@@ -127,3 +127,27 @@ Sem release, sem JAR e sem funcionalidades entregues até esta etapa.
 - Separa artefato instalável no Actions e inclui SHA256SUMS; não distribui fontes no mesmo ZIP.
 - Verifica versão, entrypoint compilado Java 21, ModInitializer/onInitialize, namespace remapeado e dependências no JAR final antes da distribuição.
 - Reproduzida ClassNotFoundException ao instalar fontes alpha.4; o usuário confirmou ter instalado esse arquivo. Sem alterações em outros mods ou sistemas de jogo.
+
+## Local — 0.3.0-alpha.6
+
+- Navegação JSON e rodapé opcionais em 11 telas, com movimentação conjunta de ícones/callbacks e suporte a trocas de posições.
+- Validação estrita de conflitos, limites, duplicatas e proteção da área de prêmios; compatibilidade com configurações antigas.
+- Fixture e testes de protocolo para submenus/estados reais, preservação de componentes, confirmação e reload.
+- Sem commit, push ou publicação desta revisão.
+
+## Local — 0.3.0-alpha.7
+
+- Tamanho de 3/4 até 6 linhas, título com dados reais, paleta e aparência de botões por tela.
+- Ícones registrados, nomes que preservam ação/estado e lore adicional, sem alterar payloads nem habilitar controles ausentes.
+- Validação estrita de templates/limites/registro e reload transacional, com configurações antigas preservadas.
+- Runners de recompensas adaptados ao botão oculto após operação encerrada; verificações anteriores de inventário/stores preservadas.
+- Mudanças alpha.6/alpha.7 permanecem locais, sem publicação.
+
+## Local — 0.3.0-alpha.8
+
+- Recompensas CURRENCY isoladas ou combinadas com itens/Pokémon, valores BigDecimal e moeda exata registrada, sem conversão/fallback.
+- Integração opcional Impactor5.3.5 com JSON nativo auditado: valida conta/precisão/resultado, aguarda save e confirma arquivo antes do ack.
+- Detecta erro de persistência que o provedor oculta; incerteza fica em NEEDS_REVIEW, sem retry automático.
+- Prévia/segunda confirmação monetárias, planos históricos compatíveis e limites estritos.
+- Dependência API compileOnly 5.3.5, sem empacotar/instalar Impactor ou alterar suas configurações no servidor do usuário.
+- Alterações continuam locais; nenhuma publicação.

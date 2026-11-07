@@ -238,3 +238,23 @@ Menus vanilla ChestMenu 3..6 linhas, Component/TextColor por caractere para grad
 ## Empacotamento alpha.5
 
 EntryPoint `br.com.shirokaidex.core.ShirokaiDex` e implementação `net.fabricmc.api.ModInitializer` corretos; o erro reportado foi reproduzido com sources.jar alpha.4 e confirmado pelo usuário como arquivo instalado. O fonte declarava um entrypoint sem bytecode. Alpha.5 remove o descritor das fontes e valida o JAR final; nenhuma API/versão de dependência alterada. Evidência em `validation/entrypoint-alpha5.json`.
+
+## Navegação JSON alpha.6 local
+
+Sem nova integração externa: usa os mesmos SimpleContainer, ChestMenu e callbacks protegidos. Só os slots de navegação mudam, com conteúdos/ações reposicionados juntos antes de abrir o menu; confirmação e preflight continuam nas APIs existentes. Servidor empacotado com Cobblemon1.8.3 e teste de reload com LuckPerms5.4.140; primeira passagem de navegação/resgate também executada sem LuckPerms/API. Cliente gráfico/carga pendentes.
+
+## Aparência alpha.7 local
+
+Somente APIs Minecraft já usadas: SimpleContainer, ItemStack, componentes CUSTOM_NAME/LORE e registry snapshot imutável de itens capturado na thread do servidor. O parser não consulta registries fora da thread. Alterações de ícone afetam apenas controles da tela, sem copiar metadados de prêmio ou mudar entrega. Novos tamanhos usam os tipos de ChestMenu já suportados (3–6 linhas). Teste em servidor empacotado detalhado em `validation/menu-appearance.json`. Nenhuma dependência externa nova.
+
+## Impactor 5.3.5 — CURRENCY, alpha.8 local
+
+API Maven `net.impactdev.impactor.api:economy:5.3.5`, repositório oficial development. Dependência somente compileOnly; event-api snapshot não usado excluído da resolução, conforme artefato consumido. Repo permite também `net.impactdev:json:1.0.0`, dependência real da API. As duas primeiras tentativas de resolução falharam por esses detalhes e foram corrigidas; build final completo aprovado.
+
+JAR oficial `Impactor-Fabric-5.3.5+1.21.1.jar`, versão interna 5.3.5+1.21.1, obtido pela URL/hashes do manifesto público auditado do Shirokai Crates; SHA-512 conferido. APIs reais `EconomyService.instance`, currencies.currency(Key), account, Account.owner/currency/virtual/balance/deposit, EconomyTransaction.successful/type/amount/account/currency e EconomyService.save compiladas/exercitadas. Sem IDs de transação externos inventados, fallback de moeda ou comandos administrativos.
+
+Auditoria adicional nas fontes oficiais da tag 5.3.5 (`da9a2fd55cf6f0acb6e55fe157745f3bdc17ab84`): ImpactorAccount.deposit inicia save sem aguardá-lo; ConfigurateProvider.save(Path, Account) captura exceções e usa doubleValue, enquanto account() restaura via BigDecimal.valueOf(node.getDouble()). O future público, isoladamente, não prova gravação. Dex valida roundtrip antes do crédito e verifica saldo nativo por leitura assíncrona depois do save. Erro real de escrita ocultado pelo Impactor foi reproduzido e ficou em NEEDS_REVIEW após reinício.
+
+Checagem reflexiva isolada/somente leitura para identificar serviço/backend reais, pois API pública não expõe essa capacidade: public storage() do serviço, fields implementation/loader/root conferidos nas fontes e por javap no JAR oficial. Classe JsonLoader também confirmada. Suporta só serviço nativo com JSON, versões 5.3.5/5.3.5+metadata; SQL/HOCON/YAML/custom providers não são certificados e são bloqueados antes de efeitos. Não escreve nem altera configurações do Impactor em servidores de usuários.
+
+[Guia](CURRENCY_REWARDS.md), [evidência](validation/phase3-currency.json): ausência opcional, depósitos reais, isolamento de moedas, rejeição de referência/precisão, plano misto, falha e reinício. Não é certificação de transação distribuída, concorrência com todos os plugins ou carga.

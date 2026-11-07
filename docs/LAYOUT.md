@@ -56,3 +56,70 @@ Esta é a primeira passagem, não a conclusão de todos os layouts JSON do promp
 Prévia e grade leem estados persistidos via worker SQLite, sem reservar operações. Leituras falhas mostram indisponibilidade e não oferecem resgate. Prévia distingue reserva com plano alterado e permite consultar o UUID completo no chat. Callbacks verificam sessão, tela, configuração e permissões antes de abrir. Os ícones de payload e o item da confirmação preservam componentes próprios. Confirmação inclui resumo e botão verde.
 
 Limites: esta segunda passagem tem testes automatizados e build; sua navegação/renderização ainda precisa de repetição em servidor e cliente gráfico. Evidências de servidor da primeira passagem não certificam estas mudanças. Layouts JSON completos continuam pendentes.
+
+## Navegação JSON dos submenus — alpha.6 local
+
+O campo opcional `menus` em config.json aceita overrides por tela. Sem ele, todas as posições anteriores são mantidas. A paleta continua definida por `home.palette`.
+
+```json
+{
+  "menus": {
+    "rewards": { "footer": false, "slots": { "close": 26, "next": 22 } },
+    "wiki": { "slots": { "close": 35 } },
+    "reward": { "slots": { "status": 26, "next": 19 } }
+  }
+}
+```
+
+Exemplo de troca: close/next devem ser movidos juntos se ocuparem o destino um do outro. Slots são baseados em zero e restritos às linhas de navegação: de 18 até `rows*9-1`. Sem `rows`, os menus continuam com 27 ou 36 slots. Ícones e callbacks são movidos como conjunto, usando snapshot para não perder dados em trocas. Os slots 0–17 continuam reservados ao conteúdo/prêmios, incluindo confirmação, formas e resumo. `footer:false` remove apenas decoração. Um slot sem ação pode conter vidro decorativo; isso não significa que o resgate está habilitado.
+
+| Tela | Slots padrão configuráveis |
+|---|---|
+| selector | previous 18, close 22, home 23, next 26 |
+| collection | back 18, close 22 |
+| wiki | previous 18, filter 19, order 20, search 21, close 22, back 23, clear 24, type 25, next 26, category 27 |
+| wiki_types / wiki_categories / wiki_forms | previous 18, close 22, back 23, next 26 |
+| wiki_details | back 18, close 22, collection 23 |
+| wiki_spawns | previous 18, close 22, back 23, next 26, scope 27 |
+| rewards | previous 18, close 22, home 23, next 26 |
+| reward | back 18, status 19, previous 20, close 22, claim 24, next 26 |
+| confirmation | back 18, close 22 |
+
+Campos/telas/ações desconhecidos, duplicatas, números fracionários, colisões e destinos sobre conteúdo são rejeitados na configuração inteira. Falha de reload preserva layout ativo e backup anterior. Não aceita comandos executáveis. Controles que não se aplicam à página/estado permanecem sem ação. Permissões, confirmação e regras de entrega continuam verificadas pelo sistema original.
+
+Capacidade por página e controles dentro da área de conteúdo permanecem fixos. Tamanhos/títulos/paletas/ícones são personalizáveis na extensão alpha.7 abaixo. Aparência em cliente gráfico ainda não certificada. Fixture completa em `tests/fixtures/submenus/config.json`.
+
+## Aparência e tamanho por tela — alpha.7 local
+
+Cada entrada de `menus` também aceita `rows`, `title`, `palette` e `buttons`. Exemplo parcial para mesclar em config.json:
+
+```json
+{
+  "menus": {
+    "reward": {
+      "rows": 6,
+      "title": "{player} | {title}",
+      "palette": "EMBER",
+      "slots": { "status": 49, "claim": 52, "close": 53 },
+      "buttons": {
+        "status": {
+          "icon": "minecraft:compass",
+          "name": "Estado • {name}",
+          "lore": ["Treinador: {player}"]
+        },
+        "claim": { "icon": "minecraft:emerald", "name": "{name} agora" }
+      }
+    }
+  }
+}
+```
+
+- `rows`: 3–6 para telas originalmente de 3 linhas; 4–6 para wiki e suas subpáginas. A área dinâmica 0–17 e sua paginação continuam iguais, sem aumento artificial de capacidade. Espaço adicional recebe navegação/borda. Confirmação mantém prêmio/confirmar/resumo nos slots 11/13/15.
+- `title`: até 160 caracteres, com `{title}` (título dinâmico original) e `{player}`. Vazio mantém o original. Tokens desconhecidos, controles e chaves malformadas são rejeitados. Expansão não reinterpreta tokens contidos nos valores dinâmicos.
+- `palette`: VIOLET/OCEAN/EMBER por tela; ausente herda `home.palette`. Afeta título e borda. Estados de resgate mantêm suas cores semânticas.
+- `buttons`: somente ações conhecidas de navegação dessa tela, antes de mover slots. `icon` exige ID registrado e diferente de air. `name`, quando fornecido, deve incluir `{name}` para preservar ação/estado real. `lore` acrescenta até 8 linhas de até 160 caracteres, sem apagar requisitos, situação ou código da operação. Nome/lore aceitam `{name}` e `{player}`.
+- Customizar um botão ausente não o cria. Em resgates bloqueados ou encerrados, a aparência `claim` permanece sem ação. Prêmios/componentes/conteúdos exibidos não recebem templates de navegação.
+
+Não interpreta comandos, MiniMessage nem placeholders externos. Paletas oferecem coloração em duas cores nos submenus e gradiente na grade; o título dinâmico original pode manter paginação via `{title}`. A central continua usando seu layout `home`.
+
+Fixture completa: `tests/fixtures/menu-appearance/config.json`. Templates reutilizáveis, condições genéricas e posicionamento arbitrário de conteúdos continuam pendentes; os estados/permissões atuais são condições fixas do servidor. Validação visual em cliente gráfico/carga não certificada.

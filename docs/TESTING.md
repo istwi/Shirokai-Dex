@@ -243,3 +243,33 @@ Todos os servidores foram encerrados; SQLite integrity_check=ok; configuração/
 `./gradlew --no-daemon clean build serverDistribution` executa JUnit e `verifyModJar`. O segundo lê o ZIP final, o descritor e o bytecode ASM (nome interno, Java 21, interface ModInitializer, método público onInitialize), além do namespace intermediary/dependências embutidas; rejeita descritor nas fontes e probes no binário. `build/server-mod` contém somente o binário validado e SHA256SUMS e é a única origem do artefato de instalação do Actions.
 
 A investigação reproduziu o erro de entrypoint com fontes alpha.4 em servidor Fabric 0.17.2 / MC1.21.1 fora do Loom, isolado em /tmp, sem outros mods de usuário. Ver `validation/entrypoint-alpha5.json` para o resultado da inicialização corrigida. A presença de entradas no ZIP não substitui esse teste real.
+
+## Navegação personalizada e estados de resgate
+
+`MenuNavigationTest` verifica defaults/imutabilidade/trocas, limites/duplicatas/ações desconhecidas e preservação de backup na rejeição. O runner `tests/integration/submenus.cjs` usa servidor empacotado, loopback e a fixture `tests/fixtures/submenus/config.json`, com posições alteradas nas 11 telas. Não execute em servidor real de usuários.
+
+Para preparar estados: inicialize um servidor descartável em `/tmp` uma vez para criar schema 5 e pare-o; copie a fixture para config/shirokaidex/config.json; com o servidor parado execute `python3 tests/integration/seed-submenus.py /tmp/SEU_SERVIDOR --player DexNavLayout`. O script recusa perfis com operações existentes e cria estados sintéticos identificados no audit. Após iniciar, rode com MC_TEST_RUN, MC_TEST_PORT, MC_TEST_RCON_PORT e MC_TEST_RCON_PASSWORD_FILE, usando `MC_SUBMENU_PLAYER` igual ao nome semeado. Segredo somente em arquivo externo ao repo. O comando givepokemonother usado pelo runner registra uma obtenção real no perfil de teste para liberar marcos.
+
+Modo padrão exige LuckPerms 5.4.140 para autorizar reload ao jogador; console sem jogador não tem essa permissão. `MC_SUBMENU_MODE=without-luckperms` encerra após os seis casos de navegação/resgate, sem testar reload. Para repetir o teste inteiro, semeie outro perfil reservado DexNav (até 16 caracteres). O runner não deve ser repetido como se o perfil já resgatado fosse novo.
+
+Cobertura: paginação/troca close-next, filtros/formas/spawn, shift-click bloqueado, rodapé desativado, estados concluído/revisão/cancelado/plano alterado/bloqueado/recuperado, código de operação, confirmação/recuo, item personalizado intacto e não repetição. No modo LuckPerms, testa rejeição de reload e retorno aos defaults. Runner restaura o arquivo de configuração ao sair; encerre o servidor e remova o segredo/propriedade RCON ao concluir. Aparência em cliente e carga permanecem pendentes.
+
+## Aparência dos submenus alpha.7
+
+`MenuAppearanceTest`: limites de linhas/textos/lore, templates e expansão sem reinterpretação de valores, retenção de estado nos nomes, registro de ícones e preservação de configuração/backup após falha. `tests/integration/menu-appearance.cjs` usa a fixture `menu-appearance` e o mesmo seeder, com `--fixture menu-appearance` e perfil reservado novo (`--player DexNavSkin`, MC_SUBMENU_PLAYER igual). Exige LuckPerms no servidor descartável para os testes finais de reload. Use as variáveis MC_TEST_* documentadas acima.
+
+O runner valida 11 telas com linhas 4/5/6, slots fora do tamanho original, títulos reais, paletas, ícones/nomes/lore de navegação, ausência de ação em marcos bloqueados e uma entrega real preservando metadados do prêmio. Rejeita ícone inexistente e retorna aos defaults e depois à aparência configurada. A conferência é de protocolo/servidor, não inspeção gráfica.
+
+Os runners antigos de itens/desbloqueios/itens salvos/Pokémon agora verificam estado persistido e ausência de botão em tentativas repetidas, preservando os asserts de inventário/stores. Apenas sua sintaxe foi conferida neste bloco; as suítes completas históricas não foram repetidas. Não confundir isso com o runner novo exercitado em servidor.
+
+## Impactor e moedas alpha.8
+
+Unitários `CurrencyRewardsTest`/`CurrencyPersistenceTest` cobrem normalização exata/compatibilidade/limites, ordem e intenção de passos mistos, ausência de moeda antes de qualquer efeito, espera por persistência, falha/reinício/anti-repetição, leitura numérica não ambígua e perda de precisão do double nativo.
+
+Runner `tests/integration/currency.cjs`, fixture `tests/fixtures/currency/config.json` e manifesto runtime-mods.json. Servidor somente em /tmp/loopback, perfil reservado DexCurrency novo, MC_TEST_RUN/PORT/RCON_PORT/RCON_PASSWORD_FILE como nos demais runners. Três modos: `MC_CURRENCY_MODE=without-impactor`, padrão e `after-restart`, mantendo o mesmo perfil/banco/mundo. Entre etapas, parar e aguardar o servidor. O teste de ausência deve preceder instalação do Impactor no servidor descartável.
+
+Para o modo padrão: instalar somente nesse servidor o Impactor oficial com hash verificado; na configuração nativa de testes definir default-balance 0 e moedas `impactor:dollars` com duas casas, `impactor:tokens` com zero casas. Token usa symbol ✦, primary false, singular/plural e formatting como um registro nativo normal. Não aplicar essa configuração no servidor de usuários. O runner concede Pikachu via comando Cobblemon real para observar o marco.
+
+O modo padrão deposita 12.5 dólares, 3 tokens, depois um item +2.5 dólares/+1 token, e verifica saldo nativo durável 15/4. Moeda inexistente/precisão inválida devem bloquear antes de itens. O último caso renomeia temporariamente o arquivo nativo desse perfil, substitui por diretório para induzir falha real e restaura em finally; a operação precisa ficar em revisão sem novo crédito. Não repetir o modo padrão em perfil já resgatado. Após reiniciar, modo after-restart confirma saldos/inventário/estados sem repetir entregas. Restaura JSON do Dex ao terminar; encerrar servidor, remover segredo RCON/propriedade e JAR Impactor temporário ao finalizar.
+
+Backends fora do JSON nativo, cliente gráfico e carga não certificados. Erros de arquivo neste cenário são injetados intencionalmente. Registro completo em `validation/phase3-currency.json`.

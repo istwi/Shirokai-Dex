@@ -31,3 +31,7 @@ reward_unlocks guarda a primeira evidência de desbloqueio por UUID/ID, plano ob
 ## Migração 5 — itens salvos (local)
 
 saved_items contém modelo/protótipo SNBT, quantidade e SHA-256; saved_item_audit preserva conteúdo anterior/novo, ator e horário. Mutação e auditoria em transação; corrupção impede uso mas pode ser reparada explicitamente com preservação da evidência. Referências resolvidas ficam copiadas nos planos/backup. [Limites](SAVED_ITEMS.md). Bancos novos não são compatíveis com JARs antigos que só suportam schemas anteriores.
+
+## Etapas CURRENCY
+
+Sem alteração de schema: reward_operations.plan_json inclui opcionalmente currencies, enquanto reward_steps continua genérico. Ordem fixa: itens, Pokémon e moedas; intenção precede depósito, e ack exige sucesso da transação/save/leitura nativa. JSONs históricos sem currencies não mudam. Não existe ID idempotente externo fornecido pelo chamador; PROCESSING/efeitos incertos continuam em revisão, sem retry automático.

@@ -47,7 +47,7 @@ async function lp(text) {
 }
 function quantity(name){return bot.inventory.items().filter(i=>i.name===name).reduce((n,i)=>n+i.count,0);}
 function messageAfter(action,predicate){return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{bot.removeListener('messagestr',listener);reject(new Error('Missing claim response'));},15000);function listener(text){if(predicate(text)){clearTimeout(timer);bot.removeListener('messagestr',listener);resolve(text);}}bot.on('messagestr',listener);Promise.resolve(action()).catch(reject);});}
-async function claim(id,expected){let menu=await open('/dex rewards '+id);assert(menu.slots[24]);menu=await click(24);assert(title(menu).includes('Confirmar:'));return messageAfter(()=>bot.clickWindow(13,0,0),text=>text.includes(expected));}
+async function claim(id,expected){let menu=await open('/dex rewards '+id);if(expected==='já registrado ou bloqueado'){assert(!menu.slots[24],'Closed operation must hide repeat claim');assert(['Resgate concluído','Revisão necessária','Resgate cancelado','Recompensa alterada'].some(label=>data(menu.slots[19]).includes(label)),'Journal state must explain the block');return;}assert(menu.slots[24]);menu=await click(24);assert(title(menu).includes('Confirmar:'));return messageAfter(()=>bot.clickWindow(13,0,0),text=>text.includes(expected));}
 let keepChanged=false;
 async function unlocked(id){await until(async()=>{const menu=await open('/dex rewards '+id);const value=Boolean(menu.slots[24]);await close();return value;},20000);}
 async function main(){

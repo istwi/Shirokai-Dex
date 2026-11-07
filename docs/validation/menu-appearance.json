@@ -1,0 +1,82 @@
+{
+  "scope": "Local alpha.7 menu sizes/titles/palettes/button appearance on top of local alpha.6 navigation",
+  "base_commit": "7defc0ce57bb51068cc3657f80f9ffdfdedeaf4f",
+  "publication": "No commit, push, release or environment publication",
+  "build": "BUILD SUCCESSFUL; verifyModJar and serverDistribution passed",
+  "junit": {
+    "tests": 254,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_junit_cases": 20,
+  "jar": {
+    "name": "shirokai-dex-0.3.0-alpha.7+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "15b6010a3cbafeb72ecbf468cbafd450b0b2117c43a9e70ca4b09bebd55a60e2",
+    "matches_tested_packaged_jar": true
+  },
+  "server": {
+    "environment": "Isolated loopback Fabric production server, outside Loom",
+    "minecraft": "1.21.1",
+    "fabric": "0.17.2",
+    "java": "21.0.13",
+    "cobblemon": "1.8.3+1.21.1",
+    "luckperms": "5.4.140",
+    "startup": "Done and Shirokai Dex ready",
+    "results": [
+      {
+        "name": "Expanded selector/collection windows preserve content, progress, player title and callbacks",
+        "status": "passed"
+      },
+      {
+        "name": "Expanded wiki/pickers/details/forms/spawns retain paging and scope cards across different sizes",
+        "status": "passed"
+      },
+      {
+        "name": "Reward grid title, palette, custom close icon/name/lore and safe paging survive expansion without extraction",
+        "status": "passed"
+      },
+      {
+        "name": "Custom status labels retain actual journal states; styled absent claim cannot enable locked or terminal operations",
+        "status": "passed"
+      },
+      {
+        "name": "Themed claim keeps separate confirmation and pristine prize metadata; exactly one item delivered",
+        "status": "passed"
+      },
+      {
+        "name": "Unknown native icon rejects whole reload; removing/restoring style settings returns default/expanded UI without redelivery",
+        "status": "passed"
+      }
+    ],
+    "fixtures": "Reserved fresh DexNavSkin test profile; synthetic marked journal operations seeded while stopped; native Pokemon grant for unlock, then one real custom item delivery.",
+    "expected_rejection": "missing:icon rejected by immutable registry snapshot; active style retained",
+    "cleanup": {
+      "server_stopped": true,
+      "rcon_disabled_and_secret_removed": true,
+      "temporary_luckperms_removed": true,
+      "sqlite_integrity": "ok",
+      "foreign_keys": "ok",
+      "configuration_file_restored_to_fixture": true
+    },
+    "nonfatal_environment_messages": [
+      "Cobblemon first-profile optional/missing backup messages",
+      "Isolated offline authlib key lookup and transient tick delay"
+    ]
+  },
+  "legacy_runners": {
+    "files": [
+      "rewards.cjs",
+      "reward-unlocks.cjs",
+      "saved-items.cjs",
+      "pokemon-rewards.cjs"
+    ],
+    "validation": "node --check passed; whole historical suites not rerun. Closed-operation cases assert hidden claim and persisted state; existing inventory/store assertions retained."
+  },
+  "limitations": [
+    "Graphical client/readability and load unverified",
+    "Dynamic content page capacity remains 18; reward payload and in-content confirmation controls fixed",
+    "Reusable templates and generic conditions still pending",
+    "No external placeholders, commands or MiniMessage evaluation in templates"
+  ]
+}

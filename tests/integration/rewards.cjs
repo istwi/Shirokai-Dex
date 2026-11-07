@@ -46,7 +46,7 @@ async function lp(text) {
 }
 function quantity(name){return bot.inventory.items().filter(i=>i.name===name).reduce((n,i)=>n+i.count,0);}
 function messageAfter(action,predicate){return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{bot.removeListener('messagestr',listener);reject(new Error('Missing claim response'));},15000);function listener(text){if(predicate(text)){clearTimeout(timer);bot.removeListener('messagestr',listener);resolve(text);}}bot.on('messagestr',listener);Promise.resolve(action()).catch(reject);});}
-async function claim(id,expected){let menu=await open('/dex rewards '+id);assert(menu.slots[24]);menu=await click(24);assert(title(menu).includes('Confirmar:'));return messageAfter(()=>bot.clickWindow(13,0,0),text=>text.includes(expected));}
+async function claim(id,expected){let menu=await open('/dex rewards '+id);if(expected==='já registrado ou bloqueado'){assert(!menu.slots[24],'Closed operation must hide repeat claim');assert(['Resgate concluído','Revisão necessária','Resgate cancelado','Recompensa alterada'].some(label=>data(menu.slots[19]).includes(label)),'Journal state must explain the block');return;}assert(menu.slots[24]);menu=await click(24);assert(title(menu).includes('Confirmar:'));return messageAfter(()=>bot.clickWindow(13,0,0),text=>text.includes(expected));}
 async function main(){
   assert(process.env.MC_TEST_RCON_PASSWORD_FILE);
   rcon=await new Rcon().connect(Number(process.env.MC_TEST_RCON_PORT||25573),fs.readFileSync(process.env.MC_TEST_RCON_PASSWORD_FILE,'utf8').trim());
@@ -56,7 +56,6 @@ async function main(){
   if(process.env.MC_REWARD_MODE==='after-restart'){
     const expectedDiamonds=Number(process.env.MC_REWARD_EXPECT_DIAMONDS||2);
     await until(()=>quantity('diamond')===expectedDiamonds&&quantity('paper')===64);
-    await until(async()=>{const menu=await open('/dex rewards first');const ready=Boolean(menu.slots[24]);await close();return ready;});
     await claim('first','já registrado ou bloqueado');assert.equal(quantity('diamond'),expectedDiamonds);assert.equal(quantity('paper'),64);
     if(JSON.parse(original).rewards.some(p=>p.id==='save_failure')){await claim('save_failure','já registrado ou bloqueado');assert.equal(quantity('diamond'),expectedDiamonds);pass('Uncertain save failure stays blocked after restart without redelivery');}
     pass('Completed claim and saved inventory survive restart without redelivery');
@@ -80,7 +79,7 @@ async function main(){
     return;
   }
   const baseline=await response('/dex status',t=>t.includes('Pokédex oficial:'));assert(baseline.includes('0 espécies obtidas'),'Use fresh reward player');
-  let menu=await open('/dex rewards first');assert(!menu.slots[24]);assert(data(menu.slots[19]).includes('Bloqueada'));
+  let menu=await open('/dex rewards first');assert(!menu.slots[24]);assert(data(menu.slots[19]).includes('Marco bloqueado'));
   await bot.clickWindow(0,0,4);await until(()=>menu.slots[0]?.name==='diamond'&&!menu.selectedItem);await close();assert.equal(quantity('diamond'),0);
   pass('Locked milestone preview cannot claim or extract displayed reward icons');
   await rcon.command(`givepokemonother ${PLAYER} pikachu level=5`);

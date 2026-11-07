@@ -1,25 +1,33 @@
 # Próximos passos
 
-**Entrega solicitada:** pré-release `v0.3.0-alpha.4`, incluindo commit/push do snapshot atual. Referência de continuidade: essa tag. Após esta entrega, desenvolvimento futuro permanece local até nova autorização. Configuração de ambiente não deve ser publicada.
+**Estado atual:** envio do snapshot alpha.6/7/8 autorizado pelo usuário. Referência: commit `feat: add configurable menu presentation and Impactor currency rewards`, base `7defc0c`. Depois do envio, continuar integração de chaves Crates localmente. Sem autorização de nova release/publicação de ambiente.
 
 ## Última tarefa realizada
 
-Correção de distribuição alpha.5 para impedir descoberta do sources.jar como mod. Erro original reproduzido em servidor Fabric real e causa confirmada pelo usuário. EntryPoint Java não mudou; novas verificações inspecionam o bytecode do JAR remapeado. Artefato Actions agora contém somente JAR instalável e SHA256SUMS. Referência: commit `fix: prevent source archives from loading as Fabric mods`; evidência `validation/entrypoint-alpha5.json`.
+CURRENCY integrado ao plano/journal/preflight/menus, com API Impactor5.3.5 e backend JSON nativo auditado. Aguarda save e leitura de saldo, pois o provedor suprime erros; confere identidade e precisão e não usa moeda principal como fallback. Build/JAR verificados; 274 JUnit sem falhas/erros/skips e 8 checks de servidor (sem API, real e restart). Guia/evidência: CURRENCY_REWARDS.md e validation/phase3-currency.json. Native saldo final do teste: dólares15/tokens4/item1; operação incerta continua bloqueada.
+
+Mudanças alpha.6/7 de menus e adaptação dos runners anteriores preservadas. Snapshot autorizado para sincronização; confirmar SHA remoto na entrega.
 
 ## Pendência de distribuição
+
+Alpha.5 foi publicada como artifact no Actions run 42400989186, com conferência de hash após upload. A limitação abaixo refere-se a anexos de release, não a esse artifact. Alpha.6/alpha.7/alpha.8 ainda são somente locais.
 
 O upload do JAR/sources/SHA256SUMS recebeu HTTP 401 Bad credentials em uploads.github.com, embora API e push estejam autorizados. A release informa ausência de JAR anexado. Corrigir o acesso do ambiente ao host de uploads e enviar os arquivos já validados de build/libs antes de recomendar instalação. Nunca solicitar token em chat.
 
 ## Próxima tarefa exata
 
-1. Conferir o commit da correção alpha.5 e seu artefato no Actions antes de continuar. O usuário autorizou commit/push desta correção. Preservar alterações futuras localmente; nova publicação requer autorização.
-2. **Prioridade explícita atual: layout geral antes de outros sistemas.** Validar em servidor dev a harmonização aplicada: páginas de progresso, wiki/detalhes/formas/spawn e prévia/confirmação, estados reais e consulta assíncrona. Ajustar runners antigos que ainda esperam botão de resgate depois de concluído; preservar a verificação de não duplicação. Conferir itens personalizados intactos. Manter sistemas ainda não implementados visivelmente indisponíveis, sem dados fictícios.
-3. A central/grade e configuração `home` já existem: não refazer. /dex é o hub; seletor é acessado por botão, sem novos aliases que mascarem IDs personalizados. Framework de layouts JSON para todos os menus e aparência em cliente real seguem parciais. Conferir renderização/legibilidade em cliente quando disponível.
-4. Não iniciar agora moeda/Impactor, Crates, COMMAND, capturas/competições; usuário pediu retomar sistemas após revisão visual. Pokémon já funciona no escopo descrito em POKEMON_REWARDS.md; formatos/provedores adicionais ficam pendentes, não repetir essa implementação.
-5. Documentação objetiva, testes relevantes e blocos maiores; atualizar checklist e provas localmente. A autorização atual cobre apenas esta pré-release, sem configuração de ambiente.
+1. Conferir o commit de sincronização acima e o estado remoto antes de continuar. Não reaplicar blocos alpha.6/7/8; preservar trabalho novo local. Nova release/ambiente não autorizados.
+2. Próximo bloco funcional da Fase3: chaves físicas Shirokai Crates. Conferir HEAD/APIs atuais do repo informado pelo usuário e auditoria existente; não presumir versão instalada. Exigir prévia/confirmação, espaço e comprovação durável; não tratar retorno de comando como prova de entrega persistida. COMMAND e recuperação supervisionada ainda pendentes.
+3. Não repetir a implementação CURRENCY: API5.3.5 e JSON nativo já exercitados; formatos/serviços/versões adicionais continuam fora do suporte. Manter checagem exata de moeda/conta/precisão, intenção antes do efeito, save + readback e NEEDS_REVIEW para incerteza. Nunca adicionar retry automático ou equivalência com a moeda principal.
+4. Ao mudar adaptadores de itens/Pokémon, repetir seus runners completos (já adaptados à UI sem botão repetido). Não alegar que foram repetidos no bloco monetário. Testes novos de CURRENCY e menus não certificam todas as integrações antigas.
+5. Pendências visuais em paralelo: cliente gráfico, templates reutilizáveis, conteúdo/condições genéricas. Fases4–6 (capturas, estatísticas, competições, rankings, conquistas/perfis) ainda pendentes. Não mudar outros mods nem publicar ambiente.
 
 ## Arquivos importantes
 
+- Moedas: CurrencyReward, CurrencyRewardAdapter/Port, ImpactorCurrencyPort, CurrencyPersistence; RewardPlan/RewardsCodec/RewardJournal.steps, core/menus/localização. CurrencyRewardsTest/CurrencyPersistenceTest, fixture e runner currency.cjs (normal/without-impactor/after-restart), manifesto oficial runtime-mods.json. Guia CURRENCY_REWARDS.md.
+
+- Aparência: `MenuAppearance`, `MenuNavigation.Layout`, `MenuStyle.appearance`, `MenuAppearanceTest` e CollectionValidator (snapshot de ícones). Runner/fixture `menu-appearance`, seeder com `--fixture menu-appearance`; exporta metadados de teste, não dados de usuários.
+- Nova navegação: `menus/layout/MenuNavigation`, `config/MenuNavigationCodec`, `Settings.menus`, `MenuStyle.navigation`, `MenuNavigationTest`; fixture/runner `submenus`, seeder reservado para servidor descartável parado.
 - Layout: `HomeMenu`, `menus/layout/HomeLayout`, `HomeLayoutCodec`, `MainMenu.show`/tamanhos e callbacks em ShirokaiDex; HomeLayoutTest, runner home-layout.cjs, fixture layout e probe separado layoutProbe. Helpers antigos de teste agora entram no seletor clicando na central.
 - Pokémon: `PokemonReward`, `PokemonRewardsCodec`, `PokemonPayload`, `PokemonRewardAdapter`, RewardPlan.steps/definition/reuse e journal compatível. `pokemonProbe` só de testes; nunca incluir no JAR. Leitura assíncrona de NBT não escreve stores nem consulta registries fora da thread do servidor.
 

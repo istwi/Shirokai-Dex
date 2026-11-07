@@ -1,0 +1,155 @@
+{
+  "scope": "Local alpha.8 CURRENCY / Impactor 5.3.5 native JSON",
+  "base_commit": "7defc0ce57bb51068cc3657f80f9ffdfdedeaf4f",
+  "publication": "No commit, push, release or environment publication",
+  "build": "BUILD SUCCESSFUL; verifyModJar and serverDistribution passed",
+  "junit": {
+    "tests": 274,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_junit_cases": 20,
+  "jar": {
+    "name": "shirokai-dex-0.3.0-alpha.8+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "01afa419958a16e9cc7e5b491afc3c818e8eb01c9f877655fee89dab357ab244",
+    "matches_all_three_test_server_starts": true,
+    "impactor_classes_not_bundled": true,
+    "compiled_entrypoint_present": true
+  },
+  "provider": {
+    "project": "impactor",
+    "version": "5.3.5+1.21.1-Fabric",
+    "filename": "Impactor-Fabric-5.3.5+1.21.1.jar",
+    "url": "https://cdn.modrinth.com/data/LdBYVaPS/versions/KwNU9SQW/Impactor-Fabric-5.3.5%2B1.21.1.jar",
+    "sha512": "bfcec7e2a56b77fd874087a615aadaf71250a46dd29bf898ed0d1d280b807d4c5e34b700efe00a428067743dc672786e0467be01a1e30871a04bbf4dcf8b8020"
+  },
+  "audit": {
+    "source_commit": "da9a2fd55cf6f0acb6e55fe157745f3bdc17ab84",
+    "public_api": "EconomyService/currencies/currency/account; Account.deposit; EconomyTransaction result/type/amount/owner/currency; service.save",
+    "native_save_findings": [
+      "deposit starts but does not await save",
+      "ConfigurateProvider.save(Path,Account) catches write exceptions, permitting apparent success",
+      "Native account save uses balance.doubleValue, restore uses BigDecimal.valueOf(node.getDouble())"
+    ],
+    "capability": "Read-only reflection pinned to audited native service/JSON loader and fields implementation/loader/root; javap confirmed fields in official checksum-verified distribution",
+    "mitigations": [
+      "Strict current currency identity/precision and no fallback",
+      "Journal intent before account loading/deposit; no late deposit after account future timeout",
+      "Native double roundtrip check before deposit",
+      "Wait save plus asynchronous exact decimal readback; never repeat a deposit to repair a readback failure"
+    ],
+    "dependency_resolution": "Initial resolution attempts failed on unused event-api SNAPSHOT and missing repository inclusion for net.impactdev:json; fixed by excluding event-api and adding exact net.impactdev group to official repo filter. Final build passed."
+  },
+  "server": {
+    "environment": "Isolated loopback production Fabric server outside Loom; same world/database/profile across modes",
+    "minecraft": "1.21.1",
+    "fabric_loader": "0.17.2",
+    "java": "21.0.13",
+    "cobblemon": "1.8.3+1.21.1",
+    "impactor": "5.3.5+1.21.1 in main/restart; absent in first mode",
+    "results": {
+      "without-impactor": [
+        {
+          "name": "Currency-only preview and confirmation show exact currency/amount without item or Pokemon assumptions",
+          "status": "passed"
+        },
+        {
+          "name": "Missing optional Impactor does not prevent startup or create an account/delivery",
+          "status": "passed"
+        }
+      ],
+      "main": [
+        {
+          "name": "Currency-only preview and confirmation show exact currency/amount without item or Pokemon assumptions",
+          "status": "passed"
+        },
+        {
+          "name": "Real Impactor dollars/tokens deposits are independently saved with exact amounts and no conversion",
+          "status": "passed"
+        },
+        {
+          "name": "Missing currency and incompatible token precision abort mixed plans before any item or monetary effect",
+          "status": "passed"
+        },
+        {
+          "name": "Mixed item+two-currency plan completes once with journal-backed closed previews",
+          "status": "passed"
+        },
+        {
+          "name": "Real suppressed native JSON write failure is detected by readback and blocks uncertain credit for manual review",
+          "status": "passed"
+        }
+      ],
+      "after-restart": [
+        {
+          "name": "Native balances/items and completed/review states survive restart without redelivery",
+          "status": "passed"
+        }
+      ]
+    },
+    "journal_states_after_restart": {
+      "cash": "COMPLETED",
+      "mixed": "COMPLETED",
+      "tokens": "COMPLETED",
+      "uncertain": "NEEDS_REVIEW"
+    },
+    "steps_after_restart": {
+      "cash": [
+        [
+          0,
+          "COMPLETED"
+        ]
+      ],
+      "mixed": [
+        [
+          0,
+          "COMPLETED"
+        ],
+        [
+          1,
+          "COMPLETED"
+        ],
+        [
+          2,
+          "COMPLETED"
+        ]
+      ],
+      "tokens": [
+        [
+          0,
+          "COMPLETED"
+        ]
+      ],
+      "uncertain": [
+        [
+          0,
+          "INTENT"
+        ]
+      ]
+    },
+    "durable_balances_after_restart": {
+      "impactor:dollars": 15.0,
+      "impactor:tokens": 4.0
+    },
+    "items_after_restart": {
+      "minecraft:diamond": 1
+    },
+    "expected_failure": "Temporarily replaced the reserved profile native account file with a directory. Impactor suppressed save errors; Dex readback failed and uncertain intent stayed NEEDS_REVIEW. File restored in finally before restart.",
+    "cleanup": {
+      "servers_stopped": true,
+      "rcon_disabled_and_secret_removed": true,
+      "temporary_impactor_jar_removed": true,
+      "sqlite_integrity": "ok",
+      "foreign_keys": "ok",
+      "config_restored_to_fixture": true
+    }
+  },
+  "limitations": [
+    "Only audited native JSON service on Impactor 5.3.5 supported; SQL/HOCON/YAML/custom services and other versions fail closed",
+    "No distributed atomicity or caller-supplied external idempotency key; uncertain effects require manual review",
+    "Native mixed test covered item+two currencies; Pokemon+currency combination and older complete Pokemon/item suites not rerun in this block",
+    "Graphical client, load and wide concurrency with other plugins not certified",
+    "Currency existence/precision checked at claim time, not proof from a syntactically valid config"
+  ]
+}

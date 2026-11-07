@@ -7,7 +7,8 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /** First delivery scope: immutable plain item plans; registry/capacity validation belongs to server adapter. */
-public record RewardPlan(String id, String collection, int minimumRegistered, BigDecimal minimumPercent, List<Item> items, boolean manual,List<PokemonReward> pokemon) {
+public record RewardPlan(String id, String collection, int minimumRegistered, BigDecimal minimumPercent, List<Item> items, boolean manual,List<PokemonReward> pokemon,List<CurrencyReward> currencies) {
+    public RewardPlan(String id,String collection,int minimumRegistered,BigDecimal minimumPercent,List<Item> items,boolean manual,List<PokemonReward> pokemon){this(id,collection,minimumRegistered,minimumPercent,items,manual,pokemon,List.of());}
     public RewardPlan(String id,String collection,int minimumRegistered,BigDecimal minimumPercent,List<Item> items,boolean manual){this(id,collection,minimumRegistered,minimumPercent,items,manual,List.of());}
     public RewardPlan(String id,String collection,int minimumRegistered,BigDecimal minimumPercent,List<Item> items){this(id,collection,minimumRegistered,minimumPercent,items,false);}
     public static RewardPlan manual(String id,List<Item> items){return new RewardPlan(id,"admin",0,null,items,true);}
@@ -20,9 +21,9 @@ public record RewardPlan(String id, String collection, int minimumRegistered, Bi
         }
     }
     public RewardPlan {
-        identifier(id); identifier(collection); items = List.copyOf(items); pokemon=List.copyOf(pokemon);
-        if (items.size()+pokemon.size()<1 || items.size()+pokemon.size()>32 || pokemon.size()>6) throw new IllegalArgumentException("reward requires 1..32 actions, maximum six pokemon");
-        if(manual&&!pokemon.isEmpty())throw new IllegalArgumentException("manual item plans cannot contain pokemon");
+        identifier(id); identifier(collection); items = List.copyOf(items); pokemon=List.copyOf(pokemon);currencies=List.copyOf(currencies);
+        if (items.size()+pokemon.size()+currencies.size()<1 || items.size()+pokemon.size()+currencies.size()>32 || pokemon.size()>6 || currencies.size()>8) throw new IllegalArgumentException("reward requires 1..32 actions, maximum six pokemon/eight currencies");
+        if(manual&&(!pokemon.isEmpty()||!currencies.isEmpty()))throw new IllegalArgumentException("manual item plans cannot contain pokemon");
         if(items.stream().mapToInt(item -> item.data().getBytes(java.nio.charset.StandardCharsets.UTF_8).length).sum()>65536)throw new IllegalArgumentException("maximum 64 KiB payload per reward");
         if(manual && (!collection.equals("admin")||minimumRegistered!=0||minimumPercent!=null))throw new IllegalArgumentException("invalid manual plan");
         if (!manual && ((minimumRegistered > 0) == (minimumPercent != null) || minimumRegistered < 0)) throw new IllegalArgumentException("exactly one positive unlock threshold required");
@@ -46,12 +47,13 @@ public record RewardPlan(String id, String collection, int minimumRegistered, Bi
         for (Item item : items) { JsonObject value = new JsonObject(); value.addProperty("type", item.data().isEmpty()?"ITEM":"CUSTOM_ITEM"); value.addProperty("id", item.id()); value.addProperty("count", item.count()); if(!item.data().isEmpty())value.addProperty("payload_snbt",item.data()); actions.add(value); }
         root.add("items", actions);
         if(!pokemon.isEmpty()){var entries=new JsonArray();pokemon.forEach(value->entries.add(value.json()));root.add("pokemon",entries);}
+        if(!currencies.isEmpty()){var money=new JsonArray();for(var entry:currencies){var value=new JsonObject();value.addProperty("type","CURRENCY");value.addProperty("currency",entry.currency());value.addProperty("amount",entry.amount());money.add(value);}root.add("currencies",money);}
         String json=root.toString();
         if(json.getBytes(java.nio.charset.StandardCharsets.UTF_8).length>262144)throw new IllegalArgumentException("operation plan exceeds 256 KiB");
         return json;
     }
-    public int steps(){return items.size()+pokemon.size();}
-    public RewardPlan withPokemon(List<PokemonReward> values){return new RewardPlan(id,collection,minimumRegistered,minimumPercent,items,manual,values);}
+    public int steps(){return items.size()+pokemon.size()+currencies.size();}
+    public RewardPlan withPokemon(List<PokemonReward> values){return new RewardPlan(id,collection,minimumRegistered,minimumPercent,items,manual,values,currencies);}
     public RewardPlan definition(){return withPokemon(pokemon.stream().map(value->value.withSnapshot("")).toList());}
     public RewardPlan reuse(String reserved){
         var json=JsonParser.parseString(reserved).getAsJsonObject();

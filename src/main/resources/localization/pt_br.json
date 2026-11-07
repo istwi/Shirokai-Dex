@@ -105,7 +105,7 @@
   "reward_error": "Falha no resgate. Não repita uma entrega incerta; consulte a administração.",
   "reward_result.completed": "Recompensa entregue e registrada.",
   "reward_result.busy": "Você já tem um resgate em andamento.",
-  "reward_result.not_eligible": "Requisito não atendido ou inventário/equipe/PC sem espaço disponível.",
+  "reward_result.not_eligible": "Requisito não atendido ou inventário/equipe/PC sem espaço disponível. Integração/moeda indisponível ou precisão incompatível também impedem o resgate.",
   "reward_result.blocked": "Resgate já registrado ou bloqueado. Consulte a administração se necessário.",
   "reward_result.needs_review": "Resgate interrompido. Entrega bloqueada para revisão administrativa.",
   "reward_admin_invalid": "ID ou evidência inválida.",
@@ -181,5 +181,10 @@
   "layout.confirm_summary": "Resumo da entrega",
   "layout.confirm_steps": "Etapas de entrega: {0}",
   "layout.confirm_contents": "Itens: {0} • Pokémon: {1}",
-  "layout.navigation_hint": "Clique para abrir."
+  "layout.navigation_hint": "Clique para abrir.",
+  "currency_backend_unavailable": "Impactor 5.3.5 indisponível. Nenhuma recompensa foi entregue.",
+  "currency_dollars": "PokéDollars: $ {0}",
+  "currency_tokens": "PokéTokens: ✦ {0}",
+  "currency_amount": "Moeda: {0} • Quantia: {1}",
+  "currency_generic": "{1}: {0}"
 }

@@ -1,0 +1,396 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "✦ Shirokai Dex",
+  "menus": {
+    "selector": {
+      "slots": {
+        "close": 44,
+        "next": 43,
+        "previous": 36,
+        "home": 40
+      },
+      "rows": 5,
+      "title": "{player} | {title}",
+      "palette": "OCEAN",
+      "footer": true
+    },
+    "collection": {
+      "slots": {
+        "close": 35,
+        "back": 27
+      },
+      "rows": 4,
+      "title": "{player} | {title}",
+      "palette": "OCEAN",
+      "footer": true
+    },
+    "wiki": {
+      "slots": {
+        "close": 53,
+        "next": 52,
+        "previous": 45,
+        "filter": 46,
+        "order": 47,
+        "search": 48,
+        "back": 49,
+        "clear": 50,
+        "type": 51,
+        "category": 44
+      },
+      "rows": 6,
+      "title": "{player} | {title}",
+      "palette": "OCEAN",
+      "footer": true
+    },
+    "wiki_details": {
+      "slots": {
+        "close": 53,
+        "back": 45,
+        "collection": 49
+      },
+      "rows": 6,
+      "title": "{player} | {title}",
+      "palette": "OCEAN",
+      "footer": true
+    },
+    "wiki_types": {
+      "slots": {
+        "close": 44,
+        "next": 43,
+        "previous": 36,
+        "back": 40
+      },
+      "rows": 5,
+      "title": "{player} | {title}",
+      "palette": "OCEAN",
+      "footer": true
+    },
+    "wiki_categories": {
+      "slots": {
+        "close": 44,
+        "next": 43,
+        "previous": 36,
+        "back": 40
+      },
+      "rows": 5,
+      "title": "{player} | {title}",
+      "palette": "OCEAN",
+      "footer": true
+    },
+    "wiki_forms": {
+      "slots": {
+        "close": 44,
+        "next": 43,
+        "previous": 36,
+        "back": 40
+      },
+      "rows": 5,
+      "title": "{player} | {title}",
+      "palette": "OCEAN",
+      "footer": true
+    },
+    "wiki_spawns": {
+      "slots": {
+        "close": 53,
+        "previous": 45,
+        "next": 52,
+        "back": 49,
+        "scope": 50
+      },
+      "rows": 6,
+      "title": "{player} | {title}",
+      "palette": "OCEAN",
+      "footer": true
+    },
+    "rewards": {
+      "footer": true,
+      "slots": {
+        "close": 53,
+        "next": 52,
+        "previous": 45,
+        "home": 49
+      },
+      "rows": 6,
+      "title": "{player} | {title}",
+      "palette": "OCEAN",
+      "buttons": {
+        "close": {
+          "icon": "minecraft:oak_door",
+          "name": "{name} • {player}",
+          "lore": [
+            "Retorno personalizado"
+          ]
+        }
+      }
+    },
+    "reward": {
+      "slots": {
+        "close": 53,
+        "status": 49,
+        "previous": 46,
+        "next": 50,
+        "back": 45,
+        "claim": 52
+      },
+      "rows": 6,
+      "title": "{player} | {title}",
+      "palette": "EMBER",
+      "footer": true,
+      "buttons": {
+        "status": {
+          "icon": "minecraft:compass",
+          "name": "Estado • {name}",
+          "lore": [
+            "Treinador: {player}"
+          ]
+        },
+        "claim": {
+          "icon": "minecraft:emerald",
+          "name": "{name} agora",
+          "lore": [
+            "Confirmação obrigatória"
+          ]
+        },
+        "close": {
+          "icon": "minecraft:red_dye",
+          "name": "{name} • {player}"
+        }
+      }
+    },
+    "confirmation": {
+      "slots": {
+        "back": 27,
+        "close": 35
+      },
+      "rows": 4,
+      "title": "{player} | {title}",
+      "palette": "OCEAN",
+      "footer": true
+    }
+  },
+  "rewards": [
+    {
+      "id": "available",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "type": "CUSTOM_ITEM",
+          "id": "minecraft:diamond",
+          "count": 1,
+          "payload_snbt": "{\"id\":\"minecraft:diamond\",\"count\":1,\"components\":{\"minecraft:custom_name\":\"{\\\"text\\\": \\\"Prêmio intacto\\\", \\\"color\\\": \\\"gold\\\", \\\"italic\\\": false}\",\"minecraft:lore\":[\"{\\\"text\\\": \\\"Lore original\\\", \\\"color\\\": \\\"aqua\\\"}\"]}}"
+        }
+      ]
+    },
+    {
+      "id": "completed",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "cancelled",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "pending",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "changed",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "locked",
+      "collection": "national",
+      "minimum_registered": 9999,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "recovered",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_00",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_01",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_02",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_03",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_04",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_05",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_06",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_07",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_08",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_09",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_10",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_11",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

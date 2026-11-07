@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Prioridade local atual: layout geral**, por pedido do usuário após o bloco Pokémon. Recompensas POKEMON no escopo NBT auditadas; central e grade novas, paletas/slots/gradiente e navegação testados. 214 JUnit e 30 checks reais destes blocos. [Pokémon](validation/phase3-pokemon.json), [layout](validation/layout-home.json). Não conclui todo o mod/layout; sem commit/push até autorização.
+**Retomada:** alpha.8 local acrescentou CURRENCY com Impactor5.3.5/JSON nativo; 274 JUnit e 8 checks de servidor, [evidência](validation/phase3-currency.json). Menus alpha.6/7 preservados. Base publicada `7defc0c`, sem novos commits/push. Próximo bloco: chaves físicas Crates/Fase3; demais fases continuam pendentes.
 
 ## Preparação e continuidade
 
@@ -83,7 +83,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 - [ ] Recompensas.
 - [x] ~~CUSTOM_ITEM com codec oficial e componentes Minecraft auditados.~~ Nome/lore/encantamento/dano/custom_data testados; componentes adicionais de mods exigem validação própria. [Evidência](validation/phase3-saved-items.json).
 - [x] ~~Recompensas POKEMON com atributos reais, snapshot e equipe/PC nativos.~~ Escopo NBT e intervalo 1..60s; formatos/provedores adicionais não suportados. Falha/reinício/anti-repetição testados. [Evidência](validation/phase3-pokemon.json).
-- [ ] Impactor.
+- [ ] Impactor. Integração CURRENCY com API5.3.5/JSON nativo implementada/testada; serviços/backends/versões adicionais não certificados. [Guia](CURRENCY_REWARDS.md).
 - [x] ~~Itens salvos: save/list/give/delete, componentes preservados e snapshots independentes.~~ Migração 5, permissão, auditoria/limites, backup e reinício comprovados. [Guia](SAVED_ITEMS.md).
 - [ ] Resgate manual. Itens simples com prévia/segunda confirmação, espaço integral e idempotência validados; tipos avançados pendentes.
 - [ ] Persistência segura. Journal/migração 3, intenção/etapas/auditoria, concorrência e falhas simuladas testados; não há transação distribuída com inventário.
@@ -128,7 +128,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## FASE 7 — Personalização e integrações
 
-- [ ] Menus JSON avançados. Central com rows/palette/slots validada; layouts completos de todos os submenus ainda pendentes.
+- [ ] Menus JSON avançados. Central e 11 telas existentes têm navegação/tamanho/título/paleta/aparência de controles validados em alpha.6/7; modelos reutilizáveis, conteúdo/condições genéricas, telas de fases futuras e cliente gráfico pendentes.
 - [ ] Condições dos botões.
 - [ ] Integração SkiesGUIs.
 - [ ] LuckPerms.
@@ -194,7 +194,7 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 ### Segunda passagem visual local
 
 - [x] ~~Testar cálculo da barra, bloqueio de resgate por estado/plano alterado e isolamento da consulta SQLite.~~ Evidência: `validation/layout-submenus.json`.
-- [ ] Validar em servidor/cliente o estilo compartilhado dos submenus e estados de resgate. Código aplicado; testes automatizados não certificam aparência nem navegação nativa.
+- [ ] Validar aparência em cliente gráfico. Navegação nativa/estados dos submenus já foram exercitados no bloco alpha.6; cliente visual continua pendente.
 
 | Preparação da pré-release alpha.4 | Snapshot das alterações locais, 218 JUnit/build, JAR sem probes e limitações explícitas; sem certificação visual/carga | Tag `v0.3.0-alpha.4`, commit de preparação da release |
 
@@ -206,3 +206,29 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 | Correção de inicialização alpha.5 | build.gradle, workflow, documentação/evidência; fontes não são mod e distribuição valida bytecode final | Commit `fix: prevent source archives from loading as Fabric mods` |
 
 - [x] ~~Validar inicialização alpha.5 fora do Loom.~~ Fabric 0.17.2 / MC1.21.1 / Java21 / Cobblemon1.8.3: Done + Dex ready, SQLite íntegro; fontes novas ignoradas. Evidência em `validation/entrypoint-alpha5.json`. Não certifica modpack/carga/cliente gráfico.
+
+### Navegação configurável dos submenus — alpha.6 local
+
+- [x] ~~Validar navegação JSON, conflitos, defaults e recuperação de configuração.~~ 234 JUnit totais, incluindo 16 novos casos, e 7 checks em servidor empacotado. [Evidência](validation/layout-navigation.json).
+- [x] ~~Exercitar estilo/navegação dos submenus e estados reais via protocolo.~~ Confirmação e entrega de item personalizado, sem repetição, filtros/formas/spawn e reload incluídos.
+- [ ] Revisar aparência em cliente gráfico e completar modelos reutilizáveis/conteúdo/condições. Tamanhos/títulos/paletas/ícones de navegação foram validados no bloco alpha.7; isso não equivale ao sistema completo de menus.
+
+| Navegação de submenus (local) | MenuNavigation/codec/Settings/MenuStyle/MainMenu/HomeMenu, 16 casos Java novos e fixture/runner/seeder de servidor; 234 JUnit + 7 checks | Sem commit, base `7defc0c`; [evidência](validation/layout-navigation.json) |
+
+### Apresentação configurável — alpha.7 local
+
+- [x] ~~Validar linhas, títulos, paletas e aparência dos controles existentes.~~ 254 JUnit totais, 20 casos novos e 6 checks em servidor empacotado; [evidência](validation/menu-appearance.json).
+- [x] ~~Preservar estado real, ações bloqueadas e componentes de prêmios sob templates.~~ Ausência de claim preservada, entrega real única e reload de ícone inexistente rejeitado.
+- [ ] Modelos reutilizáveis, condições genéricas, posicionamento de conteúdo e cliente gráfico. O escopo implementado é só dos menus atuais, sem telas fictícias para fases futuras.
+
+| Aparência dos menus (local) | MenuAppearance, Layout/codec/renderer/validador, 20 casos novos, fixture/runner; 254 JUnit + 6 checks nativos; runners legados adaptados com sintaxe validada | Sem commit, base `7defc0c`; [evidência](validation/menu-appearance.json) |
+
+### CURRENCY — alpha.8 local
+
+- [x] ~~Entregar moedas registradas pela API Impactor5.3.5 com journal e leitura nativa.~~ 274 JUnit totais, 20 casos novos e 8 checks reais de servidor/ausência/reinício; [evidência](validation/phase3-currency.json).
+- [x] ~~Detectar save nativo suprimido e impedir repetição automática após falha/reinício.~~ Erro real injetado, saldo em arquivo comparado e operação persistida em NEEDS_REVIEW.
+- [ ] Outros backends/serviços/versões, carga, transações concorrentes amplas e retomada supervisionada. Sem promessa de atomicidade distribuída.
+
+| CURRENCY (local) | Modelo/codec/planos/journal/adapter opcional/readback/menus, 20 casos novos e runner em três modos; 274 JUnit + 8 checks | Sem commit, base `7defc0c`; [evidência](validation/phase3-currency.json) |
+
+| Sincronização autorizada alpha.6/7/8 | Snapshot de menus e CURRENCY, evidências de 274 JUnit e testes nativos, documentos de continuidade atualizados | Commit `feat: add configurable menu presentation and Impactor currency rewards`, base `7defc0c`; sem nova release |

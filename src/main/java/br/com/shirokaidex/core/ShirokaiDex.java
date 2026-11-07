@@ -509,9 +509,11 @@ public final class ShirokaiDex implements ModInitializer {
     }
     private void deliverReward(CommandSourceStack source,br.com.shirokaidex.rewards.RewardPlan plan){
         var player=source.getPlayer();if(player==null||!validReward(player,plan))return;
+        if(!plan.currencies().isEmpty()&&(!FabricLoader.getInstance().isModLoaded("impactor")||!br.com.shirokaidex.rewards.ImpactorCurrencyPort.supported())){source.sendFailure(messages.text(language(),"currency_backend_unavailable"));return;}
         br.com.shirokaidex.rewards.PokemonRewardAdapter pokemonAdapter=plan.pokemon().isEmpty()?null:new br.com.shirokaidex.rewards.PokemonRewardAdapter(source.getServer(),player,current->validReward(player,current));
         if(pokemonAdapter!=null){pokemonDeliveries.add(pokemonAdapter);source.sendSuccess(()->messages.text(language(),"pokemon_processing"),false);}
         br.com.shirokaidex.rewards.RewardDelivery.Adapter adapter=pokemonAdapter==null?new br.com.shirokaidex.rewards.ItemRewardAdapter(source.getServer(),player,current->validReward(player,current)):pokemonAdapter;
+        if(!plan.currencies().isEmpty())adapter=new br.com.shirokaidex.rewards.CurrencyRewardAdapter(adapter,new br.com.shirokaidex.rewards.ImpactorCurrencyPort(source.getServer(),player,current->validReward(player,current)));
         rewardDelivery.claim(player.getUUID(), plan, adapter)
                 .whenComplete((result, failure) -> source.getServer().execute(() -> {
                     if(pokemonAdapter!=null){pokemonDeliveries.remove(pokemonAdapter);pokemonAdapter.close();}

@@ -33,3 +33,13 @@ Campo opcional `categories` e referência `collections[].category`: [guia](CATEG
 ## Pokémon e central visual
 
 `rewards[].pokemon`: [schema/limites de atributos e armazenamento](POKEMON_REWARDS.md). `home`: rows/palette/slots validados da central, [exemplos](LAYOUT.md). São campos opcionais; configurações antigas permanecem válidas. Nenhuma configuração de ambiente foi publicada.
+
+## Navegação de submenus
+
+`menus` é opcional e configura slots/rodapé por tela. Veja [layout](LAYOUT.md) para schema, exemplo e todas as ações. Conflitos e posições sobre conteúdo invalidam o reload inteiro, preservando configuração e backup ativos. Configuração antiga continua válida.
+
+Alpha.7 local amplia `menus` com rows/title/palette/buttons. Títulos aceitam `{title}`/`{player}`; nomes de navegação devem preservar `{name}`, e lore extra é anexada aos dados reais. IDs de ícones são validados no snapshot do registro; um ícone desconhecido rejeita todo o reload e preserva configuração/backup ativos. Veja LAYOUT.md.
+
+## Moedas
+
+Cada recompensa aceita `currencies`: array de até oito entradas CURRENCY, com `currency` namespaced registrado e `amount` numérico positivo exato, até 10^15 e oito casas. Decimais precisam caber na moeda do provedor. Ausência da API/moeda impede o resgate; não converte nem usa moeda principal como fallback. Consulte [CURRENCY_REWARDS.md](CURRENCY_REWARDS.md) para schema/escopo JSON e falhas.

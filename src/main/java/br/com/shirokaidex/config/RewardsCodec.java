@@ -1,6 +1,7 @@
 package br.com.shirokaidex.config;
 
 import br.com.shirokaidex.rewards.RewardPlan;
+import br.com.shirokaidex.rewards.CurrencyReward;
 import com.google.gson.stream.*;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -12,7 +13,7 @@ final class RewardsCodec {
         List<RewardPlan> result=new ArrayList<>();Set<String> ids=new HashSet<>();r.beginArray();
         while(r.hasNext()) {
             if(result.size()>=128)throw error(r,"maximum 128 rewards");
-            Set<String> keys=new HashSet<>();String id=null,collection=null;int minimum=0;BigDecimal percent=null;List<RewardPlan.Item> items=new ArrayList<>();List<br.com.shirokaidex.rewards.PokemonReward> pokemon=List.of();
+            Set<String> keys=new HashSet<>();String id=null,collection=null;int minimum=0;BigDecimal percent=null;List<RewardPlan.Item> items=new ArrayList<>();List<br.com.shirokaidex.rewards.PokemonReward> pokemon=List.of();List<CurrencyReward> currencies=new ArrayList<>();
             r.beginObject();while(r.hasNext()){
                 String key=r.nextName();unique(r,keys,key);
                 switch(key){
@@ -20,6 +21,17 @@ final class RewardsCodec {
                     case "collection"->collection=string(r);
                     case "minimum_registered"->minimum=integer(r);
                     case "minimum_percent"->{if(r.peek()!=JsonToken.NUMBER)throw error(r,"expected numeric percent");percent=new BigDecimal(r.nextString());}
+                    case "currencies"->{
+                        r.beginArray();while(r.hasNext()){
+                            if(currencies.size()>=8)throw error(r,"maximum eight currency entries");
+                            Set<String> fields=new HashSet<>();String currency=null,type="CURRENCY";BigDecimal amount=null;
+                            r.beginObject();while(r.hasNext()){String field=r.nextName();unique(r,fields,field);switch(field){
+                                case "type"->type=string(r);case "currency"->currency=string(r);
+                                case "amount"->{if(r.peek()!=JsonToken.NUMBER)throw error(r,"amount must be numeric");String value=r.nextString();if(!value.matches("[0-9]{1,16}(\\.[0-9]{1,8})?"))throw error(r,"invalid amount");amount=new BigDecimal(value);}
+                                default->throw error(r,"unknown currency field "+field);
+                            }}r.endObject();if(!type.equals("CURRENCY")||currency==null||amount==null)throw error(r,"CURRENCY requires currency and amount");currencies.add(new CurrencyReward(currency,amount));
+                        }r.endArray();
+                    }
                     case "pokemon"->pokemon=PokemonRewardsCodec.read(r);
                     case "items"->{
                         r.beginArray();while(r.hasNext()){
@@ -48,7 +60,7 @@ final class RewardsCodec {
                 }
             }r.endObject();
             if(keys.contains("minimum_registered")&&keys.contains("minimum_percent"))throw error(r,"choose one threshold");
-            RewardPlan plan=new RewardPlan(id,collection,minimum,percent,items,false,pokemon);
+            RewardPlan plan=new RewardPlan(id,collection,minimum,percent,items,false,pokemon,currencies);
             if(!ids.add(plan.id()))throw error(r,"duplicate reward id "+id);result.add(plan);
         }r.endArray();return List.copyOf(result);
     }

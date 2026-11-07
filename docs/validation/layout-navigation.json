@@ -1,0 +1,83 @@
+{
+  "scope": "Local alpha.6 configurable navigation in 11 submenu screens",
+  "base_commit": "7defc0ce57bb51068cc3657f80f9ffdfdedeaf4f",
+  "publication": "No commit, push, release or environment publication",
+  "build": "BUILD SUCCESSFUL; verifyModJar and serverDistribution passed",
+  "junit": {
+    "tests": 234,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_junit_cases": 16,
+  "jar": {
+    "name": "shirokai-dex-0.3.0-alpha.6+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "9aea5374b120edbea16a14f3265812554780cb0d928170249eefcc8e04e754cb",
+    "matches_tested_packaged_jar": true
+  },
+  "server": {
+    "environment": "Isolated loopback production Fabric server, outside Loom",
+    "minecraft": "1.21.1",
+    "fabric": "0.17.2",
+    "java": "21.0.13",
+    "cobblemon": "1.8.3+1.21.1",
+    "luckperms": "5.4.140 for authorized reload; earlier six browsing/claim cases exercised without LuckPerms",
+    "startup": "Done and Shirokai Dex ready",
+    "results": [
+      {
+        "name": "Selector/collection navigation remaps callbacks with icons; progress bar and click protection remain intact",
+        "status": "passed"
+      },
+      {
+        "name": "Wiki pagination and type/category pickers use configured navigation slots without losing content",
+        "status": "passed"
+      },
+      {
+        "name": "Details, forms and spawn summaries preserve return paths and fixed payload cards",
+        "status": "passed"
+      },
+      {
+        "name": "Reward grid swaps close/next safely, keeps paging, and honors footer=false",
+        "status": "passed"
+      },
+      {
+        "name": "Completed/review/cancelled/changed/locked/recovered states suppress claim; relocated status displays operation UUID",
+        "status": "passed"
+      },
+      {
+        "name": "Custom item preview/confirmation preserves metadata; one real claim updates preview/grid and hides repeat claim",
+        "status": "passed"
+      },
+      {
+        "name": "Invalid reload preserves active layout; omission restores backward-compatible defaults; valid reload restores configured layout without redelivery",
+        "status": "passed"
+      }
+    ],
+    "fixtures": "Seeded COMPLETED/NEEDS_REVIEW/CANCELLED/PENDING/changed-plan/PROCESSING in stopped disposable database, explicitly marked synthetic in audit. PROCESSING recovered to review on startup. One real custom item claim after native Pokemon grant.",
+    "initial_harness_corrections": [
+      "A missing claim may render a decorative pane; check no actionable arrow and clicking has no effect, rather than requiring empty slot",
+      "Console reload is intentionally denied without a player permission; final runner uses an authorized LuckPerms player and waits for async result"
+    ],
+    "expected_rejections": [
+      "Invalid navigation slot 0 logged a rejected reload; previous layout retained"
+    ],
+    "nonfatal_environment_messages": [
+      "Cobblemon first-profile missing .old data messages and optional mixin/data fixer notices",
+      "Isolated authlib public key lookup unavailable; test server offline and loopback only",
+      "Transient tick delay during first player load"
+    ],
+    "cleanup": {
+      "server_stopped": true,
+      "rcon_disabled_and_secret_removed": true,
+      "temporary_luckperms_removed": true,
+      "sqlite_integrity": "ok",
+      "foreign_keys": "ok",
+      "configuration_file_restored_to_fixture": true
+    }
+  },
+  "limitations": [
+    "Graphical client appearance/readability and load not certified",
+    "Full JSON templates for sizes/titles/icons/content pending; content positions remain fixed",
+    "Older full reward/unlock/saved-item/Pokemon runners require adaptation to hidden repeat-claim button and were not rerun here"
+  ]
+}

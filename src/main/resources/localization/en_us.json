@@ -105,7 +105,7 @@
   "reward_error": "Claim failed. Do not retry an uncertain delivery; contact an administrator.",
   "reward_result.completed": "Reward delivered and recorded.",
   "reward_result.busy": "You already have a claim in progress.",
-  "reward_result.not_eligible": "Requirement not met or inventory/party/PC has no available capacity.",
+  "reward_result.not_eligible": "Requirement not met or inventory/party/PC has no available capacity. An unavailable integration/currency or incompatible precision also blocks claiming.",
   "reward_result.blocked": "Claim already recorded or blocked. Contact an administrator if needed.",
   "reward_result.needs_review": "Claim interrupted. Delivery blocked for administrative review.",
   "reward_admin_invalid": "Invalid ID or evidence.",
@@ -181,5 +181,10 @@
   "layout.confirm_summary": "Delivery summary",
   "layout.confirm_steps": "Delivery steps: {0}",
   "layout.confirm_contents": "Items: {0} • Pokémon: {1}",
-  "layout.navigation_hint": "Click to open."
+  "layout.navigation_hint": "Click to open.",
+  "currency_backend_unavailable": "Impactor 5.3.5 unavailable. No reward was delivered.",
+  "currency_dollars": "PokéDollars: $ {0}",
+  "currency_tokens": "PokéTokens: ✦ {0}",
+  "currency_amount": "Currency: {0} • Amount: {1}",
+  "currency_generic": "{1}: {0}"
 }

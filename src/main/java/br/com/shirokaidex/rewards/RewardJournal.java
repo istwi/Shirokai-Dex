@@ -89,7 +89,7 @@ public final class RewardJournal {
         }
         audit(c,id,from+"->"+to,actor,reason);return true;
     }
-    private static int steps(String plan){var json=com.google.gson.JsonParser.parseString(plan).getAsJsonObject();return json.getAsJsonArray("items").size()+(json.has("pokemon")?json.getAsJsonArray("pokemon").size():0);}
+    private static int steps(String plan){var json=com.google.gson.JsonParser.parseString(plan).getAsJsonObject();return json.getAsJsonArray("items").size()+(json.has("pokemon")?json.getAsJsonArray("pokemon").size():0)+(json.has("currencies")?json.getAsJsonArray("currencies").size():0);}
     private static void audit(Connection c,UUID id,String action,String actor,String reason)throws SQLException {
         try(PreparedStatement s=c.prepareStatement("INSERT INTO reward_audit(operation_id,action,actor,reason,recorded_at) VALUES(?,?,?,?,?)")) {
             s.setString(1,id.toString());s.setString(2,action);s.setString(3,actor);s.setString(4,reason);s.setString(5,Instant.now().toString());s.executeUpdate();

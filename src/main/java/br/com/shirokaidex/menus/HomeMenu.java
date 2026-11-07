@@ -45,7 +45,7 @@ public final class HomeMenu {
     public static void rewards(ServerPlayer player,Settings settings,Messages messages,List<RewardPlan> plans,Set<String> unlocked,Map<String,br.com.shirokaidex.rewards.RewardJournal.State> states,boolean unavailable,int requested,Consumer<String> navigate,IntConsumer page,Runnable home){
         var contents=new SimpleContainer(27);Map<Integer,Runnable> actions=new HashMap<>();var slice=Wiki.paginate(plans,requested,18);
         for(int i=0;i<slice.items().size();i++){
-            var plan=slice.items().get(i);var item=new ItemStack(plan.pokemon().isEmpty()?Items.CHEST:Items.DRAGON_EGG);
+            var plan=slice.items().get(i);var item=new ItemStack(!plan.pokemon().isEmpty()?Items.DRAGON_EGG:!plan.currencies().isEmpty()?Items.GOLD_INGOT:Items.CHEST);
             var view=unavailable?br.com.shirokaidex.menus.layout.RewardView.unavailable():br.com.shirokaidex.menus.layout.RewardView.state(unlocked.contains(plan.id()),states.get(plan.id()));
             int color=switch(view.status()){case COMPLETED,AVAILABLE->MenuStyle.SUCCESS;case PROCESSING,RESERVED->MenuStyle.NAVIGATION;case NEEDS_REVIEW,PLAN_CHANGED,UNAVAILABLE->MenuStyle.DANGER;case LOCKED,CANCELLED->0x999999;};
             MenuStyle.card(item,Component.literal(plan.id()),List.of(messages.text(settings.language(),"layout.reward_status."+view.status().name()),messages.text(settings.language(),"home.reward_actions",plan.steps()),messages.text(settings.language(),"home.click_preview")),color);contents.setItem(i,item);actions.put(i,()->navigate.accept(plan.id()));
@@ -55,8 +55,9 @@ public final class HomeMenu {
         button(contents,actions,22,Items.BARRIER,messages.text(settings.language(),"home.close"),player::closeContainer);
         if(slice.number()>0)button(contents,actions,18,Items.ARROW,messages.text(settings.language(),"page_previous"),()->page.accept(slice.number()-1));
         if(slice.number()+1<slice.pages())button(contents,actions,26,Items.ARROW,messages.text(settings.language(),"page_next"),()->page.accept(slice.number()+1));
-        MenuStyle.footer(contents,settings);
-        MainMenu.show(player,gradient(messages.text(settings.language(),"home.rewards").getString()+" ["+(slice.number()+1)+"/"+slice.pages()+"]",settings.home().palette()),contents,actions);
+        var layout=settings.menus().layout(br.com.shirokaidex.menus.layout.MenuNavigation.Screen.REWARDS);
+        contents=MenuStyle.appearance(contents,layout,player.getGameProfile().getName());MenuStyle.navigation(contents,actions,layout);var palette=layout.palette().orElse(settings.home().palette());if(layout.footer())MenuStyle.footer(contents,palette);
+        MainMenu.show(player,gradient(MenuStyle.titleLabel(layout,messages.text(settings.language(),"home.rewards").getString()+" ["+(slice.number()+1)+"/"+slice.pages()+"]",player.getGameProfile().getName()),palette),contents,actions);
     }
     private static void button(SimpleContainer contents,Map<Integer,Runnable> actions,int slot,Item icon,Component label,Runnable action){var item=new ItemStack(icon);item.set(DataComponents.CUSTOM_NAME,name(label,0xF1CD76));contents.setItem(slot,item);actions.put(slot,action);}
     private static Component name(Component label,int rgb){return Component.literal("✦ ").append(label).withStyle(style->style.withColor(rgb).withBold(true).withItalic(false));}

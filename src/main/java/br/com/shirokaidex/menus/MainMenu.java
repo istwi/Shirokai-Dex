@@ -1,6 +1,7 @@
 package br.com.shirokaidex.menus;
 
 import br.com.shirokaidex.config.Settings;
+import br.com.shirokaidex.menus.layout.MenuNavigation.Screen;
 import br.com.shirokaidex.wiki.Wiki;
 import br.com.shirokaidex.spawning.SpawnCatalog;
 import br.com.shirokaidex.localization.Messages;
@@ -50,7 +51,7 @@ public final class MainMenu extends ChestMenu {
         navigation(contents,actions,23,messages.text(settings.language(),"home.return_home"),home);
         closeButton(contents, actions, player, settings.language(), messages);
         String title = settings.menuTitle() + (pages > 1 ? " [" + (page + 1) + "/" + pages + "]" : "");
-        styledShow(player,settings,messages,title,contents,actions,Set.of());
+        styledShow(player,settings,messages,Screen.SELECTOR,title,contents,actions,Set.of());
     }
     public static void openCollection(ServerPlayer player, Settings settings, Messages messages,
                                       CollectionDefinition definition, ProgressCalculator.CollectionProgress value, Runnable back, Runnable wiki) {
@@ -60,7 +61,7 @@ public final class MainMenu extends ChestMenu {
         navigation(contents, actions, 15, messages.text(settings.language(), "wiki_open"), wiki);
         navigation(contents, actions, 18, messages.text(settings.language(), "menu_back"), back);
         closeButton(contents, actions, player, settings.language(), messages);
-        styledShow(player,settings,messages,settings.menuTitle()+" — "+displayName(definition,settings.language(),messages),contents,actions,Set.of());
+        styledShow(player,settings,messages,Screen.COLLECTION,settings.menuTitle()+" — "+displayName(definition,settings.language(),messages),contents,actions,Set.of());
     }
     public static void openWiki(ServerPlayer player, Settings settings, Messages messages, CollectionDefinition definition,
                                 Wiki.Request request, Wiki.Page page, SpawnCatalog spawns, Consumer<Wiki.Request> navigate, Runnable back, Runnable searchHelp) {
@@ -134,7 +135,9 @@ public final class MainMenu extends ChestMenu {
             navigation(contents, actions, 23, messages.text(language, "wiki_collection_back"), back);
         }
         closeButton(contents, actions, player, language, messages);
-        styledShow(player,settings,messages,title,contents,actions,Set.of());
+        Screen screen=request.facet()==Wiki.Facet.TYPE?Screen.WIKI_TYPES:request.facet()==Wiki.Facet.CATEGORY?Screen.WIKI_CATEGORIES:
+                page.detail().isEmpty()?Screen.WIKI:request.spawnPage()>=0?Screen.WIKI_SPAWNS:request.formPage()>=0?Screen.WIKI_FORMS:Screen.WIKI_DETAILS;
+        styledShow(player,settings,messages,screen,title,contents,actions,Set.of());
     }
     private static String facetName(String value, String language, Messages messages) {
         return value.isEmpty() ? messages.text(language, "wiki_facet_all").getString() : value;
@@ -143,10 +146,11 @@ public final class MainMenu extends ChestMenu {
                                   br.com.shirokaidex.rewards.RewardPlan plan, br.com.shirokaidex.menus.layout.RewardView view, int requestedPage,
                                   IntConsumer navigate, Runnable back, Runnable claim) {
         var contents = new SimpleContainer(27); Map<Integer,Runnable> actions = new HashMap<>();
-        var entries=new java.util.ArrayList<Object>();entries.addAll(plan.items());entries.addAll(plan.pokemon());
+        var entries=new java.util.ArrayList<Object>();entries.addAll(plan.items());entries.addAll(plan.pokemon());entries.addAll(plan.currencies());
         var page = Wiki.paginate(entries, requestedPage, 18);
         for (int i = 0; i < page.items().size(); i++) {
             var action=page.items().get(i);
+            if(action instanceof br.com.shirokaidex.rewards.CurrencyReward money){contents.setItem(i,currencyItem(money,settings.language(),messages));continue;}
             if(action instanceof br.com.shirokaidex.rewards.PokemonReward pokemon){contents.setItem(i,pokemonItem(pokemon,settings.language(),messages));continue;}
             var entry=(br.com.shirokaidex.rewards.RewardPlan.Item)action;
             var item = br.com.shirokaidex.rewards.ItemPayload.restore(player.getServer(),entry);
@@ -169,7 +173,7 @@ public final class MainMenu extends ChestMenu {
         if(page.number()>0) navigation(contents,actions,20,messages.text(settings.language(),"page_previous"),()->navigate.accept(page.number()-1));
         if(page.number()+1<page.pages()) navigation(contents,actions,26,messages.text(settings.language(),"page_next"),()->navigate.accept(page.number()+1));
         closeButton(contents,actions,player,settings.language(),messages);
-        styledShow(player,settings,messages,messages.text(settings.language(),"reward_preview",plan.id(),page.number()+1,page.pages()).getString(),contents,actions,new HashSet<>(java.util.stream.IntStream.range(0,18).boxed().toList()));
+        styledShow(player,settings,messages,Screen.REWARD,messages.text(settings.language(),"reward_preview",plan.id(),page.number()+1,page.pages()).getString(),contents,actions,new HashSet<>(java.util.stream.IntStream.range(0,18).boxed().toList()));
     }
 
     public static void confirmReward(ServerPlayer player, Settings settings, Messages messages,
@@ -179,25 +183,34 @@ public final class MainMenu extends ChestMenu {
     public static void confirmReward(ServerPlayer player,Settings settings,Messages messages,
                                      br.com.shirokaidex.rewards.RewardPlan plan,String label,Runnable confirm,Runnable back){
         var contents = new SimpleContainer(27); Map<Integer,Runnable> actions = new HashMap<>();
-        var preview=plan.items().isEmpty()?pokemonItem(plan.pokemon().getFirst(),settings.language(),messages):br.com.shirokaidex.rewards.ItemPayload.restore(player.getServer(),plan.items().getFirst());
+        var preview=plan.items().isEmpty()?(plan.pokemon().isEmpty()?currencyItem(plan.currencies().getFirst(),settings.language(),messages):pokemonItem(plan.pokemon().getFirst(),settings.language(),messages)):br.com.shirokaidex.rewards.ItemPayload.restore(player.getServer(),plan.items().getFirst());
         if(!plan.items().isEmpty())preview.setCount(Math.min(plan.items().getFirst().count(),preview.getMaxStackSize()));contents.setItem(11,preview);
         var confirmation=new ItemStack(Items.LIME_DYE);confirmation.set(DataComponents.CUSTOM_NAME,messages.text(settings.language(),"reward_confirm"));confirmation.set(DataComponents.LORE,new ItemLore(List.of(messages.text(settings.language(),"layout.confirm_hint"))));contents.setItem(13,confirmation);actions.put(13,confirm);
         var summary=new ItemStack(Items.PAPER);summary.set(DataComponents.CUSTOM_NAME,messages.text(settings.language(),"layout.confirm_summary"));summary.set(DataComponents.LORE,new ItemLore(List.of(messages.text(settings.language(),"layout.confirm_steps",plan.steps()),messages.text(settings.language(),"layout.confirm_contents",plan.items().size(),plan.pokemon().size()))));contents.setItem(15,summary);
+        if(!plan.currencies().isEmpty()){var lore=new ArrayList<>(summary.get(DataComponents.LORE).lines());for(var money:plan.currencies())lore.add(messages.text(settings.language(),"currency_amount",money.currency(),money.amount().toPlainString()));summary.set(DataComponents.LORE,new ItemLore(lore));}
         navigation(contents,actions,18,messages.text(settings.language(),"menu_back"),back);
         closeButton(contents,actions,player,settings.language(),messages);
-        styledShow(player,settings,messages,messages.text(settings.language(),"reward_confirmation",label).getString(),contents,actions,Set.of(11));
+        styledShow(player,settings,messages,Screen.CONFIRMATION,messages.text(settings.language(),"reward_confirmation",label).getString(),contents,actions,Set.of(11));
     }
 
     private static int rewardColor(br.com.shirokaidex.menus.layout.RewardView view){return switch(view.status()){case AVAILABLE,COMPLETED->MenuStyle.SUCCESS;case RESERVED,PROCESSING->MenuStyle.NAVIGATION;case NEEDS_REVIEW,PLAN_CHANGED,UNAVAILABLE->MenuStyle.DANGER;case LOCKED,CANCELLED->0x999999;};}
-    private static void styledShow(ServerPlayer player,Settings settings,Messages messages,String title,SimpleContainer contents,Map<Integer,Runnable> actions,Set<Integer> preserved){
+    private static void styledShow(ServerPlayer player,Settings settings,Messages messages,Screen screen,String title,SimpleContainer contents,Map<Integer,Runnable> actions,Set<Integer> preserved){
+        var layout=settings.menus().layout(screen);var palette=layout.palette().orElse(settings.home().palette());
         for(int slot=0;slot<contents.getContainerSize();slot++){
             if(preserved.contains(slot))continue;var item=contents.getItem(slot);if(item.isEmpty())continue;
             if(actions.containsKey(slot)&&item.getOrDefault(DataComponents.LORE,ItemLore.EMPTY).lines().isEmpty())item.set(DataComponents.LORE,new ItemLore(List.of(messages.text(settings.language(),slot==22?"home.click_close":"layout.navigation_hint"))));
-            MenuStyle.polish(item,slot==22?MenuStyle.DANGER:item.is(Items.LIME_DYE)?MenuStyle.SUCCESS:item.is(Items.ARROW)?MenuStyle.NAVIGATION:settings.home().palette().start);
+            MenuStyle.polish(item,slot==22?MenuStyle.DANGER:item.is(Items.LIME_DYE)?MenuStyle.SUCCESS:item.is(Items.ARROW)?MenuStyle.NAVIGATION:palette.start);
         }
-        MenuStyle.footer(contents,settings);show(player,MenuStyle.title(title,settings),contents,actions);
+        contents=MenuStyle.appearance(contents,layout,player.getGameProfile().getName());MenuStyle.navigation(contents,actions,layout);
+        if(layout.footer())MenuStyle.footer(contents,palette);
+        show(player,MenuStyle.title(MenuStyle.titleLabel(layout,title,player.getGameProfile().getName()),palette),contents,actions);
     }
 
+    private static ItemStack currencyItem(br.com.shirokaidex.rewards.CurrencyReward money,String language,Messages messages){
+        var item=new ItemStack(money.currency().equals("impactor:dollars")?Items.GOLD_INGOT:money.currency().equals("impactor:tokens")?Items.NETHER_STAR:Items.GOLD_NUGGET);
+        item.set(DataComponents.CUSTOM_NAME,messages.text(language,money.currency().equals("impactor:dollars")?"currency_dollars":money.currency().equals("impactor:tokens")?"currency_tokens":"currency_generic",money.amount().toPlainString(),money.currency()));
+        item.set(DataComponents.LORE,new ItemLore(List.of(messages.text(language,"currency_amount",money.currency(),money.amount().toPlainString()))));return item;
+    }
     private static ItemStack pokemonItem(br.com.shirokaidex.rewards.PokemonReward pokemon,String language,Messages messages){
         var item=new ItemStack(Items.DRAGON_EGG);item.set(DataComponents.CUSTOM_NAME,messages.text(language,"pokemon_reward",pokemon.species()));
         var lore=new java.util.ArrayList<Component>();String defaults=messages.text(language,"pokemon_default").getString();

@@ -5,12 +5,13 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '2.2.20'
 }
 
-version = '0.3.0-alpha.5+mc1.21.1-cobblemon1.8.3'
+version = '0.3.0-alpha.8+mc1.21.1-cobblemon1.8.3'
 group = 'br.com.shirokaidex'
 base { archivesName = 'shirokai-dex' }
 
 repositories {
     mavenCentral()
+    maven { url = "https://maven.impactdev.net/repository/development/"; content { includeGroup "net.impactdev.impactor.api"; includeGroup "net.impactdev" } }
     // Official versioned GitHub artifact; optional API, no bundled dependency.
     ivy {
         url = 'https://github.com/Patbox/TextPlaceholderAPI/releases/download'
@@ -33,6 +34,7 @@ dependencies {
     implementation include('org.xerial:sqlite-jdbc:3.47.1.0')
     implementation 'com.google.code.gson:gson:2.10.1'
     compileOnly 'net.luckperms:api:5.4'
+    compileOnly('net.impactdev.impactor.api:economy:5.3.5') { exclude group: 'net.kyori', module: 'event-api' }
     modCompileOnly('eu.pb4:placeholder-api:2.4.2+1.21') { transitive = false }
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'

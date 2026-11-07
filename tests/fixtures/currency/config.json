@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "✦ Shirokai Dex",
+  "rewards": [
+    {
+      "id": "cash",
+      "collection": "national",
+      "minimum_registered": 1,
+      "currencies": [
+        {
+          "type": "CURRENCY",
+          "currency": "impactor:dollars",
+          "amount": 12.5
+        }
+      ]
+    },
+    {
+      "id": "tokens",
+      "collection": "national",
+      "minimum_registered": 1,
+      "currencies": [
+        {
+          "type": "CURRENCY",
+          "currency": "impactor:tokens",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "id": "missing",
+      "collection": "national",
+      "minimum_registered": 1,
+      "currencies": [
+        {
+          "type": "CURRENCY",
+          "currency": "custom:missing",
+          "amount": 10
+        }
+      ],
+      "items": [
+        {
+          "id": "minecraft:netherite_ingot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "precision",
+      "collection": "national",
+      "minimum_registered": 1,
+      "currencies": [
+        {
+          "type": "CURRENCY",
+          "currency": "impactor:tokens",
+          "amount": 0.5
+        }
+      ],
+      "items": [
+        {
+          "id": "minecraft:netherite_ingot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "uncertain",
+      "collection": "national",
+      "minimum_registered": 1,
+      "currencies": [
+        {
+          "type": "CURRENCY",
+          "currency": "impactor:dollars",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "mixed",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:diamond",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 2.5
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

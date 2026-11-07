@@ -54,3 +54,7 @@ Avaliador em round robin considera no máximo um jogador por tick, com intervalo
 reward_unlocks preserva a primeira evidência por UUID/ID: plano observado, registros, total e horário. Observações repetidas não substituem a evidência. Desbloqueios já registrados sobrevivem ao logout, reinício e mudanças posteriores de progresso/requisito. Permissão atual continua obrigatória. ID identifica a mesma recompensa permanentemente; mudar ID cria outra recompensa. Conteúdo configurado vigente é usado ao iniciar resgate; operação já reservada conserva seu plano e bloqueia substituição silenciosa. Use novos IDs para recompensas diferentes.
 
 Não reconstruímos marcos transitórios que nunca foram observados; dados atuais da Pokédex podem desbloquear marcos ao instalar o mod, sem inferir capturas históricas. Falhas de persistência não liberam novos resgates; nova observação é tentada depois.
+
+## CURRENCY — alpha.8 local
+
+Entradas `currencies` podem acompanhar itens/Pokémon ou formar uma recompensa isolada. API real Impactor5.3.5 com backend JSON nativo: sem moeda principal como fallback, sem arredondamento implícito e com verificação de gravação por leitura. Veja [guia de moedas](CURRENCY_REWARDS.md). Planos antigos continuam serializados sem campo currencies quando vazio; journal conta etapas monetárias adicionais sem nova migração SQL.

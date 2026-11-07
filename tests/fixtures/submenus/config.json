@@ -1,0 +1,318 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "✦ Shirokai Dex",
+  "menus": {
+    "selector": {
+      "slots": {
+        "close": 26,
+        "next": 22
+      }
+    },
+    "collection": {
+      "slots": {
+        "back": 26,
+        "close": 18
+      }
+    },
+    "wiki": {
+      "slots": {
+        "previous": 29,
+        "filter": 28,
+        "order": 27,
+        "search": 26,
+        "close": 35,
+        "back": 30,
+        "clear": 31,
+        "type": 33,
+        "next": 34,
+        "category": 32
+      }
+    },
+    "wiki_details": {
+      "slots": {
+        "back": 34,
+        "collection": 33,
+        "close": 35
+      }
+    },
+    "wiki_types": {
+      "slots": {
+        "previous": 29,
+        "next": 34,
+        "back": 33,
+        "close": 35
+      }
+    },
+    "wiki_categories": {
+      "slots": {
+        "previous": 29,
+        "next": 34,
+        "back": 33,
+        "close": 35
+      }
+    },
+    "wiki_forms": {
+      "slots": {
+        "previous": 29,
+        "next": 34,
+        "back": 33,
+        "close": 35
+      }
+    },
+    "wiki_spawns": {
+      "slots": {
+        "previous": 29,
+        "next": 34,
+        "back": 33,
+        "close": 35,
+        "scope": 32
+      }
+    },
+    "rewards": {
+      "footer": false,
+      "slots": {
+        "next": 22,
+        "close": 26
+      }
+    },
+    "reward": {
+      "slots": {
+        "status": 26,
+        "next": 19,
+        "claim": 25,
+        "back": 23
+      }
+    },
+    "confirmation": {
+      "slots": {
+        "back": 26,
+        "close": 18
+      }
+    }
+  },
+  "rewards": [
+    {
+      "id": "available",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "type": "CUSTOM_ITEM",
+          "id": "minecraft:diamond",
+          "count": 1,
+          "payload_snbt": "{\"id\":\"minecraft:diamond\",\"count\":1,\"components\":{\"minecraft:custom_name\":\"{\\\"text\\\": \\\"Prêmio intacto\\\", \\\"color\\\": \\\"gold\\\", \\\"italic\\\": false}\",\"minecraft:lore\":[\"{\\\"text\\\": \\\"Lore original\\\", \\\"color\\\": \\\"aqua\\\"}\"]}}"
+        }
+      ]
+    },
+    {
+      "id": "completed",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "cancelled",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "pending",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "changed",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "locked",
+      "collection": "national",
+      "minimum_registered": 9999,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "recovered",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_00",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_01",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_02",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_03",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_04",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_05",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_06",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_07",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_08",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_09",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_10",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "page_11",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,34 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
+## Sincronização autorizada — menus e CURRENCY
+
+O usuário solicitou commit/push das alterações alpha.6/7/8 validadas. Entrega de referência: commit `feat: add configurable menu presentation and Impactor currency rewards`, sobre a base `7defc0c`. Código, fixtures, evidências e documentação incluídos; 274 JUnit e 8 checks monetários, além dos blocos anteriores de menus. Sem nova release/publicação de ambiente. As seções locais abaixo preservam a história de implementação; a confirmação do envio depende da verificação remota ao concluir a entrega. Próximo trabalho: chaves físicas Crates, inicialmente em escopo local.
+
+## Trabalho local atual — alpha.8: CURRENCY
+
+Base remota publicada `7defc0c`; mudanças alpha.6/7/8 locais, sem commit/push/publicação. Recompensas monetárias isoladas ou mistas com itens/Pokémon. IDs exatos registrados e BigDecimal, sem conversão/fallback. Integração opcional Impactor5.3.5/JSON nativo: resultado da transação, save aguardado e saldo gravado conferido antes do ack; erros ocultados e precisão double do provedor tratados conservadoramente. Planos antigos e schema5 preservados.
+
+**274 JUnit sem falhas/erros/skips; 8 checks reais em servidor empacotado aprovados**, somando 2 sem Impactor, 5 nativos e 1 após reinício. Depósitos reais de dólares/tokens, plano misto e entrega única; moeda ausente/precisão incompatível bloqueiam antes de itens. Falha real de save suprimida pelo provedor detectada, operação permanece em revisão. [Guia](CURRENCY_REWARDS.md), [evidência](validation/phase3-currency.json).
+
+Servidores encerrados, SQLite íntegro, segredo RCON e JAR Impactor temporário removidos. Escopo limitado a JSON nativo auditado com identificação read-only do backend. Outros provedores/formatos/versões, concorrência ampla e carga não certificados; sem idempotência externa nem transação atômica. Próximo bloco: auditar integração atual de chaves físicas Shirokai Crates e demais tipos pendentes da Fase3. Não declarar o mod inteiro pronto.
+
+## Bloco local anterior — alpha.7: apresentação dos menus
+
+Base publicada `7defc0c`; alterações alpha.6/alpha.7 locais, sem commit/push/publicação. Menus existentes agora suportam linhas 3/4..6, título com dados reais, paleta por tela e aparência dos controles (ícone/nome/lore). Registros e textos validados antes de publicar configuração. Nome de ação/estado e lore crítica preservados; templates não alteram prêmios nem criam ações bloqueadas.
+
+**254 JUnit aprovados, sem falhas/erros/skips, e 6 checks novos de servidor empacotado aprovados.** Cobertura das 11 telas ampliadas, slots novos, títulos/paletas, estados bloqueados, prêmio personalizado intacto, entrega única e rejeição de ícone desconhecido com retorno aos defaults. [Evidência](validation/menu-appearance.json). Runners antigos adaptados/sintaxe conferida; não foram repetidos integralmente.
+
+Servidor encerrado, SQLite íntegro, RCON/segredo e LuckPerms temporário removidos. Cliente gráfico/carga, modelos reutilizáveis, condições genéricas e posicionamento arbitrário de conteúdos pendentes; não equivale ao mod completo. Próximo bloco funcional: auditoria/integração Impactor da Fase 3, respeitando journal e ausência de fallback de moeda.
+
+## Bloco local anterior — alpha.6: navegação por tela
+
+Base `7defc0c`, sem commit/push/publicação das mudanças atuais. Onze telas agora aceitam slots/rodapé por JSON `menus`: seletor, coleção, wiki, filtros, detalhes, formas, spawn, grade/prévia de recompensas e confirmação. Movimentação conjunta de ícones/callbacks, trocas sem sobrescrita e proteção de conteúdo; configuração legada preservada. Sem novas APIs externas, dependências ou mudanças nas regras de entrega.
+
+**Build e 234 JUnit aprovados, zero falhas/erros/skips; 7 checks de protocolo em servidor empacotado aprovados.** Cobertura inclui estados reais do journal, confirmação, item personalizado preservado, um único resgate e rejeição de reload/defaults/restauração. Rejeição de slot inválido foi intencional; reload final foi validado por jogador autorizado. Servidor encerrado, SQLite íntegro, segredo RCON e LuckPerms temporário removidos. Fixture e evidência em `validation/layout-navigation.json`.
+
+Ainda pendentes: inspeção em cliente gráfico, templates completos, carga e adaptação/repetição de runners antigos de resgate. Nenhuma funcionalidade adicional do prompt foi declarada pronta por mera compilação. Correção de entrypoint/empacotamento alpha.5 mantida.
+
 ## Correção de inicialização — alpha.5
 
 Causa confirmada pelo usuário e reproduzida em Fabric 0.17.2 / Minecraft 1.21.1 / Java 21: instalação acidental do `sources.jar` alpha.4. O descritor do código-fonte declarava `br.com.shirokaidex.core.ShirokaiDex`, mas o pacote continha `.java`, não `.class`. O binário alpha.4 local contém a classe correta; não foi necessário alterar entrypoint, pacote ou sistemas do mod.

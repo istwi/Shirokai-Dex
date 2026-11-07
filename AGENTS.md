@@ -47,3 +47,7 @@ O usuário pediu uma release no GitHub. Autoriza commit/push do estado atual e p
 ## Autorização pontual — correção de inicialização alpha.5
 
 O usuário autorizou investigar/corrigir a inicialização, atualizar documentação, fazer commit/push e gerar novo artifact JAR. Escopo: empacotamento e distribuição do Shirokai Dex; sem mudanças nos demais mods ou publicação de ambiente.
+
+## Autorização atual de sincronização
+
+O usuário pediu enviar ao GitHub as atualizações já concluídas e depois continuar o projeto. Autoriza commit/push do snapshot alpha.6/7/8 validado; não autoriza nova release nem publicação de ambiente. Trabalho novo após essa sincronização continua local até nova solicitação de envio.

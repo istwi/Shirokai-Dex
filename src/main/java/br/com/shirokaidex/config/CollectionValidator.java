@@ -21,6 +21,8 @@ public final class CollectionValidator {
     }
     public void validate(Settings settings) throws IOException {
         validate(settings.categories());
+        for(var layout:settings.menus().layouts().values())for(var button:layout.buttons().values())
+            if(!button.icon().isEmpty()&&!items.contains(button.icon()))throw new IOException("config.json menus."+layout.screen().id()+": unknown menu icon "+button.icon());
         for (var reward : settings.rewards()) {
             try { reward.json(); }
             catch(IllegalArgumentException failure){throw new IOException("config.json rewards."+reward.id()+": encoded plan exceeds limits",failure);}
