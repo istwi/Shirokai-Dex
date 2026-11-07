@@ -4,6 +4,8 @@ Atualizado em 2026-11-07. GitHub: `istwi/Shirokai-Dex`. Apenas uma instância Co
 
 ## Fase atual
 
+Atualização mais recente: checklist permanente em `MASTER_CHECKLIST.md`, com fases do prompt mestre e evidências. O próximo Codex deve lê-la e atualizá-la em toda entrega. A pausa anterior foi encerrada pelo usuário para retomar os primeiros passos; no momento está sendo preparada a passagem solicitada ao Codex do amigo. Apenas um Codex deve executar trabalho por vez.
+
 Sistema de continuidade configurado e enviado ao GitHub; Fase 0 com auditoria estática inicial registrada. Fase 1 possui apenas esqueleto de build, não funcionalidade implementada. A prioridade solicitada pelo usuário foi configurar a continuidade **antes** das funcionalidades.
 
 ## Concluído
@@ -30,6 +32,8 @@ Sistema de continuidade configurado e enviado ao GitHub; Fase 0 com auditoria es
 
 ## Testes e verificações executados
 
+Tentativa posterior ao commit `ec8f1e9`: com propriedades JVM HTTP/HTTPS derivadas do proxy herdado e cache gravável, o download Gradle chegou a 100%. O Wrapper rejeitou o checksum salvo: ele tinha 66 caracteres, em vez de 64. O valor foi novamente obtido por HTTPS do endpoint oficial `https://services.gradle.org/distributions/gradle-8.14.3-bin.zip.sha256`, validado como SHA-256 e corrigido para `bd71102213493060956ec229d946beee57158dbd89d0e62b91bca0fa2c5f3531`. A verificação não foi desabilitada. Ainda é necessário repetir o comando; o Gradle não executou com sucesso. Essa evidência substitui a hipótese anterior de que bastaria resolver DNS.
+
 | Verificação | Resultado |
 |---|---|
 | Inspeção do checkout e instruções pré-existentes | Checkout inicialmente vazio; não havia HEAD, fontes, AGENTS ou testes |
@@ -53,6 +57,8 @@ O checker de continuidade e a verificação de links/arquivos são checks de doc
 Pipeline `.github/workflows/continuity.yml` preparado com permissão somente de leitura: verifica documentação e exige atualizar estado/próximos passos quando o diff contém alterações técnicas. Não faz push, publicação, build Java ou release automaticamente. A revisão de exatidão dos documentos continua obrigatória para o Codex.
 
 ## Erros e limitações conhecidos
+
+- Checksum da distribuição corrigido a partir da fonte oficial; nova execução do Wrapper e resolução completa ainda pendentes. O erro de transcrição estava no esqueleto inicial do projeto.
 
 - Configuração local do Gradle/proxy pendente, sem tentativa de desabilitar TLS ou checksums.
 - A Pokédex oficial não comprova captura shiny pelo cruzamento de shiny visto com espécie obtida; não implementar essa inferência.

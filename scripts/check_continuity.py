@@ -12,6 +12,7 @@ REQUIRED = (
     "AGENTS.md", "README.md", "CHANGELOG.md",
     "docs/PROJECT_STATUS.md", "docs/NEXT_STEPS.md",
     "docs/API_COMPATIBILITY.md", "docs/PROJECT_SPECIFICATION.md",
+    "docs/MASTER_CHECKLIST.md",
 )
 HEADINGS = {
     "docs/PROJECT_STATUS.md": (
@@ -62,7 +63,7 @@ def check(base=None):
             for name in changed
         )
         if technical:
-            for name in ("docs/PROJECT_STATUS.md", "docs/NEXT_STEPS.md"):
+            for name in ("docs/PROJECT_STATUS.md", "docs/NEXT_STEPS.md", "docs/MASTER_CHECKLIST.md"):
                 if name not in changed:
                     errors.append(f"Alteração técnica sem atualização de passagem: {name}")
     return errors

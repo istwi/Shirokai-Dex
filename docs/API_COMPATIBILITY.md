@@ -111,6 +111,8 @@ Spawn/wiki (`PENDING_TEST`): não foi validada uma consulta universal de biomas/
 
 ## Acesso e testes executados
 
+- Atualização posterior: propriedades JVM de proxy permitiram baixar a distribuição Gradle. O checksum inicialmente salvo tinha 66 caracteres e foi corrigido após nova consulta ao SHA-256 oficial de 64 caracteres (`https://services.gradle.org/distributions/gradle-8.14.3-bin.zip.sha256`). Não houve relaxamento de TLS/checksum; a execução após a correção ainda está pendente.
+
 - Java 21 executado; checkout vazio e ausência de instruções AGENTS confirmados.
 - Tags Cobblemon, Impactor e submódulo, LuckPerms, Placeholder API e SGUI obtidas e inspecionadas.
 - POM Cobblemon e catálogo Maven oficial consultados com TLS ativo; commit do POM corresponde à tag.

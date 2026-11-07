@@ -4,6 +4,8 @@ Mod planejado para Minecraft 1.21.1, Fabric, Java 21 e Cobblemon 1.8.3, desenvol
 
 **Estado atual:** auditoria estática inicial e sistema de continuidade. Há um esqueleto Gradle, mas ainda não há inicializador Fabric, funcionalidades implementadas ou JAR instalável. Nenhuma integração é declarada funcional.
 
+Acompanhe o que foi concluído e onde continuar na [checklist do prompt mestre](docs/MASTER_CHECKLIST.md). Todo Codex deve atualizá-la a cada entrega, marcando e riscando somente itens verificados.
+
 Antes de trabalhar, leia [AGENTS.md](AGENTS.md), [estado do projeto](docs/PROJECT_STATUS.md) e [próximos passos](docs/NEXT_STEPS.md). O [prompt mestre](docs/PROJECT_SPECIFICATION.md) foi preservado integralmente. Consulte as [evidências das APIs](docs/API_COMPATIBILITY.md) antes de implementar integrações.
 
 ## Desenvolvimento

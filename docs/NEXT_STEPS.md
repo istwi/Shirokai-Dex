@@ -2,6 +2,8 @@
 
 ## Última tarefa realizada
 
+Atualização mais recente: criada a checklist fixa `MASTER_CHECKLIST.md`, exigida por AGENTS e pelo checker em alterações técnicas. O download do Gradle via proxy funcionou, mas o Wrapper rejeitou um checksum salvo com 66 caracteres. Corrigido para os 64 caracteres consultados no endpoint oficial, sem desabilitar verificação. A próxima tarefa técnica é repetir o comando com cache gravável e propriedades JVM de proxy; não houve execução bem-sucedida do Gradle ainda.
+
 Preparado o protocolo de continuidade solicitado antes da implementação de funcionalidades. Prompt mestre preservado, auditoria estática inicial documentada e esqueleto Gradle criado. Nenhum inicializador Fabric ou sistema de negócio foi implementado. Não recomeçar o repositório.
 
 Base técnica relevante: `9eaae42946e5e11a3e0d5e0b9c82fd495a8e1afc` (`chore: preserve project specification and initial API audit`). Entrega de continuidade: `72304ea4a58ff166d19cfc92413e4e36e20e9285` (`docs: establish mandatory Codex handoff and continuity checks`), enviada para `origin/main` e confirmada por leitura remota. A atualização documental posterior registra essa verificação. Verifique também os commits posteriores no remoto; não dependa apenas do documento.
@@ -17,6 +19,8 @@ Base técnica relevante: `9eaae42946e5e11a3e0d5e0b9c82fd495a8e1afc` (`chore: pre
 7. Atualize estado, próximos passos, compatibilidade e changelog; faça commits coerentes, push autorizado e confira o SHA remoto. Configure o pipeline Java e artifact ao existir build de fato. Não publique release estável nesta etapa.
 
 ## Arquivos importantes
+
+- `MASTER_CHECKLIST.md`: checklist permanente do prompt mestre, com itens concluídos riscados e parciais abertos. Atualização obrigatória em toda entrega.
 
 - `../AGENTS.md`: protocolo obrigatório para qualquer Codex.
 - `PROJECT_STATUS.md`: estado e evidências atuais.

@@ -2,6 +2,10 @@
 
 Estas instruções aplicam-se a todo o repositório. Apenas um Codex trabalha por vez. GitHub é a fonte oficial entre sessões; não dependa da memória de conversas ou de arquivos fora do repositório.
 
+## Regra fixa: checklist do prompt mestre
+
+Leia e atualize [docs/MASTER_CHECKLIST.md](docs/MASTER_CHECKLIST.md) em toda entrega. Ela acompanha o [prompt mestre integral](docs/PROJECT_SPECIFICATION.md). Marque `[x]` e risque com `~~texto~~` somente os itens comprovadamente concluídos; mantenha parciais abertos, com evidências e limitações. Registre criação, alteração, correção ou remoção na tabela de entregas, indicando arquivos/testes e referência do commit. Reabra itens quando uma mudança invalidar sua conclusão. Esta regra não substitui os documentos de estado e próximos passos.
+
 ## Antes de trabalhar
 
 1. Confirme a raiz e o remoto com Git, sem revelar credenciais. Inspecione `git status --short --branch`, alterações staged/unstaged, arquivos não rastreados e commits locais ainda não enviados.
