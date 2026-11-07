@@ -2,6 +2,9 @@
 
 ## Última tarefa realizada
 
+Publicação alpha autorizada pelo usuário: rascunho v0.1.0-alpha.1 criado; upload direto falhou com HTTP 401. Workflow manual `.github/workflows/publish-alpha.yml` preparado para publicar o alvo fixo c11b366 usando o token do próprio Actions. Verificar execução e os 5 anexos antes de afirmar publicação; não recriar release se já publicada. O relatório local e o checksum dos binários CI são evidências separadas.
+
+
 Fundação Fase 1: build/proxy/JDK, Fabric lifecycle, configuração segura, SQLite/migração, comando/menu inicial e consulta oficial Cobblemon. 20 casos JUnit e smoke de 10 checks aprovados; smoke repetido após reinício e com JAR instalado fora do Loom. Veja [evidências](validation/phase1-foundation.json).
 
 Entrega funcional enviada e confirmada: `9cab47d7d4dcd6c95793cc57e4b1b60d87b49b45` (`feat: implement and validate Fabric foundation alpha`). Atualização documental posterior registra a sincronização e notices. Confira quaisquer commits posteriores ao sincronizar; não recrie esses componentes.

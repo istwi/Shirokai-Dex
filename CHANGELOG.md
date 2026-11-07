@@ -2,6 +2,8 @@
 
 ## 0.1.0-alpha.1 — fundação experimental
 
+- Preparada publicação autorizada como pré-release por workflow manual, com alvo fixo, validação de testes, checksums e procedência; upload direto da sessão foi recusado (401).
+
 - Implementados lifecycle Fabric, configuração validada com backup/recuperação e SQLite com migração transacional em executor dedicado.
 - Adicionados `/dex`, `/dex status`, menu inicial somente de leitura e consulta da Pokédex oficial/registro dinâmico Cobblemon.
 - Reload administrativo protegido por API LuckPerms opcional; ausência nega ação sem impedir startup.

@@ -127,6 +127,11 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 - [ ] Documentação.
 - [ ] Release.
 
+## Distribuição da fundação
+
+- [x] ~~Confirmar builds Java 21 e continuidade no GitHub Actions.~~ Commits 9cab47d e c11b366: success.
+- [ ] Publicar pré-release v0.1.0-alpha.1 com JAR, fontes, checksums e evidências. Rascunho criado; upload direto recebeu 401. Workflow manual de publicação preparado, resultado ainda pendente. Isto não conclui a release final da Fase 8.
+
 ## Entregas e evidências
 
 | Entrega | Resultado e evidência | Referência |

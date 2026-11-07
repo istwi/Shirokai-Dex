@@ -61,3 +61,7 @@ Servidores locais eram offline e limitados a loopback; não validam autenticaç�
 Base anterior enviada/confirmada: `8c1e7f365be918b866ac137c020e2337db14e721` (checklist/checksum). Esta entrega é identificada pelo assunto `feat: implement and validate Fabric foundation alpha`; inclui código, testes, documentos e evidência do JAR. Obter o SHA com Git, sem atualização circular do hash deste documento.
 
 Entrega funcional enviada e confirmada no remoto: `9cab47d7d4dcd6c95793cc57e4b1b60d87b49b45`, com árvore local limpa. Workflows desse commit iniciaram; aprovação remota/artifact ainda dependem do resultado observado no GitHub. Atualização documental posterior apenas registra essa referência e corrige os notices; a próxima sessão deve conferir também esse commit documental e quaisquer posteriores.
+
+## Publicação alpha solicitada
+
+O usuário autorizou publicar a alpha. Builds e continuidade dos commits 9cab47d/c11b366 passaram no GitHub Actions. Criado rascunho v0.1.0-alpha.1 com alvo c11b366; upload direto recebeu HTTP 401 no host de anexos, embora API/Git funcionem. Workflow manual Publish foundation alpha foi preparado para compilar esse alvo exato, exigir 20 testes aprovados, anexar JAR/fontes/checksums/proveniência e só então publicar como pré-release. Não necessita chave pessoal. Conferir resultado antes de declarar publicado.
