@@ -6,7 +6,7 @@
 ./gradlew --no-daemon build
 ```
 
-Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 87 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
+Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 95 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
 
 `DexProgressTest` adiciona 12 casos de cálculo, truncamento, vazio/indisponível, IDs namespaced, denominador dinâmico, formas e duplicação.
 
@@ -159,3 +159,23 @@ Cinco checks: parser/argumentos; provedores de namespace/alias preservados; cont
 Remova o probe e ambas as dependências opcionais, reinicie e execute `npm test`: 13 checks da fundação passaram, incluindo consulta/wiki e prévia explicitamente indisponível, sem falha de class loading. Ao terminar, `stop`, verificar salvamento/SQLite e restaurar os mods/configuração anteriores; remover a credencial temporária RCON. O probe nunca deve ser instalado em produção ou incluído nos assets de distribuição.
 
 Relatórios: `build/integration-placeholders.json`, `build/integration-placeholders-probe.json`, `build/integration-foundation.json`; [evidência persistida](validation/phase2-placeholders.json). Execuções em servidor de desenvolvimento real, não nova certificação fora do Loom. TAB, alias legado positivo, cliente visual e carga continuam pendentes.
+
+## Tipos, labels e todas as formas da wiki (alpha.5)
+
+`WikiFacetsTest` acrescenta oito testes: cruzamento na mesma forma, estados das formas selecionadas, restrição dos critérios JSON, opções estáveis/imutáveis, paginação de 100 formas sem perdas, opções com várias páginas, preservação do estado de navegação e detalhe invalidado após mudança de dados. Total: **95 JUnit**, zero falhas/erros/skips.
+
+Fixture própria em `tests/fixtures/wiki-facets`: configuração com coleção de variantes/restrita e datapack `datapacks/wiki-facets` contendo `dex_test:variants`. Tem 40 formas de água com label mythical e uma forma padrão normal/legendary. A obtenção da padrão não comprova obtenção das variantes. O schema foi conferido nos dados reais de Unown do artefato fixado; não utiliza modelos/spawns nem define histórico de capturas.
+
+Com servidor **parado e descartável**, preserve a configuração existente e instale o config.json dessa fixture em `run/config/shirokaidex/config.json` e o datapack em `<mundo>/datapacks/wiki-facets`. Use mundo separado da fixture antiga de progresso. LuckPerms Fabric 5.4.140 e RCON temporário autenticado em loopback são necessários; o responsável precisa ter aceitado a EULA. Inicie pelo comando cloud documentado e aguarde ambas as mensagens de readiness e o RCON.
+
+```sh
+cd tests/integration
+MC_TEST_RCON_PASSWORD_FILE=/caminho/seguro/temporario \
+  MC_WIKI_FACETS_PLAYER=DexFacets npm run test:wiki-facets
+```
+
+`MC_TEST_RUN`, `MC_TEST_PORT` e `MC_TEST_RCON_PORT` têm os padrões `run`, 25571 e 25573. Use perfil novo e descartável, com até 16 caracteres. A configuração é conferida antes de operar. Oito checks agrupados verificam opções dinâmicas/paginadas, interseção de tipo/label, todas as 41 formas, estados e critérios por forma, bloqueio de inventário de quatro linhas (inclusive item real do jogador), revogação com seletor aberto, revogação com página de formas aberta e reload/idioma/ajuste de páginas. A concessão oficial de um Pokémon e de dois papéis é setup do teste; não é classificada como captura legítima.
+
+Após esse teste, o servidor foi encerrado e a fixture antiga de coleções/progresso foi validada em outro mundo com perfil novo: **os oito checks de `npm run test:wiki` passaram**. Não fazer hot reload de espécies para trocar fixtures; reiniciar a instância é obrigatório. A configuração válida original foi restaurada/recarregada pelo teste, e os servidores foram encerrados com mundos salvos. Propriedades locais anteriores restauradas, senha temporária removida e SQLite com integrity_check=ok.
+
+Resultados atuais: `build/integration-wiki-facets.json` e `build/integration-wiki.json`; [evidência](validation/phase2-wiki-facets.json), incluindo fingerprints da fixture conferidos contra os bytes instalados no mundo de teste. As evidências antigas não são substituídas. Não houve teste visual/carga ou instalação desta alpha fora do Loom, nem nova certificação de TAB/alias legado.

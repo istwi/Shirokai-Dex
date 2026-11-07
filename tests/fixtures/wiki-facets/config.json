@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "Wiki facets test",
+  "collections": [
+    {
+      "id": "national"
+    },
+    {
+      "id": "shiny"
+    },
+    {
+      "id": "legendary"
+    },
+    {
+      "id": "variants",
+      "name": "Variantes",
+      "criteria": {
+        "include_species": [
+          "dex_test:variants"
+        ]
+      }
+    },
+    {
+      "id": "water_forms",
+      "name": "Formas de água",
+      "criteria": {
+        "include_species": [
+          "dex_test:variants"
+        ],
+        "types": [
+          "water"
+        ]
+      }
+    },
+    {
+      "id": "locked",
+      "name": "Restrita",
+      "permission": "shirokaidex.collection.locked",
+      "criteria": {
+        "include_species": [
+          "dex_test:variants"
+        ]
+      }
+    }
+  ]
+}

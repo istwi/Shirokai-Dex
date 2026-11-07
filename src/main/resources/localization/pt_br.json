@@ -59,5 +59,18 @@
   "wiki.order.ID": "Identificador",
   "placeholder_unavailable": "Text Placeholder API não está disponível. As outras funções do Dex continuam disponíveis.",
   "placeholder_metric_invalid": "Métrica inválida. Use percent, registered, seen, total ou remaining.",
-  "placeholder_preview": "Placeholder {0} {1}: {2}"
+  "placeholder_preview": "Placeholder {0} {1}: {2}",
+  "wiki_type": "Tipo: {0}",
+  "wiki_category": "Categoria (label): {0}",
+  "wiki_types_title": "Tipos [{0}/{1}]",
+  "wiki_categories_title": "Categorias [{0}/{1}]",
+  "wiki_option_apply": "Clique para aplicar.",
+  "wiki_option_selected": "Selecionada. Clique para aplicar.",
+  "wiki_forms_title": "Formas — {0} [{1}/{2}] ({3})",
+  "wiki_forms_open": "Ver formas ({0})",
+  "wiki_forms_count": "Formas elegíveis: {0}",
+  "wiki_types": "Tipos: {0}",
+  "wiki_form_categories": "Categorias (labels): {0}",
+  "wiki_details_back": "Voltar aos detalhes",
+  "wiki_facet_all": "Sem filtro"
 }

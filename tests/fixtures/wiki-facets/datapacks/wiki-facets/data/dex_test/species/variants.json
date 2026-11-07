@@ -1,0 +1,674 @@
+{
+  "implemented": true,
+  "nationalPokedexNumber": 60004,
+  "name": "Dex Test Variants",
+  "primaryType": "normal",
+  "maleRatio": 0.5,
+  "height": 10,
+  "weight": 10,
+  "labels": [
+    "legendary",
+    "dex_fixture"
+  ],
+  "abilities": [
+    "runaway"
+  ],
+  "baseStats": {
+    "hp": 50,
+    "attack": 50,
+    "defence": 50,
+    "special_attack": 50,
+    "special_defence": 50,
+    "speed": 50
+  },
+  "experienceGroup": "medium_fast",
+  "baseExperienceYield": 1,
+  "catchRate": 255,
+  "eggCycles": 1,
+  "baseFriendship": 50,
+  "moves": [
+    "1:tackle"
+  ],
+  "forms": [
+    {
+      "name": "variant_00",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-00"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_01",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-01"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_02",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-02"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_03",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-03"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_04",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-04"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_05",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-05"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_06",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-06"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_07",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-07"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_08",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-08"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_09",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-09"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_10",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-10"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_11",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-11"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_12",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-12"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_13",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-13"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_14",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-14"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_15",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-15"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_16",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-16"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_17",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-17"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_18",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-18"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_19",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-19"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_20",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-20"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_21",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-21"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_22",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-22"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_23",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-23"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_24",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-24"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_25",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-25"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_26",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-26"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_27",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-27"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_28",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-28"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_29",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-29"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_30",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-30"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_31",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-31"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_32",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-32"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_33",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-33"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_34",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-34"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_35",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-35"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_36",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-36"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_37",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-37"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_38",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-38"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    },
+    {
+      "name": "variant_39",
+      "primaryType": "water",
+      "maleRatio": 0.5,
+      "height": 10,
+      "weight": 10,
+      "labels": [
+        "mythical",
+        "dex_fixture"
+      ],
+      "aspects": [
+        "dex-variant-39"
+      ],
+      "evolutions": [],
+      "battleOnly": false
+    }
+  ]
+}

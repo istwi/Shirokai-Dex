@@ -2,7 +2,19 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
-## Entrega atual — placeholders básicos (alpha.4)
+## Entrega atual — filtros e formas da wiki (alpha.5)
+
+Base sincronizada `ef99403dbc2c3463cd1e55e91abe2202046e8a89`, sem mudanças/commits locais pendentes. Versão `0.2.0-alpha.5+mc1.21.1-cobblemon1.8.3`; entrega identificada por `feat: add wiki type filters and complete form pagination`.
+
+Seletores paginados de tipos/labels reais e formas sem corte em 32 linhas. Tipo, label e critérios JSON combinam na mesma forma; estados são calculados nas formas elegíveis. Consulta, estado e ordenação preservados entre lista/seletores/detalhes/formas. Wiki usa quatro linhas vanilla; seletor/progresso permanecem em três. [Guia](WIKI.md).
+
+**95 JUnit**, zero falhas/erros/skips; **8 checks novos e 8 de regressão da wiki** em servidor dev real com LuckPerms. Fixture com 40 variantes + forma padrão comprovou acesso às 41 formas e nenhuma transferência de progresso da padrão às variantes. Inventário, permissões de botões antigos e ajuste de páginas após reload validados; interface global en_us também exercitada. [Evidência](validation/phase2-wiki-facets.json).
+
+Nenhuma alteração de dependências, schema JSON, registro oficial, progresso/denominadores ou placeholders. Filtros são temporários da consulta. Spawn, categorias completas/históricas, cliente visual/carga e esta alpha fora do Loom continuam pendentes; não houve nova certificação de TAB/alias legado.
+
+Servidores encerrados, mundos salvos, SQLite íntegro e configuração local anterior restaurada; segredo temporário RCON removido. JAR `build/libs/shirokai-dex-0.2.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar`. Nenhuma nova release/publicação de ambiente; alpha.3 publicada permanece imutável.
+
+## Entrega anterior — placeholders básicos (alpha.4)
 
 Base sincronizada: `05a75779a5944a59d41ea0392daa537899f3c759`, sem mudanças ou commits locais pendentes. Versão `0.2.0-alpha.4+mc1.21.1-cobblemon1.8.3`; entrega identificada pelo assunto `feat: add optional collection progress placeholders`.
 
@@ -52,7 +64,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Fase atual
 
-**Fase 2 — porcentagens, coleções, wiki inicial e placeholders básicos**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
+**Fase 2 — coleções, wiki com filtros/formas e placeholders básicos**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
 
 ## Concluído
 

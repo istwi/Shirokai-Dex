@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Placeholders básicos entregues na alpha.4**, sobre fundação, coleções e wiki existentes: cinco métricas, prévia no parser real, snapshots, permissões e preservação de provedores. 87 JUnit + 8 checks normais + 5 de probe + 13 de fundação sem APIs opcionais; cleanup real PASS. [Evidência](validation/phase2-placeholders.json). Próximo incremento: filtros e navegação de formas da wiki. TAB, alias legado positivo, spawn, cliente visual/carga e sistemas posteriores continuam pendentes.
+**Wiki ampliada na alpha.5:** seletores dinâmicos de tipos/labels e páginas de todas as formas, sem corte de 32 linhas; filtros combinam na mesma forma e preservam consulta. 95 JUnit + 8 checks novos + 8 de regressão em servidor real; fixture com 41 formas. [Evidência](validation/phase2-wiki-facets.json). Próxima etapa: auditar spawn real. Categorias completas, TAB/alias legado positivo, cliente visual/carga e sistemas posteriores seguem pendentes.
 
 ## Preparação e continuidade
 
@@ -54,7 +54,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 - [ ] Categorias. Filtros de labels/tipos/formas/espécies em coleções prontos; categorias nomeadas/condições avançadas e histórico ainda pendentes.
 - [ ] Progresso oficial. Leitura, percentuais, wiki e placeholders básicos verificados; captura shiny e demais requisitos completos permanecem parciais.
 - [ ] Datapacks. Fixture com duas espécies namespaced e remoção entre reinícios testados; ecossistema real e demais regras ainda pendentes.
-- [ ] Wiki. Parcial: pesquisa, filtros de estados, ordenação, paginação e detalhes implementados/testados; spawn, formas além de 32, filtros adicionais e cliente visual pendentes.
+- [ ] Wiki. Parcial: pesquisa, filtros de estados, ordenação, paginação e detalhes implementados/testados; seletores por tipo/label e todas as formas já paginados; spawn, categorias avançadas e cliente visual pendentes.
 - [ ] Menus. Seletor, progresso e wiki protegidos disponíveis; layouts JSON avançados e validação visual pendentes.
 - [x] ~~Placeholders básicos.~~ Cinco métricas por coleção com Text Placeholder API opcional; parser, permissões, eventos/reload, contextos e conflitos verificados no servidor. [Guia](PLACEHOLDERS.md), [evidência](validation/phase2-placeholders.json). TAB/alias legado e placeholders completos permanecem na Fase 7.
 
@@ -69,6 +69,8 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 - [x] ~~Validar permissões por dimensão e pacotes adicionais de inventário.~~ Oito checks em servidor dev real, com repetição em perfil novo; não equivale a cliente visual/carga. [Evidência](validation/phase2-contexts.json).
 
 - [x] ~~Entregar wiki inicial navegável por coleção.~~ Comandos/botão, pesquisa nome/ID, filtros, ordenação, paginação e detalhes com revalidação; 78 JUnit e 8 checks específicos em servidor real. [Guia](WIKI.md), [evidência](validation/phase2-wiki.json).
+
+- [x] ~~Adicionar filtros por tipo/label e páginas sem corte de formas na wiki.~~ 95 JUnit e 8 checks novos + 8 regressões reais, com 41 formas e revalidação de inventário/permissão/reload. [Guia](WIKI.md), [evidência](validation/phase2-wiki-facets.json).
 
 ## FASE 3 — Recompensas
 
@@ -163,5 +165,6 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 | Wiki inicial | `wiki/Wiki.java`, adaptador/core/menu/localização, `WikiTest`, runner wiki e smoke público; alpha.3, 78 JUnit + 8 wiki + 9 coleções + 12 fundação. Spawn/cliente visual/carga/JAR fora do Loom pendentes | Commit `feat: add searchable paginated species wiki`, base `5ad1b60`; [evidência](validation/phase2-wiki.json) |
 | Release alpha.3 | Workflow `42365493365` aprovado, 78 JUnit, 5 anexos baixados e checksums/proveniência/tag verificados; pré-release publicada, sem alterar a anterior | Tag `v0.2.0-alpha.3`, alvo `47817bf`; [evidência](validation/release-alpha3.json) |
 | Placeholders básicos | Pacote placeholders, lifecycle/preview, compileOnly opcional, nove testes Java novos, runner/probe; 87 JUnit e 8+5+13 checks reais, preservação de provedores e cleanup PASS. TAB/alias positivo/carga pendentes | Commit `feat: add optional collection progress placeholders`, base `05a7577`; [evidência](validation/phase2-placeholders.json) |
+| Filtros e formas da wiki | Wiki/GUI/localização, oito testes Java novos, fixture/runner; alpha.5, 95 JUnit + 8 novos + 8 regressões. Todas as 41 formas de teste acessíveis, mesmo escopo de forma e proteção de inventário/reload. Spawn/categorias completas/cliente visual/carga pendentes | Commit `feat: add wiki type filters and complete form pagination`, base `ef99403`; [evidência](validation/phase2-wiki-facets.json) |
 
 Ao registrar a própria entrega, use o assunto do commit em preparação e substitua pela referência exata na atualização seguinte; não crie commits infinitos apenas para gravar o hash do próprio documento.

@@ -10,6 +10,18 @@ Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificaç�
 
 A auditoria estática inicial não executou testes funcionais. As validações posteriores da fundação estão separadas abaixo; captura, resgate e economia continuam sem testes funcionais.
 
+## Atualização: filtros e formas da wiki — alpha.5
+
+Nenhum novo getter Cobblemon: tipos, labels, formas e estados vêm do snapshot imutável já auditado. `MenuType.GENERIC_9x4` foi conferido por `javap` no Minecraft mapeado 1.21.1, compilado e exercitado pelo protocolo real; wiki passa a quatro linhas, enquanto seletor/progresso permanecem em três.
+
+Tipos e categorias (labels) secundários são aplicados junto aos critérios JSON **na mesma forma**. Estados visto/obtido/shiny visto são calculados somente nas formas elegíveis quando existe esse escopo, sem transferir obtenção da forma normal para uma variante. Sem escopo por forma, o agregado oficial da espécie é preservado. Navegação não modifica dados oficiais/configuração/denominadores.
+
+Schema da fixture própria conferido nos dados originais `data/cobblemon/species/generation2/unown.json` de Cobblemon 1.8.3: campos name, primaryType, labels, aspects e battleOnly, além das dimensões. Nenhum código ou asset de Pokémon foi copiado. Fixture `dex_test:variants` adiciona 40 formas alternativas e a padrão: **41 formas enumeradas e visitadas no servidor**, incluindo a última além do corte antigo de 32 linhas. O Unown original tem 27 alternativas e não bastaria para testar esse limite.
+
+`VERIFIED`: opções de tipo/label derivadas da coleção, paginação de opções/formas, cruzamento na mesma forma, estados por forma, preservação de consulta/filtros, inventário somente de leitura, revogação com botões antigos e ajuste de página/idioma após reload. **95 JUnit, 8 checks novos e 8 de regressão da wiki** em servidor dev real com LuckPerms. [Evidência](validation/phase2-wiki-facets.json).
+
+Spawn, categorias completas/históricas, cliente visual, carga e novo JAR instalado fora do Loom permanecem pendentes. Esta entrega não altera placeholders nem certifica novamente integrações externas. [Guia](WIKI.md).
+
 ## Atualização: placeholders básicos — alpha.4
 
 Text Placeholder API **2.4.2+1.21**, revisão `2427627df3e73ec00a2d3623c7e60e1d076bdb67`, auditada nas classes `Placeholders`, `PlaceholderContext`, `PlaceholderResult` e `PlaceholderHandler` da tag oficial. Artefato original da release GitHub, sem código copiado nem dependência aninhada; URL/SHA-256 em `tests/fixtures/placeholders/runtime.json`. Maven Nucleoid respondeu negação do proxy; o mesmo artefato oficial foi resolvido via Ivy/GitHub com TLS ativo, sem alterar rede/versões.

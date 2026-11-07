@@ -1,0 +1,201 @@
+{
+  "base_commit": "ef99403dbc2c3463cd1e55e91abe2202046e8a89",
+  "version": "0.2.0-alpha.5+mc1.21.1-cobblemon1.8.3",
+  "toolchain": {
+    "java": "Temurin 21.0.13+9",
+    "gradle": "8.14.3",
+    "loom": "1.11.8"
+  },
+  "audit": {
+    "new_minecraft_symbol": "MenuType.GENERIC_9x4 verified with javap on the mapped Minecraft 1.21.1 JAR, compiled and exercised in the real protocol",
+    "data_source": "Existing immutable official species/form/type/label/knowledge snapshot; no new Cobblemon integration methods",
+    "fixture_schema": "Form JSON fields inspected in the original Cobblemon 1.8.3 data/cobblemon/species/generation2/unown.json; fixture is own data, not copied Pokemon assets",
+    "vanilla_example": "Unown original data has 27 alternate forms; custom fixture deliberately exercises 40 alternates plus the standard form",
+    "fixture_species": "dex_test:variants",
+    "fixture_form_count": 41,
+    "runtime_fixture_sha256": {
+      "pack.mcmeta": "7e862f3ff62b192b7d79c709905a25c7a5a2b4dd1d58ff7172c51748bdaef5f8",
+      "data/dex_test/species/variants.json": "e81065397ce7c590888732a29f6e4e973ca671c4715e8f241a3120a89b39aaea"
+    }
+  },
+  "unit_suites": [
+    {
+      "name": "br.com.shirokaidex.config.CollectionsConfigTest",
+      "tests": "31",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T11:28:02.090Z"
+    },
+    {
+      "name": "br.com.shirokaidex.config.ConfigManagerTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T11:28:02.282Z"
+    },
+    {
+      "name": "br.com.shirokaidex.database.DatabaseTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T11:28:02.353Z"
+    },
+    {
+      "name": "br.com.shirokaidex.placeholders.PlaceholderTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T11:28:02.905Z"
+    },
+    {
+      "name": "br.com.shirokaidex.pokedex.ConfiguredProgressTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T11:28:02.920Z"
+    },
+    {
+      "name": "br.com.shirokaidex.pokedex.DexProgressTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T11:28:02.934Z"
+    },
+    {
+      "name": "br.com.shirokaidex.wiki.WikiFacetsTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T11:28:02.952Z"
+    },
+    {
+      "name": "br.com.shirokaidex.wiki.WikiTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T11:28:02.978Z"
+    }
+  ],
+  "protocol_reports": {
+    "wiki-facets": {
+      "timestamp": "2026-11-07T11:31:36.190Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexFacets",
+      "results": [
+        {
+          "name": "Dynamic type/category pickers are collection-scoped, preserve query and paginate all type choices",
+          "status": "passed"
+        },
+        {
+          "name": "Type and label intersect on the same form and survive ordering/details/back navigation",
+          "status": "passed"
+        },
+        {
+          "name": "All 41 real registered forms are reachable beyond the old 32-line limit without changing official progress",
+          "status": "passed"
+        },
+        {
+          "name": "Owned normal form does not mark water forms seen/owned and collection criteria cannot be bypassed",
+          "status": "passed"
+        },
+        {
+          "name": "Four-row form menus block pickup/right/shift/hotbar/discard and preserve real player inventory",
+          "status": "passed"
+        },
+        {
+          "name": "An already open facet picker rechecks permission before applying an option",
+          "status": "passed"
+        },
+        {
+          "name": "An already open form-page button rechecks revocation without handing out paper icons",
+          "status": "passed"
+        },
+        {
+          "name": "Reload revalidates stale form callbacks, clamps the page, changes language and restores all forms safely",
+          "status": "passed"
+        }
+      ]
+    },
+    "wiki": {
+      "timestamp": "2026-11-07T11:35:59.475Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexWiki5",
+      "results": [
+        {
+          "name": "Collection button opens a dynamic wiki; pagination is stable and reversible",
+          "status": "passed"
+        },
+        {
+          "name": "Wiki supports deterministic ordering by identifier",
+          "status": "passed"
+        },
+        {
+          "name": "Search accepts canonical names and case-insensitive namespaced IDs; details show real forms/types and explicit unknown spawn/capture data",
+          "status": "passed"
+        },
+        {
+          "name": "Empty results, reset, valid unimplemented species and oversized search have explicit bounded behavior",
+          "status": "passed"
+        },
+        {
+          "name": "Collection filters and shiny-unavailable semantics are preserved; browsing and discard do not mutate official progress or give icons",
+          "status": "passed"
+        },
+        {
+          "name": "Seen/obtained/unseen/shiny-seen filters track official Cobblemon events without treating granted Pokémon as verified shiny captures",
+          "status": "passed"
+        },
+        {
+          "name": "Restricted wiki commands and stale species buttons enforce current LuckPerms permissions",
+          "status": "passed"
+        },
+        {
+          "name": "Stale wiki navigation revalidates reloaded collection criteria and returns safely to the collection",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "runtime": "Dedicated Loom development servers; Minecraft 1.21.1/Fabric 0.17.2/Cobblemon 1.8.3/LuckPerms 5.4.140; offline and loopback only; separate worlds for extended forms fixture and existing wiki regression",
+  "startup_evidence": [
+    "[11:30:03] [main/INFO] (Cobblemon) Loaded 1026 Pokémon species",
+    "[11:30:07] [shirokaidex-sqlite/INFO] (shirokaidex) Shirokai Dex ready: configuration validated, SQLite migration 1 applied/verified",
+    "[11:30:15] [Server thread/INFO] (Minecraft) Done (7.415s)! For help, type \"help\"",
+    "[11:32:48] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved"
+  ],
+  "semantics": [
+    "Collection criteria, selected type and selected label must match the same form",
+    "Facets and state filters use the eligible forms; unfiltered queries preserve official species aggregate",
+    "Options come from all forms eligible for the collection, independent of search/current state/other facet",
+    "Form and option pages are bounded to 18 visible entries; no 32-form truncation",
+    "All data navigation rechecks current permission and definition; stale pages clamp after reload",
+    "Temporary query facets never change collection JSON, progress, denominator or placeholders"
+  ],
+  "jar": {
+    "name": "shirokai-dex-0.2.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "5f39ee2ace78150c5f0bd887bb74baab518f21b641ec70806fbb02769918c47b",
+    "scope": "Final development build; current alpha not validated installed outside Loom"
+  },
+  "shutdown": {
+    "server": "Both servers stopped with stop; all dimensions saved",
+    "sqlite_integrity_check": "ok",
+    "local_state": "Original server.properties restored; test JSON configuration removed; temporary RCON password removed; original mods preserved",
+    "new_release": "none",
+    "environment_publication": "none"
+  },
+  "limitations": [
+    "No natural-spawn data provider integrated",
+    "No visual Minecraft client or load test",
+    "Categories here are source labels, not the complete configurable category/history system",
+    "Canonical names/types/labels; no per-client name localization",
+    "TAB and positive legacy placeholder alias remain pending; no new placeholder/API runtime certification in this delivery"
+  ]
+}

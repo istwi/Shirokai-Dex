@@ -5,7 +5,7 @@
 | `/dex` | Abre seletor de coleções somente de leitura |
 | `/dex national`, `/dex legendary`, `/dex shiny` | Abrem páginas individuais com progresso/% ou estado indisponível explicado |
 | `/dex national status`, `/dex legendary status`, `/dex shiny status` | Resumo de quantidade/total e % por coleção, ou N/D sem evidência |
-| `/dex <id> wiki [pesquisa]` | Wiki paginada da coleção; pesquisa por nome canônico/ID, filtros e detalhes. [Guia](WIKI.md) |
+| `/dex <id> wiki [pesquisa]` | Wiki paginada da coleção; pesquisa por nome/ID, seletores de tipo/label e todas as formas em páginas. [Guia](WIKI.md) |
 | `/dex <id> placeholder <métrica>` | Prévia dos cinco placeholders básicos pelo parser da API opcional; [sintaxe e limites](PLACEHOLDERS.md) |
 | `/dex status` | Consulta espécies vistas/obtidas na Pokédex oficial e total de espécies implementadas |
 | `/dex admin reload` | Recarrega a configuração validada, exigindo LuckPerms |

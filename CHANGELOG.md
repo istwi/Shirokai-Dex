@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0-alpha.5 — filtros e formas da wiki (desenvolvimento)
+
+- Seletores paginados de tipos/labels reais da coleção, combinados na mesma forma com critérios JSON e filtros de estado. Pesquisa e ordenação são preservadas.
+- Todas as formas acessíveis em páginas de 18, sem corte de 32 linhas; estados, tipos e labels por forma, com retorno aos detalhes/lista. Wiki usa quatro linhas; seletor/progresso permanecem com três.
+- Permissões e critérios atuais revalidados em seletores e páginas de formas; reload ajusta páginas e impede dados obsoletos. Inventário/progresso oficial permanecem somente de leitura.
+- Oito novos testes Java e fixture com 40 variantes para validar mais de 32 formas em servidor real. Spawn, cliente visual, categorias avançadas e carga continuam pendentes. Nenhuma nova release ou configuração de ambiente publicada.
+
 ## 0.2.0-alpha.4 — placeholders básicos (desenvolvimento)
 
 - Integração opcional com Text Placeholder API 2.4.2+1.21: percent, registered, seen, total e remaining por coleção; prévia `/dex <id> placeholder <métrica>`.

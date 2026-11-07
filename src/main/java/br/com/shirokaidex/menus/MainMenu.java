@@ -24,7 +24,7 @@ public final class MainMenu extends ChestMenu {
     private final UUID owner;
     private final Map<Integer, Runnable> actions;
     private MainMenu(int id, ServerPlayer player, SimpleContainer container, Map<Integer, Runnable> actions) {
-        super(MenuType.GENERIC_9x3, id, player.getInventory(), container, 3);
+        super(container.getContainerSize() == 36 ? MenuType.GENERIC_9x4 : MenuType.GENERIC_9x3, id, player.getInventory(), container, container.getContainerSize() / 9);
         owner = player.getUUID(); this.actions = Map.copyOf(actions);
     }
     private static final List<Integer> CONTENT_SLOTS = List.of(13, 11, 15, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 17);
@@ -62,12 +62,39 @@ public final class MainMenu extends ChestMenu {
     }
     public static void openWiki(ServerPlayer player, Settings settings, Messages messages, CollectionDefinition definition,
                                 Wiki.Request request, Wiki.Page page, Consumer<Wiki.Request> navigate, Runnable back, Runnable searchHelp) {
-        var contents = new SimpleContainer(27);
+        var contents = new SimpleContainer(36);
         Map<Integer, Runnable> actions = new HashMap<>();
         String language = settings.language();
-        if (page.detail().isPresent()) {
-            contents.setItem(13, wikiItem(page.detail().get(), language, messages, true));
+        String title = messages.text(language, "wiki_title", displayName(definition, language, messages), page.number() + 1, page.pages(), page.total()).getString();
+        if (request.facet() != Wiki.Facet.NONE) {
+            var options = Wiki.options(request.facet() == Wiki.Facet.TYPE ? page.types() : page.categories(), request.optionPage(), 18);
+            String selected = request.facet() == Wiki.Facet.TYPE ? request.type() : request.category();
+            for (int i = 0; i < options.items().size(); i++) {
+                String value = options.items().get(i);
+                var item = new ItemStack(Items.PAPER);
+                item.set(DataComponents.CUSTOM_NAME, Component.literal(facetName(value, language, messages)));
+                item.set(DataComponents.LORE, new ItemLore(List.of(messages.text(language, selected.equals(value) ? "wiki_option_selected" : "wiki_option_apply"))));
+                contents.setItem(i, item);
+                actions.put(i, () -> navigate.accept(request.facet() == Wiki.Facet.TYPE ? request.type(value) : request.category(value)));
+            }
+            if (options.number() > 0) navigation(contents, actions, 18, messages.text(language, "page_previous"), () -> navigate.accept(request.pick(request.facet(), options.number() - 1)));
+            if (options.number() + 1 < options.pages()) navigation(contents, actions, 26, messages.text(language, "page_next"), () -> navigate.accept(request.pick(request.facet(), options.number() + 1)));
+            navigation(contents, actions, 23, messages.text(language, "wiki_back"), () -> navigate.accept(request.page(page.number())));
+            title = messages.text(language, request.facet() == Wiki.Facet.TYPE ? "wiki_types_title" : "wiki_categories_title", options.number() + 1, options.pages()).getString();
+        } else if (page.detail().isPresent() && request.formPage() >= 0) {
+            var row = page.detail().get();
+            var forms = Wiki.forms(row, request.formPage(), 18);
+            for (int i = 0; i < forms.items().size(); i++) contents.setItem(i, formItem(row.id(), forms.items().get(i), language, messages));
+            if (forms.number() > 0) navigation(contents, actions, 18, messages.text(language, "page_previous"), () -> navigate.accept(request.forms(forms.number() - 1)));
+            if (forms.number() + 1 < forms.pages()) navigation(contents, actions, 26, messages.text(language, "page_next"), () -> navigate.accept(request.forms(forms.number() + 1)));
+            navigation(contents, actions, 23, messages.text(language, "wiki_details_back"), () -> navigate.accept(request.detail(row.id())));
+            title = messages.text(language, "wiki_forms_title", row.name(), forms.number() + 1, forms.pages(), forms.total()).getString();
+        } else if (page.detail().isPresent()) {
+            var row = page.detail().get();
+            contents.setItem(13, wikiItem(row, language, messages, true));
+            navigation(contents, actions, 15, messages.text(language, "wiki_forms_open", row.forms().size()), () -> navigate.accept(request.forms(0)));
             navigation(contents, actions, 18, messages.text(language, "wiki_back"), () -> navigate.accept(request.page(page.number())));
+            navigation(contents, actions, 23, messages.text(language, "wiki_collection_back"), back);
         } else {
             for (int i = 0; i < page.rows().size(); i++) {
                 var row = page.rows().get(i);
@@ -80,16 +107,19 @@ public final class MainMenu extends ChestMenu {
             }
             if (page.number() > 0) navigation(contents, actions, 18, messages.text(language, "page_previous"), () -> navigate.accept(request.page(page.number() - 1)));
             if (page.number() + 1 < page.pages()) navigation(contents, actions, 26, messages.text(language, "page_next"), () -> navigate.accept(request.page(page.number() + 1)));
-            navigation(contents, actions, 19, messages.text(language, "wiki_filter", messages.text(language, "wiki.filter." + request.filter()).getString()),
-                    () -> navigate.accept(new Wiki.Request(request.query(), request.filter().next(), request.order(), 0, null)));
-            navigation(contents, actions, 20, messages.text(language, "wiki_order", messages.text(language, "wiki.order." + request.order()).getString()),
-                    () -> navigate.accept(new Wiki.Request(request.query(), request.filter(), request.order().next(), 0, null)));
+            navigation(contents, actions, 19, messages.text(language, "wiki_filter", messages.text(language, "wiki.filter." + request.filter()).getString()), () -> navigate.accept(request.filtered(request.filter().next())));
+            navigation(contents, actions, 20, messages.text(language, "wiki_order", messages.text(language, "wiki.order." + request.order()).getString()), () -> navigate.accept(request.ordered(request.order().next())));
             navigation(contents, actions, 21, messages.text(language, "wiki_search", request.query()), searchHelp);
             navigation(contents, actions, 24, messages.text(language, "wiki_clear"), () -> navigate.accept(Wiki.Request.initial("")));
+            navigation(contents, actions, 25, messages.text(language, "wiki_type", facetName(request.type(), language, messages)), () -> navigate.accept(request.pick(Wiki.Facet.TYPE, 0)));
+            navigation(contents, actions, 27, messages.text(language, "wiki_category", facetName(request.category(), language, messages)), () -> navigate.accept(request.pick(Wiki.Facet.CATEGORY, 0)));
+            navigation(contents, actions, 23, messages.text(language, "wiki_collection_back"), back);
         }
-        navigation(contents, actions, 23, messages.text(language, "wiki_collection_back"), back);
         closeButton(contents, actions, player, language, messages);
-        show(player, messages.text(language, "wiki_title", displayName(definition, language, messages), page.number() + 1, page.pages(), page.total()).getString(), contents, actions);
+        show(player, title, contents, actions);
+    }
+    private static String facetName(String value, String language, Messages messages) {
+        return value.isEmpty() ? messages.text(language, "wiki_facet_all").getString() : value;
     }
     private static ItemStack wikiItem(Wiki.Row row, String language, Messages messages, boolean detail) {
         var item = new ItemStack(Items.BOOK);
@@ -101,15 +131,24 @@ public final class MainMenu extends ChestMenu {
         lore.add(messages.text(language, "wiki_shiny_seen", yesNo(row.shinySeen(), language, messages)));
         lore.add(messages.text(language, "collection_unavailable"));
         if (detail) {
-            // One bounded line per form; conditions refer only to forms eligible for this collection.
-            for (var form : row.forms().stream().sorted(Comparator.comparing(ProgressCalculator.Form::name)).limit(32).toList()) {
-                lore.add(messages.text(language, "wiki_form", form.name(), String.join(", ", new TreeSet<>(form.types())),
-                        yesNo(form.seen(), language, messages), yesNo(form.owned(), language, messages), yesNo(form.shinySeen(), language, messages)));
-            }
-            if (row.forms().size() > 32) lore.add(messages.text(language, "wiki_more_forms", row.forms().size() - 32));
+            Set<String> types = new TreeSet<>(); row.forms().forEach(form -> types.addAll(form.types()));
+            lore.add(messages.text(language, "wiki_types", String.join(", ", types)));
+            lore.add(messages.text(language, "wiki_forms_count", row.forms().size()));
             lore.add(messages.text(language, "wiki_spawn_unknown"));
         } else lore.add(messages.text(language, "wiki_details"));
         item.set(DataComponents.LORE, new ItemLore(lore));
+        return item;
+    }
+    private static ItemStack formItem(String species, ProgressCalculator.Form form, String language, Messages messages) {
+        var item = new ItemStack(Items.PAPER);
+        item.set(DataComponents.CUSTOM_NAME, Component.literal(form.name()));
+        item.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(species),
+                messages.text(language, "wiki_types", String.join(", ", new TreeSet<>(form.types()))),
+                messages.text(language, "wiki_form_categories", String.join(", ", new TreeSet<>(form.labels()))),
+                messages.text(language, "wiki_seen", yesNo(form.seen(), language, messages)),
+                messages.text(language, "wiki_owned", yesNo(form.owned(), language, messages)),
+                messages.text(language, "wiki_shiny_seen", yesNo(form.shinySeen(), language, messages)),
+                messages.text(language, "collection_unavailable"))));
         return item;
     }
     private static String yesNo(boolean value, String language, Messages messages) {
