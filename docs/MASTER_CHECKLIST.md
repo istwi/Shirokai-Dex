@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Fundação experimental implementada e validada.** Build e 20 casos JUnit aprovados; smoke de 10 verificações aprovado em servidor de desenvolvimento, após reinício e com JAR instalado fora do Loom. Consulte [evidências](validation/phase1-foundation.json). Fase 0 continua com integrações avançadas pendentes. Próximo passo: fechar os testes complementares de permissão positiva/gestos do menu e preparar a Fase 2, sem inferir shiny capturado a partir de shiny visto. Nenhuma recompensa ou competição foi implementada.
+**Fase 2 iniciada: porcentagens Nacional/Lendária e navegação por coleção.** 32 casos JUnit, regressão de 11 checks, 6 checks de progresso, reconexão/lore e remoção de datapack aprovados; JAR validado fora do Loom. [Evidência](validation/phase2-percentages.json). Shiny permanece N/D sem prova histórica confiável. Próximo passo: modelos/validação JSON das coleções e testes complementares, sem marcar a Fase 2 completa.
 
 ## Preparação e continuidade
 
@@ -48,15 +48,19 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## FASE 2 — Pokédex
 
-- [ ] Pokédex Nacional.
-- [ ] Shiny.
-- [ ] Lendária.
+- [ ] Pokédex Nacional. Parcial: leitura oficial, quantidade/total e % em menu/chat; coleções JSON/wiki ainda pendentes.
+- [ ] Shiny. Página explícita N/D; capturas shiny não são inferidas de dados vistos/obtidos.
+- [ ] Lendária. Parcial: labels de formas reais, quantidade/total e %; extensibilidade JSON pendente.
 - [ ] Categorias.
 - [ ] Progresso oficial.
-- [ ] Datapacks.
+- [ ] Datapacks. Fixture com duas espécies namespaced e remoção entre reinícios testados; ecossistema real e demais regras ainda pendentes.
 - [ ] Wiki.
 - [ ] Menus.
 - [ ] Placeholders básicos.
+
+- [x] ~~Exibir % e quantidade/total nas coleções com dados confiáveis.~~ Nacional/Lendária em menu e status; duas casas, sem 100% antecipado; vazio/sem evidência = N/D. [Regra](POKEDEX.md).
+- [x] ~~Validar denominadores dinâmicos e não duplicar espécies/formas.~~ 12 testes de cálculo, fixture real, aquisição repetida e remoção entre reinícios.
+- [x] ~~Adicionar seletor e páginas das três coleções iniciais.~~ Navegação e lore transmitida testadas; Shiny não numérica até evidência.
 
 ## FASE 3 — Recompensas
 
@@ -140,10 +144,10 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 | Continuidade | Documentos e checker validados, incluindo cenários negativos; envio confirmado | `72304ea`, `ec8f1e9` |
 | Checklist permanente | Adicionada esta lista e exigida atualização por AGENTS e checker; documentação do ponto de retomada atualizada | Commit com assunto `docs: track master prompt progress and correct official Gradle checksum` |
 | Gradle via proxy | Resolvido: checksum oficial corrigido, JDK completo instalado/verificado, build aprovado | [Instalação](INSTALLATION.md) e [testes](TESTING.md) |
-
 | Fundação alpha | Inicialização, config, SQLite/migrações, menu, comandos, consulta oficial, helper de build e CI; 20 casos Java + 10 checks de protocolo, com reinício e JAR instalado. [Arquivos e testes](PROJECT_STATUS.md) | `9cab47d7d4dcd6c95793cc57e4b1b60d87b49b45`, confirmado no remoto |
 | Passagem da fundação | Registrada referência exata da entrega funcional e notices atualizados; sem mudança de código | Commit `docs: record synchronized foundation validation` |
-
 | Pré-release alpha.1 | Publicada pelo Actions após 20 testes; 5 anexos, downloads/checksums e commit da tag conferidos | `v0.1.0-alpha.1`, alvo `c11b366`; [evidência](validation/release-alpha1.json) |
+
+| Porcentagens — início Fase 2 | Nacional/Lendária, cache invalidado por evento, páginas/lore/status, Shiny N/D; 32 JUnit e testes de protocolo/datapack | Commit `feat: add verified Pokedex completion percentages`, [evidência](validation/phase2-percentages.json) |
 
 Ao registrar a própria entrega, use o assunto do commit em preparação e substitua pela referência exata na atualização seguinte; não crie commits infinitos apenas para gravar o hash do próprio documento.

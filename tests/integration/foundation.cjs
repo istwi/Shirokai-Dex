@@ -59,11 +59,19 @@ async function main() {
 
   bot.chat('/dex');
   await until(() => bot.currentWindow);
-  const window = bot.currentWindow;
+  let window = bot.currentWindow;
   assert.equal(window.type, 'minecraft:generic_9x3');
   assert.equal(window.slots[13].name, 'book');
   assert.equal(window.slots[22].name, 'barrier');
   pass('Initial server-side inventory menu opens');
+  assert.equal(window.slots[11].name, 'amethyst_shard');
+  assert.equal(window.slots[15].name, 'nether_star');
+  const selector = window;
+  await bot.clickWindow(13, 0, 0);
+  await until(() => bot.currentWindow && bot.currentWindow !== selector);
+  window = bot.currentWindow;
+  assert.equal(window.slots[18].name, 'arrow');
+  pass('Collection selector navigates to national progress page');
   for (const [button, mode, label] of [[0, 0, 'pickup'], [1, 0, 'right click'], [0, 1, 'shift click'], [0, 2, 'hotbar swap']]) {
     await bot.clickWindow(13, button, mode);
     await until(() => !window.selectedItem && window.slots[13]?.name === 'book' &&
@@ -75,7 +83,7 @@ async function main() {
   pass('Close button closes the menu');
   const after = await command('/dex status', message => message.includes('Pokédex oficial:'));
   assert.equal(after, before);
-  assert(!bot.inventory.items().some(item => item.name === 'book' || item.name === 'barrier'));
+  assert(!bot.inventory.items().some(item => ['book', 'barrier', 'amethyst_shard', 'nether_star', 'arrow'].includes(item.name)));
   pass('Official progress unchanged and no display items left in player inventory');
   await command('/dex admin reload', message => /Unknown|incomplete|desconhecido|incompleto|Incorrect argument|Argumento incorreto/i.test(message));
   pass('Administrative reload rejected without LuckPerms permission');

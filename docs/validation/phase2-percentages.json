@@ -1,0 +1,165 @@
+{
+  "version": "0.2.0-alpha.1+mc1.21.1-cobblemon1.8.3",
+  "scope": "Initial Fase 2 percentages; not complete Fase 2",
+  "unit_suites": [
+    {
+      "name": "br.com.shirokaidex.pokedex.DexProgressTest",
+      "tests": "12",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-07T09:23:55.205Z",
+      "hostname": "79be8c77c86f",
+      "time": "0.016"
+    },
+    {
+      "name": "br.com.shirokaidex.database.DatabaseTest",
+      "tests": "4",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-07T09:23:54.638Z",
+      "hostname": "79be8c77c86f",
+      "time": "0.565"
+    },
+    {
+      "name": "br.com.shirokaidex.config.ConfigManagerTest",
+      "tests": "16",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-07T09:23:54.474Z",
+      "hostname": "79be8c77c86f",
+      "time": "0.155"
+    }
+  ],
+  "protocol_reports": {
+    "integration-foundation": {
+      "timestamp": "2026-11-07T09:28:11.762Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3",
+      "results": [
+        {
+          "name": "Fabric login with Cobblemon and without LuckPerms/other optional integrations",
+          "status": "passed"
+        },
+        {
+          "name": "Official Pokédex query against dynamic registry (907 implemented species)",
+          "status": "passed"
+        },
+        {
+          "name": "Initial server-side inventory menu opens",
+          "status": "passed"
+        },
+        {
+          "name": "Collection selector navigates to national progress page",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks pickup without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks right click without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks shift click without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks hotbar swap without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Close button closes the menu",
+          "status": "passed"
+        },
+        {
+          "name": "Official progress unchanged and no display items left in player inventory",
+          "status": "passed"
+        },
+        {
+          "name": "Administrative reload rejected without LuckPerms permission",
+          "status": "passed"
+        }
+      ]
+    },
+    "integration-progress-with-fixture": {
+      "timestamp": "2026-11-07T09:28:13.759Z",
+      "mode": "with-fixture",
+      "results": [
+        {
+          "name": "National and legendary show real zero percentages with nonempty dynamic totals",
+          "status": "passed"
+        },
+        {
+          "name": "Namespaced datapack species updates national count and percent through official data event",
+          "status": "passed"
+        },
+        {
+          "name": "Repeated acquisition of one species does not increase species completion",
+          "status": "passed"
+        },
+        {
+          "name": "Legendary species with no alternate forms counts via standard-form labels and official ownership",
+          "status": "passed"
+        },
+        {
+          "name": "Shiny acquisition is not misrepresented as verified shiny capture percentage",
+          "status": "passed"
+        },
+        {
+          "name": "Direct pages transmit correct percentages/N-D in item lore and back navigation works for all three collections",
+          "status": "passed"
+        }
+      ]
+    },
+    "integration-progress-resume-with-fixture": {
+      "timestamp": "2026-11-07T09:25:42.024Z",
+      "mode": "resume-with-fixture",
+      "results": [
+        {
+          "name": "Official collection progress remains available on reconnect",
+          "status": "passed"
+        },
+        {
+          "name": "Direct pages transmit correct percentages/N-D in item lore and back navigation works for all three collections",
+          "status": "passed"
+        }
+      ]
+    },
+    "integration-progress-after-removal": {
+      "timestamp": "2026-11-07T09:28:09.735Z",
+      "mode": "after-removal",
+      "results": [
+        {
+          "name": "Removing test datapack on restart recalculates both denominators and excludes removed species",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "runtime": "Development plus packaged JAR outside Loom, loopback/offline only",
+  "datapack_baseline": {
+    "national": {
+      "registered": 0,
+      "total": 907,
+      "percent": 0
+    },
+    "legendary": {
+      "registered": 0,
+      "total": 18,
+      "percent": 0
+    }
+  },
+  "removal_assertions": "National denominator decreased by 2 and legendary denominator by 1 after removing fixture and restarting; registered removed species excluded",
+  "jar": {
+    "name": "shirokai-dex-0.2.0-alpha.1+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "34c3ecb42cd7b1a317dbdca89758f6a415dddd585251362fbc7e6269e9788f6e"
+  },
+  "limitations": [
+    "Shiny captured progress unavailable; no historical inference",
+    "JSON collections/categories/wiki/placeholders not implemented",
+    "Positive LuckPerms and visual client tests still pending"
+  ]
+}

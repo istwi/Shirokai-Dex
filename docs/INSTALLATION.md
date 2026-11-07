@@ -19,10 +19,12 @@ O helper deriva HTTP/HTTPS proxy das variáveis existentes e usa cache gravável
 
 JDK local usado na validação: Temurin 21.0.13+9, tarball oficial `OpenJDK21U-jdk_x64_linux_hotspot_21.0.13_9.tar.gz`, obtido da release `jdk-21.0.13+9` do repositório `adoptium/temurin21-binaries`. SHA-256 verificado com o arquivo oficial: `d7f5d5cf865a2902b70ff549b97586a7d3f234e016f041ab447ea740c7d66d1c`. Não presumir que `/workspace/.tools/jdk-21.0.13+9` exista em outras máquinas.
 
-Arquivo de mod: `build/libs/shirokai-dex-0.1.0-alpha.1+mc1.21.1-cobblemon1.8.3.jar`. O arquivo `-sources.jar` é código-fonte e **não deve ser instalado**. O JDBC SQLite é incluído no JAR; não instalar outro SQLite mod por conta desta dependência. LuckPerms é opcional na inicialização, mas obrigatório para o reload administrativo.
+Arquivo de mod: `build/libs/shirokai-dex-0.2.0-alpha.1+mc1.21.1-cobblemon1.8.3.jar`. O arquivo `-sources.jar` é código-fonte e **não deve ser instalado**. O JDBC SQLite é incluído no JAR; não instalar outro SQLite mod por conta desta dependência. LuckPerms é opcional na inicialização, mas obrigatório para o reload administrativo.
 
 Instale o JAR principal na pasta `mods` de um servidor de testes com as dependências. Faça backup antes de iniciar. Este Dex não exige mod próprio no cliente; o Cobblemon e outros mods do servidor continuam tendo seus próprios requisitos de cliente.
 
 O servidor de desenvolvimento Loom e o JAR distribuído fora do Loom foram validados. O servidor isolado de distribuição usou o perfil oficial `https://maven.fabricmc.net/net/fabricmc/fabric-loader/0.17.2/fabric-loader-0.17.2.json`, Minecraft original e JARs de release das dependências, com checksums conferidos. Foi iniciado por `net.fabricmc.loader.impl.launch.knot.KnotServer` com o classpath desse perfil e `-Dfabric.gameJarPath=server.jar`, sem classes/fontes do projeto no classpath. O JAR do Dex ficou somente em `mods`; o smoke passou. Essa preparação alternativa foi usada porque o Fabric Installer não conseguiu consultar seus endpoints de metadata neste ambiente. Não houve alteração de allowlist.
 
 Evidência e checksum do JAR estão em [validação da Fase 1](validation/phase1-foundation.json). Não há release estável. O workflow Java gera artifact identificado pelo commit se passar; confira sua execução no GitHub, sem presumir resultado.
+
+A versão de desenvolvimento 0.2.0-alpha.1 adiciona [porcentagens e páginas de coleção](POKEDEX.md), com [validação própria](validation/phase2-percentages.json). A pré-release pública 0.1.0-alpha.1 permanece disponível separadamente e não contém essas novidades. Nenhum layout JSON completo ou captura shiny verificável foi adicionado nesta etapa.

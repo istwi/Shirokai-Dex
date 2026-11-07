@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0-alpha.1 — porcentagens iniciais (desenvolvimento)
+
+- Nacional e Lendária com quantidade/total e % no menu/status; duas casas sem falso 100%, total vazio N/D.
+- Seletor e páginas das três coleções; Shiny explicitamente N/D até evidência de captura confiável.
+- Cache por UUID invalidado por evento oficial e lifecycle, sem polling global por tick.
+- Classificação por formas reais, incluindo forma padrão quando a lista de alternativas é vazia; nacional preserva agregado oficial.
+- 32 JUnit, regressão de 11 checks e progresso de 6 checks aprovados; datapack namespaced, remoção entre reinícios e JAR fora do Loom testados.
+- Fase 2 ainda parcial: coleções JSON, wiki, placeholders e captura shiny histórica pendentes. Release pública anterior não foi alterada.
+
+
 ## 0.1.0-alpha.1 — fundação experimental
 
 - Publicada a pré-release `v0.1.0-alpha.1`, alvo `c11b366`, por workflow aprovado com 20 testes e 5 anexos. Downloads, checksums e proveniência conferidos; upload direto recusado foi resolvido pelo Actions.

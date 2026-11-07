@@ -6,7 +6,9 @@
 ./gradlew --no-daemon build
 ```
 
-Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 20 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
+Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 32 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
+
+`DexProgressTest` adiciona 12 casos de cálculo, truncamento, vazio/indisponível, IDs namespaced, denominador dinâmico, formas e duplicação.
 
 Resultados completos locais: `build/test-results/test/TEST-*.xml`. Esses testes não cobrem capturas, recompensas, competições ou desempenho multiplayer.
 
@@ -34,7 +36,7 @@ npm ci --ignore-scripts --no-audit --no-fund
 npm test
 ```
 
-Se o diretório pessoal for somente de leitura, acrescente `--cache /workspace/.cache/npm` aos comandos npm. Para outra porta loopback: `MC_TEST_PORT=25572 npm test`. O smoke conecta `DexFoundation`, verifica consulta oficial, menu, bloqueio de pickup/clique direito/Shift/hotbar, fechamento, ausência de itens indevidos, progresso inalterado e rejeição de reload sem LuckPerms. Total: 10 verificações na execução aprovada. O relatório é sobrescrito por execução em `build/integration-foundation.json`, com timestamp e target.
+Se o diretório pessoal for somente de leitura, acrescente `--cache /workspace/.cache/npm` aos comandos npm. Para outra porta loopback: `MC_TEST_PORT=25572 npm test`. O smoke conecta `DexFoundation`, verifica consulta oficial, menu, bloqueio de pickup/clique direito/Shift/hotbar, fechamento, ausência de itens indevidos, progresso inalterado e rejeição de reload sem LuckPerms. Total atual: 11 verificações na execução aprovada, incluindo navegação do seletor para a página Nacional. O relatório é sobrescrito por execução em `build/integration-foundation.json`, com timestamp e target.
 
 O cliente de protocolo ignora metadados de entidades, receitas, advancements e árvore de comandos customizados que a biblioteca vanilla não entende. Inventário, comandos executados e respostas testadas são reais, não mocks. Isto não valida renderização em cliente Minecraft/Cobblemon, sugestões de comandos, receitas nem mecânicas de batalha/captura.
 
@@ -50,3 +52,20 @@ O mesmo smoke passou com o JAR final em um servidor isolado fora do Loom, usando
 - Capturas, recompensas e falhas externas: ainda não implementadas.
 - Testes de carga: não realizados; não há alegação de capacidade de jogadores.
 - GitHub Actions: confira execução/artifact do commit correspondente. Resultado local não garante CI.
+
+## Testes de porcentagem e datapacks (0.2.0-alpha.1)
+
+Fixture própria: `tests/fixtures/datapacks/dex-progress`, formato 48 para Minecraft 1.21.1. Define uma espécie comum e uma lendária implementadas, com namespace `dex_test`, sem formas alternativas. Não contém modelos nem spawns e serve apenas para testes de dados/protocolo.
+
+Use mundo descartável e perfil DexProgress sem registros prévios. Com servidor parado, copie a pasta da fixture para `run/world/datapacks/dex-progress`. Inicie o servidor, aguarde readiness e conceda OP **somente ao perfil de teste DexProgress**, pelo console vanilla, para que o runner possa executar o comando oficial de obtenção Cobblemon. Isso não substitui permissões administrativas do Dex: seu reload continua exigindo LuckPerms. Não apagar dados de jogadores reais para adaptar um teste.
+
+```sh
+cd tests/integration
+npm run test:progress
+```
+
+O runner exige Nacional/Lendária zeradas no início. Obtém Pokémon pela API real do comando oficial `givepokemon`, sem comandos de concessão direta de Pokédex; confere atualização pelo evento, espécie repetida, forma padrão lendária, Shiny indisponível mesmo após shiny obtido e porcentagem real nos componentes de lore. Executa 6 verificações agrupadas. Para reconferir apenas reconexão/lore sem repetir concessões: `MC_PROGRESS_MODE=resume-with-fixture npm run test:progress` (2 verificações).
+
+Depois pare o servidor, mova a fixture para fora de `world/datapacks` preservando os arquivos e reinicie. Execute `MC_PROGRESS_MODE=after-removal npm run test:progress`: uma verificação agrupada compara com a baseline gravada no primeiro teste, exigindo total Nacional menor em 2, Lendária menor em 1 e exclusão das espécies removidas da contagem atual. Não faz hot reload nem altera registros oficiais para fabricar o resultado.
+
+Relatórios atuais: `build/integration-progress-*.json`; evidência persistida em [phase2-percentages.json](validation/phase2-percentages.json). Mesmo código/JAR foi validado também fora do Loom em servidor isolado, usando `MC_TEST_PORT=25572`. A imagem de um cliente Minecraft real continua pendente; apenas os componentes efetivamente transmitidos e suas respostas foram assertados.

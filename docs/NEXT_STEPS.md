@@ -2,23 +2,23 @@
 
 ## Última tarefa realizada
 
-Publicação solicitada concluída: [v0.1.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.1.0-alpha.1), tag em `c11b366`, 5 anexos e workflow `42358003410` aprovado. Downloads, SHA-256 e proveniência conferidos; ver `docs/validation/release-alpha1.json`. Workflow de publicação foi adicionado no commit `7255055`. Não executar novamente para essa versão: já está pública, como pré-release. Continuar as tarefas técnicas abaixo, sem sobrescrever seus assets.
+Início Fase 2 com pedido explícito de %: Nacional/Lendária exibem quantidade/total e percentual em menu/status; seletor e páginas com retorno interno; Shiny N/D sem inventar captura histórica. Cache por UUID invalidado por evento oficial. 32 JUnit, regressão de 11 checks, progresso de 6 checks, reconexão/lore e remoção de datapack aprovados, inclusive JAR instalado fora do Loom. [Evidências](validation/phase2-percentages.json).
 
-
-Fundação Fase 1: build/proxy/JDK, Fabric lifecycle, configuração segura, SQLite/migração, comando/menu inicial e consulta oficial Cobblemon. 20 casos JUnit e smoke de 10 checks aprovados; smoke repetido após reinício e com JAR instalado fora do Loom. Veja [evidências](validation/phase1-foundation.json).
-
-Entrega funcional enviada e confirmada: `9cab47d7d4dcd6c95793cc57e4b1b60d87b49b45` (`feat: implement and validate Fabric foundation alpha`). Atualização documental posterior registra a sincronização e notices. Confira quaisquer commits posteriores ao sincronizar; não recrie esses componentes.
+Base remota anterior `93185ae`; localizar esta entrega pelo assunto `feat: add verified Pokedex completion percentages`. Versão do build: `0.2.0-alpha.1+mc1.21.1-cobblemon1.8.3`. Não sobrescrever a release anterior `v0.1.0-alpha.1`: publicada e verificada, alvo c11b366. O workflow publish-alpha.yml é específico da release antiga e não serve para publicar esta versão.
 
 ## Próxima tarefa exata
 
 1. Execute o protocolo de AGENTS: sincronize sem descarte, leia checklist/estado e confira o código.
 2. Feche testes complementares: auditar/instalar LuckPerms Fabric compatível e testar permissão positiva/contextos e `/dex admin reload` válido/inválido. Ausência do provedor já nega a ação; não usar OP como substituto.
 3. Testar arraste, double-click/descarte e aparência no cliente Minecraft/Cobblemon real; o smoke não valida renderização.
-4. Preparar Fase 2 incrementalmente: modelos de coleções/categorias JSON validados e consultas de leitura. Não tratar OWNED como captura competitiva nem inferir captura shiny de shiny visto. Documentar política para dados que não podem ser reconstruídos.
-5. Criar fixture de datapack com espécie namespaced; testar totais entre reinícios. Cobblemon declara espécies inseguras para hot reload; não forçar reload do registro oficial.
+4. Continuar a Fase 2 a partir do cálculo/menus já implementados em `pokedex`, `cobblemon` e `menus`; não reimplementar percentuais. Adicionar modelos de coleções/categorias JSON validados e consultas de leitura. Não tratar OWNED como captura competitiva nem inferir captura shiny de shiny visto. Documentar política para dados que não podem ser reconstruídos.
+5. Reutilizar a fixture namespaced e os testes de totais entre reinícios já existentes; expandir para datapacks reais/casos de formas conforme os novos critérios, sem recriar a validação concluída. Cobblemon declara espécies inseguras para hot reload; não forçar reload do registro oficial.
 6. Atualizar checklist/estado/próximos passos/auditoria/changelog; testes, commit, push autorizado e confirmação remota. Não publicar ambiente/release estável sem autorização.
 
 ## Arquivos importantes
+
+- [Porcentagens e coleções](POKEDEX.md), `src/main/java/br/com/shirokaidex/pokedex`, `DexProgressTest`, `tests/integration/progress.cjs` e `tests/fixtures/datapacks/dex-progress`: trabalho atual. A forma padrão precisa ser incluída mesmo quando Species.forms está vazio.
+
 
 - [Checklist](MASTER_CHECKLIST.md), [prompt integral](PROJECT_SPECIFICATION.md), [auditoria](API_COMPATIBILITY.md), [estado](PROJECT_STATUS.md).
 - `src/main/java/br/com/shirokaidex/core/ShirokaiDex.java`: lifecycle, comandos e integração assíncrona.
@@ -43,7 +43,7 @@ Crates indicado: `https://github.com/istwi/Shirokai-Crates`, revisão `05b3995c4
 
 ## Testes pendentes e cuidados
 
-- Capturas, recompensas, economia, competições, datapacks externos e carga ainda não validados funcionalmente.
+- Capturas, recompensas, economia, competições, datapacks reais adicionais e carga ainda não validados funcionalmente. Duas espécies de fixture namespaced foram testadas; não generalizar para todo ecossistema. Percentual shiny deve permanecer N/D até haver fonte de captura verificável.
 - Não modificar a Pokédex oficial nem chamar concessões para fabricar progresso.
 - Não prometer atomicidade SQLite/inventário/APIs externas.
 - Não depender de processos vivos; servidores de teste devem ser encerrados e dados locais ficam fora do Git.

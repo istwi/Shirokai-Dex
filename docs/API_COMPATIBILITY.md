@@ -10,6 +10,16 @@ Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificaç�
 
 A auditoria estática inicial não executou testes funcionais. As validações posteriores da fundação estão separadas abaixo; captura, resgate e economia continuam sem testes funcionais.
 
+## Atualização: porcentagens e formas — verificação funcional inicial
+
+Fonte: mesma tag Cobblemon 1.8.3 fixada nesta auditoria. Consulta de `Species.getStandardForm()`, `getForms()`, `FormData.getLabels()`, `SpeciesDexRecord.getFormRecord(name)` e `FormDexRecord.getKnowledge()` compilada e executada em servidor real. **Species.forms pode estar vazio quando não há formas alternativas**; incluir a forma padrão explicitamente é necessário. Labels da forma padrão usam as da espécie quando não há override, como em `Pokemon.isLegendary()`.
+
+`CobblemonEvents.POKEDEX_DATA_CHANGED_POST.subscribe(Consumer<Post>)` e `Post.getPlayerUUID()` usados para invalidar snapshot na thread correta. Testes de obtenção real via comando oficial givepokemon observaram nova contagem antes da expiração de 5 segundos do cache, sem chamar métodos de concessão de Pokédex. Esses Pokémon concedidos não foram classificados como capturas legítimas nem evidência shiny capturada.
+
+Fixture própria com `dex_test:ordinary` e `dex_test:legend`, incluindo espécie lendária sem formas alternativas, foi carregada. Nacional: 907 espécies implementadas com fixture, 905 após removê-la e reiniciar; Lendária: 18/17. Apenas classificação/progresso atuais foram derivados, sem inventar histórico. O JAR fora do Loom passou nos testes. [Relatório](validation/phase2-percentages.json). Isso não certifica datapacks adicionais reais.
+
+Shiny capturado continua **UNSUPPORTED pelo registro oficial isolado** e a UI mostra N/D, não 0% nem a inferência inválida de shiny visto + normal obtido.
+
 ## Atualização: fundação experimental validada
 
 `VERIFIED` no escopo básico: build Java 21, 20 casos JUnit sem falhas e servidor Fabric 0.17.2 com Cobblemon 1.8.3, tanto em desenvolvimento quanto com JAR remapeado instalado isoladamente fora do Loom. Evidência: [relatório](validation/phase1-foundation.json).

@@ -4,9 +4,14 @@ Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apen
 
 ## Fase atual
 
-Primeira entrega da **fundação experimental da Fase 1**, validada no escopo abaixo. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
+**Início da Fase 2 — porcentagens e coleções iniciais**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
 
 ## Concluído
+
+- Nova alpha local `0.2.0-alpha.1+mc1.21.1-cobblemon1.8.3`: seletor/páginas Nacional, Lendária e Shiny; status por coleção, porcentagens com duas casas e sem falso 100%. [Comportamento](POKEDEX.md).
+- Cache por UUID até 5 segundos, invalidado por evento oficial pós-Pokédex, login/logout/reload/lifecycle; cálculo puro separado do adaptador. Nacional usa agregado oficial; Lendária exige forma elegível obtida.
+- Validação atual: **32 casos JUnit** e regressão/progresso em servidor dev e JAR fora do Loom, incluindo datapack e sua remoção. [Relatório](validation/phase2-percentages.json).
+
 
 - Build Gradle 8.14.3/Loom 1.11.8 com checksum oficial, helper de proxy/cache e JDK 21 completo verificado. Plugin Kotlin 2.2.20 habilita metadata remapping; ICU 71.1 compõe o runtime dev dedicado.
 - Inicializador Fabric com lifecycle/readiness/logs e falhas isoladas do Dex; ausência de LuckPerms não impede iniciar.
@@ -19,6 +24,9 @@ Primeira entrega da **fundação experimental da Fase 1**, validada no escopo ab
 
 ## Em desenvolvimento
 
+- Coleções e critérios configuráveis JSON, wiki/menus avançados e placeholders da Fase 2. Esta entrega não implementa esses sistemas nem captura shiny histórica.
+
+
 - Testes complementares: LuckPerms positivo/contextos e interações/aparência em cliente Minecraft real.
 - Preparação incremental da Fase 2, respeitando limitações reais de shiny e de espécies/datapacks.
 
@@ -30,6 +38,11 @@ Primeira entrega da **fundação experimental da Fase 1**, validada no escopo ab
 - Licença do código próprio e release estável. Nenhuma configuração de ambiente foi alterada/publicada nesta entrega.
 
 ## Testes e verificações executados
+
+Atualização de porcentagens: 32 JUnit (16 configuração + 4 SQLite + 12 progresso), zero falhas/erros/skips. Regressão de protocolo: 11 verificações. Progresso: 6 verificações com espécie comum/lendária de datapack e shiny obtido por comando; cache respondeu ao evento antes do TTL. Reconexão/lore: 2 checks; remoção de datapack entre reinícios: 1 check. Progresso/status e lore reais conferidos em servidor de desenvolvimento e no JAR empacotado. Total Nacional 907 com fixture e 905 sem; Lendária 18 com fixture e 17 sem. Fonte de contagem é o registro real, não esses números fixados no código.
+
+Os testes abaixo e `phase1-foundation.json` preservam o histórico da primeira alpha; não representam o último total da suíte. O novo relatório é `phase2-percentages.json`.
+
 
 Evidência persistida: [relatório da fundação](validation/phase1-foundation.json). Testes em `src/test` e `tests/integration`.
 
@@ -69,3 +82,7 @@ Usuário autorizou publicar. [Pré-release v0.1.0-alpha.1](https://github.com/is
 Cinco anexos: JAR instalável, sources JAR, SHA256SUMS.txt, BUILD_PROVENANCE.json e phase1-foundation.json. Todos foram baixados da release; checksums e proveniência verificados. Evidência em [release-alpha1.json](validation/release-alpha1.json). O relatório phase1 descreve o teste local de servidor e seu hash local; os binários publicados são de CI e têm checksums próprios, sem confundir as duas evidências.
 
 Upload direto da sessão recebeu HTTP 401; resolvido pelo token do próprio GitHub Actions, sem chave pessoal nem alteração do ambiente. O workflow é específico desta alpha e recusa nova publicação se a release já não estiver em rascunho. Não recriar ou sobrescrever a release.
+
+## Última entrega de progresso
+
+Implementação identificada pelo assunto `feat: add verified Pokedex completion percentages`, baseada no remoto `93185ae`. A alpha.1 publicada permanece imutável; esta versão 0.2.0-alpha.1 será disponibilizada pelo artifact de build do commit e JAR local. Não foi publicada nova release nesta tarefa. Confirmar SHA/push ao encerrar.
