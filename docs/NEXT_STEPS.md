@@ -63,3 +63,7 @@ Crates indicado: `https://github.com/istwi/Shirokai-Crates`, revisão `05b3995c4
 - Não depender de processos vivos; servidores de teste devem ser encerrados e dados locais ficam fora do Git.
 - Preservar inscrição, cancelamento definitivo por edição, calendário, faixas exclusivas e estatísticas permanentes independentes.
 - Conferir Actions pelo commit; existência do workflow não prova artifact publicado.
+
+## Publicação da alpha.3 autorizada
+
+Usuário solicitou o JAR na release. Build remoto do código `47817bff13cdc3464ad926791233801a01354b54` aprovado no Actions `42365240743`. Workflow dedicado `publish-wiki-alpha.yml` preparado para gerar/testar o mesmo commit e publicar somente a pré-release `v0.2.0-alpha.3`, com JAR, fontes, relatório, checksums e proveniência. A release anterior não será alterada. Publicação e anexos ainda aguardam confirmação da execução. Nenhuma configuração de ambiente é publicada por esse fluxo.
