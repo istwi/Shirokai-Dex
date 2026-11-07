@@ -1,23 +1,21 @@
 # Shirokai Dex
 
-Mod planejado para Minecraft 1.21.1, Fabric, Java 21 e Cobblemon 1.8.3, desenvolvido incrementalmente para o servidor Shirokai.
+Fundação experimental de mod server-side para Minecraft 1.21.1, Fabric, Java 21 e Cobblemon 1.8.3.
 
-**Estado atual:** auditoria estática inicial e sistema de continuidade. Há um esqueleto Gradle, mas ainda não há inicializador Fabric, funcionalidades implementadas ou JAR instalável. Nenhuma integração é declarada funcional.
+Disponível nesta alpha: `/dex`, resumo somente de leitura da Pokédex oficial, menu inicial protegido, configuração validada com recuperação e SQLite com migração versionada. Coleções completas, recompensas, capturas, rankings e competições ainda não estão implementados.
 
-Acompanhe o que foi concluído e onde continuar na [checklist do prompt mestre](docs/MASTER_CHECKLIST.md). Todo Codex deve atualizá-la a cada entrega, marcando e riscando somente itens verificados.
+Validação local: **20 casos JUnit aprovados** e **10 verificações de protocolo** aprovadas em servidor real, repetidas após reinício e com JAR instalado fora do Loom. Não é release estável. Consulte [testes e limites](docs/TESTING.md).
 
-Antes de trabalhar, leia [AGENTS.md](AGENTS.md), [estado do projeto](docs/PROJECT_STATUS.md) e [próximos passos](docs/NEXT_STEPS.md). O [prompt mestre](docs/PROJECT_SPECIFICATION.md) foi preservado integralmente. Consulte as [evidências das APIs](docs/API_COMPATIBILITY.md) antes de implementar integrações.
+## Instalar e desenvolver
 
-## Desenvolvimento
+Com JDK 21 completo: `./gradlew --no-daemon build`.
 
-Java 21 é obrigatório. Gradle Wrapper 8.14.3 tem checksum de distribuição fixado. O build fixa as versões principais, mas a resolução completa e o build ainda não foram validados. O primeiro passo técnico é corrigir o acesso do Gradle ao proxy, preservando TLS e certificados, e executar `./gradlew --no-daemon help`.
+Em cloud com proxy herdado: `python3 scripts/gradle_cloud.py --no-daemon build`, usando a truststore do ambiente quando necessária. Não desabilite TLS/checksums. Artefato: `build/libs/shirokai-dex-0.1.0-alpha.1+mc1.21.1-cobblemon1.8.3.jar`; não instalar `-sources.jar`.
 
-Em ambientes onde o diretório pessoal não é gravável, defina `GRADLE_USER_HOME` para um cache gravável fora do checkout, por exemplo `/workspace/.cache/shirokai-gradle`. O Java/Gradle não usa automaticamente `HTTPS_PROXY`; configure o proxy a partir das variáveis herdadas sem salvar credenciais ou endereços específicos da sessão no repositório.
+Leia [instalação](docs/INSTALLATION.md), [configuração](docs/CONFIGURATION.md), [comandos](docs/COMMANDS.md), [permissões](docs/PERMISSIONS.md), [banco](docs/DATABASE.md) e [diagnóstico](docs/TROUBLESHOOTING.md). O workflow [Java 21](.github/workflows/build.yml) gera artifact identificado pelo commit quando passa; confira o resultado no GitHub.
 
-Não instale este checkout como um mod pronto. A Fase 1 precisa implementar e validar inicialização, configuração, SQLite/migrações, comando e menu inicial. O pipeline Java, os testes e a distribuição serão adicionados com essa implementação.
+## Continuidade obrigatória
 
-## Continuidade
+Antes de trabalhar, leia [AGENTS.md](AGENTS.md), [checklist](docs/MASTER_CHECKLIST.md), [estado](docs/PROJECT_STATUS.md), [próximos passos](docs/NEXT_STEPS.md) e [auditoria](docs/API_COMPATIBILITY.md). O [prompt mestre integral](docs/PROJECT_SPECIFICATION.md) permanece preservado.
 
-GitHub é a fonte oficial entre sessões. Apenas um Codex trabalha por vez. Commits devem incluir código e documentos de progresso correspondentes. Antes de encerrar, valide, faça commit, tente push autorizado e confirme o resultado; se bloqueado, informe explicitamente o que permanece somente local. Não publique releases ou configurações de ambiente sem autorização específica.
-
-Execute `python3 scripts/check_continuity.py` para verificar documentos, seções e links locais. O workflow de continuidade também exige atualizar estado e próximos passos em alterações técnicas. Ele não substitui os testes do mod nem garante que o texto corresponde ao código: essa conferência é obrigatória no protocolo do Codex.
+Apenas um Codex por vez. A cada entrega, atualize a checklist com itens comprovados riscados, estado, próximos passos e evidências. Faça commit/push autorizado e confirme sincronização. Execute `python3 scripts/check_continuity.py`; o checker não substitui revisão do código ou testes do mod.

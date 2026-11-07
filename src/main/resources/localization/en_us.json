@@ -1,0 +1,11 @@
+{
+  "not_ready": "Shirokai Dex is not available yet. Check the server logs.",
+  "players_only": "This command must be run by a player.",
+  "progress": "Official Pokédex: {0} species owned, {1} seen, of {2} implemented.",
+  "foundation": "Experimental foundation. Collections and rewards are not available yet.",
+  "reload_ok": "Shirokai Dex configuration reloaded.",
+  "reload_failed": "Invalid or unavailable configuration. The last valid configuration was retained. Check the logs.",
+  "query_failed": "Unable to query the official Pokédex. Check the logs.",
+  "menu_progress": "✦ Official Pokédex",
+  "menu_close": "Close"
+}

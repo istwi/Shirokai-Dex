@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Fase 0: auditoria estática inicial feita; validação funcional pendente. Fase 1: esqueleto Gradle parcial.** Próxima ação: repetir o comando Gradle via proxy com o checksum já corrigido na fonte oficial; depois implementar a fundação. Não há mod inicializável ou JAR instalável.
+**Fundação experimental implementada e validada.** Build e 20 casos JUnit aprovados; smoke de 10 verificações aprovado em servidor de desenvolvimento, após reinício e com JAR instalado fora do Loom. Consulte [evidências](validation/phase1-foundation.json). Fase 0 continua com integrações avançadas pendentes. Próximo passo: fechar os testes complementares de permissão positiva/gestos do menu e preparar a Fase 2, sem inferir shiny capturado a partir de shiny visto. Nenhuma recompensa ou competição foi implementada.
 
 ## Preparação e continuidade
 
@@ -20,31 +20,31 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 - [x] ~~Registrar auditoria estática inicial com fontes e limitações.~~ Evidência: [compatibilidade](API_COMPATIBILITY.md), commit `9eaae42`; não equivale à validação funcional da Fase 0.
 - [x] ~~Configurar passagem obrigatória entre Codex.~~ Evidência: [AGENTS.md](../AGENTS.md), [estado](PROJECT_STATUS.md), [próximos passos](NEXT_STEPS.md), commit `72304ea`.
 - [x] ~~Confirmar commit e envio inicial ao GitHub.~~ Evidência: commit remoto `ec8f1e9`, confirmado por leitura Git.
-- [ ] Concluir configuração e resolução do build Gradle. Parcial: download via proxy funcionou; checksum incorreto foi corrigido consultando o valor oficial. Repetição do Wrapper e resolução completa pendentes.
+- [x] ~~Concluir configuração e resolução do build Gradle.~~ Evidência: `build` aprovado com JDK 21, proxy herdado e checksums ativos; [instalação](INSTALLATION.md).
 
 ## FASE 0 — Auditoria técnica
 
 - [ ] Investigar as APIs reais.
 - [ ] Verificar dependências.
 - [ ] Confirmar eventos de captura.
-- [ ] Confirmar acesso à Pokédex.
+- [x] ~~Confirmar acesso à Pokédex.~~ Consulta básica executada em servidor real, sem escrita na Pokédex oficial; variantes shiny permanecem limitadas conforme auditoria.
 - [ ] Confirmar registro dinâmico de espécies.
 - [ ] Confirmar criação de Pokémon.
 - [ ] Confirmar integração econômica.
-- [ ] Criar `API_COMPATIBILITY.md`.
+- [x] ~~Criar `API_COMPATIBILITY.md`.~~ Documento criado e atualizado com evidências e testes pendentes.
 - [ ] Identificar bloqueios técnicos.
 
 ## FASE 1 — Fundação
 
-- [ ] Estrutura Gradle.
-- [ ] Inicialização Fabric.
-- [ ] Sistema de configuração.
-- [ ] SQLite.
-- [ ] Migrações.
-- [ ] Logs.
-- [ ] Comando `/dex`.
-- [ ] Menu inicial.
-- [ ] Integração básica com Cobblemon.
+- [x] ~~Estrutura Gradle.~~ Build e JAR remapeado aprovados.
+- [x] ~~Inicialização Fabric.~~ Servidor dev e JAR isolado iniciaram com Cobblemon 1.8.3.
+- [x] ~~Sistema de configuração.~~ Parsing estrito, reload seguro e recuperação testados; comando com LuckPerms positivo ainda pendente.
+- [x] ~~SQLite.~~ Driver incluído e carregado no JAR instalado; executor dedicado.
+- [x] ~~Migrações.~~ Transação, rollback, versão futura e reabertura testados.
+- [x] ~~Logs.~~ Readiness, recuperação e falhas registradas no servidor.
+- [x] ~~Comando `/dex`.~~ Menu e `/dex status` testados via cliente de protocolo.
+- [x] ~~Menu inicial.~~ 10 verificações de smoke com itens somente de leitura; gestos adicionais/cliente visual pendentes.
+- [x] ~~Integração básica com Cobblemon.~~ Leitura real de registros oficiais e 905 espécies implementadas; datapacks externos e demais integrações pendentes.
 
 ## FASE 2 — Pokédex
 
@@ -134,6 +134,8 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 | Auditoria inicial e build base | Fontes reais auditadas; sem testes funcionais; sem mod implementado | `9eaae42` |
 | Continuidade | Documentos e checker validados, incluindo cenários negativos; envio confirmado | `72304ea`, `ec8f1e9` |
 | Checklist permanente | Adicionada esta lista e exigida atualização por AGENTS e checker; documentação do ponto de retomada atualizada | Commit com assunto `docs: track master prompt progress and correct official Gradle checksum` |
-| Gradle via proxy | Download chegou a 100%; Wrapper rejeitou checksum salvo. Não houve execução do Gradle | Tentativa posterior a `ec8f1e9`; checksum corrigido na entrega seguinte, nova execução pendente |
+| Gradle via proxy | Resolvido: checksum oficial corrigido, JDK completo instalado/verificado, build aprovado | [Instalação](INSTALLATION.md) e [testes](TESTING.md) |
+
+| Fundação alpha | Inicialização, config, SQLite/migrações, menu, comandos, consulta oficial, helper de build e CI; 20 casos Java + 10 checks de protocolo, com reinício e JAR instalado. [Arquivos e testes](PROJECT_STATUS.md) | Commit `feat: implement and validate Fabric foundation alpha` |
 
 Ao registrar a própria entrega, use o assunto do commit em preparação e substitua pela referência exata na atualização seguinte; não crie commits infinitos apenas para gravar o hash do próprio documento.

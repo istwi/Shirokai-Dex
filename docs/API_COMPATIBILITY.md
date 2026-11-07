@@ -8,7 +8,21 @@ Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificaç�
 - `PENDING_TEST`: API localizada, mas integração, compilação ou comportamento em servidor ainda não testados.
 - `UNSUPPORTED`: contrato solicitado não demonstrado pela API examinada; não implica impossibilidade de todas as alternativas.
 
-Nenhum teste de captura, resgate, economia, GUI ou servidor Fabric foi executado nesta etapa da auditoria.
+A auditoria estática inicial não executou testes funcionais. As validações posteriores da fundação estão separadas abaixo; captura, resgate e economia continuam sem testes funcionais.
+
+## Atualização: fundação experimental validada
+
+`VERIFIED` no escopo básico: build Java 21, 20 casos JUnit sem falhas e servidor Fabric 0.17.2 com Cobblemon 1.8.3, tanto em desenvolvimento quanto com JAR remapeado instalado isoladamente fora do Loom. Evidência: [relatório](validation/phase1-foundation.json).
+
+`Cobblemon.INSTANCE.getPlayerDataManager().getPokedexData(ServerPlayer)`, `getSpeciesRecord`, `hasAtLeast(SEEN/OWNED)` e `PokemonSpecies.INSTANCE.getImplemented()` foram compilados e executados no servidor: 1025 espécies carregadas pelo Cobblemon, 905 implementadas no catálogo usado pelo resumo. Não há lista fixa no código. Datapacks adicionais não foram testados.
+
+Menu básico usa o protocolo vanilla, sem SGUI: assinaturas de `ChestMenu`, `AbstractContainerMenu`, `SimpleMenuProvider`, componentes `CUSTOM_NAME` e `LORE` verificadas no Minecraft mapeado. Smoke real confirmou abertura e bloqueios de pickup, clique direito, Shift/hotbar, fechamento e ausência de alteração do progresso oficial/entrega de ícones. Aparência em cliente Minecraft real e demais gestos continuam pendentes. SGUI não é dependência da fundação.
+
+API LuckPerms 5.4 resolveu e compilou; ausência do mod e negação de reload foram testadas no servidor. Permissão positiva/contextos ainda são `PENDING_TEST`. Impactor, Placeholders, SkiesGUIs, TAB e Crates não são integrações funcionais desta alpha.
+
+Cuidados reais do ambiente de desenvolvimento: Loom 1.11.8 só disponibiliza remapeamento de metadata Kotlin quando o plugin Kotlin está aplicado (`KotlinClasspathService.createOptions`, fonte oficial do Loom). Plugin Kotlin 2.2.20 corrigiu o `ClassNotFoundException: net.minecraft.class_2960` por reflexão do Cobblemon. `minecraftServerLibraries` com ICU 71.1, como no build oficial Cobblemon, corrigiu o runtime Showdown. Nenhum JAR oficial foi alterado.
+
+O próprio Cobblemon informa no startup que seus registros de espécies são carregados uma vez por instância e não são seguros para reload. Não chamar `PokemonSpecies.reload` para forçar hot reload. Alterações de datapacks/espécies devem ser validadas entre reinícios; reload de JSON do Dex é um fluxo distinto.
 
 ## Fontes fixadas
 
@@ -43,7 +57,7 @@ Limite: outro mod pode publicar o evento ou alterar o fluxo. A observação de u
 
 Estratégia candidata: snapshot imutável na thread do servidor; persistir chave de deduplicação composta pelo UUID do Pokémon e UUID da entidade de Poké Ball, com unicidade em SQLite. Validar recaptura do mesmo Pokémon, repetição do mesmo callback, reinício e captura simultânea antes de adotar. Não usar somente espécie/horário nem UUID do Pokémon isolado, pois pode haver recaptura legítima após soltura.
 
-## Pokédex oficial — PENDING_TEST
+## Pokédex oficial — consulta básica VERIFIED; variantes PENDING_TEST
 
 - `api.storage.player.PlayerInstancedDataStoreManager.getPokedexData(ServerPlayer)` e sobrecarga UUID retornam `api.pokedex.PokedexManager`.
 - `AbstractPokedexManager.getSpeciesRecord(ResourceLocation)` consulta sem criar registro; `getHighestKnowledgeForSpecies` e `getKnowledgeForSpecies` também estão presentes.
@@ -53,7 +67,7 @@ Estratégia candidata: snapshot imutável na thread do servidor; persistir chave
 
 **UNSUPPORTED pelo registro isolado:** reconstrução de “shiny capturado” pelo cruzamento `OWNED && shiny visto`. Ver um shiny e obter um normal produz essa combinação sem comprovar captura shiny. Alternativa correta: evidência própria de capturas shiny a partir da instalação, mantendo o progresso oficial separado; não reconstruir histórico inexistente. A Pokédex oficial também registra obtenção, que não equivale a captura selvagem competitiva.
 
-## Registro dinâmico e categorias — PENDING_TEST
+## Registro dinâmico e categorias — enumeração básica VERIFIED; datapacks/categorias PENDING_TEST
 
 - `api.pokemon.PokemonSpecies.species`, `.implemented`, `getByIdentifier(ResourceLocation)` e `reload(Map<ResourceLocation, Species>)` existem. Dados são carregados do caminho de recursos `species`.
 - `pokemon.Species` fornece identificador, formas, tipos e labels; `Pokemon.isLegendary()`, `isMythical()`, `isUltraBeast()` usam labels da forma.
@@ -117,7 +131,7 @@ Spawn/wiki (`PENDING_TEST`): não foi validada uma consulta universal de biomas/
 - Tags Cobblemon, Impactor e submódulo, LuckPerms, Placeholder API e SGUI obtidas e inspecionadas.
 - POM Cobblemon e catálogo Maven oficial consultados com TLS ativo; commit do POM corresponde à tag.
 - `api.modrinth.com` e `maven.cobblemon.com` retornaram bloqueio HTTP 403 no proxy. O Maven oficial alternativo acima respondeu; não desabilitar TLS nem ampliar rede automaticamente.
-- Compilação dos adaptadores, testes unitários/integrados e servidor Fabric: **pendentes**. Inspeção de fonte não é teste funcional.
+- Na auditoria inicial, compilação e testes eram pendentes. O escopo básico foi posteriormente validado conforme a seção de atualização e o relatório; demais integrações continuam pendentes. Inspeção de fonte não é teste funcional.
 
 ## Critérios para avançar
 

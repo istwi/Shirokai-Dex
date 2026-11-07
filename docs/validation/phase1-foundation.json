@@ -1,0 +1,93 @@
+{
+  "timestamp": "2026-11-07T08:43:28.024Z",
+  "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3",
+  "results": [
+    {
+      "name": "Fabric login with Cobblemon and without LuckPerms/other optional integrations",
+      "status": "passed"
+    },
+    {
+      "name": "Official Pokédex query against dynamic registry (905 implemented species)",
+      "status": "passed"
+    },
+    {
+      "name": "Initial server-side inventory menu opens",
+      "status": "passed"
+    },
+    {
+      "name": "Menu blocks pickup without transferring the display item",
+      "status": "passed"
+    },
+    {
+      "name": "Menu blocks right click without transferring the display item",
+      "status": "passed"
+    },
+    {
+      "name": "Menu blocks shift click without transferring the display item",
+      "status": "passed"
+    },
+    {
+      "name": "Menu blocks hotbar swap without transferring the display item",
+      "status": "passed"
+    },
+    {
+      "name": "Close button closes the menu",
+      "status": "passed"
+    },
+    {
+      "name": "Official progress unchanged and no display items left in player inventory",
+      "status": "passed"
+    },
+    {
+      "name": "Administrative reload rejected without LuckPerms permission",
+      "status": "passed"
+    }
+  ],
+  "runtime": "Packaged remapped JAR in isolated server outside Loom; Fabric KnotServer with official Maven loader profile, original Minecraft bundle and release mod artifacts",
+  "port": 25572,
+  "unit_tests": [
+    {
+      "name": "br.com.shirokaidex.database.DatabaseTest",
+      "tests": "4",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-07T08:41:17.247Z",
+      "hostname": "79be8c77c86f",
+      "time": "0.395"
+    },
+    {
+      "name": "br.com.shirokaidex.config.ConfigManagerTest",
+      "tests": "16",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-07T08:41:17.153Z",
+      "hostname": "79be8c77c86f",
+      "time": "0.091"
+    }
+  ],
+  "jar": {
+    "name": "shirokai-dex-0.1.0-alpha.1+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "a381b1505701267422f53ab0c107ebe8444a41a21ac527a838d98085068c13c7"
+  },
+  "development_restart": {
+    "passed": true,
+    "checks": [
+      "Invalid configuration recovered from last-good backup",
+      "Invalid original preserved",
+      "Existing UUIDs and first joins preserved",
+      "One migration record",
+      "SQLite integrity_check=ok",
+      "Smoke suite passed again"
+    ]
+  },
+  "known_failed_attempts": [
+    "Missing JDK compiler before local Temurin installation",
+    "Development startup before Kotlin metadata remapping",
+    "Development Showdown startup before explicit server ICU dependency",
+    "Initial smoke expected a different vanilla permission error string; corrected matcher after inspecting real response",
+    "Packaged client connected before server readiness; ECONNREFUSED, repeated after Done",
+    "Fabric Installer metadata lookup unavailable; isolated server assembled using official static Maven loader metadata instead"
+  ]
+}

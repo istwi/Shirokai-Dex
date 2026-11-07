@@ -1,0 +1,33 @@
+name: Build Java 21 (experimental)
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Compile, test and build remapped JAR
+        run: ./gradlew --no-daemon build
+      - name: Upload experimental JAR and sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: shirokai-dex-alpha-mc1.21.1-cobblemon1.8.3-${{ github.sha }}
+          path: build/libs/*.jar
+          if-no-files-found: error
+      - name: Upload JUnit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-${{ github.sha }}
+          path: build/test-results/test/*.xml
+          if-no-files-found: warn

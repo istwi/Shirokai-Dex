@@ -1,0 +1,28 @@
+# Instalação — alpha experimental
+
+Alvo: Minecraft 1.21.1, servidor dedicado Fabric Loader 0.17.2+, Java **21**, Fabric API 0.116.6+1.21.1, Cobblemon **1.8.3+1.21.1** e Fabric Language Kotlin 1.13.6+kotlin.2.2.20. Confira as versões exatas antes de instalar. Não use esta alpha no servidor de produção sem os testes de staging.
+
+Gere o artefato com JDK 21 completo:
+
+```sh
+./gradlew --no-daemon build
+```
+
+Em nuvem com proxy herdado:
+
+```sh
+export JAVA_HOME=/caminho/do/jdk-21
+python3 scripts/gradle_cloud.py --no-daemon build
+```
+
+O helper deriva HTTP/HTTPS proxy das variáveis existentes e usa cache gravável em `/workspace/.cache/shirokai-gradle` quando não há `GRADLE_USER_HOME` definido. Não salva credenciais nem altera configuração global. Caso o JDK local não use a CA do ambiente, use a truststore fornecida pelo sistema; na máquina validada foi necessário acrescentar `-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts`. Não desabilite TLS.
+
+JDK local usado na validação: Temurin 21.0.13+9, tarball oficial `OpenJDK21U-jdk_x64_linux_hotspot_21.0.13_9.tar.gz`, obtido da release `jdk-21.0.13+9` do repositório `adoptium/temurin21-binaries`. SHA-256 verificado com o arquivo oficial: `d7f5d5cf865a2902b70ff549b97586a7d3f234e016f041ab447ea740c7d66d1c`. Não presumir que `/workspace/.tools/jdk-21.0.13+9` exista em outras máquinas.
+
+Arquivo de mod: `build/libs/shirokai-dex-0.1.0-alpha.1+mc1.21.1-cobblemon1.8.3.jar`. O arquivo `-sources.jar` é código-fonte e **não deve ser instalado**. O JDBC SQLite é incluído no JAR; não instalar outro SQLite mod por conta desta dependência. LuckPerms é opcional na inicialização, mas obrigatório para o reload administrativo.
+
+Instale o JAR principal na pasta `mods` de um servidor de testes com as dependências. Faça backup antes de iniciar. Este Dex não exige mod próprio no cliente; o Cobblemon e outros mods do servidor continuam tendo seus próprios requisitos de cliente.
+
+O servidor de desenvolvimento Loom e o JAR distribuído fora do Loom foram validados. O servidor isolado de distribuição usou o perfil oficial `https://maven.fabricmc.net/net/fabricmc/fabric-loader/0.17.2/fabric-loader-0.17.2.json`, Minecraft original e JARs de release das dependências, com checksums conferidos. Foi iniciado por `net.fabricmc.loader.impl.launch.knot.KnotServer` com o classpath desse perfil e `-Dfabric.gameJarPath=server.jar`, sem classes/fontes do projeto no classpath. O JAR do Dex ficou somente em `mods`; o smoke passou. Essa preparação alternativa foi usada porque o Fabric Installer não conseguiu consultar seus endpoints de metadata neste ambiente. Não houve alteração de allowlist.
+
+Evidência e checksum do JAR estão em [validação da Fase 1](validation/phase1-foundation.json). Não há release estável. O workflow Java gera artifact identificado pelo commit se passar; confira sua execução no GitHub, sem presumir resultado.
