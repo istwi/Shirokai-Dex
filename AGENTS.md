@@ -51,3 +51,7 @@ O usuário autorizou investigar/corrigir a inicialização, atualizar documenta�
 ## Autorização atual de sincronização
 
 O usuário pediu enviar ao GitHub as atualizações já concluídas e depois continuar o projeto. Autoriza commit/push do snapshot alpha.6/7/8 validado; não autoriza nova release nem publicação de ambiente. Trabalho novo após essa sincronização continua local até nova solicitação de envio.
+
+## Parada e passagem solicitadas pelo responsável
+
+O usuário pediu enviar o que está pronto e o progresso ao GitHub e parar para trocar de Codex. Main funcional alpha.8 está enviada; WIP de checkpoint Crates separado em handoff/crates-checkpoint. Conferir docs/CRATES_CHECKPOINT_HANDOFF.md antes de retomar. Nenhuma nova release ou publicação de ambiente autorizada.

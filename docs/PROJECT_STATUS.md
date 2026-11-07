@@ -2,6 +2,14 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
+## Sessão encerrada pelo responsável — passagem ao próximo Codex
+
+Main funcional validada: `191a65e` (alpha.8, 274 JUnit e 8 checks monetários, evidências dos menus preservadas). Código/documentação enviados e Actions concluído com sucesso. A entrega documental de passagem não altera esse código funcional.
+
+Continuação Crates incompleta foi salva e enviada separadamente: branch `handoff/crates-checkpoint`, commit `6b97093`. Inclui checkpoint assíncrono/ItemRewardAdapter, probe remapeado, fixture e instruções. Build/JAR/274 JUnit passaram nessa branch; teste funcional de checkpoint/chaves ainda NÃO foi executado. Não foi integrado à main nem publicado como release.
+
+Próximo Codex: [passagem exata](CRATES_CHECKPOINT_HANDOFF.md). Servidor descartável encerrado normalmente; RCON desativado, segredo/probe/dependências temporárias removidos. Não há trabalho importante apenas local. Usuário pediu parar; não prosseguir nesta sessão.
+
 ## Sincronização autorizada — menus e CURRENCY
 
 O usuário solicitou commit/push das alterações alpha.6/7/8 validadas. Entrega de referência: commit `feat: add configurable menu presentation and Impactor currency rewards`, sobre a base `7defc0c`. Código, fixtures, evidências e documentação incluídos; 274 JUnit e 8 checks monetários, além dos blocos anteriores de menus. Sem nova release/publicação de ambiente. As seções locais abaixo preservam a história de implementação; a confirmação do envio depende da verificação remota ao concluir a entrega. Próximo trabalho: chaves físicas Crates, inicialmente em escopo local.

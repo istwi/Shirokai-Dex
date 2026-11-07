@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Retomada:** alpha.8 local acrescentou CURRENCY com Impactor5.3.5/JSON nativo; 274 JUnit e 8 checks de servidor, [evidência](validation/phase3-currency.json). Menus alpha.6/7 preservados. Base publicada `7defc0c`, sem novos commits/push. Próximo bloco: chaves físicas Crates/Fase3; demais fases continuam pendentes.
+**Retomada:** main funcional validada/enviada `191a65e` (alpha.8). WIP Crates separado e enviado em `handoff/crates-checkpoint`, commit `6b97093`; sem teste funcional novo, não integrado. [Passagem](CRATES_CHECKPOINT_HANDOFF.md). Sessão parada por pedido do responsável.
 
 ## Preparação e continuidade
 
@@ -232,3 +232,5 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 | CURRENCY (local) | Modelo/codec/planos/journal/adapter opcional/readback/menus, 20 casos novos e runner em três modos; 274 JUnit + 8 checks | Sem commit, base `7defc0c`; [evidência](validation/phase3-currency.json) |
 
 | Sincronização autorizada alpha.6/7/8 | Snapshot de menus e CURRENCY, evidências de 274 JUnit e testes nativos, documentos de continuidade atualizados | Commit `feat: add configurable menu presentation and Impactor currency rewards`, base `7defc0c`; sem nova release |
+
+| Passagem para outro Codex | Main funcional preservada; WIP Crates salvo e enviado separadamente, pendências e testes exatos documentados; servidor encerrado e segredo removido | Main funcional `191a65e`; branch handoff/crates-checkpoint `6b97093`; [passagem](CRATES_CHECKPOINT_HANDOFF.md) |

@@ -1,6 +1,10 @@
 # Próximos passos
 
-**Estado atual:** envio do snapshot alpha.6/7/8 autorizado pelo usuário. Referência: commit `feat: add configurable menu presentation and Impactor currency rewards`, base `7defc0c`. Depois do envio, continuar integração de chaves Crates localmente. Sem autorização de nova release/publicação de ambiente.
+**Sessão parada por pedido do usuário.** Main funcional `191a65e` enviada e CI aprovado. Continuação incompleta: branch `handoff/crates-checkpoint`, commit `6b97093`, também enviada. Código funcional alpha.8 permanece na main; WIP alpha.9 não integrado. Sem nova release/ambiente.
+
+## Passagem obrigatória
+
+Abrir [CRATES_CHECKPOINT_HANDOFF.md](CRATES_CHECKPOINT_HANDOFF.md). Próxima tarefa: validar checkpoint/itens/chaves da branch WIP em servidor real antes de integrar. Build e unitários não certificam esse novo fluxo. Não refazer menus/moedas nem promover o WIP por apenas compilar.
 
 ## Última tarefa realizada
 
@@ -16,11 +20,10 @@ O upload do JAR/sources/SHA256SUMS recebeu HTTP 401 Bad credentials em uploads.g
 
 ## Próxima tarefa exata
 
-1. Conferir o commit de sincronização acima e o estado remoto antes de continuar. Não reaplicar blocos alpha.6/7/8; preservar trabalho novo local. Nova release/ambiente não autorizados.
-2. Próximo bloco funcional da Fase3: chaves físicas Shirokai Crates. Conferir HEAD/APIs atuais do repo informado pelo usuário e auditoria existente; não presumir versão instalada. Exigir prévia/confirmação, espaço e comprovação durável; não tratar retorno de comando como prova de entrega persistida. COMMAND e recuperação supervisionada ainda pendentes.
-3. Não repetir a implementação CURRENCY: API5.3.5 e JSON nativo já exercitados; formatos/serviços/versões adicionais continuam fora do suporte. Manter checagem exata de moeda/conta/precisão, intenção antes do efeito, save + readback e NEEDS_REVIEW para incerteza. Nunca adicionar retry automático ou equivalência com a moeda principal.
-4. Ao mudar adaptadores de itens/Pokémon, repetir seus runners completos (já adaptados à UI sem botão repetido). Não alegar que foram repetidos no bloco monetário. Testes novos de CURRENCY e menus não certificam todas as integrações antigas.
-5. Pendências visuais em paralelo: cliente gráfico, templates reutilizáveis, conteúdo/condições genéricas. Fases4–6 (capturas, estatísticas, competições, rankings, conquistas/perfis) ainda pendentes. Não mudar outros mods nem publicar ambiente.
+1. Conferir GitHub/status, ler AGENTS e a passagem detalhada acima. Main está validada e enviada; trabalho incompleto não foi descartado.
+2. Checkout `handoff/crates-checkpoint` (`6b97093`) para continuar o checkpoint público do Crates0.2.1. Criar runner nativo conforme os passos exatos da passagem, usando probe/fixture da branch.
+3. Testar atraso real de fila, chaves válidas via SAVED_ITEM, falha/revisão, fallback vanilla e reinício. Somente depois considerar integração na main. CRATE_KEY dedicado ainda não implementado.
+4. Não publicar release/ambiente nem presumir autorização de novas publicações pelo próximo Codex. O usuário interrompeu esta sessão para trocar de instância.
 
 ## Arquivos importantes
 
