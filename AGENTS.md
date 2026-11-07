@@ -1,0 +1,33 @@
+# Continuidade obrigatória — Shirokai Dex
+
+Estas instruções aplicam-se a todo o repositório. Apenas um Codex trabalha por vez. GitHub é a fonte oficial entre sessões; não dependa da memória de conversas ou de arquivos fora do repositório.
+
+## Antes de trabalhar
+
+1. Confirme a raiz e o remoto com Git, sem revelar credenciais. Inspecione `git status --short --branch`, alterações staged/unstaged, arquivos não rastreados e commits locais ainda não enviados.
+2. Consulte o GitHub com `git fetch origin`, branches e últimos commits. Quando existir upstream e a árvore estiver limpa, sincronize com `git pull --ff-only`. Não sobrescreva arquivos locais, não use `reset --hard`, `clean`, checkout destrutivo ou force push para sincronizar. Se houver divergência ou mudanças locais, preserve-as e integre sem descartá-las; explique conflitos reais que impeçam continuar. Um remoto vazio não possui HEAD para buscar: confirme com `git ls-remote origin` antes de concluir que houve falha de autenticação.
+3. Leia este arquivo, `docs/PROJECT_STATUS.md` e `docs/NEXT_STEPS.md`; consulte `docs/API_COMPATIBILITY.md` antes de qualquer integração. `docs/PROJECT_SPECIFICATION.md` preserva os requisitos funcionais completos.
+4. Compare os documentos com o código, build, testes e últimos commits. Corrija documentação desatualizada com evidências. Continue a primeira tarefa pendente; não reinicie o projeto nem reimplemente partes concluídas.
+5. Use o checkout existente. Cada tarefa cloud já é isolada; não crie worktree sem solicitação explícita. Não altere configurações publicadas do ambiente nem publique novas versões do ambiente sem autorização.
+
+## Durante o trabalho
+
+- Respeite as fases do prompt mestre. APIs reais e versões exatas devem ser auditadas antes de uso. Diferencie inspeção estática, compilação, teste automatizado e validação em servidor real.
+- Alvo: Minecraft 1.21.1, Fabric, Java 21, Cobblemon 1.8.3, Impactor 5.3.5, SQLite. Não atualizar versões silenciosamente nem inventar classes, comandos ou eventos.
+- Preserve a Pokédex oficial; separe obtenção, captura legítima, estatísticas permanentes e pontuação competitiva. Não invente dados históricos.
+- Alterações funcionais devem acompanhar testes aplicáveis, documentação e registro de erros/limitações. Não declare conclusão somente porque compilou.
+- Não implemente todas as fases simultaneamente. Integrações opcionais ausentes não devem derrubar o servidor. Entregas externas incertas não devem ser repetidas automaticamente.
+- Não grave credenciais, logs privados, caches, artefatos temporários ou dependências baixadas no Git. Use autenticação existente; nunca peça valores secretos em chat. Preserve TLS e checksums.
+- Preserve mudanças do usuário. Não remova código funcional sem justificativa documentada. Não copie código externo sem verificar a licença.
+
+## Antes de concluir um conjunto coerente ou encerrar
+
+1. Salve e valide o trabalho com os testes realmente aplicáveis. Investigue falhas; registre comando, resultado, ambiente e testes pendentes. Não transforme checks de documentação em alegação de build ou funcionamento do mod.
+2. Atualize `docs/PROJECT_STATUS.md`: fase, concluído/em desenvolvimento/pendente, testes, erros conhecidos, APIs auditadas e última alteração relevante.
+3. Atualize `docs/NEXT_STEPS.md`: última tarefa, próxima tarefa exata, arquivos importantes, problemas, dependências, testes pendentes, cuidados e referência ao último commit relevante. A próxima instância deve conseguir continuar sem esta conversa.
+4. Atualize a documentação afetada, `docs/API_COMPATIBILITY.md` e `CHANGELOG.md` quando apropriado. Distinga fato confirmado de hipótese.
+5. Revise `git diff --check`, alterações e arquivos staged. Faça commits descritivos agrupando alterações relacionadas. Não invente autor ou substitua identidade Git configurada.
+6. Envie ao GitHub quando autorizado (o usuário autorizou commits e push neste projeto). Respeite proteção de branch e fluxo de PR quando existente. Não use force push nem contorne proteção. Não publique release estável sem testes obrigatórios aprovados.
+7. Confirme o SHA remoto com `git ls-remote` e o estado local. Informe branch, commit e sincronização. Se push falhar, documente o erro e diga explicitamente que o GitHub não foi atualizado e quais commits permanecem locais. Não considere acesso de leitura prova de permissão de escrita.
+
+Não deixe trabalho importante apenas no ambiente sem informar. Publicação de ambiente, release e push são ações distintas; nunca alegue uma a partir de evidência de outra.
