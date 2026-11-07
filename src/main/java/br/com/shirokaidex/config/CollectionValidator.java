@@ -1,6 +1,7 @@
 package br.com.shirokaidex.config;
 
 import br.com.shirokaidex.pokedex.*;
+import br.com.shirokaidex.categories.CategoryCatalog;
 import java.io.IOException;
 import java.util.*;
 
@@ -19,6 +20,7 @@ public final class CollectionValidator {
         this.forms = Set.copyOf(forms); this.items = Set.copyOf(items);
     }
     public void validate(Settings settings) throws IOException {
+        validate(settings.categories());
         for (var definition : settings.collections()) {
             if (!items.contains(definition.icon())) throw new IOException("config.json collections." + definition.id() + ".icon: unknown item " + definition.icon());
             check(definition, "include_species", definition.criteria().includeSpecies(), species);
@@ -28,7 +30,21 @@ public final class CollectionValidator {
             check(definition, "forms", definition.criteria().forms(), forms);
         }
     }
+    public void validate(CategoryCatalog catalog) throws IOException {
+        for (var definition : catalog.definitions().values()) {
+            String path = "config.json categories." + definition.id() + ".criteria.";
+            var criteria = definition.criteria();
+            check(path, "include_species", criteria.includeSpecies(), species);
+            check(path, "exclude_species", criteria.excludeSpecies(), species);
+            check(path, "labels", criteria.labels(), labels);
+            check(path, "types", criteria.types(), types);
+            check(path, "forms", criteria.forms(), forms);
+        }
+    }
     private static void check(CollectionDefinition definition, String key, Set<String> values, Set<String> known) throws IOException {
-        for (String value : values) if (!known.contains(value)) throw new IOException("config.json collections." + definition.id() + ".criteria." + key + ": unknown reference " + value);
+        check("config.json collections." + definition.id() + ".criteria.", key, values, known);
+    }
+    private static void check(String path, String key, Set<String> values, Set<String> known) throws IOException {
+        for (String value : values) if (!known.contains(value)) throw new IOException(path + key + ": unknown reference " + value);
     }
 }

@@ -2,20 +2,19 @@
 
 ## Última tarefa realizada
 
-Alpha.6: resumos parciais de spawn na wiki, base `a4ecd4f07b4396f63fa1b7a73261ca894821220a`, commit `feat: show audited world spawn rule summaries in wiki`. Pool mundial somente de leitura: biomas/tags, dimensões e ticks, alternativas/exclusões separadas, forma declarada sem inferir aplicabilidade. IDs namespaced resolvidos por identificador. [Guia](WIKI.md#aparecimento-e-limites).
-
-102 JUnit e 17 checks de protocolo (7 spawn, 2 remoção entre reinícios, 8 regressão wiki). Nenhum nascimento real testado; ausência de regra simples não é ausência universal de spawn. [Evidência](validation/phase2-spawns.json). Servidores encerrados, SQLite íntegro, propriedades restauradas e segredo temporário removido. JAR local alpha.6; release publicada continua alpha.3. Não usar workflows antigos fixados em outros commits para publicar esta versão.
+Categorias nomeadas alpha.7, base `5ac56f2`, commit `feat: add reusable named category rules for collections`. JSON `categories`, composição all/any/none e referência por coleção; wiki/progresso/reload compartilham o mesmo escopo de forma. [Guia](CATEGORIES.md). Evidências e resultados finais em PROJECT_STATUS e validation/phase2-categories.json.
 
 ## Próxima tarefa exata
 
-1. Executar protocolo AGENTS, conferir commits locais/remoto e preservar trabalho. Não refazer coleções, filtros/formas, placeholders básicos ou resumo de spawn.
-2. Continuar Fase 2 com **categorias nomeadas reutilizáveis por JSON**, conforme seção 7 do prompt. Auditar/reutilizar critérios existentes e classificar somente por dados reais; classificação desconhecida exige configuração explícita. Definir esquema/validação/permissões, associar à consulta/coleções sem duplicar o denominador nem confundir labels do registro com categorias administrativas.
-3. Histórico/recálculo de categorias e modo SNAPSHOT/LIVE de competições continuam abertos: não fabricar eventos passados nem antecipar todos os sistemas. Implementar somente a fundação coerente com evidências.
-4. Spawn continua parcial: composições, aspectos/formas, extensões e condições adicionais precisam de auditoria/testes próprios. Não interpretar ausência no pool como ausência de spawn natural; trocar espécies/fixtures entre reinícios, sem hot reload de registros oficiais.
-5. TAB/alias legado positivo, cliente visual, carga e instalação da nova alpha fora do Loom permanecem pendentes.
-6. Atualizar checklist/estado/auditoria/changelog; validar, commitar e enviar ao GitHub com confirmação remota. Não publicar ambiente nem release sem autorização específica.
+1. Executar protocolo AGENTS e sincronizar sem descartar trabalho. Não refazer fundação, coleções, wiki, placeholders, spawn ou categorias nomeadas.
+2. Completar a fundação de evolução das categorias (seção 7.1): definir versão/fingerprint persistido das regras e política de histórico antes de implementar capturas. Não inventar eventos, recálculo ou pontuação. Não implementar competições para simular SNAPSHOT/LIVE.
+3. Testar recuperação/reinício e mudança de regras em dados reais descartáveis; histórico/recálculo administrativo continuam abertos até existirem dados suficientes e fluxo de prévia/justificativa/confirmação/auditoria.
+4. Cobertura de spawn adicional, TAB/alias legado positivo, cliente visual, carga e instalação da nova alpha fora do Loom continuam pendentes.
+5. Trabalhar em blocos coerentes maiores, com documentação objetiva e testes relevantes; não repetir a leitura integral dos mesmos documentos dentro da mesma tarefa sem mudança. Atualizar checklist/estado/API/changelog e evidências; commitar, enviar e confirmar remoto. Não publicar ambiente nem release sem autorização específica.
 
 ## Arquivos importantes
+
+- `categories/CategoryCatalog`, `config/CategoriesCodec`, `CollectionDefinition.CategorySelection`, Settings/ConfigManager/CollectionValidator; `CategoryCatalogTest`, `CategoryIntegrationTest`, runner `tests/integration/categories.cjs` e fixture `tests/fixtures/categories/config.json`. Categoria é regra sem ACL própria; acesso pertence à coleção.
 
 - `spawning/SpawnAccess.java`, `SpawnCatalog.java`, `SpawnCatalogTest`, lifecycle em `ShirokaiDex`, `MainMenu.spawnItem`, `tests/integration/spawns.cjs` e `tests/fixtures/spawning`: entrega alpha.6.
 

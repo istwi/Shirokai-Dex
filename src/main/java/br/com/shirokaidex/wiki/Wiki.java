@@ -65,13 +65,13 @@ public final class Wiki {
         for (var entry : entries) {
             var species = entry.species();
             if (!criteria.acceptsSpecies(species.id())) continue;
-            var collectionForms = species.forms().stream().filter(criteria::acceptsForm).toList();
-            if (criteria.filtersForms() && collectionForms.isEmpty()) continue;
+            var collectionForms = species.forms().stream().filter(form -> definition.acceptsForm(species.id(), form)).toList();
+            if (definition.filtersForms() && collectionForms.isEmpty()) continue;
             collectionForms.forEach(form -> { types.addAll(form.types()); categories.addAll(form.labels()); });
             // Secondary facets must match the same form, together with the collection criteria.
             var forms = collectionForms.stream().filter(form -> (request.type().isEmpty() || form.types().contains(request.type()))
                     && (request.category().isEmpty() || form.labels().contains(request.category()))).toList();
-            boolean scoped = criteria.filtersForms() || !request.type().isEmpty() || !request.category().isEmpty();
+            boolean scoped = definition.filtersForms() || !request.type().isEmpty() || !request.category().isEmpty();
             if (scoped && forms.isEmpty()) continue;
             boolean seen = scoped ? forms.stream().anyMatch(ProgressCalculator.Form::seen) : species.seen();
             boolean owned = scoped ? forms.stream().anyMatch(ProgressCalculator.Form::owned) : species.owned();

@@ -2,7 +2,15 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
-## Entrega atual — resumo de spawn (alpha.6)
+## Entrega atual — categorias nomeadas (alpha.7)
+
+Base sincronizada `5ac56f2`; commit `feat: add reusable named category rules for collections`. Regras imutáveis por JSON, composição `all_of`/`any_of`/`none_of`, validação de grafo/registro e associação por coleção. Progresso, wiki e reload usam a mesma forma elegível; união não duplica espécies. Configuração antiga preservada; permissões continuam nas coleções. [Schema e limites](CATEGORIES.md).
+
+Build e **124 JUnit aprovados, zero falhas/erros/skips**. Uma regressão inicial de igualdade de Settings com catálogo vazio foi corrigida com igualdade estrutural; suíte final integral aprovada. Validação em servidor e limpeza: consultar [evidência desta entrega](validation/phase2-categories.json).
+
+Histórico, versão persistida das regras, recálculo auditado e SNAPSHOT/LIVE seguem pendentes. Nenhum registro oficial é escrito, nenhuma classificação de captura é inferida e nenhuma release/configuração de ambiente foi publicada. Esta alpha ainda não certificada em cliente visual, carga ou instalação fora do Loom.
+
+## Entrega anterior — resumo de spawn (alpha.6)
 
 Base `a4ecd4f07b4396f63fa1b7a73261ca894821220a`; commit identificado por `feat: show audited world spawn rule summaries in wiki`. Versão `0.2.0-alpha.6+mc1.21.1-cobblemon1.8.3`.
 
@@ -76,9 +84,11 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Fase atual
 
-**Fase 2 — coleções, wiki com filtros/formas e resumo parcial de spawn, placeholders básicos**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
+**Fase 2 — categorias nomeadas, coleções, wiki com filtros/formas e resumo parcial de spawn, placeholders básicos**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
 
 ## Concluído
+
+- Categorias nomeadas JSON, composição all/any/none e integração em coleções/wiki/reload: 124 JUnit e 6 checks reais de protocolo aprovados. [Evidência](validation/phase2-categories.json).
 
 - Nova alpha local `0.2.0-alpha.1+mc1.21.1-cobblemon1.8.3`: seletor/páginas Nacional, Lendária e Shiny; status por coleção, porcentagens com duas casas e sem falso 100%. [Comportamento](POKEDEX.md).
 - Cache por UUID até 5 segundos, invalidado por evento oficial pós-Pokédex, login/logout/reload/lifecycle; cálculo puro separado do adaptador. Nacional usa agregado oficial; Lendária exige forma elegível obtida.
@@ -96,7 +106,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Em desenvolvimento
 
-- Evolução da wiki, menus avançados, categorias e integrações adicionais de placeholders da Fase 2. Wiki inicial, coleções e critérios JSON já estão implementados; captura shiny histórica permanece indisponível.
+- Evolução da wiki, menus avançados, categorias e integrações adicionais de placeholders da Fase 2. Wiki inicial, coleções, categorias nomeadas e critérios JSON já estão implementados; captura shiny histórica permanece indisponível.
 
 
 - Testes complementares: aparência/gestos em cliente Minecraft real, contextos LuckPerms adicionais e carga. O cenário de dimensão e os pacotes de inventário descritos acima foram verificados.
@@ -110,6 +120,8 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 - Licença do código próprio e release estável. Nenhuma configuração de ambiente foi alterada/publicada nesta entrega.
 
 ## Testes e verificações executados
+
+Entrega atual: build e 124 JUnit sem falhas/erros/skips; 6 checks de categorias em servidor dev com LuckPerms, sem falhas. Servidor encerrado, SQLite integrity_check=ok, propriedades/configuração restauradas e senha temporária removida. [Relatório](validation/phase2-categories.json). Rejeições esperadas de configuração inválida aparecem nos logs dos testes negativos; não são falhas da suíte.
 
 Atualização de porcentagens: 32 JUnit (16 configuração + 4 SQLite + 12 progresso), zero falhas/erros/skips. Regressão de protocolo: 11 verificações. Progresso: 6 verificações com espécie comum/lendária de datapack e shiny obtido por comando; cache respondeu ao evento antes do TTL. Reconexão/lore: 2 checks; remoção de datapack entre reinícios: 1 check. Progresso/status e lore reais conferidos em servidor de desenvolvimento e no JAR empacotado. Total Nacional 907 com fixture e 905 sem; Lendária 18 com fixture e 17 sem. Fonte de contagem é o registro real, não esses números fixados no código.
 
@@ -143,7 +155,7 @@ Servidores locais eram offline e limitados a loopback; não validam autenticaç�
 
 ## Última alteração relevante e sincronização
 
-Entrega alpha.6: `feat: show audited world spawn rule summaries in wiki`, base `a4ecd4f`. Commit/push autorizados pelo usuário; conferir SHA com Git para evitar referência circular neste documento. Histórico das entregas e releases permanece abaixo e na checklist.
+Entrega alpha.7: `feat: add reusable named category rules for collections`, base `5ac56f2`. Commit/push autorizados pelo usuário; conferir SHA com Git para evitar referência circular neste documento. Histórico das entregas e releases permanece abaixo e na checklist.
 
 ## Publicação alpha confirmada
 

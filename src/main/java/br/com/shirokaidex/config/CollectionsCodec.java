@@ -22,7 +22,7 @@ final class CollectionsCodec {
         return List.copyOf(values);
     }
     private static CollectionDefinition collection(JsonReader r) throws IOException {
-        Set<String> keys = new HashSet<>(); String id = null, name = null, description = "", icon = null, permission = "";
+        Set<String> keys = new HashSet<>(); String id = null, name = null, description = "", icon = null, permission = "", category = null;
         CollectionDefinition.Mode mode = null; CollectionDefinition.Criteria criteria = null;
         String path = r.getPath();
         r.beginObject();
@@ -34,6 +34,7 @@ final class CollectionsCodec {
                 case "description" -> description = string(r);
                 case "icon" -> icon = string(r);
                 case "permission" -> permission = string(r);
+                case "category" -> category = string(r);
                 case "progress_mode" -> {
                     String value = string(r);
                     try { mode = CollectionDefinition.Mode.valueOf(value); }
@@ -55,10 +56,11 @@ final class CollectionsCodec {
             if (mode == null) mode = CollectionDefinition.Mode.OWNED;
             if (criteria == null) criteria = CollectionDefinition.Criteria.all();
         }
-        try { return new CollectionDefinition(id, name, description, icon, mode, criteria, permission); }
+        try { return new CollectionDefinition(id, name, description, icon, mode, criteria, permission,
+                category == null ? null : new CollectionDefinition.CategorySelection(category, null)); }
         catch (IllegalArgumentException | NullPointerException failure) { throw new IOException("config.json " + path + ": " + failure.getMessage(), failure); }
     }
-    private static CollectionDefinition.Criteria criteria(JsonReader r) throws IOException {
+    static CollectionDefinition.Criteria criteria(JsonReader r) throws IOException {
         Set<String> fields = new HashSet<>(); Map<String, Set<String>> values = new HashMap<>();
         String path = r.getPath(); r.beginObject();
         while (r.hasNext()) {

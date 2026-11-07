@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "Categorias de teste",
+  "categories": [
+    {
+      "id": "rare",
+      "criteria": {
+        "labels": [
+          "legendary"
+        ]
+      }
+    },
+    {
+      "id": "water",
+      "criteria": {
+        "types": [
+          "water"
+        ]
+      }
+    },
+    {
+      "id": "combined",
+      "all_of": [
+        "rare",
+        "water"
+      ]
+    },
+    {
+      "id": "either",
+      "any_of": [
+        "rare",
+        "water"
+      ]
+    },
+    {
+      "id": "only_water",
+      "all_of": [
+        "water"
+      ],
+      "none_of": [
+        "rare"
+      ]
+    }
+  ],
+  "collections": [
+    {
+      "id": "national"
+    },
+    {
+      "id": "variants",
+      "name": "Variantes",
+      "category": "only_water",
+      "criteria": {
+        "include_species": [
+          "dex_test:variants"
+        ]
+      }
+    },
+    {
+      "id": "split",
+      "name": "Mesma forma",
+      "category": "combined",
+      "criteria": {
+        "include_species": [
+          "dex_test:variants"
+        ]
+      }
+    },
+    {
+      "id": "union",
+      "name": "Uniao",
+      "category": "either",
+      "criteria": {
+        "include_species": [
+          "dex_test:variants"
+        ]
+      }
+    },
+    {
+      "id": "locked",
+      "name": "Restrita",
+      "category": "water",
+      "permission": "shirokaidex.collection.locked",
+      "criteria": {
+        "include_species": [
+          "dex_test:variants"
+        ]
+      }
+    }
+  ]
+}

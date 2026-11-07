@@ -1,0 +1,76 @@
+{
+  "timestamp": "2026-11-07T12:35:00.323Z",
+  "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+  "test_player": "DexCategory",
+  "results": [
+    {
+      "name": "Named all/any/none conditions use the same form and count a species once across 41 forms",
+      "status": "passed"
+    },
+    {
+      "name": "Wiki and progress use identical category scope; incompatible forms do not cross-match",
+      "status": "passed"
+    },
+    {
+      "name": "Collection permissions protect named categories and stale wiki buttons",
+      "status": "passed"
+    },
+    {
+      "name": "Category reload invalidates progress caches and stale wiki navigation",
+      "status": "passed"
+    },
+    {
+      "name": "Cycles and unknown registry references reject the whole reload and preserve the last valid backup",
+      "status": "passed"
+    },
+    {
+      "name": "Valid restoration reapplies categories without modifying official progress or granting menu icons",
+      "status": "passed"
+    }
+  ],
+  "base_commit": "5ac56f2",
+  "implementation_commit_subject": "feat: add reusable named category rules for collections",
+  "version": "0.2.0-alpha.7+mc1.21.1-cobblemon1.8.3",
+  "junit": {
+    "tests": 124,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "build": {
+    "status": "passed",
+    "command": "JAVA_HOME=/workspace/.tools/jdk-21.0.13+9 python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build",
+    "artifact": "build/libs/shirokai-dex-0.2.0-alpha.7+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "34594910775d80f2b45ad52a69c9330c7ec625eb3e115a22a033f6d3bc061f80",
+    "scope": "Local build; runtime tested with Loom, not this remapped JAR installation"
+  },
+  "fixtures": {
+    "tests/fixtures/categories/config.json": "a142faea384650815d2d12cedf524cb4801af37f43292db67f75770f5b59ef98",
+    "tests/fixtures/wiki-facets/datapacks/wiki-facets/pack.mcmeta": "7e862f3ff62b192b7d79c709905a25c7a5a2b4dd1d58ff7172c51748bdaef5f8"
+  },
+  "cleanup": {
+    "normal_stop": true,
+    "worlds_saved": true,
+    "sqlite_integrity": "ok",
+    "prior_properties_and_config_restored": true,
+    "temporary_rcon_secret_removed": true,
+    "temporary_luckperms_jar_removed": true
+  },
+  "notes": [
+    "Initial Settings equality regression fixed with structural category catalog equality; final full suite passed.",
+    "One initial startup without optional LuckPerms was stopped normally before permission tests; the six final checks used LuckPerms 5.4.140.",
+    "Two expected reload rejections logged errors during negative tests; final checks have no failures.",
+    "Existing Cobblemon datafixer/mixin warnings and blocked offline Yggdrasil key request are not claimed absent."
+  ],
+  "pending": [
+    "Persistent category rule versions and history/recalculation",
+    "Competition SNAPSHOT/LIVE",
+    "Runtime backup recovery/restart for named categories (JUnit recovery validation passed)",
+    "Visual client, load, remapped alpha.7 installation outside Loom",
+    "Additional spawner conditions and TAB/legacy alias"
+  ],
+  "publication": {
+    "release": false,
+    "environment": false
+  }
+}

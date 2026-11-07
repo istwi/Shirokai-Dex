@@ -17,3 +17,7 @@ Reload cria e valida uma candidata fora da thread do servidor, grava atomicament
 Execute `/dex admin reload` com a permissão LuckPerms correspondente. Sem LuckPerms, a ação administrativa é negada inclusive para operadores. Reload positivo/negativo com LuckPerms Fabric 5.4.140 foi testado no JAR instalado, incluindo rollback de coleções e recuperação após reinício.
 
 Esta fase implementa filtros iniciais de coleções JSON; layouts completos de menus, recompensas e competições ainda estão pendentes. Os arquivos de tradução atuais são recursos separados `localization/pt_br.json` e `localization/en_us.json`; tradução por cliente e substituições externas pertencem às próximas fases.
+
+## Categorias nomeadas
+
+Campo opcional `categories` e referência `collections[].category`: [guia](CATEGORIES.md). Aplicação transacional junto das coleções, sem alteração de arquivos antigos.

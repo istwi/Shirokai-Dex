@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0-alpha.7 — categorias nomeadas (desenvolvimento)
+
+- Categorias JSON reutilizáveis com critérios reais e composição all/any/none, associadas a coleções e wiki na mesma forma; espécies contadas uma vez.
+- Validação de ciclos, referências, duplicados e dados do registro; reload/backup continuam transacionais. Permissões por coleção e configuração antiga preservadas.
+- Histórico/recálculo e versão persistida de regras continuam pendentes. [Guia](docs/CATEGORIES.md), [validação](docs/validation/phase2-categories.json). Sem publicação de release ou ambiente.
+
 ## 0.2.0-alpha.6 — declarações de spawn na wiki (desenvolvimento)
 
 - Resumo paginado e somente de leitura do pool mundial: IDs/tags de bioma, dimensões e intervalos de ticks; alternativas e exclusões separadas. IDs de espécies preservam namespaces.

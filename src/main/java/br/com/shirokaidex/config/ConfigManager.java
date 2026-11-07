@@ -74,6 +74,7 @@ public final class ConfigManager {
             Integer version = null;
             String language = null, title = null;
             List<CollectionDefinition> collections = CollectionDefinition.defaults();
+            var categories = new br.com.shirokaidex.categories.CategoryCatalog(List.of());
             reader.beginObject();
             while (reader.hasNext()) {
                 String key = reader.nextName();
@@ -88,6 +89,7 @@ public final class ConfigManager {
                     case "language" -> language = string(reader, key);
                     case "menu_title" -> title = string(reader, key);
                     case "collections" -> collections = CollectionsCodec.read(reader);
+                    case "categories" -> categories = CategoriesCodec.read(reader);
                     default -> throw new IOException("config.json: unknown field " + key);
                 }
             }
@@ -96,7 +98,7 @@ public final class ConfigManager {
             if (version == null || language == null || title == null) throw new IOException("config.json: schema_version, language and menu_title are required");
             if (!Set.of("pt_br", "en_us").contains(language)) throw new IOException("config.json: unsupported language");
             if (title.isBlank() || title.length() > 128 || title.codePoints().anyMatch(Character::isISOControl)) throw new IOException("config.json: invalid menu_title");
-            return new Settings(version, language, title, collections);
+            return new Settings(version, language, title, collections, categories);
         } catch (IllegalStateException | IllegalArgumentException failure) {
             throw new IOException("config.json: invalid field or JSON structure", failure);
         }

@@ -1,10 +1,28 @@
 package br.com.shirokaidex.pokedex;
 
 import java.util.*;
+import br.com.shirokaidex.categories.CategoryCatalog;
 
 /** Immutable user configuration; no executable actions or command templates. */
 public record CollectionDefinition(String id, String name, String description, String icon,
-                                   Mode mode, Criteria criteria, String permission) {
+                                   Mode mode, Criteria criteria, String permission, CategorySelection category) {
+    public record CategorySelection(String id, CategoryCatalog catalog) {
+        public CategorySelection {
+            if (id == null || !id.matches("[a-z][a-z0-9_]{0,47}")) throw new IllegalArgumentException("invalid category reference");
+        }
+    }
+    public CollectionDefinition(String id, String name, String description, String icon, Mode mode, Criteria criteria, String permission) {
+        this(id, name, description, icon, mode, criteria, permission, null);
+    }
+    public CollectionDefinition bind(CategoryCatalog catalog) {
+        if (category == null) return this;
+        if (!catalog.definitions().containsKey(category.id())) throw new IllegalArgumentException("unknown category " + category.id() + " in collection " + id);
+        return new CollectionDefinition(id, name, description, icon, mode, criteria, permission, new CategorySelection(category.id(), catalog));
+    }
+    public boolean filtersForms() { return criteria.filtersForms() || category != null; }
+    public boolean acceptsForm(String species, ProgressCalculator.Form form) {
+        return criteria.acceptsForm(form) && (category == null || Objects.requireNonNull(category.catalog(), "unbound category").matches(category.id(), species, form));
+    }
     public enum Mode { OWNED, SEEN, SHINY_SEEN, SHINY_CAPTURED }
     private static final Set<String> RESERVED = Set.of("admin", "status", "help", "rewards", "top", "achievements", "profile", "settings", "history", "language");
     public record Criteria(Set<String> includeSpecies, Set<String> excludeSpecies, Set<String> labels,

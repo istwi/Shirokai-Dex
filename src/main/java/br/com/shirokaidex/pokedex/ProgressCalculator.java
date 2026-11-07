@@ -48,11 +48,11 @@ public final class ProgressCalculator {
             var criteria = definition.criteria();
             for (var species : unique.values()) {
                 if (!criteria.acceptsSpecies(species.id())) continue;
-                var eligible = species.forms().stream().filter(criteria::acceptsForm).toList();
-                if (criteria.filtersForms() && eligible.isEmpty()) continue;
+                var eligible = species.forms().stream().filter(form -> definition.acceptsForm(species.id(), form)).toList();
+                if (definition.filtersForms() && eligible.isEmpty()) continue;
                 total++;
-                boolean hasSeen = criteria.filtersForms() ? eligible.stream().anyMatch(Form::seen) : species.seen();
-                boolean hasOwned = criteria.filtersForms() ? eligible.stream().anyMatch(Form::owned) : species.owned();
+                boolean hasSeen = definition.filtersForms() ? eligible.stream().anyMatch(Form::seen) : species.seen();
+                boolean hasOwned = definition.filtersForms() ? eligible.stream().anyMatch(Form::owned) : species.owned();
                 boolean hasShinySeen = eligible.stream().anyMatch(Form::shinySeen);
                 if (definition.mode() == CollectionDefinition.Mode.SHINY_SEEN || definition.mode() == CollectionDefinition.Mode.SHINY_CAPTURED) {
                     if (hasShinySeen) seen++;

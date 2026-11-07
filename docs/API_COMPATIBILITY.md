@@ -206,3 +206,7 @@ Wiki e resumos de spawn do pool mundial (`VERIFIED` no escopo da alpha.6): `Cobb
 ## Critérios para avançar
 
 Fundação pode começar com as APIs identificadas, mantendo integrações opcionais isoladas. Antes de concluir a Fase 1: resolver artefatos fixados, compilar, executar testes reais de configuração/migração e inicializar servidor Fabric com Cobblemon 1.8.3. Antes da Fase 2: resolver a limitação shiny sem falsificar dados; validar datapacks e eventos no servidor. Recompensas, competições e chaves permanecem fora da fundação.
+
+## Categorias nomeadas — alpha.7
+
+Nenhuma API externa nova. Catálogo puro reutiliza Criteria e snapshots oficiais já auditados; validação semântica usa CollectionValidator. Wiki/progresso compartilham escopo de forma e reload valida o candidato integral. Não grava Pokédex, captura, histórico ou competição. [Schema](CATEGORIES.md), [evidência](validation/phase2-categories.json).

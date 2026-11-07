@@ -99,3 +99,7 @@ Wiki, busca, ranking, recompensas, categorias históricas, modelos complexos de 
 `/dex <id> wiki [pesquisa]` e o botão na página da coleção abrem a wiki usando os mesmos critérios de espécies/formas/tipos/labels e a mesma permissão. Espécies não implementadas permanecem fora da lista. Navegação e detalhes revalidam configuração e autorização inclusive após reload/revogação. [Pesquisa, controles e limites](WIKI.md).
 
 Na alpha.5, seletores de tipo/label são filtros temporários da wiki e precisam combinar na mesma forma já aceita pelos critérios JSON. A navegação de formas usa páginas sem corte em 32 linhas; não altera o progresso/denominador da coleção nem sua configuração.
+
+## Categorias reutilizáveis (alpha.7)
+
+O campo opcional `category` referencia uma regra em `categories` no mesmo config.json. Critérios locais e categoria combinam na mesma forma. Veja [schema e limites](CATEGORIES.md). Permissões continuam definidas por coleção.
