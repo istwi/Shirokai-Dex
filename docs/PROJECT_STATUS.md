@@ -4,7 +4,7 @@ Atualizado em 2026-11-07. GitHub: `istwi/Shirokai-Dex`. Apenas uma instância Co
 
 ## Fase atual
 
-Preparação da continuidade concluída localmente; Fase 0 com auditoria estática inicial registrada. Fase 1 possui apenas esqueleto de build, não funcionalidade implementada. A prioridade solicitada pelo usuário foi configurar a continuidade **antes** das funcionalidades.
+Sistema de continuidade configurado e enviado ao GitHub; Fase 0 com auditoria estática inicial registrada. Fase 1 possui apenas esqueleto de build, não funcionalidade implementada. A prioridade solicitada pelo usuário foi configurar a continuidade **antes** das funcionalidades.
 
 ## Concluído
 
@@ -65,6 +65,6 @@ Pipeline `.github/workflows/continuity.yml` preparado com permissão somente de 
 
 Base técnica: commit `9eaae42946e5e11a3e0d5e0b9c82fd495a8e1afc` — `chore: preserve project specification and initial API audit`.
 
-Entrega de continuidade: commit com assunto `docs: establish mandatory Codex handoff and continuity checks`; localizar o SHA com `git log --all --oneline`. O próprio commit contém estes documentos, evitando uma atualização circular do seu próprio hash.
+Entrega de continuidade: `72304ea4a58ff166d19cfc92413e4e36e20e9285` — `docs: establish mandatory Codex handoff and continuity checks`.
 
-O push deve ser conferido ao final com `git ls-remote origin` e `git status`. Este arquivo não presume sucesso de push antes da operação. Se o remoto contiver a entrega de continuidade e a árvore estiver limpa e sem commits à frente, a passagem está sincronizada; caso contrário, registrar o bloqueio e preservar os commits locais.
+Sincronização efetivamente verificada em 2026-11-07: `git push -u origin main` criou `main`; `git ls-remote origin refs/heads/main` retornou exatamente `72304ea4a58ff166d19cfc92413e4e36e20e9285`, igual ao HEAD local, e a árvore estava limpa. Nenhum force push foi usado. Esta atualização documental registra essa confirmação; confirme também seu commit no remoto ao iniciar a próxima sessão. Publicação de ambiente e release não foram executadas.

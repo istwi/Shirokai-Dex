@@ -4,7 +4,7 @@
 
 Preparado o protocolo de continuidade solicitado antes da implementação de funcionalidades. Prompt mestre preservado, auditoria estática inicial documentada e esqueleto Gradle criado. Nenhum inicializador Fabric ou sistema de negócio foi implementado. Não recomeçar o repositório.
 
-Base técnica relevante: `9eaae42946e5e11a3e0d5e0b9c82fd495a8e1afc` (`chore: preserve project specification and initial API audit`). A entrega de continuidade é identificada pelo assunto `docs: establish mandatory Codex handoff and continuity checks`; use `git log --all --oneline` para obter seu SHA. Verifique o remoto, não dependa apenas do documento.
+Base técnica relevante: `9eaae42946e5e11a3e0d5e0b9c82fd495a8e1afc` (`chore: preserve project specification and initial API audit`). Entrega de continuidade: `72304ea4a58ff166d19cfc92413e4e36e20e9285` (`docs: establish mandatory Codex handoff and continuity checks`), enviada para `origin/main` e confirmada por leitura remota. A atualização documental posterior registra essa verificação. Verifique também os commits posteriores no remoto; não dependa apenas do documento.
 
 ## Próxima tarefa exata
 
