@@ -6,7 +6,7 @@
 ./gradlew --no-daemon build
 ```
 
-Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 32 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
+Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 69 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
 
 `DexProgressTest` adiciona 12 casos de cálculo, truncamento, vazio/indisponível, IDs namespaced, denominador dinâmico, formas e duplicação.
 
@@ -69,3 +69,13 @@ O runner exige Nacional/Lendária zeradas no início. Obtém Pokémon pela API r
 Depois pare o servidor, mova a fixture para fora de `world/datapacks` preservando os arquivos e reinicie. Execute `MC_PROGRESS_MODE=after-removal npm run test:progress`: uma verificação agrupada compara com a baseline gravada no primeiro teste, exigindo total Nacional menor em 2, Lendária menor em 1 e exclusão das espécies removidas da contagem atual. Não faz hot reload nem altera registros oficiais para fabricar o resultado.
 
 Relatórios atuais: `build/integration-progress-*.json`; evidência persistida em [phase2-percentages.json](validation/phase2-percentages.json). Mesmo código/JAR foi validado também fora do Loom em servidor isolado, usando `MC_TEST_PORT=25572`. A imagem de um cliente Minecraft real continua pendente; apenas os componentes efetivamente transmitidos e suas respostas foram assertados.
+
+## Coleções JSON e permissões (alpha.2)
+
+31 casos CollectionsConfigTest e 6 ConfiguredProgressTest somam-se aos 32 anteriores: 69 JUnit sem falhas/erros/skips. Integração atual: 11 checks de regressão sem LuckPerms, 9 com configuração de 31 coleções/LuckPerms 5.4.140/JAR instalado e 2 após reinício com JSON inválido. [Evidência](validation/phase2-collections.json).
+
+Fixtures em tests/fixtures/collections e datapacks/dex-progress (agora inclui espécie future não implementada). Runner `npm run test:collections`, no diretório tests/integration, exige servidor descartável loopback, LuckPerms e RCON autenticado com segredo temporário externo ao Git. Defina MC_TEST_RUN, MC_TEST_PORT, MC_TEST_RCON_PORT e MC_TEST_RCON_PASSWORD_FILE; MC_COLLECTIONS_PLAYER escolhe perfil descartável novo (máximo 16 caracteres). Não usar registros reais nem copiar o segredo para relatórios. O runner espaça comandos de um jogador não OP; rajadas/carga não foram certificadas.
+
+Depois dos 9 checks, um JSON inválido foi colocado no arquivo ativo, servidor encerrado e reiniciado; `MC_COLLECTIONS_MODE=after-restart` com o mesmo perfil validou backup semântico, progresso persistido e navegação nos dois sentidos. O runner usa comandos oficiais de obtenção de Pokémon e grants LuckPerms pelo RCON; não concede registros artificiais de Pokédex. Encerrar o servidor e restaurar configurações originais; senha temporária não deve sobreviver ao teste.
+
+Wiki, visualização em cliente real, contextos de dimensão, desempenho e captura shiny histórica seguem pendentes. A documentação histórica das alphas anteriores mantém seus próprios relatórios imutáveis.

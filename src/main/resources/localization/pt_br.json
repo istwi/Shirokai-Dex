@@ -21,5 +21,13 @@
   "empty_collection": "Nenhuma espécie elegível no registro atual.",
   "collection_status": "{0}: {1}/{2} — {3}.",
   "collection_unknown_status": "{0}: N/D — progresso indisponível.",
-  "menu_back": "Voltar às Pokédex"
+  "menu_back": "Voltar às Pokédex",
+  "page_previous": "Página anterior",
+  "page_next": "Próxima página",
+  "collection_missing": "Pokédex inexistente: {0}.",
+  "collection_denied": "Você não tem permissão para abrir esta Pokédex.",
+  "mode.OWNED": "Progresso: espécies obtidas (Pokédex oficial)",
+  "mode.SEEN": "Progresso: espécies vistas (Pokédex oficial)",
+  "mode.SHINY_SEEN": "Progresso: espécies shiny vistas",
+  "mode.SHINY_CAPTURED": "Progresso: capturas shiny verificadas"
 }

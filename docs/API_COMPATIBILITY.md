@@ -10,6 +10,12 @@ Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificaç�
 
 A auditoria estática inicial não executou testes funcionais. As validações posteriores da fundação estão separadas abaixo; captura, resgate e economia continuam sem testes funcionais.
 
+## Atualização: coleções JSON e LuckPerms real
+
+Verificados em servidor Fabric 1.21.1: FormData.getTypes() / ElementalType.getName(), labels e formas para filtros; ícones conferidos em BuiltInRegistries.ITEM antes da publicação da candidata. O validador recebe somente dados imutáveis capturados na thread do servidor; não acessa Minecraft no executor de configuração. Modos OWNED/SEEN/SHINY_SEEN foram executados; SHINY_CAPTURED não ganhou fonte histórica e permanece N/D.
+
+LuckPerms Fabric **5.4.140**, distribuição CDN Modrinth fixada no manifesto de testes do Shirokai Crates, SHA-512 verificado (relatório). JAR declara dependência fabric-permissions-api-v0 >=0.3.1 e inclui a versão 0.3.1 aninhada. API checkPermission já compilada foi agora exercitada com grants/revokes globais reais, reload autorizado/negado e GUI antiga após revogação. Contextos específicos de dimensão continuam PENDING_TEST. Nenhum segredo foi necessário para obter o artefato. [Evidência](validation/phase2-collections.json).
+
 ## Atualização: porcentagens e formas — verificação funcional inicial
 
 Fonte: mesma tag Cobblemon 1.8.3 fixada nesta auditoria. Consulta de `Species.getStandardForm()`, `getForms()`, `FormData.getLabels()`, `SpeciesDexRecord.getFormRecord(name)` e `FormDexRecord.getKnowledge()` compilada e executada em servidor real. **Species.forms pode estar vazio quando não há formas alternativas**; incluir a forma padrão explicitamente é necessário. Labels da forma padrão usam as da espécie quando não há override, como em `Pokemon.isLegendary()`.

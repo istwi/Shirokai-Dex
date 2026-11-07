@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Fase 2 iniciada: porcentagens Nacional/Lendária e navegação por coleção.** 32 casos JUnit, regressão de 11 checks, 6 checks de progresso, reconexão/lore e remoção de datapack aprovados; JAR validado fora do Loom. [Evidência](validation/phase2-percentages.json). Shiny permanece N/D sem prova histórica confiável. Próximo passo: modelos/validação JSON das coleções e testes complementares, sem marcar a Fase 2 completa.
+**Pausado a pedido do usuário, após entrega de coleções JSON (0.2.0-alpha.2).** 69 JUnit, 11 regressões sem LuckPerms, 9 checks de coleções com LuckPerms real/JAR instalado e 2 de reinício aprovados. [Evidência](validation/phase2-collections.json). Percentuais e filtros reutilizados; Shiny capturado segue N/D. Quando autorizado: wiki e demais pendências da Fase 2, sem reimplementar coleções JSON.
 
 ## Preparação e continuidade
 
@@ -48,10 +48,10 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## FASE 2 — Pokédex
 
-- [ ] Pokédex Nacional. Parcial: leitura oficial, quantidade/total e % em menu/chat; coleções JSON/wiki ainda pendentes.
+- [ ] Pokédex Nacional. Parcial: leitura oficial, quantidade/total e % em menu/chat; JSON inicial validado; wiki e recursos avançados ainda pendentes.
 - [ ] Shiny. Página explícita N/D; capturas shiny não são inferidas de dados vistos/obtidos.
-- [ ] Lendária. Parcial: labels de formas reais, quantidade/total e %; extensibilidade JSON pendente.
-- [ ] Categorias.
+- [ ] Lendária. Parcial: labels de formas reais, quantidade/total e %; filtros JSON iniciais validados; recursos avançados pendentes.
+- [ ] Categorias. Filtros de labels/tipos/formas/espécies em coleções prontos; categorias nomeadas/condições avançadas e histórico ainda pendentes.
 - [ ] Progresso oficial.
 - [ ] Datapacks. Fixture com duas espécies namespaced e remoção entre reinícios testados; ecossistema real e demais regras ainda pendentes.
 - [ ] Wiki.
@@ -61,6 +61,10 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 - [x] ~~Exibir % e quantidade/total nas coleções com dados confiáveis.~~ Nacional/Lendária em menu e status; duas casas, sem 100% antecipado; vazio/sem evidência = N/D. [Regra](POKEDEX.md).
 - [x] ~~Validar denominadores dinâmicos e não duplicar espécies/formas.~~ 12 testes de cálculo, fixture real, aquisição repetida e remoção entre reinícios.
 - [x] ~~Adicionar seletor e páginas das três coleções iniciais.~~ Navegação e lore transmitida testadas; Shiny não numérica até evidência.
+
+- [x] ~~Configurar coleções por JSON com metadados, filtros, modo e permissão.~~ Validação de referências reais, 1–64 coleções e compatibilidade com config antigo; [regras](COLLECTIONS.md).
+- [x] ~~Validar reload atômico e permissões com LuckPerms real.~~ Grant/revoke global, botão antigo, negação, rollback e recuperação após reinício testados; contextos específicos ainda pendentes.
+- [x] ~~Paginar seletor de coleções configuradas.~~ Fixture com 31 coleções; navegação de ida/volta e ocultação/revalidação verificadas.
 
 ## FASE 3 — Recompensas
 
@@ -79,7 +83,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 - [ ] Eventos de captura validados.
 - [ ] Deduplicação.
 - [ ] Estatísticas permanentes.
-- [ ] Categorias.
+- [ ] Categorias. Filtros de labels/tipos/formas/espécies em coleções prontos; categorias nomeadas/condições avançadas e histórico ainda pendentes.
 - [ ] Histórico.
 - [ ] Retenção.
 - [ ] Recordes.
@@ -149,5 +153,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 | Pré-release alpha.1 | Publicada pelo Actions após 20 testes; 5 anexos, downloads/checksums e commit da tag conferidos | `v0.1.0-alpha.1`, alvo `c11b366`; [evidência](validation/release-alpha1.json) |
 
 | Porcentagens — início Fase 2 | Nacional/Lendária, cache invalidado por evento, páginas/lore/status, Shiny N/D; 32 JUnit e testes de protocolo/datapack | Commit `feat: add verified Pokedex completion percentages`, [evidência](validation/phase2-percentages.json) |
+
+| Coleções JSON | Metadados/filtros/modos, validação, paginação e permissões; 69 JUnit, 11 regressões, 9 checks + 2 de reinício. Pausado por pedido do usuário | Commit `feat: add validated JSON Pokedex collections and permission checks`, [evidência](validation/phase2-collections.json) |
 
 Ao registrar a própria entrega, use o assunto do commit em preparação e substitua pela referência exata na atualização seguinte; não crie commits infinitos apenas para gravar o hash do próprio documento.

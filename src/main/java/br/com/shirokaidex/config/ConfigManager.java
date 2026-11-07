@@ -8,6 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import br.com.shirokaidex.pokedex.CollectionDefinition;
 import java.util.concurrent.atomic.AtomicReference;
 
 /** Reads/writes must be called from the configuration executor, never a menu callback. */
@@ -15,6 +17,8 @@ public final class ConfigManager {
     private final Path directory;
     private final AtomicReference<Settings> current = new AtomicReference<>();
     private volatile boolean recovered;
+    @FunctionalInterface public interface Validator { void validate(Settings settings) throws IOException; }
+    private Validator validator = settings -> { };
 
     public ConfigManager(Path directory) { this.directory = directory; }
     public Settings current() {
@@ -23,6 +27,7 @@ public final class ConfigManager {
         return settings;
     }
     public boolean recoveredFromBackup() { return recovered; }
+    public synchronized void setValidator(Validator validator) { this.validator = java.util.Objects.requireNonNull(validator); }
 
     public synchronized void initialize() throws IOException {
         Files.createDirectories(directory);
@@ -34,7 +39,10 @@ public final class ConfigManager {
         catch (IOException failure) {
             Path backup = directory.resolve("config.last-good.json");
             if (!Files.isRegularFile(backup)) throw failure;
-            try { current.set(parse(readBounded(backup))); recovered = true; }
+            try {
+                Settings fallback = parse(readBounded(backup)); validator.validate(fallback);
+                current.set(fallback); recovered = true;
+            }
             catch (IOException invalidBackup) { failure.addSuppressed(invalidBackup); throw failure; }
         }
     }
@@ -42,6 +50,7 @@ public final class ConfigManager {
     public synchronized Settings reload() throws IOException {
         String json = readBounded(directory.resolve("config.json"));
         Settings candidate = parse(json);
+        validator.validate(candidate);
         // Persist the validated recovery copy before publishing the immutable candidate.
         writeAtomic(directory.resolve("config.last-good.json"), json);
         current.set(candidate);
@@ -53,7 +62,8 @@ public final class ConfigManager {
         try (var input = Files.newInputStream(path)) {
             byte[] bytes = input.readNBytes(65537);
             if (bytes.length > 65536) throw new IOException(path.getFileName() + ": maximum size is 64 KiB");
-            return new String(bytes, StandardCharsets.UTF_8);
+            try { return StandardCharsets.UTF_8.newDecoder().decode(java.nio.ByteBuffer.wrap(bytes)).toString(); }
+            catch (java.nio.charset.CharacterCodingException failure) { throw new IOException(path.getFileName() + ": invalid UTF-8", failure); }
         }
     }
 
@@ -63,6 +73,7 @@ public final class ConfigManager {
             Set<String> keys = new HashSet<>();
             Integer version = null;
             String language = null, title = null;
+            List<CollectionDefinition> collections = CollectionDefinition.defaults();
             reader.beginObject();
             while (reader.hasNext()) {
                 String key = reader.nextName();
@@ -76,6 +87,7 @@ public final class ConfigManager {
                     }
                     case "language" -> language = string(reader, key);
                     case "menu_title" -> title = string(reader, key);
+                    case "collections" -> collections = CollectionsCodec.read(reader);
                     default -> throw new IOException("config.json: unknown field " + key);
                 }
             }
@@ -84,7 +96,7 @@ public final class ConfigManager {
             if (version == null || language == null || title == null) throw new IOException("config.json: schema_version, language and menu_title are required");
             if (!Set.of("pt_br", "en_us").contains(language)) throw new IOException("config.json: unsupported language");
             if (title.isBlank() || title.length() > 128 || title.codePoints().anyMatch(Character::isISOControl)) throw new IOException("config.json: invalid menu_title");
-            return new Settings(version, language, title);
+            return new Settings(version, language, title, collections);
         } catch (IllegalStateException | IllegalArgumentException failure) {
             throw new IOException("config.json: invalid field or JSON structure", failure);
         }

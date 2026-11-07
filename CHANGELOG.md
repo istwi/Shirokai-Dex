@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0-alpha.2 — coleções JSON
+
+- Metadados, ícones, modos OWNED/SEEN/SHINY_SEEN e filtros combinados por coleção; SHINY_CAPTURED permanece indisponível sem evidência.
+- Validação semântica com snapshot real do registro e aplicação/backup atômicos; compatibilidade com config antigo e recuperação validadas.
+- Comandos dinâmicos, seletor paginado e permissões revalidadas inclusive em GUI antiga.
+- 69 JUnit e integração com LuckPerms 5.4.140: 11 regressões, 9 checks de coleções e 2 de reinício aprovados.
+- Trabalho salvo e pausado por solicitação do usuário; sem nova release.
+
+
 ## 0.2.0-alpha.1 — porcentagens iniciais (desenvolvimento)
 
 - Nacional e Lendária com quantidade/total e % no menu/status; duas casas sem falso 100%, total vazio N/D.

@@ -36,4 +36,4 @@ O total acompanha o registro real após startup. Alterações de datapack de esp
 
 ## Limites desta etapa
 
-Coleções/categorias customizadas por JSON, critérios avançados, wiki/pesquisa/paginação, placeholders Fabric/TAB e recompensas ainda não estão implementados. Nacional/Lendária são as coleções iniciais de progresso, não a Fase 2 completa. O cálculo puro e o adaptador Cobblemon estão separados para permitir essa evolução.
+[Coleções por JSON](COLLECTIONS.md) e filtros iniciais foram adicionados na alpha.2. Critérios avançados/categorias históricas, wiki/pesquisa/paginação por espécie, placeholders Fabric/TAB e recompensas continuam pendentes. Nacional/Lendária são as coleções iniciais de progresso, não a Fase 2 completa. O cálculo puro e o adaptador Cobblemon estão separados para permitir essa evolução.

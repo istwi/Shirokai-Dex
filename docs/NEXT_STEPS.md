@@ -2,20 +2,27 @@
 
 ## Última tarefa realizada
 
-Início Fase 2 com pedido explícito de %: Nacional/Lendária exibem quantidade/total e percentual em menu/status; seletor e páginas com retorno interno; Shiny N/D sem inventar captura histórica. Cache por UUID invalidado por evento oficial. 32 JUnit, regressão de 11 checks, progresso de 6 checks, reconexão/lore e remoção de datapack aprovados, inclusive JAR instalado fora do Loom. [Evidências](validation/phase2-percentages.json).
+**Projeto pausado a pedido do usuário após salvar no GitHub.** Não iniciar novas alterações até autorização para continuar.
 
-Base remota anterior `93185ae`; localizar esta entrega pelo assunto `feat: add verified Pokedex completion percentages`. Versão do build: `0.2.0-alpha.1+mc1.21.1-cobblemon1.8.3`. Não sobrescrever a release anterior `v0.1.0-alpha.1`: publicada e verificada, alvo c11b366. O workflow publish-alpha.yml é específico da release antiga e não serve para publicar esta versão.
+Coleções JSON implementadas na alpha 0.2.0-alpha.2: metadados, 4 modos, filtros combinados, validação transacional/semântica, permissões LuckPerms, seletor paginado e comandos dinâmicos. Arquivos antigos sem collections usam os padrões. SHINY_SEEN é explícito e SHINY_CAPTURED segue N/D.
+
+69 JUnit aprovados; 11 checks de regressão sem LuckPerms; 9 checks com JAR empacotado + LuckPerms Fabric 5.4.140; 2 checks de reinício/recuperação e navegação. [Evidência](validation/phase2-collections.json). Grant/revoke global e reload positivo/negativo fecharam parte dos testes complementares anteriores. Contextos específicos, cliente visual e carga ainda pendentes.
+
+Base anterior enviada: e4eb78f; entrega atual identificada por `feat: add validated JSON Pokedex collections and permission checks`. Confirmar SHA e remoto antes da próxima sessão. Não sobrescrever a release v0.1.0-alpha.1; workflow publish-alpha.yml continua específico daquela release antiga.
 
 ## Próxima tarefa exata
 
 1. Execute o protocolo de AGENTS: sincronize sem descarte, leia checklist/estado e confira o código.
-2. Feche testes complementares: auditar/instalar LuckPerms Fabric compatível e testar permissão positiva/contextos e `/dex admin reload` válido/inválido. Ausência do provedor já nega a ação; não usar OP como substituto.
+2. Quando o usuário retomar: reutilizar a integração LuckPerms 5.4.140 já validada para grants/revokes globais e reload. Testar contextos de dimensão e demais gestos do menu; não refazer a implementação concluída nem usar OP como substituto.
 3. Testar arraste, double-click/descarte e aparência no cliente Minecraft/Cobblemon real; o smoke não valida renderização.
-4. Continuar a Fase 2 a partir do cálculo/menus já implementados em `pokedex`, `cobblemon` e `menus`; não reimplementar percentuais. Adicionar modelos de coleções/categorias JSON validados e consultas de leitura. Não tratar OWNED como captura competitiva nem inferir captura shiny de shiny visto. Documentar política para dados que não podem ser reconstruídos.
+4. Continuar a Fase 2 a partir do cálculo/menus já implementados em `pokedex`, `cobblemon` e `menus`; não reimplementar percentuais. Coleções JSON e critérios iniciais já existem; próximo incremento é wiki navegável/pesquisa/filtros/paginação por espécie e evolução das categorias, reutilizando os modelos e percentuais. Não tratar OWNED como captura competitiva nem inferir captura shiny de shiny visto. Documentar política para dados que não podem ser reconstruídos.
 5. Reutilizar a fixture namespaced e os testes de totais entre reinícios já existentes; expandir para datapacks reais/casos de formas conforme os novos critérios, sem recriar a validação concluída. Cobblemon declara espécies inseguras para hot reload; não forçar reload do registro oficial.
 6. Atualizar checklist/estado/próximos passos/auditoria/changelog; testes, commit, push autorizado e confirmação remota. Não publicar ambiente/release estável sem autorização.
 
 ## Arquivos importantes
+
+- [Coleções JSON](COLLECTIONS.md), CollectionDefinition, CollectionsCodec, CollectionValidator e os testes CollectionsConfigTest/ConfiguredProgressTest; runtime em tests/integration/collections.cjs e fixture tests/fixtures/collections.
+
 
 - [Porcentagens e coleções](POKEDEX.md), `src/main/java/br/com/shirokaidex/pokedex`, `DexProgressTest`, `tests/integration/progress.cjs` e `tests/fixtures/datapacks/dex-progress`: trabalho atual. A forma padrão precisa ser incluída mesmo quando Species.forms está vazio.
 
@@ -42,6 +49,9 @@ Não presumir caminhos/caches/processos em outra máquina. `runServer` requer te
 Crates indicado: `https://github.com/istwi/Shirokai-Crates`, revisão `05b3995c4d4466ef17c6171ad07d4f0eab512db9`, versão declarada 0.2.1. Impactor 5.3.5 auditado estaticamente; nenhuma integração econômica foi implementada. Não inventar métodos/coordenadas nem comandos console de chaves.
 
 ## Testes pendentes e cuidados
+
+- Fixture atual tem 3 espécies de teste (2 implementadas e 1 não implementada). Runner de coleções exige perfil descartável novo; MC_COLLECTIONS_PLAYER permite nome diferente. RCON usa arquivo de senha temporário fora do Git e somente loopback. Não reutilizar dados de jogadores reais nem registrar credenciais.
+
 
 - Capturas, recompensas, economia, competições, datapacks reais adicionais e carga ainda não validados funcionalmente. Duas espécies de fixture namespaced foram testadas; não generalizar para todo ecossistema. Percentual shiny deve permanecer N/D até haver fonte de captura verificável.
 - Não modificar a Pokédex oficial nem chamar concessões para fabricar progresso.

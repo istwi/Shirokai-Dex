@@ -21,5 +21,13 @@
   "empty_collection": "No eligible species in the current registry.",
   "collection_status": "{0}: {1}/{2} — {3}.",
   "collection_unknown_status": "{0}: N/A — progress unavailable.",
-  "menu_back": "Back to Pokédex collections"
+  "menu_back": "Back to Pokédex collections",
+  "page_previous": "Previous page",
+  "page_next": "Next page",
+  "collection_missing": "Unknown Pokédex: {0}.",
+  "collection_denied": "You do not have permission to open this Pokédex.",
+  "mode.OWNED": "Progress: species owned (official Pokédex)",
+  "mode.SEEN": "Progress: species seen (official Pokédex)",
+  "mode.SHINY_SEEN": "Progress: shiny species seen",
+  "mode.SHINY_CAPTURED": "Progress: verified shiny captures"
 }

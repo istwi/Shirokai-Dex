@@ -1,0 +1,179 @@
+{
+  "version": "0.2.0-alpha.2+mc1.21.1-cobblemon1.8.3",
+  "unit_suites": [
+    {
+      "name": "br.com.shirokaidex.pokedex.ConfiguredProgressTest",
+      "tests": "6",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-07T09:53:49.346Z",
+      "hostname": "79be8c77c86f",
+      "time": "0.008"
+    },
+    {
+      "name": "br.com.shirokaidex.pokedex.DexProgressTest",
+      "tests": "12",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-07T09:53:49.355Z",
+      "hostname": "79be8c77c86f",
+      "time": "0.012"
+    },
+    {
+      "name": "br.com.shirokaidex.config.CollectionsConfigTest",
+      "tests": "31",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-07T09:53:48.494Z",
+      "hostname": "79be8c77c86f",
+      "time": "0.239"
+    },
+    {
+      "name": "br.com.shirokaidex.database.DatabaseTest",
+      "tests": "4",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-07T09:53:48.797Z",
+      "hostname": "79be8c77c86f",
+      "time": "0.548"
+    },
+    {
+      "name": "br.com.shirokaidex.config.ConfigManagerTest",
+      "tests": "16",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-07T09:53:48.736Z",
+      "hostname": "79be8c77c86f",
+      "time": "0.059"
+    }
+  ],
+  "protocol_reports": {
+    "integration-foundation": {
+      "timestamp": "2026-11-07T09:55:44.601Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3",
+      "results": [
+        {
+          "name": "Fabric login with Cobblemon and without LuckPerms/other optional integrations",
+          "status": "passed"
+        },
+        {
+          "name": "Official Pokédex query against dynamic registry (905 implemented species)",
+          "status": "passed"
+        },
+        {
+          "name": "Initial server-side inventory menu opens",
+          "status": "passed"
+        },
+        {
+          "name": "Collection selector navigates to national progress page",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks pickup without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks right click without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks shift click without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks hotbar swap without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Close button closes the menu",
+          "status": "passed"
+        },
+        {
+          "name": "Official progress unchanged and no display items left in player inventory",
+          "status": "passed"
+        },
+        {
+          "name": "Administrative reload rejected without LuckPerms permission",
+          "status": "passed"
+        }
+      ]
+    },
+    "integration-collections": {
+      "timestamp": "2026-11-07T10:01:17.865Z",
+      "test_player": "DexCollections2",
+      "results": [
+        {
+          "name": "JSON species whitelist resolves namespaced species; unimplemented species remains valid but has no eligible progress",
+          "status": "passed"
+        },
+        {
+          "name": "Selector paginates more than 18 collections and hides restricted collection on every page",
+          "status": "passed"
+        },
+        {
+          "name": "Custom owned/seen collections combine species, labels, types, forms and exclude precedence correctly",
+          "status": "passed"
+        },
+        {
+          "name": "Explicit SHINY_SEEN uses official seen state while SHINY_CAPTURED remains unavailable",
+          "status": "passed"
+        },
+        {
+          "name": "Type-filtered collection resolves real Cobblemon elemental types",
+          "status": "passed"
+        },
+        {
+          "name": "LuckPerms positive permission works and stale GUI button rechecks revocation without leaking its icon",
+          "status": "passed"
+        },
+        {
+          "name": "Administrative reload succeeds with an explicit LuckPerms grant and was denied before the grant",
+          "status": "passed"
+        },
+        {
+          "name": "Invalid registry reference rejects the whole reload including title/language and preserves last-good backup",
+          "status": "passed"
+        },
+        {
+          "name": "Valid reload atomically applies metadata/filters and invalidates cached collection percentage",
+          "status": "passed"
+        }
+      ]
+    },
+    "integration-collections-restart": {
+      "timestamp": "2026-11-07T10:06:18.227Z",
+      "test_player": "DexCollections2",
+      "results": [
+        {
+          "name": "Restart recovers semantically valid collection backup and preserves official player progress",
+          "status": "passed"
+        },
+        {
+          "name": "Pagination forward and backward survives configuration recovery",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "runtime": "Default config without LuckPerms in development; 31-collection fixture with LuckPerms in packaged server outside Loom, loopback/offline only",
+  "luckperms": {
+    "version": "5.4.140",
+    "source": "https://cdn.modrinth.com/data/Vebnzrzj/versions/l47d4ZWk/LuckPerms-Fabric-5.4.140.jar",
+    "sha512": "386ff4d18981c830d21ddaa599d70c1c5430c1475e2c5960275bad535cbd572c77e38b3841f0a71e3ea4a795c56d45ff8c4a8dba3799dae26bff5a382c6e0a64"
+  },
+  "jar": {
+    "name": "shirokai-dex-0.2.0-alpha.2+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "8c03d5d8f940ecddebe9c6a534bd21a7859944648f25e715e6eb4d1240ddcfe8"
+  },
+  "known_failed_attempt": "First unpaced protocol runner timed out on a repeated status request. Isolated repeated commands responded; paced runner with a fresh disposable player passed. No mod change was made to bypass the check. High-rate command behavior is not certified.",
+  "limitations": [
+    "Wiki, arbitrary condition trees, placeholders and verified shiny captures remain pending",
+    "LuckPerms global grant/revoke verified; dimension-specific contexts not tested",
+    "No visual Minecraft client or load test"
+  ]
+}

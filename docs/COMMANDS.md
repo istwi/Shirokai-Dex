@@ -15,3 +15,5 @@ O registro recusa um `/dex` já presente durante seu callback e registra o confl
 Não existem comandos de premiação, pausa de competição, concessão de Pokédex ou manipulação de capturas nesta alpha.
 
 Detalhes de cálculo, atualização e limitações: [Pokédex e porcentagem](POKEDEX.md).
+
+Desde a alpha.2: `/dex <id>` e `/dex <id> status` também atendem coleções JSON criadas pelo administrador. Sugestões dinâmicas e seletor respeitam as permissões atuais; páginas do seletor são automáticas. [Coleções](COLLECTIONS.md).

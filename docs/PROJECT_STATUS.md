@@ -2,6 +2,20 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
+## Pausa solicitada
+
+Usuário pediu salvar no GitHub e pausar. Não retomar implementação até nova solicitação. Entrega atual: `0.2.0-alpha.2+mc1.21.1-cobblemon1.8.3`, identificada pelo commit de assunto `feat: add validated JSON Pokedex collections and permission checks`, baseada no remoto `e4eb78f`.
+
+## Atualização mais recente — coleções JSON
+
+Implementados campo opcional collections no config.json, metadados/ícones/permissões, filtros por whitelist/exclusão/labels/tipos/formas, modos OWNED/SEEN/SHINY_SEEN e SHINY_CAPTURED explicitamente indisponível. 1–64 coleções, seletor paginado em blocos de 18, comandos dinâmicos e revalidação da permissão no clique. Compatibilidade com JSON antigo preservada.
+
+Configuração inteira e backup só são publicados após validação estrutural e semântica contra snapshot imutável do registro; arquivo UTF-8 inválido/referência desconhecida não muda estado ativo. Backup também é validado no startup. UI indica modo de progresso e não confunde shiny visto com capturado.
+
+Validação desta entrega: **69 casos JUnit aprovados**, 11 checks de regressão sem LuckPerms em servidor dev, 9 checks de coleções com LuckPerms Fabric 5.4.140 e JAR instalado fora do Loom, mais 2 checks após reinício com configuração inválida. Grant/revoke global, botão antigo, reload autorizado, rollback de idioma/título/coleções, cache e recuperação passaram. Contextos específicos de dimensão, cliente visual e carga continuam pendentes. [Evidência](validation/phase2-collections.json), [configuração](COLLECTIONS.md).
+
+O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consultas isoladas responderam e o runner com requisições espaçadas passou usando outro perfil descartável, sem alterar o mod para contornar o check. Comportamento em rajadas/carga não foi certificado. Servidores de teste encerrados; configurações locais originais restauradas e credencial RCON temporária removida. Nenhuma nova release ou configuração de ambiente foi publicada.
+
 ## Fase atual
 
 **Início da Fase 2 — porcentagens e coleções iniciais**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.

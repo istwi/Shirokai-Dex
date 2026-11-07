@@ -1,0 +1,29 @@
+{
+  "implemented": false,
+  "nationalPokedexNumber": 60003,
+  "name": "Dex Test Future",
+  "primaryType": "normal",
+  "maleRatio": 0.5,
+  "height": 10,
+  "weight": 10,
+  "labels": [],
+  "abilities": [
+    "runaway"
+  ],
+  "baseStats": {
+    "hp": 50,
+    "attack": 50,
+    "defence": 50,
+    "special_attack": 50,
+    "special_defence": 50,
+    "speed": 50
+  },
+  "experienceGroup": "medium_fast",
+  "baseExperienceYield": 1,
+  "catchRate": 255,
+  "eggCycles": 1,
+  "baseFriendship": 50,
+  "moves": [
+    "1:tackle"
+  ]
+}

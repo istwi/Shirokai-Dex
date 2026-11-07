@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "Coleções de teste",
+  "collections": [
+    {
+      "id": "national"
+    },
+    {
+      "id": "shiny"
+    },
+    {
+      "id": "legendary"
+    },
+    {
+      "id": "duo",
+      "name": "Duo",
+      "description": "Duas espécies da fixture",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary",
+          "dex_test:legend"
+        ]
+      }
+    },
+    {
+      "id": "seen_duo",
+      "name": "Vistas",
+      "progress_mode": "SEEN",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary",
+          "dex_test:legend"
+        ]
+      }
+    },
+    {
+      "id": "normal_legends",
+      "name": "Lendárias normais",
+      "criteria": {
+        "labels": [
+          "legendary"
+        ],
+        "types": [
+          "normal"
+        ],
+        "forms": [
+          "normal"
+        ]
+      }
+    },
+    {
+      "id": "shiny_seen",
+      "name": "Shiny vistas",
+      "progress_mode": "SHINY_SEEN",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "locked",
+      "name": "Restrita",
+      "icon": "minecraft:diamond",
+      "permission": "shirokaidex.collection.locked",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "without_legend",
+      "name": "Sem lendária",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary",
+          "dex_test:legend"
+        ],
+        "exclude_species": [
+          "dex_test:legend"
+        ]
+      }
+    },
+    {
+      "id": "future_species",
+      "name": "Espécie não implementada",
+      "criteria": {
+        "include_species": [
+          "dex_test:future"
+        ]
+      }
+    },
+    {
+      "id": "electric",
+      "name": "Elétricas",
+      "criteria": {
+        "types": [
+          "electric"
+        ]
+      }
+    },
+    {
+      "id": "page_00",
+      "name": "Página teste 00",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_01",
+      "name": "Página teste 01",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_02",
+      "name": "Página teste 02",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_03",
+      "name": "Página teste 03",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_04",
+      "name": "Página teste 04",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_05",
+      "name": "Página teste 05",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_06",
+      "name": "Página teste 06",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_07",
+      "name": "Página teste 07",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_08",
+      "name": "Página teste 08",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_09",
+      "name": "Página teste 09",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_10",
+      "name": "Página teste 10",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_11",
+      "name": "Página teste 11",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_12",
+      "name": "Página teste 12",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_13",
+      "name": "Página teste 13",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_14",
+      "name": "Página teste 14",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_15",
+      "name": "Página teste 15",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_16",
+      "name": "Página teste 16",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_17",
+      "name": "Página teste 17",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_18",
+      "name": "Página teste 18",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    },
+    {
+      "id": "page_19",
+      "name": "Página teste 19",
+      "criteria": {
+        "include_species": [
+          "dex_test:ordinary"
+        ]
+      }
+    }
+  ]
+}
