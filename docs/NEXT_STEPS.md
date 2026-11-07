@@ -6,6 +6,10 @@
 
 Passagem local de estilo compartilhado nos submenus de coleção, wiki, formas, spawn, prévia e confirmação: paleta, títulos, cartões, rodapé e barra de progresso. Prévia/grade consultam o journal assincronamente para mostrar estado real; confirmação fica oculta em operações concluídas/em processamento/revisão/canceladas. Payloads de itens de recompensa são preservados. Ver `validation/layout-submenus.json`. Snapshot incluído na preparação da pré-release `v0.3.0-alpha.4`.
 
+## Pendência de distribuição
+
+O upload do JAR/sources/SHA256SUMS recebeu HTTP 401 Bad credentials em uploads.github.com, embora API e push estejam autorizados. A release informa ausência de JAR anexado. Corrigir o acesso do ambiente ao host de uploads e enviar os arquivos já validados de build/libs antes de recomendar instalação. Nunca solicitar token em chat.
+
 ## Próxima tarefa exata
 
 1. Conferir a tag `v0.3.0-alpha.4` e o estado remoto antes de continuar. Preservar alterações futuras localmente; nova publicação requer autorização.

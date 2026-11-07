@@ -4,7 +4,7 @@ Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apen
 
 ## Entrega para pré-release v0.3.0-alpha.4
 
-Publicação solicitada explicitamente pelo usuário. Snapshot reúne versões de categorias, recompensas ITEM/CUSTOM_ITEM/SAVED_ITEM/POKEMON, desbloqueios permanentes e layout central/submenus. Referência desta entrega: tag `v0.3.0-alpha.4` (commit de preparação). Build e 218 JUnit aprovados, zero falhas/erros/skips. Evidências anteriores de servidor estão em `docs/validation`; a segunda passagem dos submenus ainda não foi repetida em servidor/cliente gráfico. JAR fora do Loom e carga seguem sem certificação. Publicação será verificada via GitHub antes da confirmação final. As seções abaixo preservam o histórico local de cada bloco, não o estado de sincronização desta entrega.
+Publicação solicitada explicitamente pelo usuário. Snapshot reúne versões de categorias, recompensas ITEM/CUSTOM_ITEM/SAVED_ITEM/POKEMON, desbloqueios permanentes e layout central/submenus. Referência desta entrega: tag `v0.3.0-alpha.4` (commit de preparação). Build e 218 JUnit aprovados, zero falhas/erros/skips. Evidências anteriores de servidor estão em `docs/validation`; a segunda passagem dos submenus ainda não foi repetida em servidor/cliente gráfico. JAR fora do Loom e carga seguem sem certificação. Código enviado em `0989d29`. Rascunho criado; upload dos anexos bloqueado por HTTP 401 Bad credentials em uploads.github.com (API GitHub e push funcionam). Pré-release será publicada com código-fonte e aviso explícito de ausência do JAR; artefatos ficam locais em build/libs. As seções abaixo preservam o histórico local de cada bloco, não o estado de sincronização desta entrega.
 
 ## Trabalho local atual — Pokémon e início do layout geral
 
