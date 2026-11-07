@@ -1,32 +1,28 @@
 # Próximos passos
 
-**Estado atual:** envio do snapshot alpha.6/7/8 autorizado pelo usuário. Referência: commit `feat: add configurable menu presentation and Impactor currency rewards`, base `7defc0c`. Depois do envio, continuar integração de chaves Crates localmente. Sem autorização de nova release/publicação de ambiente.
-
-## Parada solicitada pelo responsável
-
-Main com alpha.6/7/8 validada: `191a65e`. Trabalho novo incompleto está separado em `handoff/crates-checkpoint`. Próximo Codex deve abrir [CRATES_CHECKPOINT_HANDOFF.md](CRATES_CHECKPOINT_HANDOFF.md), testar nativamente o checkpoint e só depois integrar. Não refazer menus/moedas nem afirmar suporte CRATE_KEY pronto. Sessão encerrada por pedido do usuário.
+**Estado atual:** validação local alpha.9 em `handoff/crates-checkpoint`, base `6b97093`. Main `c89cc1b`/funcional `191a65e` preservadas. Envio deste bloco validado autorizado na resposta “continua” à confirmação de commit/push somente nesta branch; sem nova release/publicação de ambiente.
 
 ## Última tarefa realizada
 
-CURRENCY integrado ao plano/journal/preflight/menus, com API Impactor5.3.5 e backend JSON nativo auditado. Aguarda save e leitura de saldo, pois o provedor suprime erros; confere identidade e precisão e não usa moeda principal como fallback. Build/JAR verificados; 274 JUnit sem falhas/erros/skips e 8 checks de servidor (sem API, real e restart). Guia/evidência: CURRENCY_REWARDS.md e validation/phase3-currency.json. Native saldo final do teste: dólares15/tokens4/item1; operação incerta continua bloqueada.
-
-Mudanças alpha.6/7 de menus e adaptação dos runners anteriores preservadas. Snapshot autorizado para sincronização; confirmar SHA remoto na entrega.
+Checkpoint nativo Crates0.2.1 exercitado fora do Loom: chave real emitida pelo provedor e congelada via SAVED_ITEM, autenticidade por Tokens.matches, ACK após writer atrasado/readback, falha de playerdata/revisão/anti-repetição, reinícios e fallback vanilla sem Crates. 274 JUnit e 26 checks de servidor (8 checkpoint + 10 itens + 8 Pokémon, incluindo reinícios); resultados e regressões detalhados na [evidência](validation/phase3-crates-checkpoint.json). Nenhum tipo CRATE_KEY novo implementado. [Passagem atualizada](CRATES_CHECKPOINT_HANDOFF.md).
 
 ## Pendência de distribuição
 
-Alpha.5 foi publicada como artifact no Actions run 42400989186, com conferência de hash após upload. A limitação abaixo refere-se a anexos de release, não a esse artifact. Alpha.6/alpha.7/alpha.8 ainda são somente locais.
+Alpha.5 foi publicada como artifact no Actions run 42400989186, com conferência de hash após upload. A limitação abaixo refere-se a anexos de release, não a esse artifact. Alpha.6/alpha.7/alpha.8 foram sincronizadas na main; a evidência do artifact alpha.8 está na passagem Crates.
 
 O upload do JAR/sources/SHA256SUMS recebeu HTTP 401 Bad credentials em uploads.github.com, embora API e push estejam autorizados. A release informa ausência de JAR anexado. Corrigir o acesso do ambiente ao host de uploads e enviar os arquivos já validados de build/libs antes de recomendar instalação. Nunca solicitar token em chat.
 
 ## Próxima tarefa exata
 
-1. Conferir o commit de sincronização acima e o estado remoto antes de continuar. Não reaplicar blocos alpha.6/7/8; preservar trabalho novo local. Nova release/ambiente não autorizados.
-2. Próximo bloco funcional da Fase3: chaves físicas Shirokai Crates. Conferir HEAD/APIs atuais do repo informado pelo usuário e auditoria existente; não presumir versão instalada. Exigir prévia/confirmação, espaço e comprovação durável; não tratar retorno de comando como prova de entrega persistida. COMMAND e recuperação supervisionada ainda pendentes.
-3. Não repetir a implementação CURRENCY: API5.3.5 e JSON nativo já exercitados; formatos/serviços/versões adicionais continuam fora do suporte. Manter checagem exata de moeda/conta/precisão, intenção antes do efeito, save + readback e NEEDS_REVIEW para incerteza. Nunca adicionar retry automático ou equivalência com a moeda principal.
-4. Ao mudar adaptadores de itens/Pokémon, repetir seus runners completos (já adaptados à UI sem botão repetido). Não alegar que foram repetidos no bloco monetário. Testes novos de CURRENCY e menus não certificam todas as integrações antigas.
-5. Pendências visuais em paralelo: cliente gráfico, templates reutilizáveis, conteúdo/condições genéricas. Fases4–6 (capturas, estatísticas, competições, rankings, conquistas/perfis) ainda pendentes. Não mudar outros mods nem publicar ambiente.
+1. Conferir árvore local/commits/remoto. Entrega identificada pelo assunto `test: validate native Crates checkpoints and delivery regressions`, base `6b97093`; envio autorizado somente nesta branch. Preservar a main validada. Revisar evidência/diff antes de considerar integração.
+2. Seguir [CRATES_CHECKPOINT_HANDOFF.md](CRATES_CHECKPOINT_HANDOFF.md). A base de checkpoint/SAVED_ITEM está validada no escopo da evidência; próximo bloco funcional é auditar contrato público de **CRATE_KEY dedicado**. Não promover reflexão privada do probe a API de produção nem chamar givekey e tratar retorno como entrega durável.
+3. Preservar planos/componentes/permissões, journal antes do efeito, espera/readback nativo e NEEDS_REVIEW sem retry. Sem transação distribuída. Outros provedores/versões/concorrência ampla continuam pendentes.
+4. COMMAND e recuperação supervisionada completa ainda pendentes; não antecipar todos os sistemas. Capturas/estatísticas/competições/rankings e cliente gráfico/carga continuam abertos no prompt/checklist.
+5. Testes atuais são no JAR intermediary fora do Loom; probe separado de teste nunca deve ir ao JAR de distribuição. Nenhuma alteração em outros mods ou publicação de ambiente autorizada.
 
 ## Arquivos importantes
+
+- Checkpoint: PlayerSaveCoordinator/ItemRewardAdapter, `src/checkpointProbe`, `tests/integration/crates-checkpoint.cjs` (quatro modos), manifestos/fixture crates-checkpoint. Remapeamento Pokémon de regressão em build.gradle; ver relatório e passagem atualizados.
 
 - Moedas: CurrencyReward, CurrencyRewardAdapter/Port, ImpactorCurrencyPort, CurrencyPersistence; RewardPlan/RewardsCodec/RewardJournal.steps, core/menus/localização. CurrencyRewardsTest/CurrencyPersistenceTest, fixture e runner currency.cjs (normal/without-impactor/after-restart), manifesto oficial runtime-mods.json. Guia CURRENCY_REWARDS.md.
 
@@ -76,14 +72,14 @@ JAVA_HOME=/workspace/.tools/jdk-21.0.13+9 python3 scripts/gradle_cloud.py -Djava
 
 Não presumir caminhos/caches/processos em outra máquina. Para `runServer` cloud, acrescente `--init-script scripts/server_proxy.init.gradle` ao comando acima, trocando `build` por `runServer`; a JVM filha precisa do proxy para dependências LuckPerms. `runServer` requer terminal interativo e configuração descartável com EULA aceita pelo responsável; veja TESTING. Diretórios ignorados e `/tmp` não são fontes de continuidade.
 
-Crates indicado: `https://github.com/istwi/Shirokai-Crates`, revisão `05b3995c4d4466ef17c6171ad07d4f0eab512db9`, versão declarada 0.2.1. Impactor 5.3.5 auditado estaticamente; nenhuma integração econômica foi implementada. Não inventar métodos/coordenadas nem comandos console de chaves.
+Crates indicado: `https://github.com/istwi/Shirokai-Crates`, revisão `05b3995c4d4466ef17c6171ad07d4f0eab512db9`, versão declarada 0.2.1. Impactor 5.3.5/JSON nativo foi integrado e testado na alpha.8; demais backends não certificados. Não inventar métodos/coordenadas nem comandos console de chaves.
 
 ## Testes pendentes e cuidados
 
 - Fixture atual tem 3 espécies de teste (2 implementadas e 1 não implementada). Runner de coleções exige perfil descartável novo; MC_COLLECTIONS_PLAYER permite nome diferente. RCON usa arquivo de senha temporário fora do Git e somente loopback. Não reutilizar dados de jogadores reais nem registrar credenciais.
 
 
-- Capturas, recompensas, economia, competições, datapacks reais adicionais e carga ainda não validados funcionalmente. Duas espécies de fixture namespaced foram testadas; não generalizar para todo ecossistema. Percentual shiny deve permanecer N/D até haver fonte de captura verificável.
+- Capturas, competições, datapacks reais adicionais e carga ainda não validados funcionalmente; recompensas/economia apenas nos escopos dos relatórios. Duas espécies de fixture namespaced foram testadas; não generalizar para todo ecossistema. Percentual shiny deve permanecer N/D até haver fonte de captura verificável.
 - Não modificar a Pokédex oficial nem chamar concessões para fabricar progresso.
 - Não prometer atomicidade SQLite/inventário/APIs externas.
 - Não depender de processos vivos; servidores de teste devem ser encerrados e dados locais ficam fora do Git.

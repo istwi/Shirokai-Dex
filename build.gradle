@@ -77,7 +77,7 @@ sourceSets {
 tasks.register('pokemonProbeJar', Jar) {
     dependsOn tasks.named('compilePokemonProbeJava'), tasks.named('processPokemonProbeResources')
     from sourceSets.pokemonProbe.output
-    archiveClassifier = 'pokemon-probe'
+    archiveClassifier = 'pokemon-probe-dev'
     destinationDirectory = layout.buildDirectory.dir('test-mods')
 }
 
@@ -159,5 +159,13 @@ tasks.register('remapCheckpointProbeJar', net.fabricmc.loom.task.RemapJarTask) {
     dependsOn tasks.named('checkpointProbeJar')
     inputFile.set(tasks.named('checkpointProbeJar').flatMap { it.archiveFile })
     archiveClassifier = 'checkpoint-probe'
+    destinationDirectory = layout.buildDirectory.dir('test-mods')
+}
+
+// Production-namespace test probe for regression of the item/Pokemon delivery composition.
+tasks.register('remapPokemonProbeJar', net.fabricmc.loom.task.RemapJarTask) {
+    dependsOn tasks.named('pokemonProbeJar')
+    inputFile.set(tasks.named('pokemonProbeJar').flatMap { it.archiveFile })
+    archiveClassifier = 'pokemon-probe'
     destinationDirectory = layout.buildDirectory.dir('test-mods')
 }

@@ -51,3 +51,7 @@ O usuário autorizou investigar/corrigir a inicialização, atualizar documenta�
 ## Autorização atual de sincronização
 
 O usuário pediu enviar ao GitHub as atualizações já concluídas e depois continuar o projeto. Autoriza commit/push do snapshot alpha.6/7/8 validado; não autoriza nova release nem publicação de ambiente. Trabalho novo após essa sincronização continua local até nova solicitação de envio.
+
+## Autorização pontual — validação de checkpoint alpha.9
+
+Após a entrega de 274 JUnit/26 checks, o responsável respondeu “continua” à confirmação de commit/push somente em `handoff/crates-checkpoint`. Autoriza registrar/enviar esse bloco validado, preservando a main. Não autoriza release, publicação de ambiente nem mudanças em outros mods. Trabalho funcional posterior continua local até nova autorização de envio.

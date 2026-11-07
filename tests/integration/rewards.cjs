@@ -89,7 +89,7 @@ async function main(){
   menu=await open('/dex rewards pages');assert(menu.slots[26]);assert.equal(menu.slots.slice(0,18).filter(Boolean).length,18);menu=await click(26);assert.equal(menu.slots.slice(0,18).filter(Boolean).length,14);await close();
   pass('Official progress unlocks count threshold, keeps 100 percent locked and paginates all 32 item entries');
   await rcon.command(`give ${PLAYER} minecraft:cobblestone 2304`);await until(()=>quantity('cobblestone')===2304);
-  await claim('first','inventário sem espaço');assert.equal(quantity('diamond'),0);assert.equal(quantity('paper'),0);assert.equal(quantity('cobblestone'),2304);
+  await claim('first','sem espaço');assert.equal(quantity('diamond'),0);assert.equal(quantity('paper'),0);assert.equal(quantity('cobblestone'),2304);
   pass('Full inventory rejects entire plan without partial delivery or item drops');
   await rcon.command(`clear ${PLAYER}`);await until(()=>bot.inventory.items().length===0);
   await claim('first','entregue e registrada');await until(()=>quantity('diamond')===2&&quantity('paper')===64);

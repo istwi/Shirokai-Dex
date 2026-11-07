@@ -1,0 +1,352 @@
+{
+  "scope": "Crates async checkpoint / physical keys through SAVED_ITEM; dedicated CRATE_KEY not implemented",
+  "timestamp_utc": "2026-11-07T20:00:11.869171+00:00",
+  "branch": "handoff/crates-checkpoint",
+  "base_commit": "6b97093b49f9a57354c6193b69d2deac243fe626",
+  "main_preserved": "c89cc1b",
+  "publication": "Validated checkpoint block authorized for commit/push only on handoff/crates-checkpoint; no main merge, release or environment publication",
+  "build": {
+    "command": "JAVA_HOME=<JDK21> python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build serverDistribution remapCheckpointProbeJar remapPokemonProbeJar",
+    "result": "BUILD SUCCESSFUL",
+    "junit": {
+      "tests": 274,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "verifyModJar": "passed",
+    "jar": "shirokai-dex-0.3.0-alpha.9+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "017bccc501efc620dc670ef859d808b33596d4d801e538943961d45dd8bfaf8f",
+    "runtime_jar_matches": true,
+    "probe_classes_in_production_jar": false
+  },
+  "providers": [
+    {
+      "project": "impactor",
+      "version": "5.3.5+1.21.1-Fabric",
+      "filename": "Impactor-Fabric-5.3.5+1.21.1.jar",
+      "url": "https://cdn.modrinth.com/data/LdBYVaPS/versions/KwNU9SQW/Impactor-Fabric-5.3.5%2B1.21.1.jar",
+      "sha512": "bfcec7e2a56b77fd874087a615aadaf71250a46dd29bf898ed0d1d280b807d4c5e34b700efe00a428067743dc672786e0467be01a1e30871a04bbf4dcf8b8020"
+    },
+    {
+      "project": "istwi/Shirokai-Crates",
+      "version": "0.2.1",
+      "url": "https://github.com/istwi/Shirokai-Crates/releases/download/v0.2.1/shirokai-crates-0.2.1.jar",
+      "sha256": "49a82904ef3fa971c535191657a592b9ee5affad5577913f1bb537ca1274adfd"
+    }
+  ],
+  "server": {
+    "minecraft": "1.21.1",
+    "minecraft_original_sha1": "59353fb40c36d304f2035d51e7d6e6baa98dc05c",
+    "fabric_loader": "0.17.2",
+    "java": "21.0.13",
+    "cobblemon": "1.8.3+1.21.1",
+    "luckperms": "5.4.140",
+    "installation": "Packaged intermediary JAR in mods, official Fabric profile + original server.jar, no project classes/Loom on server classpath",
+    "network": "loopback only; offline disposable worlds; RCON password file outside Git",
+    "worlds": [
+      "crate-checkpoint-validation",
+      "reward-validation",
+      "pokemon-reward-validation"
+    ]
+  },
+  "protocol_checks": 26,
+  "protocol": {
+    "native": {
+      "timestamp": "2026-11-07T19:49:27.233Z",
+      "target": "Packaged Fabric 0.17.2 / Minecraft 1.21.1 / Cobblemon 1.8.3 / Crates 0.2.1 / Impactor 5.3.5",
+      "mode": "main",
+      "player": "DexCheckpoint",
+      "timings": [
+        {
+          "reward": "keys_saved",
+          "acknowledgement_ms": 2009
+        },
+        {
+          "reward": "plain",
+          "acknowledgement_ms": 2007
+        }
+      ],
+      "results": [
+        {
+          "name": "Native signed key saved as SAVED_ITEM preserves components, waits delayed checkpoint, and yields three provider-authentic keys",
+          "status": "passed"
+        },
+        {
+          "name": "Multi-item delivery waits native async save before ACK/readback; no premature review",
+          "status": "passed"
+        },
+        {
+          "name": "Completed rewards reject repeated confirmation without duplicating physical items or keys",
+          "status": "passed"
+        },
+        {
+          "name": "Real playerdata atomic-write failure yields NEEDS_REVIEW and blocks repetition; original file restored in finally",
+          "status": "passed"
+        },
+        {
+          "name": "Unhealthy loaded Crates blocks new item effects instead of silently falling back to vanilla",
+          "status": "passed"
+        }
+      ]
+    },
+    "native_restart": {
+      "timestamp": "2026-11-07T19:50:25.576Z",
+      "target": "Packaged Fabric 0.17.2 / Minecraft 1.21.1 / Cobblemon 1.8.3 / Crates 0.2.1 / Impactor 5.3.5",
+      "mode": "after-restart",
+      "player": "DexCheckpoint",
+      "timings": [],
+      "results": [
+        {
+          "name": "Signed keys/items and completed/review journal survive native restart without redelivery",
+          "status": "passed"
+        }
+      ]
+    },
+    "vanilla": {
+      "timestamp": "2026-11-07T19:51:14.763Z",
+      "target": "Packaged Fabric 0.17.2 / Minecraft 1.21.1 / Cobblemon 1.8.3 / Crates 0.2.1 / Impactor 5.3.5",
+      "mode": "vanilla",
+      "player": "DexCheckpoint",
+      "timings": [],
+      "results": [
+        {
+          "name": "Without Crates/probe the vanilla save/readback fallback completes once and preserves review blocking",
+          "status": "passed"
+        }
+      ]
+    },
+    "vanilla_restart": {
+      "timestamp": "2026-11-07T19:52:41.138Z",
+      "target": "Packaged Fabric 0.17.2 / Minecraft 1.21.1 / Cobblemon 1.8.3 / Crates 0.2.1 / Impactor 5.3.5",
+      "mode": "vanilla-restart",
+      "player": "DexCheckpoint",
+      "timings": [],
+      "results": [
+        {
+          "name": "Vanilla fallback inventory and journal survive restart; uncertain delivery remains blocked",
+          "status": "passed"
+        }
+      ]
+    },
+    "items": {
+      "timestamp": "2026-11-07T19:55:05.921Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexCheckpointR2",
+      "results": [
+        {
+          "name": "Locked milestone preview cannot claim or extract displayed reward icons",
+          "status": "passed"
+        },
+        {
+          "name": "Official progress unlocks count threshold, keeps 100 percent locked and paginates all 32 item entries",
+          "status": "passed"
+        },
+        {
+          "name": "Full inventory rejects entire plan without partial delivery or item drops",
+          "status": "passed"
+        },
+        {
+          "name": "Separate explicit confirmation delivers every item and acknowledges persistent journal steps",
+          "status": "passed"
+        },
+        {
+          "name": "Repeated claim preserves exactly the acknowledged quantities without another delivery",
+          "status": "passed"
+        },
+        {
+          "name": "Current collection permission is required for preview and stale claim buttons",
+          "status": "passed"
+        },
+        {
+          "name": "Reload revalidates stale plans, rejects unknown items atomically and leaves official progress unchanged",
+          "status": "passed"
+        },
+        {
+          "name": "Silent vanilla player save failure is detected by readback; uncertain effect is blocked for review without a second delivery",
+          "status": "passed"
+        }
+      ]
+    },
+    "items_restart": {
+      "timestamp": "2026-11-07T19:56:16.520Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexCheckpointR2",
+      "results": [
+        {
+          "name": "Uncertain save failure stays blocked after restart without redelivery",
+          "status": "passed"
+        },
+        {
+          "name": "Completed claim and saved inventory survive restart without redelivery",
+          "status": "passed"
+        }
+      ]
+    },
+    "pokemon": {
+      "timestamp": "2026-11-07T19:58:23.901Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexPokemonCP",
+      "results": [
+        {
+          "name": "Preview shows mixed item/Pokemon attributes without granting a Pokemon",
+          "status": "passed"
+        },
+        {
+          "name": "Mixed journal delivers exact validated properties, waits for NBT readback and blocks duplicate claims without inventing shiny captures",
+          "status": "passed"
+        },
+        {
+          "name": "Eight invalid registry/form/property candidates are rejected atomically instead of silently falling back",
+          "status": "passed"
+        },
+        {
+          "name": "Old Pokemon confirmation rechecks the current permission and cannot deliver after revocation",
+          "status": "passed"
+        },
+        {
+          "name": "A full party overflows into real PC capacity while preserving a valid alternate form",
+          "status": "passed"
+        },
+        {
+          "name": "Full party plus full PC refuses the entire Pokemon reward without reserving an effect",
+          "status": "passed"
+        },
+        {
+          "name": "Failed asynchronous PC write leaves one frozen Pokemon in review, never retries delivery, and native omitted defaults remain valid",
+          "status": "passed"
+        }
+      ]
+    },
+    "pokemon_restart": {
+      "timestamp": "2026-11-07T19:59:38.073Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexPokemonCP",
+      "results": [
+        {
+          "name": "Saved party/PC and prepared UUIDs survive restart; completed and uncertain operations never redeliver",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "lifecycle": {
+    "native-main": [
+      "[19:48:25] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+      "[19:48:34] [Server thread/INFO]: Done (7.818s)! For help, type \"help\"",
+      "[19:49:35] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+    ],
+    "native-restart": [
+      "[19:50:07] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+      "[19:50:07] [Server thread/INFO]: Done (3.240s)! For help, type \"help\"",
+      "[19:50:36] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+    ],
+    "vanilla-main": [
+      "[19:51:06] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+      "[19:51:07] [Server thread/INFO]: Done (2.998s)! For help, type \"help\"",
+      "[19:51:28] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+    ],
+    "vanilla-restart": [
+      "[19:52:20] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+      "[19:52:22] [Server thread/INFO]: Done (5.204s)! For help, type \"help\"",
+      "[19:52:57] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+    ],
+    "items-main": [
+      "[19:53:19] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+      "[19:53:27] [Server thread/INFO]: Done (8.051s)! For help, type \"help\"",
+      "[19:55:30] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+    ],
+    "items-restart": [
+      "[19:55:57] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+      "[19:56:00] [Server thread/INFO]: Done (2.801s)! For help, type \"help\"",
+      "[19:56:40] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+    ],
+    "pokemon-main": [
+      "[19:57:19] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+      "[19:57:23] [Server thread/INFO]: Done (9.295s)! For help, type \"help\"",
+      "[19:58:57] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+    ],
+    "pokemon-restart": [
+      "[19:59:21] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+      "[19:59:22] [Server thread/INFO]: Done (3.220s)! For help, type \"help\"",
+      "[19:59:55] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+    ]
+  },
+  "audited_contract": [
+    "Public ShirokaiCrates.service().checkpoints(), healthy(), blocked(UUID), save(ServerPlayer,true): CompletableFuture",
+    "Managed vanilla player saves are intercepted into async native checkpoint; saveAll return alone is insufficient",
+    "Await dependent future then compare saved inventory with snapshot captured at delivery; provider future/barrier not cancelled by dependent timeout",
+    "Unknown/unavailable/unhealthy loaded Crates fails closed for items; absence alone selects vanilla fallback",
+    "Native key emitted by authorized player and captured through SAVED_ITEM; separate probe invokes Tokens.matches, never reads/exposes secret",
+    "Native checkpoint writer delayed 2000ms: inventory already changed but journal still PROCESSING; completion only after save/readback",
+    "Real .dat target blocked by a nonempty owned test directory, original restored in finally; NEEDS_REVIEW remains across native/vanilla restarts"
+  ],
+  "corrected_test_attempts": [
+    "remapPokemonProbeJar initially reused input filename; changed dev input classifier and remapped successfully, production JAR unaffected",
+    "Legacy rewards runner expected old inventory-full phrase; broadened matcher to sem espaço matching existing product message and repeated full runner with fresh player"
+  ],
+  "cleanup": {
+    "servers_stopped": true,
+    "world_saves_observed": true,
+    "sqlite_integrity": "ok",
+    "temporary_rcon_secret_removed": true,
+    "provider_test_config_restored": true,
+    "provider_sources_or_user_mods_modified": false
+  },
+  "journal_state_totals": [
+    [
+      "failed",
+      "NEEDS_REVIEW",
+      1
+    ],
+    [
+      "first",
+      "COMPLETED",
+      1
+    ],
+    [
+      "keys_saved",
+      "COMPLETED",
+      1
+    ],
+    [
+      "overflow",
+      "COMPLETED",
+      1
+    ],
+    [
+      "partner",
+      "COMPLETED",
+      1
+    ],
+    [
+      "plain",
+      "COMPLETED",
+      1
+    ],
+    [
+      "save_failure",
+      "NEEDS_REVIEW",
+      1
+    ],
+    [
+      "uncertain",
+      "NEEDS_REVIEW",
+      1
+    ],
+    [
+      "vanilla",
+      "COMPLETED",
+      1
+    ]
+  ],
+  "limits": [
+    "Dedicated CRATE_KEY/COMMAND and supervised resume not implemented",
+    "Physical keys verified only for shiny1 on Crates0.2.1 with same server secret; no secret migration or universal mod component compatibility claim",
+    "Other versions/backends, real 30s timeout, crash during pending save, power loss, broad concurrency and load not certified",
+    "No distributed transaction between SQLite and inventory/provider stores; uncertain effects never automatically retried",
+    "No graphical Minecraft client verification",
+    "Saved-items legacy full runner not repeated; native signed SAVED_ITEM scenario and full item/Pokemon runners were executed"
+  ],
+  "delivery_commit_subject": "test: validate native Crates checkpoints and delivery regressions"
+}

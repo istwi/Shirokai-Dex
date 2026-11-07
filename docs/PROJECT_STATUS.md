@@ -1,6 +1,14 @@
 # Estado do projeto
 
-Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
+Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, main validada preservada e retomada em `handoff/crates-checkpoint`; apenas um Codex por vez.
+
+## Retomada local — checkpoint Crates alpha.9
+
+Branch `handoff/crates-checkpoint`, base `6b97093`; main remota `c89cc1b` e funcional `191a65e` preservadas. Nenhuma alteração local anterior encontrada; checkout/fetch feitos sem descarte. Envio deste bloco validado autorizado pela resposta “continua” à confirmação de commit/push somente nesta branch.
+
+`PlayerSaveCoordinator` e ItemRewardAdapter da passagem exercitados no JAR empacotado fora do Loom: checkpoint Crates0.2.1, chave física real via SAVED_ITEM, autenticidade nativa, espera de 2000ms, itens simples, falha real de escrita/revisão/anti-repetição, reinício e fallback sem Crates. Build/distribuição/probes separados, 274 JUnit e 26 checks de servidor aprovados (8 checkpoint, 10 itens/reinício, 8 Pokémon/reinício). Servidores encerrados, SQLite íntegro, configuração de teste Cobblemon restaurada e RCON desativado com segredo temporário removido. [Evidência](validation/phase3-crates-checkpoint.json), [procedimento](CRATES_CHECKPOINT_HANDOFF.md).
+
+Runner novo e remapeamento do probe Pokémon adicionados para validação/reprodução. Sem mudanças no código de outros mods, APIs fictícias, reenvio automático ou publicação de release/ambiente. CRATE_KEY dedicado continua pendente; cenário não certifica segredos/servidores/versões adicionais nem toda a Fase 3. Histórico abaixo distingue os blocos anteriores.
 
 ## Passagem interrompida — WIP Crates separado
 
@@ -164,9 +172,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Fase atual
 
-**Prioridade atual: layout geral.** Fundação de recompensas permanece abaixo; tipos econômicos/Crates/comandos e fases futuras não serão antecipados enquanto esta revisão visual estiver em andamento.
-
-**Fase 3 — recompensas simples e desbloqueios permanentes**, com recursos avançados da Fase 2 ainda abertos, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
+**Fase 3 — recompensas e persistência**, com recursos avançados da Fase 2 ainda abertos. Menus configuráveis, ITEM/CUSTOM_ITEM/SAVED_ITEM/POKEMON e CURRENCY estão implementados nos escopos dos relatórios. Checkpoint opcional Crates0.2.1 e chave física via SAVED_ITEM validados na branch alpha.9; CRATE_KEY dedicado/COMMAND ainda pendentes. Nacional/Lendária exibem quantidade/total e %, Shiny permanece N/D sem evidência confiável de captura. Não é mod completo nem release estável.
 
 ## Concluído
 
@@ -209,9 +215,9 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Testes e verificações executados
 
-Etapa atual: 214 JUnit e 30 checks agrupados de Pokémon/layout/regressão; provas em phase3-pokemon.json e layout-home.json. Relatórios anteriores abaixo preservam suas próprias versões/escopos.
+Histórico alpha.4: 214 JUnit e 30 checks agrupados de Pokémon/layout/regressão; provas em phase3-pokemon.json e layout-home.json. Relatórios anteriores abaixo preservam suas próprias versões/escopos.
 
-Etapa atual alpha.2: 179 JUnit e 10 checks reais sem falhas; [relatório](validation/phase3-saved-items.json). Resultados das etapas anteriores abaixo são históricos e não substituem a evidência desta etapa.
+Histórico alpha.2: 179 JUnit e 10 checks reais sem falhas; [relatório](validation/phase3-saved-items.json). Resultados das etapas anteriores abaixo são históricos e não substituem a evidência desta etapa.
 
 Entrega anterior de categorias: build e 124 JUnit sem falhas/erros/skips; 6 checks de categorias em servidor dev com LuckPerms, sem falhas. Servidor encerrado, SQLite integrity_check=ok, propriedades/configuração restauradas e senha temporária removida. [Relatório](validation/phase2-categories.json). Rejeições esperadas de configuração inválida aparecem nos logs dos testes negativos; não são falhas da suíte.
 
@@ -243,11 +249,11 @@ Servidores locais eram offline e limitados a loopback; não validam autenticaç�
 - Fabric Installer não concluiu consulta de metadata. Usado perfil estático oficial Maven e artefatos verificados para montar o servidor isolado, sem alterar allowlist/TLS.
 - Cobblemon emitiu avisos de mixins opcionais/data fixers e arquivos `.old` de usuários novos, sem histórico prévio. Dex não escreve esses arquivos.
 - Shiny visto + espécie obtida não comprovam captura shiny. Registros de espécies Cobblemon não são seguros para hot reload.
-- Integração Crates por console não é suportada no contrato auditado. Nenhuma recompensa foi entregue/implementada.
+- Comando givekey do Crates por console não é suportado no contrato auditado. Na alpha.9, o runner emite como jogador autorizado e testa a recompensa SAVED_ITEM preservando autenticidade; CRATE_KEY dedicado não implementado.
 
 ## Última alteração relevante e sincronização
 
-Entrega alpha.7: `feat: add reusable named category rules for collections`, base `5ac56f2`. Commit/push autorizados pelo usuário; conferir SHA com Git para evitar referência circular neste documento. Histórico das entregas e releases permanece abaixo e na checklist.
+Main remota `c89cc1b`, último funcional validado `191a65e`. Branch de retomada `handoff/crates-checkpoint`, base `6b97093`, com resultados novos locais de validação. Envio deste bloco validado autorizado somente nesta branch; sem nova release/ambiente. Conferir status/diff e remotos na próxima sessão, preservando o trabalho.
 
 ## Publicação alpha confirmada
 

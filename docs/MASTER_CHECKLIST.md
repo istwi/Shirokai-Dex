@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Retomada:** alpha.8 local acrescentou CURRENCY com Impactor5.3.5/JSON nativo; 274 JUnit e 8 checks de servidor, [evidência](validation/phase3-currency.json). Menus alpha.6/7 preservados. Base publicada `7defc0c`, sem novos commits/push. Próximo bloco: chaves físicas Crates/Fase3; demais fases continuam pendentes.
+**Retomada:** main alpha.8 preservada em `c89cc1b`/funcional `191a65e`; validação local alpha.9 na branch `handoff/crates-checkpoint`, base `6b97093`. Checkpoint nativo, chaves reais via SAVED_ITEM, falha/revisão, fallback e reinícios exercitados; 274 JUnit e 26 checks de servidor (8 checkpoint, 10 itens, 8 Pokémon). [Evidência](validation/phase3-crates-checkpoint.json). CRATE_KEY dedicado e demais fases continuam pendentes. Envio deste bloco validado autorizado somente nesta branch.
 
 ## Preparação e continuidade
 
@@ -236,6 +236,8 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 ### WIP separado — checkpoint Crates
 
 - [x] ~~Conferir fonte/HEAD e binário oficial Crates0.2.1 para salvamento coordenado.~~ Hash/métodos reais auditados; isso não prova entrega integrada.
-- [ ] Testar coordenação assíncrona/itens/chaves em servidor e reinício. Implementação/probe compilados na branch handoff/crates-checkpoint; usuário interrompeu antes do teste funcional.
+- [x] ~~Testar coordenação assíncrona/itens/chaves via SAVED_ITEM em servidor empacotado e reinício.~~ Writer atrasado, autenticidade nativa, componentes, falha real/NEEDS_REVIEW/anti-repetição, fallback sem Crates e reinícios; [evidência](validation/phase3-crates-checkpoint.json). Não conclui tipo CRATE_KEY dedicado, outras versões/modpacks ou toda a Fase 3.
 
 | Passagem WIP Crates | PlayerSaveCoordinator, ItemRewardAdapter, probe/fixture e instruções exatas; build/274 JUnit, sem teste nativo novo | Branch handoff/crates-checkpoint; [passagem](CRATES_CHECKPOINT_HANDOFF.md) |
+
+| Validação local checkpoint Crates | Runner em quatro modos, remapeamento de probe Pokémon, regressões e documentação objetiva. 274 JUnit e 26 checks fora do Loom (8 checkpoint + 10 itens + 8 Pokémon); SQLite íntegro e cleanup concluído. Planos/componentes e main preservados | Commit `test: validate native Crates checkpoints and delivery regressions`;  base `6b97093`, branch `handoff/crates-checkpoint`; [evidência](validation/phase3-crates-checkpoint.json) |

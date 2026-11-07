@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0-alpha.9 — validação local de checkpoint Crates
+
+- Checkpoint Crates0.2.1 aguarda future e readback antes do ACK de itens; fallback vanilla somente na ausência do provedor. Provedor carregado unhealthy/indisponível bloqueia efeito.
+- Runner em quatro modos: chave real via SAVED_ITEM, autenticidade nativa, atraso controlado, itens, falha de escrita, revisão/anti-repetição, fallback e reinícios. Sem CRATE_KEY dedicado nem alteração de outros mods.
+- 274 JUnit e evidências de servidor empacotado; regressões nos relatórios. Probe Pokémon agora tem task de remapeamento separada com input dev distinto da saída.
+- Envio do bloco validado autorizado somente na branch handoff/crates-checkpoint. Nenhuma nova release/publicação de ambiente.
+
 ## 0.3.0-alpha.4 — trabalho local não enviado
 
 - POKEMON com atributos reais validados, UUID/payload congelados, espaço de equipe/PC e confirmação de gravação NBT; falhas bloqueadas para revisão.
@@ -152,6 +159,6 @@ Sem release, sem JAR e sem funcionalidades entregues até esta etapa.
 - Dependência API compileOnly 5.3.5, sem empacotar/instalar Impactor ou alterar suas configurações no servidor do usuário.
 - Alterações continuam locais; nenhuma publicação.
 
-## WIP separado — alpha.9
+## Origem do WIP alpha.9
 
-Coordenação do checkpoint assíncrono Crates0.2.1 em desenvolvimento, em handoff/crates-checkpoint. Compilação/JAR/274 JUnit aprovados, teste funcional ainda pendente. Não é release nem integração CRATE_KEY concluída. Trabalho interrompido para passagem a outro Codex.
+Passagem `6b97093` continha coordenação/probe compilados, sem validação funcional. Retomada atual descrita no topo.

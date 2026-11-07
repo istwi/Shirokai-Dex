@@ -42,3 +42,7 @@ Componentes customizados não se misturam a pilhas comuns incompatíveis. Quanti
 `/dex admin reward list [página]` mostra até dez operações PENDING/PROCESSING/NEEDS_REVIEW por página, com a permissão separada `shirokaidex.admin.rewards`. Concluídas/canceladas ficam fora dessa fila; estado completo continua acessível por UUID. Cada página reflete o estado atual. Consultas e resgates também informam o UUID da operação quando disponível, sem criar operação apenas para informar seu ID.
 
 [Testes e limites](TESTING.md), [evidência](validation/phase3-saved-items.json). Testados componentes Minecraft listados acima e dados personalizados; não certifica todos os componentes de mods, cliente visual, carga ou instalação do JAR fora do Loom.
+
+## Compatibilidade de chaves físicas — alpha.9
+
+Na branch `handoff/crates-checkpoint`, uma chave real emitida pelo Crates 0.2.1 foi salva com `/dex admin item save native_key` e usada como SAVED_ITEM. Componentes são preservados e o checkpoint nativo deve concluir antes do ACK. A autenticidade é conferida pela rotina `Tokens.matches` do provedor, sem ler ou recriar seu segredo. O cenário usa a chave `shiny1` e o mesmo servidor/segredo; não certifica migração entre servidores, outras versões ou todos os componentes de mods. **Isso não implementa o tipo CRATE_KEY dedicado.** [Passagem/testes](CRATES_CHECKPOINT_HANDOFF.md).

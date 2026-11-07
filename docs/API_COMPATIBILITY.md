@@ -2,6 +2,12 @@
 
 Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificação de funcionamento em servidor. O repositório estava vazio, sem HEAD, fontes, build ou testes. Java local confirmado: OpenJDK 21.0.13.
 
+## Atualização — checkpoint Crates alpha.9 (branch local)
+
+Crates0.2.1, fonte `05b3995c4d4466ef17c6171ad07d4f0eab512db9` e release SHA-256 `49a82904ef3fa971c535191657a592b9ee5affad5577913f1bb537ca1274adfd`. `ShirokaiCrates.service().checkpoints()`, `healthy()`, `blocked(UUID)` e `save(ServerPlayer, true): CompletableFuture` exercitados no binário real remapeado. Mixin de save vanilla de jogadores managed enfileira escrita; retorno de saveAll sozinho não é comprovação. Produção usa somente métodos públicos por reflexão opcional e versão auditada; sem Crates usa fallback vanilla, provedor carregado inválido/unhealthy bloqueia itens.
+
+Writer nativo atrasado 2000ms: journal permaneceu PROCESSING após mutação, completando após future/readback (ACK observado em 2009/2007ms). SAVED_ITEM de chave física real preservou componentes e passou por `Tokens.matches`; apenas o probe de teste acessa campos privados para atraso e verificação nativa, sem ler/expor segredo. Falha real de gravação leva a revisão; reinícios e fallback testados. Não implementa CRATE_KEY dedicado nem certifica outras versões/segredos. [Evidência](validation/phase3-crates-checkpoint.json), [procedimento](CRATES_CHECKPOINT_HANDOFF.md).
+
 ## Estados e evidências
 
 - `VERIFIED`: apenas o fato explicitamente acompanhado de evidência foi confirmado.
