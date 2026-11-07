@@ -4,7 +4,7 @@
 
 Fundação Fase 1: build/proxy/JDK, Fabric lifecycle, configuração segura, SQLite/migração, comando/menu inicial e consulta oficial Cobblemon. 20 casos JUnit e smoke de 10 checks aprovados; smoke repetido após reinício e com JAR instalado fora do Loom. Veja [evidências](validation/phase1-foundation.json).
 
-Base anterior sincronizada: `8c1e7f3`. Entrega atual: commit de assunto `feat: implement and validate Fabric foundation alpha`; localizar SHA com `git log --oneline`. Não recriar esses componentes.
+Entrega funcional enviada e confirmada: `9cab47d7d4dcd6c95793cc57e4b1b60d87b49b45` (`feat: implement and validate Fabric foundation alpha`). Atualização documental posterior registra a sincronização e notices. Confira quaisquer commits posteriores ao sincronizar; não recrie esses componentes.
 
 ## Próxima tarefa exata
 

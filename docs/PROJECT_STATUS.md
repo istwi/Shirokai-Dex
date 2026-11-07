@@ -60,4 +60,4 @@ Servidores locais eram offline e limitados a loopback; não validam autenticaç�
 
 Base anterior enviada/confirmada: `8c1e7f365be918b866ac137c020e2337db14e721` (checklist/checksum). Esta entrega é identificada pelo assunto `feat: implement and validate Fabric foundation alpha`; inclui código, testes, documentos e evidência do JAR. Obter o SHA com Git, sem atualização circular do hash deste documento.
 
-O push será conferido contra HEAD e estado local ao concluir; a próxima sessão deve repetir essa conferência antes de trabalhar.
+Entrega funcional enviada e confirmada no remoto: `9cab47d7d4dcd6c95793cc57e4b1b60d87b49b45`, com árvore local limpa. Workflows desse commit iniciaram; aprovação remota/artifact ainda dependem do resultado observado no GitHub. Atualização documental posterior apenas registra essa referência e corrige os notices; a próxima sessão deve conferir também esse commit documental e quaisquer posteriores.
