@@ -121,6 +121,8 @@ Upload direto da sessão recebeu HTTP 401; resolvido pelo token do próprio GitH
 
 Implementação identificada pelo assunto `feat: add verified Pokedex completion percentages`, baseada no remoto `93185ae`. A alpha.1 publicada permanece imutável; esta versão 0.2.0-alpha.1 será disponibilizada pelo artifact de build do commit e JAR local. Não foi publicada nova release nesta tarefa. Confirmar SHA/push ao encerrar.
 
-## Publicação da alpha.3 autorizada
+## Publicação da alpha.3 confirmada
 
-Usuário solicitou o JAR na release. Build remoto do código `47817bff13cdc3464ad926791233801a01354b54` aprovado no Actions `42365240743`. Workflow dedicado `publish-wiki-alpha.yml` preparado para gerar/testar o mesmo commit e publicar somente a pré-release `v0.2.0-alpha.3`, com JAR, fontes, relatório, checksums e proveniência. A release anterior não será alterada. Publicação e anexos ainda aguardam confirmação da execução. Nenhuma configuração de ambiente é publicada por esse fluxo.
+Usuário autorizou publicar o JAR. [Pré-release v0.2.0-alpha.3](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.2.0-alpha.3) publicada, não draft e experimental, com tag confirmada no commit `47817bff13cdc3464ad926791233801a01354b54`. Workflow [42365493365](https://github.com/istwi/Shirokai-Dex/actions/runs/42365493365) aprovado e 78 JUnit executados no build de publicação.
+
+Cinco anexos baixados da release e conferidos: JAR instalável, fontes, `phase2-wiki.json`, `BUILD_PROVENANCE.json` e `SHA256SUMS.txt`. Checksums GitHub e manifesto verificados; versão interna do JAR, proveniência e alvo da tag confirmados. [Evidência](validation/release-alpha3.json). O relatório de servidor dev mantém seu hash local separado dos binários de CI. Limites de cliente visual/carga/JAR fora do Loom continuam explícitos. A release antiga permaneceu inalterada; nenhuma configuração de ambiente foi publicada.

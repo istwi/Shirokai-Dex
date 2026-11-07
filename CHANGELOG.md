@@ -1,11 +1,12 @@
 # Changelog
 
-## 0.2.0-alpha.3 — wiki inicial (desenvolvimento)
+## 0.2.0-alpha.3 — wiki inicial (pré-release)
 
 - Wiki por coleção via botão e `/dex <id> wiki [pesquisa]`, com 18 espécies por página, ordenação por nome/ID e filtros vistas/obtidas/não vistas/shiny vistas.
 - Detalhes com nomes canônicos, IDs, formas/tipos e estado oficial; spawn e captura shiny verificada explicitamente indisponíveis.
 - Reutiliza critérios/permissões e snapshot do progresso; ações antigas revalidam acesso e configuração após reload.
-- Nove testes Java novos (78 no total), integração da wiki e regressão das coleções em servidor real; limites documentados em `docs/WIKI.md`. Sem nova release ou publicação de ambiente.
+- Nove testes Java novos (78 no total), integração da wiki e regressão das coleções em servidor real; limites documentados em `docs/WIKI.md`.
+- Pré-release v0.2.0-alpha.3 publicada por autorização do usuário: 78 testes no CI, JAR/fontes/checksums/proveniência/relatório anexados e downloads verificados. Sem publicação de ambiente.
 
 ## Não lançado — validação complementar da alpha.2
 

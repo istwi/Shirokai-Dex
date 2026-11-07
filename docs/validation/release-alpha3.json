@@ -1,0 +1,45 @@
+{
+  "tag": "v0.2.0-alpha.3",
+  "source_commit": "47817bff13cdc3464ad926791233801a01354b54",
+  "release_url": "https://github.com/istwi/Shirokai-Dex/releases/tag/v0.2.0-alpha.3",
+  "release_id": 437512342,
+  "is_draft": false,
+  "is_prerelease": true,
+  "workflow_run": "https://github.com/istwi/Shirokai-Dex/actions/runs/42365493365",
+  "junit_passed": 78,
+  "assets": [
+    {
+      "name": "BUILD_PROVENANCE.json",
+      "size": 571,
+      "sha256": "0eb440ca8de56ab774c8c3a150a7186852a0d1970079f851b232603b9de9eef2",
+      "url": "https://github.com/istwi/Shirokai-Dex/releases/download/v0.2.0-alpha.3/BUILD_PROVENANCE.json"
+    },
+    {
+      "name": "phase2-wiki.json",
+      "size": 9075,
+      "sha256": "5193eb5089639dbe2732a1db7fa979b2759ef770b1010a8ae0de54143200ab23",
+      "url": "https://github.com/istwi/Shirokai-Dex/releases/download/v0.2.0-alpha.3/phase2-wiki.json"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "size": 421,
+      "sha256": "db29e931d2d3f49554e5d97eeada048b9be3d11f6181e5eaf1433bfcc43c7530",
+      "url": "https://github.com/istwi/Shirokai-Dex/releases/download/v0.2.0-alpha.3/SHA256SUMS.txt"
+    },
+    {
+      "name": "shirokai-dex-0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3-sources.jar",
+      "size": 29431,
+      "sha256": "cf4c001f3b32e3c6346e4f2bbcc8ca92c303dc85cf7f8113ed1e087f51f8060b",
+      "url": "https://github.com/istwi/Shirokai-Dex/releases/download/v0.2.0-alpha.3/shirokai-dex-0.2.0-alpha.3%2Bmc1.21.1-cobblemon1.8.3-sources.jar"
+    },
+    {
+      "name": "shirokai-dex-0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3.jar",
+      "size": 14305896,
+      "sha256": "99a696e2d5284be7df240f12f29ab3ae0d7e334315bddac3ee1f29a4c2e3a63f",
+      "url": "https://github.com/istwi/Shirokai-Dex/releases/download/v0.2.0-alpha.3/shirokai-dex-0.2.0-alpha.3%2Bmc1.21.1-cobblemon1.8.3.jar"
+    }
+  ],
+  "verification": "All five assets downloaded from the published release; GitHub asset digests and all four SHA256SUMS entries verified; JAR metadata, provenance and tag commit checked",
+  "runtime_validation": "phase2-wiki.json describes development server tests; no visual client/load/current-alpha packaged-server validation",
+  "environment_publication": "none"
+}

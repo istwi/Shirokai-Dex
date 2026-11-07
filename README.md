@@ -8,6 +8,8 @@ Disponível: `/dex`, resumo somente de leitura da Pokédex oficial, menu inicial
 
 Validação da alpha.3: **78 testes JUnit**, **8 checks de wiki**, **9 de regressão de coleções** e **12 de fundação sem LuckPerms** aprovados em servidor de desenvolvimento real. A wiki foi testada com datapack namespaced e LuckPerms; cliente visual, carga e dados de spawn continuam pendentes. [Testes e limites](docs/TESTING.md).
 
+[Baixar a pré-release 0.2.0-alpha.3](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.2.0-alpha.3) — JAR, fontes, checksums e relatório de validação.
+
 [Baixar a pré-release anterior 0.1.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.1.0-alpha.1) — JAR, fontes, checksums e relatório de validação.
 
 ## Instalar e desenvolver
