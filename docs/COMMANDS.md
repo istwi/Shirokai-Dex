@@ -19,3 +19,15 @@ Não existem comandos de premiação, pausa de competição, concessão de Poké
 Detalhes de cálculo, atualização e limitações: [Pokédex e porcentagem](POKEDEX.md).
 
 Desde a alpha.2: `/dex <id>` e `/dex <id> status` também atendem coleções JSON criadas pelo administrador. Sugestões dinâmicas e seletor respeitam as permissões atuais; páginas do seletor são automáticas. [Coleções](COLLECTIONS.md).
+
+## Recompensas de itens (desenvolvimento local)
+
+`/dex rewards` e `/dex rewards <id>`: lista/prévia, com resgate por segunda confirmação na GUI. Administração: `/dex admin reward status <uuid>`, `/dex admin reward cancel <uuid> confirm <justificativa>` e `/dex admin reward complete <uuid> confirm <evidência>`. [Regras e limites](REWARDS.md).
+
+## Itens salvos (local alpha.2)
+
+`/dex admin item save <id>`, `list [página]`, `give <id> <jogador>` e `delete <id> confirm`. Give requer confirmação separada e registro da operação. `/dex admin reward list [página]` lista a fila de revisão. [Guia](SAVED_ITEMS.md).
+
+## Central e grade de recompensas
+
+`/dex` agora abre a central; Pokédex abre o seletor, e Recompensas abre a grade paginada. Comandos diretos `/dex <coleção>` e `/dex rewards <id>` permanecem. Não foram adicionados aliases que mascarem IDs de coleções existentes. O botão externo VOLTAR AO MENU executa `/menu` como o jogador quando registrado. [Navegação e limites](LAYOUT.md).

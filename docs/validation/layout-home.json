@@ -1,0 +1,153 @@
+{
+  "scope": "Local only; no commit/push/release/environment publication",
+  "base_commit": "593d43f",
+  "version": "0.3.0-alpha.4+mc1.21.1-cobblemon1.8.3",
+  "junit": {
+    "tests": 214,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "runtime": [
+    {
+      "timestamp": "2026-11-07T17:20:32.078Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexLayout",
+      "results": [
+        {
+          "name": "Six-row Shirokai hub exposes real trainer progress, gradient title and current reward count",
+          "status": "passed"
+        },
+        {
+          "name": "Future systems are honestly disabled; profile, decoration and six-row icons cannot be extracted",
+          "status": "passed"
+        },
+        {
+          "name": "Hub, collection selector and collection details have reversible navigation to the central menu",
+          "status": "passed"
+        },
+        {
+          "name": "Reward grid paginates twenty visible milestones, hides restricted definitions and returns from preview",
+          "status": "passed"
+        },
+        {
+          "name": "Wiki shortcut uses the actual current collection permission and disables itself after revocation",
+          "status": "passed"
+        },
+        {
+          "name": "Conflicting layout is rejected atomically; valid four-row Ocean palette and English labels apply together",
+          "status": "passed"
+        },
+        {
+          "name": "Back-to-menu action executes the registered external command as the non-op player, without privilege elevation",
+          "status": "passed"
+        },
+        {
+          "name": "Closing the redesigned hub preserves inventory and official progress",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-11-07T17:28:46.312Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexLayout",
+      "results": [
+        {
+          "name": "Missing external /menu stays visibly unavailable, with no execution or progress mutation",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-11-07T17:28:48.012Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3",
+      "results": [
+        {
+          "name": "Fabric login with Cobblemon and without LuckPerms/other optional integrations",
+          "status": "passed"
+        },
+        {
+          "name": "Official Pokédex query against dynamic registry (905 implemented species)",
+          "status": "passed"
+        },
+        {
+          "name": "Initial server-side inventory menu opens",
+          "status": "passed"
+        },
+        {
+          "name": "Collection selector navigates to national progress page",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks pickup without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks right click without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks shift click without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks hotbar swap without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Close button closes the menu",
+          "status": "passed"
+        },
+        {
+          "name": "Public wiki and species details work without LuckPerms or other optional integrations",
+          "status": "passed"
+        },
+        {
+          "name": "Official progress unchanged and no display items left in player inventory",
+          "status": "passed"
+        },
+        {
+          "name": "Administrative reload rejected without LuckPerms permission",
+          "status": "passed"
+        },
+        {
+          "name": "Missing optional Text Placeholder API leaves public Dex/wiki functional and reports preview unavailable",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "coverage": [
+    "54-slot hub and dynamic profile",
+    "Gradient component data, palettes, validated slots and 36-slot override",
+    "Disabled future cards; inventory extraction protection",
+    "Collections/wiki/reward grid navigation and pagination",
+    "Current collection permission",
+    "Transactional invalid layout rejection",
+    "External /menu as non-op player; no privilege elevation",
+    "Missing external menu and both optional permission/placeholder integrations",
+    "Foundation/wiki regression after route change"
+  ],
+  "artifact": {
+    "path": "build/libs/shirokai-dex-0.3.0-alpha.4+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "7b63f33b82a41397f667f2ce5ad02a562a48f83edc66a39485cd7d1b09d295d3",
+    "metadata_verified": true,
+    "no_probe_classes": true,
+    "runtime_scope": "Loom dedicated development servers; remapped JAR installation not certified"
+  },
+  "cleanup": {
+    "normal_stop": true,
+    "worlds_saved": true,
+    "sqlite_integrity": "ok",
+    "prior_properties_and_dex_config_restored": true,
+    "temporary_secret_removed": true,
+    "temporary_probe_and_luckperms_removed": true
+  },
+  "pending": [
+    "Visual client and load",
+    "Complete JSON layouts and consistent styling across all submenus",
+    "Trainer profile integrations and real claim-state presentation",
+    "Deferred economy/Crates/COMMAND/competitions systems per user priority"
+  ]
+}

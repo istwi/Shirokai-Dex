@@ -1,0 +1,95 @@
+{
+  "scope": "Local only; no commit/push/publication",
+  "base_commit": "593d43f",
+  "runtime": [
+    {
+      "timestamp": "2026-11-07T17:02:22.574Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexPokemon",
+      "results": [
+        {
+          "name": "Preview shows mixed item/Pokemon attributes without granting a Pokemon",
+          "status": "passed"
+        },
+        {
+          "name": "Mixed journal delivers exact validated properties, waits for NBT readback and blocks duplicate claims without inventing shiny captures",
+          "status": "passed"
+        },
+        {
+          "name": "Eight invalid registry/form/property candidates are rejected atomically instead of silently falling back",
+          "status": "passed"
+        },
+        {
+          "name": "Old Pokemon confirmation rechecks the current permission and cannot deliver after revocation",
+          "status": "passed"
+        },
+        {
+          "name": "A full party overflows into real PC capacity while preserving a valid alternate form",
+          "status": "passed"
+        },
+        {
+          "name": "Full party plus full PC refuses the entire Pokemon reward without reserving an effect",
+          "status": "passed"
+        },
+        {
+          "name": "Failed asynchronous PC write leaves one frozen Pokemon in review, never retries delivery, and native omitted defaults remain valid",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-11-07T17:09:01.136Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexPokemon",
+      "results": [
+        {
+          "name": "Saved party/PC and prepared UUIDs survive restart; completed and uncertain operations never redeliver",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "junit_latest": {
+    "tests": 214,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "prepared_pokemon_uuids": {
+    "partner": "84dbd012-3956-456d-9406-394c977aaf23",
+    "overflow": "d3d607e6-03d5-4d56-8345-f16f8f136bc1",
+    "uncertain": "767bed46-ea8c-49f1-af62-cb0a740e0c4d"
+  },
+  "operation_states": {
+    "partner": "COMPLETED",
+    "overflow": "COMPLETED",
+    "uncertain": "NEEDS_REVIEW"
+  },
+  "proof": {
+    "reserved_plans_unchanged_after_restart": true,
+    "native_nbt_readback_before_completion": true,
+    "party_and_pc_full_rejection": true,
+    "asynchronous_pc_write_failure_requires_review": true,
+    "no_automatic_redelivery": true,
+    "shiny_reward_not_counted_as_verified_capture": true
+  },
+  "cleanup": {
+    "normal_stop": true,
+    "sqlite_integrity": "ok",
+    "native_pc_folder_restored": true,
+    "prior_properties_dex_config_and_cobblemon_config_restored": true,
+    "temporary_secret_and_probe_removed": true
+  },
+  "notes": [
+    "Probe uses separate development source set; no probe classes/commands belong in the production JAR.",
+    "Kotlin Stats companion access in probe corrected before final successful build.",
+    "JVM suite includes initial layout tests; layout runtime has its own subsequent report."
+  ],
+  "limits": [
+    "Native NBT backend only; save interval 1..60 seconds; file confirmation bounded and not an atomic transaction with SQLite",
+    "MongoDB/JSON/unknown store subclasses unsupported",
+    "No guarantee of fsync/power-loss atomicity",
+    "Further species/forms/datapacks/mod properties require their own fixtures",
+    "Visual client/load/remapped JAR installation not certified"
+  ]
+}

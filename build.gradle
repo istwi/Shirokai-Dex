@@ -5,7 +5,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '2.2.20'
 }
 
-version = '0.2.0-alpha.7+mc1.21.1-cobblemon1.8.3'
+version = '0.3.0-alpha.4+mc1.21.1-cobblemon1.8.3'
 group = 'br.com.shirokaidex'
 base { archivesName = 'shirokai-dex' }
 
@@ -62,5 +62,32 @@ tasks.register('placeholderProbeJar', Jar) {
     dependsOn tasks.named('compilePlaceholderProbeJava'), tasks.named('processPlaceholderProbeResources')
     from sourceSets.placeholderProbe.output
     archiveClassifier = 'placeholder-probe'
+    destinationDirectory = layout.buildDirectory.dir('test-mods')
+}
+
+// Separate fixture mod for party/PC capacity and attribute inspection in disposable worlds.
+sourceSets {
+    pokemonProbe {
+        compileClasspath += sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
+}
+tasks.register('pokemonProbeJar', Jar) {
+    dependsOn tasks.named('compilePokemonProbeJava'), tasks.named('processPokemonProbeResources')
+    from sourceSets.pokemonProbe.output
+    archiveClassifier = 'pokemon-probe'
+    destinationDirectory = layout.buildDirectory.dir('test-mods')
+}
+
+sourceSets {
+    layoutProbe {
+        compileClasspath += sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
+}
+tasks.register('layoutProbeJar', Jar) {
+    dependsOn tasks.named('compileLayoutProbeJava'), tasks.named('processLayoutProbeResources')
+    from sourceSets.layoutProbe.output
+    archiveClassifier = 'layout-probe'
     destinationDirectory = layout.buildDirectory.dir('test-mods')
 }

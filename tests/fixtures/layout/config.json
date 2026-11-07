@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "✦ Shirokai Dex",
+  "collections": [
+    {
+      "id": "national"
+    },
+    {
+      "id": "shiny"
+    },
+    {
+      "id": "legendary"
+    },
+    {
+      "id": "private",
+      "name": "Privada",
+      "permission": "shirokaidex.layout.private"
+    }
+  ],
+  "rewards": [
+    {
+      "id": "gift_00",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_01",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_02",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_03",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_04",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_05",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_06",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_07",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_08",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_09",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_10",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_11",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_12",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_13",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_14",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_15",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_16",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_17",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_18",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gift_19",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "hidden_reward",
+      "collection": "private",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:diamond",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

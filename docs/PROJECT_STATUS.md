@@ -2,7 +2,49 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
-## Entrega atual — categorias nomeadas (alpha.7)
+## Entrega para pré-release v0.3.0-alpha.4
+
+Publicação solicitada explicitamente pelo usuário. Snapshot reúne versões de categorias, recompensas ITEM/CUSTOM_ITEM/SAVED_ITEM/POKEMON, desbloqueios permanentes e layout central/submenus. Referência desta entrega: tag `v0.3.0-alpha.4` (commit de preparação). Build e 218 JUnit aprovados, zero falhas/erros/skips. Evidências anteriores de servidor estão em `docs/validation`; a segunda passagem dos submenus ainda não foi repetida em servidor/cliente gráfico. JAR fora do Loom e carga seguem sem certificação. Publicação será verificada via GitHub antes da confirmação final. As seções abaixo preservam o histórico local de cada bloco, não o estado de sincronização desta entrega.
+
+## Trabalho local atual — Pokémon e início do layout geral
+
+Sem commit/push/publicação; base remota confirmada continua `593d43f`. Versão local `0.3.0-alpha.4+mc1.21.1-cobblemon1.8.3`.
+
+POKEMON: validação real de espécie/forma/atributos, payload e UUID congelados antes de intenção, capacidade equipe/PC e leitura de gravação NBT antes da confirmação. Operação incerta continua bloqueada após reinício. [Escopo/limites](POKEMON_REWARDS.md), [8 checks reais](validation/phase3-pokemon.json).
+
+Prioridade passou para layout por pedido explícito do usuário. Central de seis linhas, gradiente/paletas/slots JSON, resumo oficial, navegação reversível, grade paginada de recompensas e indicação honesta de áreas não implementadas. /menu externo usa jogador sem elevar permissão e fica indisponível quando ausente. [Guia](LAYOUT.md), [22 checks de layout/regressão](validation/layout-home.json).
+
+**218 JUnit na revisão atual, zero falhas/erros/skips; 30 checks reais históricos somando os dois blocos anteriores.** Servidores encerrados, SQLite íntegro e configuração/propriedades/Cobblemon restaurados; segredos e probes removidos. Instalação do JAR fora do Loom, cliente visual/carga, layouts completos dos submenus e formatos/provedores Pokémon adicionais seguem pendentes. Moedas/Crates/COMMAND e demais sistemas ficam para depois da revisão visual, conforme solicitação.
+
+## Trabalho local anterior — itens salvos/componentes (alpha.2)
+
+Sem commit/push/publicação. Versão local `0.3.0-alpha.2+mc1.21.1-cobblemon1.8.3`; base remota continua `593d43f`, com as alterações anteriores também locais.
+
+ITEM/CUSTOM_ITEM/SAVED_ITEM, captura registry-aware de componentes, save/list/give/delete com permissão própria, confirmação e journal. Migração 5 com checksum/auditoria e reparo explícito preservando evidências; snapshots não mudam com edição/exclusão do modelo. Backup expandido resolve referências e recupera configuração após exclusão. Fila de revisão paginada e IDs de operação disponíveis. [Guia](SAVED_ITEMS.md).
+
+**Build e 179 JUnit aprovados, zero falhas/erros/skips; 10 checks reais de servidor aprovados**, incluindo reinício, componentes, referências apagadas, revisão/permissões e regressão de itens comuns. SQLite íntegro, oito operações desse perfil concluídas com planos originais preservados; servidores encerrados, configuração/propriedades restauradas e segredo removido. [Evidência](validation/phase3-saved-items.json).
+
+Ainda pendentes: Pokémon, moedas/Impactor, Crates, COMMAND, retomada supervisionada e auditoria detalhada navegável. Componentes de mods adicionais, cliente visual/carga e JAR alpha.2 instalado fora do Loom não certificados. Não há atomicidade SQLite/inventário nem eventos históricos inventados.
+
+## Trabalho local anterior — recompensas de itens e resgates
+
+Sem commit/push/publicação, por instrução do usuário. Base remota continua `593d43f`; alterações de categorias anteriores também permanecem locais.
+
+**Build e 159 JUnit aprovados sem falhas/erros/skips; 25 checks reais de servidor nos blocos de recompensas**, incluindo falha real de salvamento e reinícios. Servidores encerrados normalmente, SQLite íntegro, configurações/propriedades restauradas e segredos temporários removidos.
+
+Versão local `0.3.0-alpha.1+mc1.21.1-cobblemon1.8.3`, não publicada. Fase 3: marcos JSON por contagem/percentual exato, prévia paginada, confirmação separada, inventário principal simulado sem descarte/entrega parcial por falta de espaço, plano preservado e unicidade jogador/recompensa. Migração 3 com operações/etapas/auditoria. Recuperação bloqueia PROCESSING em NEEDS_REVIEW; administração pode inspecionar/cancelar/reconhecer evidência, sem reenviar itens. [Guia](REWARDS.md), [evidência](validation/phase3-items.json).
+
+Desbloqueios permanentes acrescentados localmente na migração 4, com primeira evidência e avaliação limitada na thread do servidor. [Evidência](validation/phase3-unlocks.json). Moedas, chaves, Pokémon, componentes/itens salvos e retomada supervisionada continuam pendentes. Não há atomicidade SQLite/inventário. Cliente visual/carga/JAR desta alteração fora do Loom não certificados.
+
+## Trabalho local anterior — versões de categorias (sem commit)
+
+A pedido do usuário, **nenhum commit/push/publicação** nesta etapa. Último estado remoto confirmado: `593d43f`. O prompt integral continua em PROJECT_SPECIFICATION.md; não foi refeito ou resumido em substituição ao original.
+
+CategoryRules gera JSON canônico e SHA-256; migração SQLite 2 preserva conteúdos antigos de forma idempotente. Startup/reload persistem regras validadas antes de publicar configuração; falha impede aplicação. Leitura por fingerprint verifica integridade. Tabela registra observação validada, não ativação/captura. Nenhum histórico de eventos é inventado. [Semântica](CATEGORIES.md), [banco](DATABASE.md).
+
+Build e 130 JUnit sem falhas/erros/skips; 6 checks em servidor + 2 após reinício aprovados. Duas versões e suas datas preservadas; SQLite íntegro; processos encerrados, configuração/propriedades restauradas e segredo removido. Evidência: [relatório local](validation/phase2-category-versions.json). Competições/recálculo, cliente visual, carga e JAR fora do Loom permanecem abertos.
+
+## Entrega anterior — categorias nomeadas (alpha.7)
 
 Base sincronizada `5ac56f2`; commit `feat: add reusable named category rules for collections`. Regras imutáveis por JSON, composição `all_of`/`any_of`/`none_of`, validação de grafo/registro e associação por coleção. Progresso, wiki e reload usam a mesma forma elegível; união não duplica espécies. Configuração antiga preservada; permissões continuam nas coleções. [Schema e limites](CATEGORIES.md).
 
@@ -84,9 +126,17 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Fase atual
 
-**Fase 2 — categorias nomeadas, coleções, wiki com filtros/formas e resumo parcial de spawn, placeholders básicos**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
+**Prioridade atual: layout geral.** Fundação de recompensas permanece abaixo; tipos econômicos/Crates/comandos e fases futuras não serão antecipados enquanto esta revisão visual estiver em andamento.
+
+**Fase 3 — recompensas simples e desbloqueios permanentes**, com recursos avançados da Fase 2 ainda abertos, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
 
 ## Concluído
+
+- Recompensas Pokémon NBT no escopo auditado, com falha real/reinício; central e grade de recompensas com layout configurável. 214 JUnit e 30 checks destes blocos.
+
+- Trabalho local alpha.2: componentes/itens salvos, backup independente, auditoria de modelos e fila de operações; 179 JUnit + 10 checks desta etapa. [Evidência](validation/phase3-saved-items.json).
+
+- Trabalho local: itens simples com prévia/segunda confirmação, journal/migrações 3–4, revisão administrativa e desbloqueios permanentes. Tipos avançados continuam abertos. [Guia](REWARDS.md).
 
 - Categorias nomeadas JSON, composição all/any/none e integração em coleções/wiki/reload: 124 JUnit e 6 checks reais de protocolo aprovados. [Evidência](validation/phase2-categories.json).
 
@@ -99,7 +149,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 - Inicializador Fabric com lifecycle/readiness/logs e falhas isoladas do Dex; ausência de LuckPerms não impede iniciar.
 - Configuração imutável estrita, reload assíncrono, backup validado atômico e recuperação sem sobrescrever JSON inválido.
 - SQLite em worker dedicado; migração transacional, WAL/foreign keys, cadastro por UUID e fechamento.
-- `/dex`, `/dex status`, menu inicial de 27 slots somente de leitura e consulta oficial Cobblemon. Espécies enumeradas dinamicamente; nenhum registro oficial alterado.
+- `/dex`, `/dex status`, seletor de 27 slots somente de leitura (agora acessado pela central de seis linhas) e consulta oficial Cobblemon. Espécies enumeradas dinamicamente; nenhum registro oficial alterado.
 - `/dex admin reload` protegido por LuckPerms sem fallback OP/console; negação sem provedor comprovada, permissão positiva/global e por dimensão agora verificada nos relatórios de coleções/contextos.
 - Mensagens em recursos separados pt_br/en_us, com idioma global configurável nesta fase.
 - Workflow Java 21 com build/testes e upload de JAR/sources/JUnit condicionado ao sucesso. Checklist e continuidade mantidas.
@@ -121,7 +171,11 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Testes e verificações executados
 
-Entrega atual: build e 124 JUnit sem falhas/erros/skips; 6 checks de categorias em servidor dev com LuckPerms, sem falhas. Servidor encerrado, SQLite integrity_check=ok, propriedades/configuração restauradas e senha temporária removida. [Relatório](validation/phase2-categories.json). Rejeições esperadas de configuração inválida aparecem nos logs dos testes negativos; não são falhas da suíte.
+Etapa atual: 214 JUnit e 30 checks agrupados de Pokémon/layout/regressão; provas em phase3-pokemon.json e layout-home.json. Relatórios anteriores abaixo preservam suas próprias versões/escopos.
+
+Etapa atual alpha.2: 179 JUnit e 10 checks reais sem falhas; [relatório](validation/phase3-saved-items.json). Resultados das etapas anteriores abaixo são históricos e não substituem a evidência desta etapa.
+
+Entrega anterior de categorias: build e 124 JUnit sem falhas/erros/skips; 6 checks de categorias em servidor dev com LuckPerms, sem falhas. Servidor encerrado, SQLite integrity_check=ok, propriedades/configuração restauradas e senha temporária removida. [Relatório](validation/phase2-categories.json). Rejeições esperadas de configuração inválida aparecem nos logs dos testes negativos; não são falhas da suíte.
 
 Atualização de porcentagens: 32 JUnit (16 configuração + 4 SQLite + 12 progresso), zero falhas/erros/skips. Regressão de protocolo: 11 verificações. Progresso: 6 verificações com espécie comum/lendária de datapack e shiny obtido por comando; cache respondeu ao evento antes do TTL. Reconexão/lore: 2 checks; remoção de datapack entre reinícios: 1 check. Progresso/status e lore reais conferidos em servidor de desenvolvimento e no JAR empacotado. Total Nacional 907 com fixture e 905 sem; Lendária 18 com fixture e 17 sem. Fonte de contagem é o registro real, não esses números fixados no código.
 
@@ -174,3 +228,7 @@ Implementação identificada pelo assunto `feat: add verified Pokedex completion
 Usuário autorizou publicar o JAR. [Pré-release v0.2.0-alpha.3](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.2.0-alpha.3) publicada, não draft e experimental, com tag confirmada no commit `47817bff13cdc3464ad926791233801a01354b54`. Workflow [42365493365](https://github.com/istwi/Shirokai-Dex/actions/runs/42365493365) aprovado e 78 JUnit executados no build de publicação.
 
 Cinco anexos baixados da release e conferidos: JAR instalável, fontes, `phase2-wiki.json`, `BUILD_PROVENANCE.json` e `SHA256SUMS.txt`. Checksums GitHub e manifesto verificados; versão interna do JAR, proveniência e alvo da tag confirmados. [Evidência](validation/release-alpha3.json). O relatório de servidor dev mantém seu hash local separado dos binários de CI. Limites de cliente visual/carga/JAR fora do Loom continuam explícitos. A release antiga permaneceu inalterada; nenhuma configuração de ambiente foi publicada.
+
+## Última alteração local — submenus
+
+Estilo compartilhado de coleção/wiki/formas/spawn/prévia/confirmação, barra exata e consulta assíncrona de estados reais do journal. Sem mudança das regras de entrega. Testes desta passagem em `validation/layout-submenus.json`; validação de protocolo/cliente desta alteração ainda pendente. Gradle avisa sobre funcionalidades obsoletas incompatíveis com Gradle 9; não houve atualização de dependências. Sem commit/push/publicação.

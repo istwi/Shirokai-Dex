@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "Teste recompensas",
+  "collections": [
+    {
+      "id": "national"
+    },
+    {
+      "id": "pair",
+      "name": "Par",
+      "criteria": {
+        "include_species": [
+          "cobblemon:pikachu",
+          "cobblemon:bulbasaur"
+        ]
+      }
+    },
+    {
+      "id": "private",
+      "name": "Privada",
+      "permission": "shirokaidex.reward.private",
+      "criteria": {
+        "include_species": [
+          "cobblemon:pikachu"
+        ]
+      }
+    }
+  ],
+  "rewards": [
+    {
+      "id": "first",
+      "collection": "pair",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:diamond",
+          "count": 2
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 64
+        }
+      ]
+    },
+    {
+      "id": "complete",
+      "collection": "pair",
+      "minimum_percent": 100,
+      "items": [
+        {
+          "id": "minecraft:emerald",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "pages",
+      "collection": "pair",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 2
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 3
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 4
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 5
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 6
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 7
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 8
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 9
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 10
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 11
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 12
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 13
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 14
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 15
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 16
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 17
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 18
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 19
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 20
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 21
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 22
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 23
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 24
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 25
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 26
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 27
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 28
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 29
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 30
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 31
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 32
+        }
+      ]
+    },
+    {
+      "id": "restricted",
+      "collection": "private",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:emerald",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "permanent",
+      "collection": "pair",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:emerald",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

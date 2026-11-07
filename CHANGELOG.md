@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.3.0-alpha.4 — trabalho local não enviado
+
+- POKEMON com atributos reais validados, UUID/payload congelados, espaço de equipe/PC e confirmação de gravação NBT; falhas bloqueadas para revisão.
+- Primeira passagem visual: central /dex, resumo do treinador, paletas/gradiente/slots JSON, grade de recompensas e retorno /menu como jogador. Sistemas indisponíveis não simulam funcionalidades.
+- 214 JUnit + 30 checks de servidor nos dois blocos. [Pokémon](docs/validation/phase3-pokemon.json), [layout](docs/validation/layout-home.json).
+- Prioridade seguinte: padronizar demais telas antes de outros sistemas. Sem commit/push/release/ambiente publicado.
+
+## 0.3.0-alpha.2 — trabalho local não enviado
+
+- ITEM/CUSTOM_ITEM/SAVED_ITEM, componentes oficiais, save/list/give/delete com confirmação, checksum e auditoria transacional.
+- Modelos são resolvidos em snapshots; edição/exclusão não altera planos e backup recupera componentes sem depender do modelo removido.
+- Revisão paginada e identificação de operações; permissões atuais verificadas nos callbacks.
+- 179 JUnit + 10 checks de servidor aprovados. [Guia](docs/SAVED_ITEMS.md), [evidência](docs/validation/phase3-saved-items.json). Sem commit/push/publicação; tipos avançados restantes pendentes.
+
+## Trabalho local não enviado — recompensas de itens
+
+- Marcos JSON por quantidade/percentual, prévia paginada e confirmação de resgate.
+- Espaço integral no inventário, journal persistido antes dos efeitos, etapas/auditoria e bloqueio de duplicação.
+- Interrupções bloqueadas para revisão; comandos administrativos com permissão própria, confirmação literal e evidência/justificativa. Sem reenvio automático.
+- [Guia](docs/REWARDS.md), [testes](docs/validation/phase3-items.json). Desbloqueio permanente implementado na migração 4; tipos avançados pendentes. Sem commit/push/publicação.
+
+## Trabalho local não enviado — versões de categorias
+
+- JSON canônico/SHA-256 e migração SQLite 2 para preservar regras anteriores; leitura verifica hash.
+- Startup/reload rejeitam publicação se a persistência falhar. Snapshots representam regras observadas, sem inventar capturas/ativações históricas.
+- Sem commit/push/publicação por pedido do usuário. [Validação](docs/validation/phase2-category-versions.json).
+
 ## 0.2.0-alpha.7 — categorias nomeadas (desenvolvimento)
 
 - Categorias JSON reutilizáveis com critérios reais e composição all/any/none, associadas a coleções e wiki na mesma forma; espécies contadas uma vez.
@@ -86,3 +113,10 @@
 - Adicionados checker documental e workflow de continuidade; validado localmente inclusive com falhas simuladas de documentos/links. Pipeline Java permanece pendente.
 
 Sem release, sem JAR e sem funcionalidades entregues até esta etapa.
+
+## Local — segunda passagem de layout
+
+- Estilo comum para submenus, barra de progresso exata, resumo e confirmação destacada.
+- Grade/prévia exibem estado persistido do resgate; operações encerradas ou incertas não oferecem confirmação.
+- Consulta assíncrona protegida contra telas/configurações/permissões desatualizadas; componentes dos prêmios preservados.
+- Sem publicação. Repetição em servidor e cliente pendente.

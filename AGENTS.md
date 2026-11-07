@@ -35,3 +35,11 @@ Leia e atualize [docs/MASTER_CHECKLIST.md](docs/MASTER_CHECKLIST.md) em toda ent
 7. Confirme o SHA remoto com `git ls-remote` e o estado local. Informe branch, commit e sincronização. Se push falhar, documente o erro e diga explicitamente que o GitHub não foi atualizado e quais commits permanecem locais. Não considere acesso de leitura prova de permissão de escrita.
 
 Não deixe trabalho importante apenas no ambiente sem informar. Publicação de ambiente, release e push são ações distintas; nunca alegue uma a partir de evidência de outra.
+
+## Restrição atual do responsável (2026-11-07)
+
+O usuário pediu manter o desenvolvimento somente no ambiente local. **Não criar commits, não fazer push e não publicar releases/configuração de ambiente até nova autorização explícita.** Esta restrição substitui a autorização anterior de commit/push nesta sessão. Manter código, testes, checklist e passagem atualizados localmente; informar que alterações ainda não estão no GitHub.
+
+## Autorização pontual de publicação (2026-11-07)
+
+O usuário pediu uma release no GitHub. Autoriza commit/push do estado atual e publicação da pré-release `v0.3.0-alpha.4`, com JAR e limitações documentadas. Não autoriza publicação de configuração de ambiente. Após esta entrega, mudanças futuras voltam a permanecer locais até nova autorização.

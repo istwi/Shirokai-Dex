@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "Pokémon de recompensa",
+  "collections": [
+    {
+      "id": "national"
+    },
+    {
+      "id": "shiny"
+    }
+  ],
+  "rewards": [
+    {
+      "id": "partner",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ],
+      "pokemon": [
+        {
+          "type": "POKEMON",
+          "species": "cobblemon:bulbasaur",
+          "level": 12,
+          "shiny": true,
+          "nature": "cobblemon:modest",
+          "ability": "overgrow",
+          "gender": "MALE",
+          "pokeball": "cobblemon:great_ball",
+          "moves": [
+            "tackle",
+            "growl",
+            "vinewhip"
+          ],
+          "held_item": "minecraft:apple",
+          "ivs": {
+            "hp": 31,
+            "attack": 20
+          },
+          "evs": {
+            "hp": 6,
+            "special_attack": 252,
+            "speed": 252
+          }
+        }
+      ]
+    },
+    {
+      "id": "overflow",
+      "collection": "national",
+      "minimum_registered": 1,
+      "pokemon": [
+        {
+          "species": "cobblemon:vulpix",
+          "form": "alola",
+          "level": 20,
+          "ability": "snowcloak"
+        }
+      ]
+    },
+    {
+      "id": "uncertain",
+      "collection": "national",
+      "minimum_registered": 1,
+      "pokemon": [
+        {
+          "species": "cobblemon:eevee"
+        }
+      ]
+    }
+  ]
+}

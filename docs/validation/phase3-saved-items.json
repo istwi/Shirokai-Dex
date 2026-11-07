@@ -1,0 +1,131 @@
+{
+  "scope": "Local only; no commit/push/release/environment publication",
+  "base_commit": "593d43f",
+  "version": "0.3.0-alpha.2+mc1.21.1-cobblemon1.8.3",
+  "junit": {
+    "tests": 179,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "runtime": [
+    {
+      "timestamp": "2026-11-07T16:18:16.202Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexSaved",
+      "results": [
+        {
+          "name": "Dedicated item permission saves full components and lists templates without consuming the held item; empty hand is rejected",
+          "status": "passed"
+        },
+        {
+          "name": "Confirmed manual give preserves name/lore/enchantment/damage/custom data and rechecks permission on an old confirmation",
+          "status": "passed"
+        },
+        {
+          "name": "Registry-aware component validation rejects unknown components atomically and recovery backup embeds resolved templates",
+          "status": "passed"
+        },
+        {
+          "name": "Changing the saved template cannot alter an already compiled reward; quantity override and components are preserved",
+          "status": "passed"
+        },
+        {
+          "name": "Deletion keeps compiled rewards usable; missing template rejects reload and leaves an independent recovery snapshot",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-11-07T16:22:19.492Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexSaved",
+      "results": [
+        {
+          "name": "Restart recovers compiled component snapshots even though the saved template was deleted",
+          "status": "passed"
+        },
+        {
+          "name": "Claimed saved reward does not repeat; inline custom item remains valid after restart",
+          "status": "passed"
+        },
+        {
+          "name": "Plain item rewards still deliver and never merge with an existing custom-component stack",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-11-07T16:27:38.905Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexSaved",
+      "results": [
+        {
+          "name": "Review queue exposes pending operations by page with its own live permission and excludes completed claims",
+          "status": "passed"
+        },
+        {
+          "name": "Explicit ITEM/CUSTOM_ITEM/SAVED_ITEM schemas validate and deliver preserved payloads after template deletion",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "proof": {
+    "schema": 5,
+    "deleted_templates_absent": [
+      "moon",
+      "typed"
+    ],
+    "completed_player_operations": 8,
+    "original_reserved_payloads_unchanged": true,
+    "template_audit_actions": [
+      "SAVE",
+      "SAVE",
+      "DELETE",
+      "SAVE",
+      "DELETE"
+    ],
+    "original_resolved_backup_sha256": "d654bf36898e0b524eb1300a49a71eef607690a1c7b942facbe4f82fccd4bfe5",
+    "observed_components": [
+      "custom_name",
+      "lore",
+      "enchantments",
+      "damage",
+      "custom_data"
+    ],
+    "explicit_types_delivered": [
+      "ITEM",
+      "CUSTOM_ITEM",
+      "SAVED_ITEM"
+    ],
+    "manual_actor_audited": true
+  },
+  "artifact": {
+    "path": "build/libs/shirokai-dex-0.3.0-alpha.2+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "639a7b77dbe5572de4506befff6e4af69d63ff058b4003b7d6b0608dd84584db",
+    "metadata_verified": true,
+    "runtime_scope": "Loom dedicated development server; remapped JAR installation not certified"
+  },
+  "cleanup": {
+    "normal_stop": true,
+    "worlds_saved": true,
+    "sqlite_integrity": "ok",
+    "prior_properties_and_config_restored": true,
+    "temporary_rcon_secret_removed": true,
+    "temporary_luckperms_mod_removed": true
+  },
+  "notes": [
+    "Initial compilation variable shadowing corrected; final build and entire JVM suite passed.",
+    "Unknown component and missing template intentionally rejected; original config retained during recovery.",
+    "Final additional serialization-size guard tested with encoded expansion; native validation/gameplay exercised in the server runs.",
+    "Existing Cobblemon mixin/datafixer warnings and offline authentication endpoint errors are outside the claimed no-failure test results."
+  ],
+  "pending": [
+    "POKEMON/COMMAND/CURRENCY/CRATE_KEY adapters",
+    "Supervised retry of verified remaining steps",
+    "Full audit-history browsing",
+    "Additional mod component fixtures",
+    "Visual client, load, JAR installation outside Loom"
+  ]
+}

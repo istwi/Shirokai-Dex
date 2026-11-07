@@ -25,3 +25,11 @@ O valor de contexto observado foi `overworld`, não `minecraft:overworld`. Confi
 Cada coleção JSON pode definir `permission`; vazio é público, demais nós exigem LuckPerms positivo e são revalidados a cada acesso. Sem provedor, coleções restritas são negadas e ocultadas. [Detalhes](COLLECTIONS.md).
 
 Placeholders básicos e suas prévias usam a permissão atual da coleção para o jogador do contexto; acesso negado não revela nem o total. A API retorna `N/D` para essa consulta; a prévia de comando informa negação. Não existe fallback OP. [Sintaxe e segurança](PLACEHOLDERS.md).
+
+## Recompensas locais
+
+Prévia/resgate herdam a permissão atual da coleção. `shirokaidex.admin.rewards` autoriza revisão/cancelamento/reconhecimento manual de evidência, sem exigir também reload. Complete não reenvia itens. Os comandos são exclusivos de jogador autorizado via LuckPerms. Desbloqueio persistente não concede permissão.
+
+## Itens salvos
+
+`shirokaidex.admin.items`: salvar/listar/excluir e confirmar concessões de itens salvos. Independente de reload e revisão de recompensas; permissão revalidada nos callbacks. Resgates comuns de SAVED_ITEM continuam herdando a permissão da coleção. [Guia](SAVED_ITEMS.md).

@@ -40,7 +40,7 @@ async function selector() {
   await closeMenu();
   await delay(Math.max(0, 1100 - (Date.now() - lastSend)));
   lastSend = Date.now(); bot.chat('/dex');
-  await until(() => bot.currentWindow);
+  await until(() => bot.currentWindow); const hub=bot.currentWindow; await bot.clickWindow(20,0,0); await until(()=>bot.currentWindow&&bot.currentWindow!==hub);
   return bot.currentWindow;
 }
 async function allowed(expected) {

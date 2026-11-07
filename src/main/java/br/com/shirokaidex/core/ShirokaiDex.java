@@ -44,6 +44,16 @@ public final class ShirokaiDex implements ModInitializer {
     private boolean spawnRefreshPending;
     private ConfigManager config;
     private Database database;
+    private br.com.shirokaidex.rewards.RewardDelivery rewardDelivery;
+    private final java.util.Map<java.util.UUID,java.util.Set<String>> rewardUnlockCache = new java.util.HashMap<>();
+    private final java.util.Map<java.util.UUID,Long> rewardObservedAt = new java.util.HashMap<>();
+    private final java.util.Set<java.util.UUID> rewardObserving = new java.util.HashSet<>();
+    private int rewardPlayerCursor;
+    private long rewardViewSequence;
+    private final java.util.Map<java.util.UUID,Long> rewardViewRequests=new java.util.HashMap<>();
+    private final java.util.Set<br.com.shirokaidex.rewards.PokemonRewardAdapter> pokemonDeliveries=new java.util.HashSet<>();
+    private final java.util.Set<CompletableFuture<Void>> payloadValidations=java.util.concurrent.ConcurrentHashMap.newKeySet();
+
     private volatile boolean ready;
     private volatile boolean stopping;
     private volatile MinecraftServer activeServer;
@@ -53,6 +63,7 @@ public final class ShirokaiDex implements ModInitializer {
         Path directory = FabricLoader.getInstance().getConfigDir().resolve("shirokaidex");
         config = new ConfigManager(directory);
         database = new Database(directory.resolve("data/shirokaidex.sqlite"));
+        rewardDelivery = new br.com.shirokaidex.rewards.RewardDelivery(database);
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, environment) -> {
             if (dispatcher.getRoot().getChild("dex") != null) {
                 LOG.error("Command /dex already exists; refusing to overwrite it");
@@ -60,8 +71,11 @@ public final class ShirokaiDex implements ModInitializer {
             }
             var root = literal("dex").executes(context -> open(context.getSource(), true))
                     .then(literal("status").executes(context -> open(context.getSource(), false)))
-                    .then(literal("admin").requires(source -> Permissions.mayReload(source.getPlayer()))
-                            .then(literal("reload").executes(context -> reload(context.getSource()))));
+                    .then(literal("admin").requires(source -> Permissions.mayReload(source.getPlayer()) || (Permissions.has(source.getPlayer(), "shirokaidex.admin.rewards") || Permissions.has(source.getPlayer(),"shirokaidex.admin.items")))
+                            .then(literal("reload").requires(source -> Permissions.mayReload(source.getPlayer())).executes(context -> reload(context.getSource())))
+                            .then(rewardAdminCommands()).then(savedItemCommands()));
+            root.then(literal("rewards").executes(context -> rewards(context.getSource(), null, 0))
+                    .then(argument("reward", StringArgumentType.word()).executes(context -> rewards(context.getSource(), StringArgumentType.getString(context, "reward"), 0))));
             for (var collection : DexCollection.values()) {
                 root.then(literal(collection.id()).requires(source -> canAccess(source.getPlayer(), collection.id()))
                         .executes(context -> collection(context.getSource(), collection.id(), true))
@@ -92,21 +106,28 @@ public final class ShirokaiDex implements ModInitializer {
         });
         CobblemonEvents.POKEDEX_DATA_CHANGED_POST.subscribe((Consumer<PokedexDataChangedEvent.Post>) event -> {
             MinecraftServer server = activeServer;
-            if (server != null) server.execute(() -> { cobblemon.invalidate(event.getPlayerUUID()); if (placeholderBridge != null) placeholderCache.invalidate(event.getPlayerUUID()); });
+            if (server != null) server.execute(() -> { rewardObservedAt.remove(event.getPlayerUUID()); cobblemon.invalidate(event.getPlayerUUID()); if (placeholderBridge != null) placeholderCache.invalidate(event.getPlayerUUID()); });
         });
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             activeServer = server; stopping = false; cobblemon.clear();
-            config.setValidator(cobblemon.validationSnapshot()::validate);
-            initialization = CompletableFuture.runAsync(() -> {
+            var registry = cobblemon.validationSnapshot();
+            config.setItemResolver(id -> database.savedItem(id).join().orElse(null));
+            config.setValidator(settings -> {
+                registry.validate(settings);
+                validatePayloads(server,settings);
+                try { database.preserveCategoryRules(br.com.shirokaidex.categories.CategoryRules.of(settings.categories())).join(); }
+                catch (CompletionException failure) { throw new java.io.IOException("Cannot preserve category rules; configuration not applied", failure); }
+            });
+            initialization = database.initialize().thenRunAsync(() -> {
                 try { config.initialize(); }
                 catch (Exception failure) { throw new CompletionException(failure); }
-            }, configWorker).thenCompose(unused -> database.initialize());
+            }, configWorker);
             initialization.whenComplete((unused, failure) -> {
                 if (failure != null) LOG.error("Shirokai Dex disabled: foundation initialization failed", failure);
                 else if (!stopping) {
                     ready = true;
                     if (config.recoveredFromBackup()) LOG.warn("Invalid config.json: using validated config.last-good.json; original file preserved");
-                    LOG.info("Shirokai Dex ready: configuration validated, SQLite migration 1 applied/verified");
+                    LOG.info("Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified");
                 }
             });
         });
@@ -130,6 +151,7 @@ public final class ShirokaiDex implements ModInitializer {
                 try { spawnCatalog = SpawnAccess.capture(server); }
                 catch (RuntimeException failure) { spawnCatalog = SpawnCatalog.unavailable(); LOG.error("World spawn information unavailable", failure); }
             }
+            if (ready) observeRewards(server);
             if (!ready || placeholderBridge == null) return;
             // Only requested/invalidated players, at most four per tick. No global player scan.
             for (int i = 0; i < 4; i++) {
@@ -144,6 +166,7 @@ public final class ShirokaiDex implements ModInitializer {
             }
         });
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            rewardObservedAt.remove(handler.player.getUUID());
             cobblemon.invalidate(handler.player.getUUID());
             if (placeholderBridge != null) placeholderCache.invalidate(handler.player.getUUID());
             var uuid = handler.player.getUUID();
@@ -152,8 +175,8 @@ public final class ShirokaiDex implements ModInitializer {
             if (initialization != null) initialization.thenCompose(unused -> database.recordLogin(uuid, name, time))
                     .exceptionally(failure -> { LOG.error("Could not persist player login {}", uuid, failure); return null; });
         });
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> { cobblemon.invalidate(handler.player.getUUID()); placeholderCache.remove(handler.player.getUUID()); });
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; ready = false; activeServer = null; cobblemon.clear(); placeholderCache.clear(); spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = false;
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> { rewardViewRequests.remove(handler.player.getUUID()); rewardUnlockCache.remove(handler.player.getUUID()); rewardObservedAt.remove(handler.player.getUUID()); cobblemon.invalidate(handler.player.getUUID()); placeholderCache.remove(handler.player.getUUID()); });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; java.util.List.copyOf(pokemonDeliveries).forEach(br.com.shirokaidex.rewards.PokemonRewardAdapter::close); pokemonDeliveries.clear(); payloadValidations.forEach(future -> future.completeExceptionally(new IllegalStateException("Server stopping"))); ready = false; activeServer = null; rewardViewRequests.clear(); rewardUnlockCache.clear(); rewardObservedAt.clear(); cobblemon.clear(); placeholderCache.clear(); spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = false;
             if (placeholderBridge != null) {
                 try { placeholderBridge.close(); }
                 catch (RuntimeException | LinkageError failure) { LOG.error("Placeholder cleanup failed", failure); }
@@ -177,7 +200,7 @@ public final class ShirokaiDex implements ModInitializer {
         if (player == null) { source.sendFailure(messages.text(language(), "players_only")); return 0; }
         try {
             var progress = cobblemon.progress(player);
-            if (menu) return selector(source, 0);
+            if (menu) return home(source);
             else source.sendSuccess(() -> messages.text(language(), "progress", progress.owned(), progress.seen(), progress.total()).copy()
                     .append(" ").append(messages.text(language(), "collection_percent", cobblemon.collections(player).get(DexCollection.NATIONAL).progress().formattedPercentage(language()).orElse(messages.text(language(), "percent_unavailable").getString()))), false);
             return 1;
@@ -195,13 +218,23 @@ public final class ShirokaiDex implements ModInitializer {
         return config.current().collections().stream().filter(value -> value.id().equals(id))
                 .anyMatch(value -> Permissions.has(player, value.permission()));
     }
+    private int home(CommandSourceStack source){
+        if(!ready||source.getPlayer()==null)return 0;var player=source.getPlayer();var settings=config.current();
+        java.util.Map<String,Runnable> actions=new java.util.HashMap<>();actions.put("dex",()->selector(source,0));actions.put("rewards",()->rewards(source,null,0));actions.put("close",player::closeContainer);
+        if(canAccess(player,"national"))actions.put("wiki",()->wiki(source,"national",Wiki.Request.initial("")));
+        if(source.getServer().getCommands().getDispatcher().getRoot().getChild("menu")!=null)actions.put("back",()->{
+            if(!ready)return;player.closeContainer();source.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack(),"menu");
+        });
+        var progress=cobblemon.collections(player).get(DexCollection.NATIONAL).progress();
+        br.com.shirokaidex.menus.HomeMenu.open(player,settings,messages,progress,visible(player,settings).size(),(int)settings.rewards().stream().filter(plan->canAccess(player,plan.collection())).count(),actions);return 1;
+    }
     private int selector(CommandSourceStack source, int page) {
         if (!ready || source.getPlayer() == null) return 0;
         ServerPlayer player = source.getPlayer();
         Settings settings = config.current();
         try {
             MainMenu.open(player, settings, messages, visible(player, settings), cobblemon.collections(player, settings.collections()), page,
-                    id -> collection(source, id, true), next -> selector(source, next));
+                    id -> collection(source, id, true), next -> selector(source, next),()->home(source));
             return 1;
         } catch (RuntimeException failure) {
             LOG.error("Collection selector failed for {}", player.getUUID(), failure);
@@ -277,6 +310,222 @@ public final class ShirokaiDex implements ModInitializer {
         return 1;
     }
 
+    private void validatePayloads(MinecraftServer server,Settings settings)throws java.io.IOException {
+        var entries=settings.rewards().stream().flatMap(plan->plan.items().stream()).filter(item->!item.data().isEmpty()).distinct().toList();
+        var pokemon=settings.rewards().stream().flatMap(plan->plan.pokemon().stream()).distinct().toList();
+        if(entries.isEmpty()&&pokemon.isEmpty())return;
+        var validation=new CompletableFuture<Void>();payloadValidations.add(validation);
+        if(stopping)validation.completeExceptionally(new IllegalStateException("Server stopping"));
+        else server.execute(()->{
+            try{if(stopping)throw new IllegalStateException("Server stopping");for(var entry:entries)br.com.shirokaidex.rewards.ItemPayload.restore(server,entry);for(var request:pokemon)br.com.shirokaidex.rewards.PokemonPayload.freeze(server,null,request);validation.complete(null);}
+            catch(Exception failure){validation.completeExceptionally(failure);}
+        });
+        try{validation.get(120,TimeUnit.SECONDS);}
+        catch(Exception failure){if(failure instanceof InterruptedException)Thread.currentThread().interrupt();throw new java.io.IOException("Saved item component validation failed; candidate not applied",failure);}
+        finally{payloadValidations.remove(validation);}
+    }
+    private com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> savedItemCommands(){
+        var root=literal("item").requires(source->Permissions.has(source.getPlayer(),"shirokaidex.admin.items"));
+        root.then(literal("save").then(argument("item",StringArgumentType.word()).executes(context->savedItemCommand(context.getSource(),"save",StringArgumentType.getString(context,"item"),0,null))));
+        root.then(literal("list").executes(context->savedItemCommand(context.getSource(),"list","",0,null))
+                .then(argument("page",com.mojang.brigadier.arguments.IntegerArgumentType.integer(1)).executes(context->savedItemCommand(context.getSource(),"list","",com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context,"page")-1,null))));
+        root.then(literal("delete").then(argument("item",StringArgumentType.word()).then(literal("confirm").executes(context->savedItemCommand(context.getSource(),"delete",StringArgumentType.getString(context,"item"),0,null)))));
+        root.then(literal("give").then(argument("item",StringArgumentType.word()).then(argument("player",StringArgumentType.word()).executes(context->savedItemCommand(context.getSource(),"give",StringArgumentType.getString(context,"item"),0,StringArgumentType.getString(context,"player"))))));
+        return root;
+    }
+    private int savedItemCommand(CommandSourceStack source,String action,String id,int page,String targetName){
+        var actor=source.getPlayer();if(!ready||actor==null||!Permissions.has(actor,"shirokaidex.admin.items"))return 0;
+        if(!action.equals("list")&&!id.matches("[a-z][a-z0-9_]{0,47}")){source.sendFailure(messages.text(language(),"saved_item_invalid"));return 0;}
+        if(action.equals("give")){
+            var target=source.getServer().getPlayerList().getPlayerByName(targetName);
+            if(target==null){source.sendFailure(messages.text(language(),"saved_item_invalid"));return 0;}
+            database.savedItem(id).whenComplete((value,failure)->source.getServer().execute(()->{
+                if(stopping||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.items"))return;
+                if(failure!=null||value.isEmpty()){source.sendFailure(messages.text(language(),"saved_item_invalid"));return;}
+                try{br.com.shirokaidex.rewards.ItemPayload.restore(source.getServer(),value.get().snapshot(1));}
+                catch(RuntimeException invalid){source.sendFailure(messages.text(language(),"saved_item_invalid"));return;}
+                var plan=br.com.shirokaidex.rewards.RewardPlan.manual("admin_"+java.util.UUID.randomUUID().toString().replace("-",""),List.of(value.get().snapshot(null)));
+                MainMenu.confirmReward(actor,config.current(),messages,plan,id+" → "+target.getGameProfile().getName(),()->{
+                    if(!ready||!Permissions.has(actor,"shirokaidex.admin.items")){source.sendFailure(messages.text(language(),"collection_denied"));return;}
+                    actor.closeContainer();
+                    rewardDelivery.claim(target.getUUID(),plan,new br.com.shirokaidex.rewards.ItemRewardAdapter(source.getServer(),target,current->ready&&!stopping&&!actor.hasDisconnected()&&Permissions.has(actor,"shirokaidex.admin.items")),actor.getUUID().toString())
+                            .whenComplete((result,error)->source.getServer().execute(()->{
+                                if(stopping||actor.hasDisconnected())return;
+                                if(error!=null)source.sendFailure(messages.text(language(),"reward_error"));
+                                else{source.sendSuccess(()->messages.text(language(),"reward_result."+result.name().toLowerCase(java.util.Locale.ROOT)),false);
+                                    database.rewardForPlayer(target.getUUID(),plan.id()).thenAccept(found->found.ifPresent(op->source.getServer().execute(()->{if(!stopping&&!actor.hasDisconnected()&&Permissions.has(actor,"shirokaidex.admin.items"))source.sendSuccess(()->messages.text(language(),"saved_item_operation",op.id()),false);})));}
+                            }));
+                },()->actor.closeContainer());
+            }));return 1;
+        }
+        CompletableFuture<String> result;
+        try{
+            if(action.equals("save")){
+                var item=br.com.shirokaidex.rewards.ItemPayload.capture(source.getServer(),id,actor.getMainHandItem());
+                result=database.saveItem(item,actor.getUUID()).thenApply(unused->id);
+            }else if(action.equals("delete"))result=database.deleteItem(id,actor.getUUID()).thenApply(deleted->deleted?id:"—");
+            else result=database.savedItems().thenApply(ids->{var slice=Wiki.paginate(ids,page,18);return "["+(slice.number()+1)+"/"+slice.pages()+"] "+String.join(", ",slice.items());});
+        }catch(RuntimeException failure){source.sendFailure(messages.text(language(),"saved_item_invalid"));return 0;}
+        result.whenComplete((value,failure)->source.getServer().execute(()->{
+            if(stopping||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.items"))return;
+            if(failure!=null){LOG.error("Saved item operation failed",failure);source.sendFailure(messages.text(language(),"saved_item_invalid"));}
+            else source.sendSuccess(()->messages.text(language(),"saved_item_result",value),false);
+        }));return 1;
+    }
+
+    private com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> rewardAdminCommands() {
+        var root = literal("reward").requires(source -> Permissions.has(source.getPlayer(), "shirokaidex.admin.rewards"));
+        root.then(literal("list").executes(context->rewardAdminList(context.getSource(),0))
+                .then(argument("page",com.mojang.brigadier.arguments.IntegerArgumentType.integer(1,100001)).executes(context->rewardAdminList(context.getSource(),com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context,"page")-1))));
+        root.then(literal("status").then(argument("operation", StringArgumentType.word()).executes(context -> rewardAdmin(context.getSource(), StringArgumentType.getString(context, "operation"), "status", ""))));
+        for (String action : List.of("cancel", "complete")) {
+            root.then(literal(action).then(argument("operation", StringArgumentType.word())
+                    .then(literal("confirm").then(argument("evidence", StringArgumentType.greedyString())
+                            .executes(context -> rewardAdmin(context.getSource(), StringArgumentType.getString(context, "operation"), action, StringArgumentType.getString(context, "evidence")))))));
+        }
+        return root;
+    }
+    private int rewardAdminList(CommandSourceStack source,int page){
+        var actor=source.getPlayer();if(!ready||actor==null||!Permissions.has(actor,"shirokaidex.admin.rewards"))return 0;
+        database.incompleteRewards(page).whenComplete((rows,failure)->source.getServer().execute(()->{
+            if(stopping||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.rewards"))return;
+            if(failure!=null){source.sendFailure(messages.text(language(),"reward_error"));return;}
+            String text="["+(page+1)+"] "+(rows.isEmpty()?"—":rows.stream().map(op->op.id()+" | "+op.player()+" | "+op.reward()+" | "+op.state()).collect(java.util.stream.Collectors.joining("; ")));
+            source.sendSuccess(()->messages.text(language(),"reward_admin_result",text),false);
+        }));return 1;
+    }
+    private int rewardAdmin(CommandSourceStack source, String raw, String action, String reason) {
+        var player = source.getPlayer();
+        if (!ready || player == null || !Permissions.has(player, "shirokaidex.admin.rewards")) return 0;
+        java.util.UUID id;
+        try { id = java.util.UUID.fromString(raw); }
+        catch (IllegalArgumentException failure) { source.sendFailure(messages.text(language(), "reward_admin_invalid")); return 0; }
+        if (reason.length() > 2048 || reason.codePoints().anyMatch(Character::isISOControl)) { source.sendFailure(messages.text(language(), "reward_admin_invalid")); return 0; }
+        CompletableFuture<String> result;
+        if (action.equals("status")) result = database.rewardOperation(id).thenApply(value -> value.map(op -> op.id()+" | "+op.player()+" | "+op.reward()+" | "+op.state()+" | "+op.plan()).orElse("—"));
+        else {
+            String actor = player.getUUID().toString();
+            var change = action.equals("cancel") ? database.cancelReward(id, actor, reason) : database.resolveReward(id, actor, reason);
+            result = change.thenApply(changed -> changed ? "OK" : "BLOCKED");
+        }
+        result.whenComplete((value, failure) -> source.getServer().execute(() -> {
+            if (stopping || player.hasDisconnected() || !Permissions.has(player,"shirokaidex.admin.rewards")) return;
+            if (failure != null) { LOG.error("Reward administrative operation failed", failure); source.sendFailure(messages.text(language(), "reward_error")); }
+            else source.sendSuccess(() -> messages.text(language(), "reward_admin_result", value), false);
+        }));
+        return 1;
+    }
+
+    private int rewards(CommandSourceStack source,String id,int page){
+        if(!ready||source.getPlayer()==null)return 0;
+        var player=source.getPlayer();var settings=config.current();long ticket=++rewardViewSequence;rewardViewRequests.put(player.getUUID(),ticket);
+        var previousMenu=player.containerMenu;
+        if(id==null){
+            var visible=settings.rewards().stream().filter(plan->canAccess(player,plan.collection())).toList();
+            database.rewardStates(player.getUUID(),visible.stream().map(br.com.shirokaidex.rewards.RewardPlan::id).toList()).whenComplete((states,error)->source.getServer().execute(()->{
+                if(!validRewardView(source,player,ticket,previousMenu))return;
+                var current=config.current();var nowVisible=current.rewards().stream().filter(plan->canAccess(player,plan.collection())).toList();
+                if(current!=settings||!nowVisible.equals(visible)){rewards(source,null,page);return;}
+                if(error!=null)LOG.error("Reward display query failed for {}",player.getUUID(),error);
+                br.com.shirokaidex.menus.HomeMenu.rewards(player,current,messages,visible,rewardUnlockCache.getOrDefault(player.getUUID(),java.util.Set.of()),error==null?states:java.util.Map.of(),error!=null,page,
+                        reward->rewards(source,reward,0),next->rewards(source,null,next),()->home(source));
+            }));return 1;
+        }
+        var plan=settings.rewards().stream().filter(value->value.id().equals(id)).findFirst().orElse(null);
+        if(plan==null||!canAccess(player,plan.collection())){source.sendFailure(messages.text(settings.language(),"collection_denied"));return 0;}
+        database.rewardForPlayer(player.getUUID(),id).whenComplete((operation,error)->source.getServer().execute(()->{
+            if(!validRewardView(source,player,ticket,previousMenu))return;
+            if(config.current()!=settings){rewards(source,id,page);return;}
+            if(!canAccess(player,plan.collection())){source.sendFailure(messages.text(language(),"collection_denied"));return;}
+            boolean unlocked=rewardUnlockCache.getOrDefault(player.getUUID(),java.util.Set.of()).contains(plan.id());
+            var view=error==null?br.com.shirokaidex.menus.layout.RewardView.preview(unlocked,plan,operation):br.com.shirokaidex.menus.layout.RewardView.unavailable();
+            if(error!=null)LOG.error("Reward preview query failed for {}",player.getUUID(),error);
+            MainMenu.openReward(player,settings,messages,plan,view,page,next->rewards(source,id,next),()->{player.closeContainer();rewards(source,null,0);},()->confirmReward(source,plan));
+        }));return 1;
+    }
+    private boolean validRewardView(CommandSourceStack source,ServerPlayer player,long ticket,net.minecraft.world.inventory.AbstractContainerMenu previous){
+        return ready&&!stopping&&!player.hasDisconnected()&&source.getServer().getPlayerList().getPlayer(player.getUUID())==player
+                &&java.util.Objects.equals(rewardViewRequests.get(player.getUUID()),ticket)&&player.containerMenu==previous;
+    }
+
+    private void observeRewards(MinecraftServer server) {
+        var players = server.getPlayerList().getPlayers();
+        if (players.isEmpty() || config.current().rewards().isEmpty()) return;
+        // Round robin: at most one player considered per tick; no unbounded request queue.
+        rewardPlayerCursor = Math.floorMod(rewardPlayerCursor, players.size());
+        var player = players.get(rewardPlayerCursor++); var uuid = player.getUUID(); long now = System.nanoTime();
+        Long previous = rewardObservedAt.get(uuid);
+        if (rewardObserving.contains(uuid) || (previous != null && now - previous < 5_000_000_000L)) return;
+        rewardObservedAt.put(uuid, now);
+        var settings = config.current(); var known = rewardUnlockCache.getOrDefault(uuid, java.util.Set.of());
+        java.util.List<br.com.shirokaidex.rewards.RewardUnlock> observed = new java.util.ArrayList<>();
+        try {
+            var progress = cobblemon.collections(player, settings.collections());
+            for (var plan : settings.rewards()) if (!known.contains(plan.id())) {
+                var counts = progress.get(plan.collection()).progress();
+                if (plan.unlocked(counts)) observed.add(new br.com.shirokaidex.rewards.RewardUnlock(plan, counts.registered().orElseThrow(), counts.total()));
+            }
+        } catch (RuntimeException failure) { LOG.error("Reward milestone observation failed for {}", uuid, failure); return; }
+        if (observed.isEmpty() && rewardUnlockCache.containsKey(uuid)) return;
+        rewardObserving.add(uuid);
+        database.rewardUnlocks(uuid, observed).whenComplete((ids, failure) -> server.execute(() -> {
+            rewardObserving.remove(uuid);
+            if (stopping || server.getPlayerList().getPlayer(uuid) != player) return;
+            if (failure != null) LOG.error("Reward unlock persistence failed for {}; retry deferred", uuid, failure);
+            else rewardUnlockCache.put(uuid, ids);
+        }));
+    }
+
+    private boolean validReward(ServerPlayer player, br.com.shirokaidex.rewards.RewardPlan plan) {
+        if (!ready || stopping || !canAccess(player, plan.collection())) return false;
+        var settings = config.current();
+        if (!settings.rewards().contains(plan.definition())) return false;
+        return rewardUnlockCache.getOrDefault(player.getUUID(), java.util.Set.of()).contains(plan.id());
+    }
+    private void confirmReward(CommandSourceStack source, br.com.shirokaidex.rewards.RewardPlan plan) {
+        var player = source.getPlayer();
+        if (player == null || !validReward(player, plan)) { source.sendFailure(messages.text(language(), "reward_not_eligible")); return; }
+        // A second menu, with explicit confirmation, is separate from the read-only preview.
+        MainMenu.confirmReward(player, config.current(), messages, plan,
+                () -> claimReward(source, plan), () -> rewards(source, plan.id(), 0));
+    }
+    private void claimReward(CommandSourceStack source, br.com.shirokaidex.rewards.RewardPlan plan) {
+        var player = source.getPlayer();
+        if (player == null || !validReward(player, plan)) { source.sendFailure(messages.text(language(), "reward_not_eligible")); return; }
+        player.closeContainer();
+        if(!plan.pokemon().isEmpty()){
+            if(!br.com.shirokaidex.rewards.PokemonRewardAdapter.supported()){source.sendFailure(messages.text(language(),"pokemon_backend_unavailable"));return;}
+            database.rewardForPlayer(player.getUUID(),plan.id()).whenComplete((reserved,error)->source.getServer().execute(()->{
+                if(stopping||player.hasDisconnected()||!validReward(player,plan))return;
+                if(error!=null){source.sendFailure(messages.text(language(),"reward_error"));return;}
+                if(reserved.isPresent()&&reserved.get().state()!=br.com.shirokaidex.rewards.RewardJournal.State.PENDING){source.sendFailure(messages.text(language(),"reward_result.blocked"));source.sendSuccess(()->messages.text(language(),"saved_item_operation",reserved.get().id()),false);return;}
+                try{
+                    var prepared=reserved.isPresent()?plan.reuse(reserved.get().plan()):plan.withPokemon(plan.pokemon().stream().map(request->br.com.shirokaidex.rewards.PokemonPayload.freeze(source.getServer(),player,request)).toList());
+                    prepared.json();deliverReward(source,prepared);
+                }catch(RuntimeException failure){LOG.error("Pokemon reward preparation failed for {}",player.getUUID(),failure);source.sendFailure(messages.text(language(),"reward_error"));}
+            }));return;
+        }
+        deliverReward(source,plan);
+    }
+    private void deliverReward(CommandSourceStack source,br.com.shirokaidex.rewards.RewardPlan plan){
+        var player=source.getPlayer();if(player==null||!validReward(player,plan))return;
+        br.com.shirokaidex.rewards.PokemonRewardAdapter pokemonAdapter=plan.pokemon().isEmpty()?null:new br.com.shirokaidex.rewards.PokemonRewardAdapter(source.getServer(),player,current->validReward(player,current));
+        if(pokemonAdapter!=null){pokemonDeliveries.add(pokemonAdapter);source.sendSuccess(()->messages.text(language(),"pokemon_processing"),false);}
+        br.com.shirokaidex.rewards.RewardDelivery.Adapter adapter=pokemonAdapter==null?new br.com.shirokaidex.rewards.ItemRewardAdapter(source.getServer(),player,current->validReward(player,current)):pokemonAdapter;
+        rewardDelivery.claim(player.getUUID(), plan, adapter)
+                .whenComplete((result, failure) -> source.getServer().execute(() -> {
+                    if(pokemonAdapter!=null){pokemonDeliveries.remove(pokemonAdapter);pokemonAdapter.close();}
+                    if (stopping || player.hasDisconnected()) return;
+                    if (failure != null) { LOG.error("Reward delivery failed for {}", player.getUUID(), failure); source.sendFailure(messages.text(language(), "reward_error")); }
+                    else {
+                        source.sendSuccess(() -> messages.text(language(), "reward_result." + result.name().toLowerCase(java.util.Locale.ROOT)), false);
+                        database.rewardForPlayer(player.getUUID(),plan.id()).thenAccept(value->value.ifPresent(op->source.getServer().execute(()->{
+                            if(!stopping&&!player.hasDisconnected())source.sendSuccess(()->messages.text(language(),"saved_item_operation",op.id()),false);
+                        })));
+                    }
+                }));
+    }
+
     private int reload(CommandSourceStack source) {
         if (!Permissions.mayReload(source.getPlayer()) || !ready) return 0;
         CompletableFuture.runAsync(() -> {
@@ -287,7 +536,7 @@ public final class ShirokaiDex implements ModInitializer {
             source.getServer().execute(() -> {
                 if (stopping) return;
                 if (failure == null) {
-                    cobblemon.clear(); placeholderCache.clear();
+                    cobblemon.clear(); placeholderCache.clear(); rewardObservedAt.clear();
                     if (placeholderBridge != null) source.getServer().getPlayerList().getPlayers().forEach(player -> placeholderCache.invalidate(player.getUUID()));
                     source.getServer().getPlayerList().getPlayers().forEach(player -> source.getServer().getCommands().sendCommands(player));
                 }

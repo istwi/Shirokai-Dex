@@ -25,7 +25,7 @@ public final class MainMenu extends ChestMenu {
     private final UUID owner;
     private final Map<Integer, Runnable> actions;
     private MainMenu(int id, ServerPlayer player, SimpleContainer container, Map<Integer, Runnable> actions) {
-        super(container.getContainerSize() == 36 ? MenuType.GENERIC_9x4 : MenuType.GENERIC_9x3, id, player.getInventory(), container, container.getContainerSize() / 9);
+        super(switch(container.getContainerSize()){case 27->MenuType.GENERIC_9x3;case 36->MenuType.GENERIC_9x4;case 45->MenuType.GENERIC_9x5;case 54->MenuType.GENERIC_9x6;default->throw new IllegalArgumentException("unsupported menu size");}, id, player.getInventory(), container, container.getContainerSize() / 9);
         owner = player.getUUID(); this.actions = Map.copyOf(actions);
     }
     private static final List<Integer> CONTENT_SLOTS = List.of(13, 11, 15, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 17);
@@ -34,7 +34,7 @@ public final class MainMenu extends ChestMenu {
     }
     public static void open(ServerPlayer player, Settings settings, Messages messages,
                             List<CollectionDefinition> visible, Map<String, ProgressCalculator.CollectionProgress> values,
-                            int requestedPage, Consumer<String> navigate, IntConsumer pageNavigation) {
+                            int requestedPage, Consumer<String> navigate, IntConsumer pageNavigation,Runnable home) {
         var contents = new SimpleContainer(27);
         Map<Integer, Runnable> actions = new HashMap<>();
         int pages = Math.max(1, (visible.size() + CONTENT_SLOTS.size() - 1) / CONTENT_SLOTS.size());
@@ -47,9 +47,10 @@ public final class MainMenu extends ChestMenu {
         }
         if (page > 0) navigation(contents, actions, 18, messages.text(settings.language(), "page_previous"), () -> pageNavigation.accept(page - 1));
         if (page + 1 < pages) navigation(contents, actions, 26, messages.text(settings.language(), "page_next"), () -> pageNavigation.accept(page + 1));
+        navigation(contents,actions,23,messages.text(settings.language(),"home.return_home"),home);
         closeButton(contents, actions, player, settings.language(), messages);
         String title = settings.menuTitle() + (pages > 1 ? " [" + (page + 1) + "/" + pages + "]" : "");
-        show(player, title, contents, actions);
+        styledShow(player,settings,messages,title,contents,actions,Set.of());
     }
     public static void openCollection(ServerPlayer player, Settings settings, Messages messages,
                                       CollectionDefinition definition, ProgressCalculator.CollectionProgress value, Runnable back, Runnable wiki) {
@@ -59,7 +60,7 @@ public final class MainMenu extends ChestMenu {
         navigation(contents, actions, 15, messages.text(settings.language(), "wiki_open"), wiki);
         navigation(contents, actions, 18, messages.text(settings.language(), "menu_back"), back);
         closeButton(contents, actions, player, settings.language(), messages);
-        show(player, settings.menuTitle() + " — " + displayName(definition, settings.language(), messages), contents, actions);
+        styledShow(player,settings,messages,settings.menuTitle()+" — "+displayName(definition,settings.language(),messages),contents,actions,Set.of());
     }
     public static void openWiki(ServerPlayer player, Settings settings, Messages messages, CollectionDefinition definition,
                                 Wiki.Request request, Wiki.Page page, SpawnCatalog spawns, Consumer<Wiki.Request> navigate, Runnable back, Runnable searchHelp) {
@@ -133,10 +134,77 @@ public final class MainMenu extends ChestMenu {
             navigation(contents, actions, 23, messages.text(language, "wiki_collection_back"), back);
         }
         closeButton(contents, actions, player, language, messages);
-        show(player, title, contents, actions);
+        styledShow(player,settings,messages,title,contents,actions,Set.of());
     }
     private static String facetName(String value, String language, Messages messages) {
         return value.isEmpty() ? messages.text(language, "wiki_facet_all").getString() : value;
+    }
+    public static void openReward(ServerPlayer player, Settings settings, Messages messages,
+                                  br.com.shirokaidex.rewards.RewardPlan plan, br.com.shirokaidex.menus.layout.RewardView view, int requestedPage,
+                                  IntConsumer navigate, Runnable back, Runnable claim) {
+        var contents = new SimpleContainer(27); Map<Integer,Runnable> actions = new HashMap<>();
+        var entries=new java.util.ArrayList<Object>();entries.addAll(plan.items());entries.addAll(plan.pokemon());
+        var page = Wiki.paginate(entries, requestedPage, 18);
+        for (int i = 0; i < page.items().size(); i++) {
+            var action=page.items().get(i);
+            if(action instanceof br.com.shirokaidex.rewards.PokemonReward pokemon){contents.setItem(i,pokemonItem(pokemon,settings.language(),messages));continue;}
+            var entry=(br.com.shirokaidex.rewards.RewardPlan.Item)action;
+            var item = br.com.shirokaidex.rewards.ItemPayload.restore(player.getServer(),entry);
+            item.setCount(Math.min(entry.count(), item.getMaxStackSize()));
+            var lines = new java.util.ArrayList<>(item.getOrDefault(DataComponents.LORE,ItemLore.EMPTY).lines());
+            lines.add(messages.text(settings.language(), "reward_item_count", entry.count()));
+            item.set(DataComponents.LORE, new ItemLore(lines));
+            contents.setItem(i, item);
+        }
+        var status=new ItemStack(switch(view.status()){case AVAILABLE,RESERVED->Items.LIME_DYE;case COMPLETED->Items.EMERALD;case PROCESSING->Items.CLOCK;case NEEDS_REVIEW,PLAN_CHANGED,UNAVAILABLE->Items.BARRIER;case LOCKED,CANCELLED->Items.GRAY_DYE;});
+        String threshold=plan.minimumPercent()==null?String.valueOf(plan.minimumRegistered()):plan.minimumPercent().toPlainString()+"%";
+        List<Component> statusLore=new ArrayList<>();statusLore.add(messages.text(settings.language(),"layout.reward_requirement",threshold));statusLore.add(messages.text(settings.language(),"layout.reward_hint."+view.status().name()));
+        if(!view.operation().isEmpty()){
+            statusLore.add(messages.text(settings.language(),"layout.operation_short",view.operation().substring(0,8)));
+            statusLore.add(messages.text(settings.language(),"layout.operation_hint"));actions.put(19,()->player.sendSystemMessage(messages.text(settings.language(),"saved_item_operation",view.operation())));
+        }
+        MenuStyle.card(status,messages.text(settings.language(),"layout.reward_status."+view.status().name()),statusLore,rewardColor(view));contents.setItem(19,status);
+        if(view.canClaim())navigation(contents,actions,24,messages.text(settings.language(),"reward_claim"),claim);
+        navigation(contents,actions,18,messages.text(settings.language(),"menu_back"),back);
+        if(page.number()>0) navigation(contents,actions,20,messages.text(settings.language(),"page_previous"),()->navigate.accept(page.number()-1));
+        if(page.number()+1<page.pages()) navigation(contents,actions,26,messages.text(settings.language(),"page_next"),()->navigate.accept(page.number()+1));
+        closeButton(contents,actions,player,settings.language(),messages);
+        styledShow(player,settings,messages,messages.text(settings.language(),"reward_preview",plan.id(),page.number()+1,page.pages()).getString(),contents,actions,new HashSet<>(java.util.stream.IntStream.range(0,18).boxed().toList()));
+    }
+
+    public static void confirmReward(ServerPlayer player, Settings settings, Messages messages,
+                                     br.com.shirokaidex.rewards.RewardPlan plan, Runnable confirm, Runnable back) {
+        confirmReward(player,settings,messages,plan,plan.id(),confirm,back);
+    }
+    public static void confirmReward(ServerPlayer player,Settings settings,Messages messages,
+                                     br.com.shirokaidex.rewards.RewardPlan plan,String label,Runnable confirm,Runnable back){
+        var contents = new SimpleContainer(27); Map<Integer,Runnable> actions = new HashMap<>();
+        var preview=plan.items().isEmpty()?pokemonItem(plan.pokemon().getFirst(),settings.language(),messages):br.com.shirokaidex.rewards.ItemPayload.restore(player.getServer(),plan.items().getFirst());
+        if(!plan.items().isEmpty())preview.setCount(Math.min(plan.items().getFirst().count(),preview.getMaxStackSize()));contents.setItem(11,preview);
+        var confirmation=new ItemStack(Items.LIME_DYE);confirmation.set(DataComponents.CUSTOM_NAME,messages.text(settings.language(),"reward_confirm"));confirmation.set(DataComponents.LORE,new ItemLore(List.of(messages.text(settings.language(),"layout.confirm_hint"))));contents.setItem(13,confirmation);actions.put(13,confirm);
+        var summary=new ItemStack(Items.PAPER);summary.set(DataComponents.CUSTOM_NAME,messages.text(settings.language(),"layout.confirm_summary"));summary.set(DataComponents.LORE,new ItemLore(List.of(messages.text(settings.language(),"layout.confirm_steps",plan.steps()),messages.text(settings.language(),"layout.confirm_contents",plan.items().size(),plan.pokemon().size()))));contents.setItem(15,summary);
+        navigation(contents,actions,18,messages.text(settings.language(),"menu_back"),back);
+        closeButton(contents,actions,player,settings.language(),messages);
+        styledShow(player,settings,messages,messages.text(settings.language(),"reward_confirmation",label).getString(),contents,actions,Set.of(11));
+    }
+
+    private static int rewardColor(br.com.shirokaidex.menus.layout.RewardView view){return switch(view.status()){case AVAILABLE,COMPLETED->MenuStyle.SUCCESS;case RESERVED,PROCESSING->MenuStyle.NAVIGATION;case NEEDS_REVIEW,PLAN_CHANGED,UNAVAILABLE->MenuStyle.DANGER;case LOCKED,CANCELLED->0x999999;};}
+    private static void styledShow(ServerPlayer player,Settings settings,Messages messages,String title,SimpleContainer contents,Map<Integer,Runnable> actions,Set<Integer> preserved){
+        for(int slot=0;slot<contents.getContainerSize();slot++){
+            if(preserved.contains(slot))continue;var item=contents.getItem(slot);if(item.isEmpty())continue;
+            if(actions.containsKey(slot)&&item.getOrDefault(DataComponents.LORE,ItemLore.EMPTY).lines().isEmpty())item.set(DataComponents.LORE,new ItemLore(List.of(messages.text(settings.language(),slot==22?"home.click_close":"layout.navigation_hint"))));
+            MenuStyle.polish(item,slot==22?MenuStyle.DANGER:item.is(Items.LIME_DYE)?MenuStyle.SUCCESS:item.is(Items.ARROW)?MenuStyle.NAVIGATION:settings.home().palette().start);
+        }
+        MenuStyle.footer(contents,settings);show(player,MenuStyle.title(title,settings),contents,actions);
+    }
+
+    private static ItemStack pokemonItem(br.com.shirokaidex.rewards.PokemonReward pokemon,String language,Messages messages){
+        var item=new ItemStack(Items.DRAGON_EGG);item.set(DataComponents.CUSTOM_NAME,messages.text(language,"pokemon_reward",pokemon.species()));
+        var lore=new java.util.ArrayList<Component>();String defaults=messages.text(language,"pokemon_default").getString();
+        lore.add(messages.text(language,"pokemon_level",pokemon.level()==null?defaults:pokemon.level()));lore.add(messages.text(language,"pokemon_shiny",pokemon.shiny()));
+        for(var entry:java.util.Map.of("form",pokemon.form(),"nature",pokemon.nature(),"ability",pokemon.ability(),"gender",pokemon.gender(),"ball",pokemon.pokeball(),"held",pokemon.heldItem()).entrySet().stream().sorted(java.util.Map.Entry.comparingByKey()).toList())lore.add(messages.text(language,"pokemon_"+entry.getKey(),entry.getValue().isEmpty()?defaults:entry.getValue()));
+        lore.add(messages.text(language,"pokemon_moves",pokemon.moves().isEmpty()?defaults:String.join(", ",pokemon.moves())));lore.add(messages.text(language,"pokemon_ivs",pokemon.ivs().isEmpty()?defaults:pokemon.ivs()));lore.add(messages.text(language,"pokemon_evs",pokemon.evs().isEmpty()?defaults:pokemon.evs()));
+        item.set(DataComponents.LORE,new ItemLore(lore));return item;
     }
     private static ItemStack wikiItem(Wiki.Row row, String language, Messages messages, boolean detail, boolean spawnAvailable) {
         var item = new ItemStack(Items.BOOK);
@@ -205,7 +273,8 @@ public final class MainMenu extends ChestMenu {
         String percent = progress.formattedPercentage(language).orElse(messages.text(language, "percent_unavailable").getString());
         lore.add(messages.text(language, "collection_percent", percent));
         if (progress.total() == 0) lore.add(messages.text(language, "empty_collection"));
-        lore.add(messages.text(language, "foundation"));
+        var filled=br.com.shirokaidex.menus.layout.ProgressMeter.filled(progress,12);
+        if(filled.isPresent())lore.add(Component.empty().append(Component.literal("▰".repeat(filled.getAsInt())).withStyle(style->style.withColor(MenuStyle.SUCCESS))).append(Component.literal("▱".repeat(12-filled.getAsInt())).withStyle(style->style.withColor(0x555B67))));
         item.set(DataComponents.LORE, new ItemLore(lore));
         return item;
     }
@@ -214,8 +283,9 @@ public final class MainMenu extends ChestMenu {
         close.set(DataComponents.CUSTOM_NAME, messages.text(language, "menu_close"));
         contents.setItem(22, close); actions.put(22, player::closeContainer);
     }
-    private static void show(ServerPlayer player, String title, SimpleContainer contents, Map<Integer, Runnable> actions) {
-        player.openMenu(new SimpleMenuProvider((id, inventory, viewer) -> new MainMenu(id, player, contents, actions), Component.literal(title)));
+    static void show(ServerPlayer player,String title,SimpleContainer contents,Map<Integer,Runnable> actions){show(player,Component.literal(title),contents,actions);}
+    static void show(ServerPlayer player, Component title, SimpleContainer contents, Map<Integer, Runnable> actions) {
+        player.openMenu(new SimpleMenuProvider((id, inventory, viewer) -> new MainMenu(id, player, contents, actions), title));
     }
     @Override public void clicked(int slot, int button, ClickType type, Player player) {
         if (!stillValid(player) || player.containerMenu != this) return;

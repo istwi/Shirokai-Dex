@@ -1,0 +1,173 @@
+{
+  "scope": "Local development only; no commit/push/publication",
+  "base_commit": "593d43f",
+  "junit": {
+    "tests": 159,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "runtime": [
+    {
+      "timestamp": "2026-11-07T12:59:56.635Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexReward",
+      "results": [
+        {
+          "name": "Locked milestone preview cannot claim or extract displayed reward icons",
+          "status": "passed"
+        },
+        {
+          "name": "Official progress unlocks count threshold, keeps 100 percent locked and paginates all 32 item entries",
+          "status": "passed"
+        },
+        {
+          "name": "Full inventory rejects entire plan without partial delivery or item drops",
+          "status": "passed"
+        },
+        {
+          "name": "Separate explicit confirmation delivers every item and acknowledges persistent journal steps",
+          "status": "passed"
+        },
+        {
+          "name": "Repeated claim preserves exactly the acknowledged quantities without another delivery",
+          "status": "passed"
+        },
+        {
+          "name": "Current collection permission is required for preview and stale claim buttons",
+          "status": "passed"
+        },
+        {
+          "name": "Reload revalidates stale plans, rejects unknown items atomically and leaves official progress unchanged",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-11-07T13:02:53.808Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexReward",
+      "results": [
+        {
+          "name": "Completed claim and saved inventory survive restart without redelivery",
+          "status": "passed"
+        },
+        {
+          "name": "Interrupted processing recovers to review; explicit administrative completion records evidence without delivering items",
+          "status": "passed"
+        },
+        {
+          "name": "Reward administration uses its own live permission; revocation prevents cancellation and authorized cancellation is final",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "journal_states": {
+    "first": "COMPLETED",
+    "uncertain_complete": "COMPLETED",
+    "pending_cancel": "CANCELLED"
+  },
+  "audit_actions": {
+    "NEEDS_REVIEW->COMPLETED": 1,
+    "PENDING->CANCELLED": 1,
+    "PENDING->PROCESSING": 1,
+    "PROCESSING->COMPLETED": 1,
+    "PROCESSING->NEEDS_REVIEW": 1,
+    "RESERVED": 1,
+    "STEP_COMPLETED": 2,
+    "STEP_INTENT": 2,
+    "TEST_FIXTURE": 2
+  },
+  "cleanup": {
+    "normal_stop": true,
+    "worlds_saved": true,
+    "sqlite_integrity": "ok",
+    "properties_and_config_restored": true,
+    "temporary_secret_removed": true,
+    "optional_test_mod_removed": true
+  },
+  "limits": [
+    "No atomic transaction between SQLite and Minecraft inventory/player files",
+    "No visual client/load/remapped JAR installation certification",
+    "Recovery fixtures injected into disposable database simulate interrupted operations; administrator completion did not execute item effects",
+    "Advanced rewards and supervised remaining-step retries pending; durable unlocks tested separately"
+  ],
+  "initial_junit": {
+    "tests": 156,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "final_runtime_regression": [
+    {
+      "timestamp": "2026-11-07T13:14:46.582Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexRewardFinal",
+      "results": [
+        {
+          "name": "Locked milestone preview cannot claim or extract displayed reward icons",
+          "status": "passed"
+        },
+        {
+          "name": "Official progress unlocks count threshold, keeps 100 percent locked and paginates all 32 item entries",
+          "status": "passed"
+        },
+        {
+          "name": "Full inventory rejects entire plan without partial delivery or item drops",
+          "status": "passed"
+        },
+        {
+          "name": "Separate explicit confirmation delivers every item and acknowledges persistent journal steps",
+          "status": "passed"
+        },
+        {
+          "name": "Repeated claim preserves exactly the acknowledged quantities without another delivery",
+          "status": "passed"
+        },
+        {
+          "name": "Current collection permission is required for preview and stale claim buttons",
+          "status": "passed"
+        },
+        {
+          "name": "Reload revalidates stale plans, rejects unknown items atomically and leaves official progress unchanged",
+          "status": "passed"
+        },
+        {
+          "name": "Silent vanilla player save failure is detected by readback; uncertain effect is blocked for review without a second delivery",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-11-07T13:18:14.134Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexRewardFinal",
+      "results": [
+        {
+          "name": "Uncertain save failure stays blocked after restart without redelivery",
+          "status": "passed"
+        },
+        {
+          "name": "Completed claim and saved inventory survive restart without redelivery",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "local_version": "0.3.0-alpha.1+mc1.21.1-cobblemon1.8.3",
+  "local_build": {
+    "artifact": "build/libs/shirokai-dex-0.3.0-alpha.1+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "f1cafa5e46ae394b8187f017e0e4c7dacc474bc37ef236398c725cac40568c96",
+    "metadata_verified": true,
+    "runtime_scope": "Loom development server; remapped JAR installation outside Loom not tested"
+  },
+  "save_failure_proof": {
+    "vanilla_suppresses_save_exceptions": true,
+    "readback_detected_real_filesystem_failure": true,
+    "intent_not_acknowledged": true,
+    "needs_review_after_restart": true,
+    "automatic_redelivery": false,
+    "disposable_playerdata_directory_restored": true
+  }
+}

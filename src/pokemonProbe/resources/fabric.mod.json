@@ -1,0 +1,1 @@
+{"schemaVersion":1,"id":"dex-pokemon-probe","version":"1.0.0","name":"Dex Pokemon test probe","environment":"server","entrypoints":{"main":["br.com.shirokaidex.probe.PokemonProbe"]},"depends":{"fabricloader":">=0.17.2","fabric-api":"*","cobblemon":"1.8.3+1.21.1"}}

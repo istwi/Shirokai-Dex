@@ -19,6 +19,8 @@ public final class ConfigManager {
     private volatile boolean recovered;
     @FunctionalInterface public interface Validator { void validate(Settings settings) throws IOException; }
     private Validator validator = settings -> { };
+    private java.util.function.Function<String,br.com.shirokaidex.rewards.SavedItem> itemResolver = id -> null;
+    public synchronized void setItemResolver(java.util.function.Function<String,br.com.shirokaidex.rewards.SavedItem> resolver) { itemResolver=java.util.Objects.requireNonNull(resolver); }
 
     public ConfigManager(Path directory) { this.directory = directory; }
     public Settings current() {
@@ -40,7 +42,7 @@ public final class ConfigManager {
             Path backup = directory.resolve("config.last-good.json");
             if (!Files.isRegularFile(backup)) throw failure;
             try {
-                Settings fallback = parse(readBounded(backup)); validator.validate(fallback);
+                Settings fallback = parse(readBounded(backup,524288),itemResolver); validator.validate(fallback);
                 current.set(fallback); recovered = true;
             }
             catch (IOException invalidBackup) { failure.addSuppressed(invalidBackup); throw failure; }
@@ -49,31 +51,52 @@ public final class ConfigManager {
 
     public synchronized Settings reload() throws IOException {
         String json = readBounded(directory.resolve("config.json"));
-        Settings candidate = parse(json);
+        Settings candidate = parse(json,itemResolver);
         validator.validate(candidate);
         // Persist the validated recovery copy before publishing the immutable candidate.
-        writeAtomic(directory.resolve("config.last-good.json"), json);
+        writeAtomic(directory.resolve("config.last-good.json"), resolvedBackup(json,candidate));
         current.set(candidate);
         recovered = false;
         return candidate;
     }
 
-    private static String readBounded(Path path) throws IOException {
+    private static String readBounded(Path path) throws IOException { return readBounded(path,65536); }
+    private static String readBounded(Path path,int maximum) throws IOException {
         try (var input = Files.newInputStream(path)) {
-            byte[] bytes = input.readNBytes(65537);
-            if (bytes.length > 65536) throw new IOException(path.getFileName() + ": maximum size is 64 KiB");
+            byte[] bytes = input.readNBytes(maximum+1);
+            if (bytes.length > maximum) throw new IOException(path.getFileName() + ": maximum size exceeded");
             try { return StandardCharsets.UTF_8.newDecoder().decode(java.nio.ByteBuffer.wrap(bytes)).toString(); }
             catch (java.nio.charset.CharacterCodingException failure) { throw new IOException(path.getFileName() + ": invalid UTF-8", failure); }
         }
     }
 
-    public static Settings parse(String json) throws IOException {
+    private static String resolvedBackup(String json,Settings settings)throws IOException {
+        var root=com.google.gson.JsonParser.parseString(json).getAsJsonObject();
+        if(!root.has("rewards"))return json;
+        var rewards=root.getAsJsonArray("rewards");boolean changed=false;
+        for(int i=0;i<rewards.size();i++){
+            var items=rewards.get(i).getAsJsonObject().getAsJsonArray("items");if(items==null)continue;
+            for(int j=0;j<items.size();j++){
+                var raw=items.get(j).getAsJsonObject();if(!raw.has("saved_item"))continue;
+                var item=settings.rewards().get(i).items().get(j);raw.remove("saved_item");
+                raw.addProperty("type","CUSTOM_ITEM");raw.addProperty("id",item.id());raw.addProperty("count",item.count());raw.addProperty("payload_snbt",item.data());changed=true;
+            }
+        }
+        String backup=changed?root.toString():json;
+        if(backup.getBytes(StandardCharsets.UTF_8).length>524288)throw new IOException("Resolved recovery backup exceeds 512 KiB");
+        return backup;
+    }
+
+    public static Settings parse(String json) throws IOException { return parse(json,id -> null); }
+    public static Settings parse(String json, java.util.function.Function<String,br.com.shirokaidex.rewards.SavedItem> resolver) throws IOException {
         try (JsonReader reader = new JsonReader(new StringReader(json))) {
             reader.setLenient(false);
             Set<String> keys = new HashSet<>();
             Integer version = null;
             String language = null, title = null;
             List<CollectionDefinition> collections = CollectionDefinition.defaults();
+            List<br.com.shirokaidex.rewards.RewardPlan> rewards = List.of();
+            var home=br.com.shirokaidex.menus.layout.HomeLayout.defaults();
             var categories = new br.com.shirokaidex.categories.CategoryCatalog(List.of());
             reader.beginObject();
             while (reader.hasNext()) {
@@ -88,8 +111,10 @@ public final class ConfigManager {
                     }
                     case "language" -> language = string(reader, key);
                     case "menu_title" -> title = string(reader, key);
+                    case "home"->home=HomeLayoutCodec.read(reader);
                     case "collections" -> collections = CollectionsCodec.read(reader);
                     case "categories" -> categories = CategoriesCodec.read(reader);
+                    case "rewards" -> rewards = RewardsCodec.read(reader,resolver);
                     default -> throw new IOException("config.json: unknown field " + key);
                 }
             }
@@ -98,7 +123,7 @@ public final class ConfigManager {
             if (version == null || language == null || title == null) throw new IOException("config.json: schema_version, language and menu_title are required");
             if (!Set.of("pt_br", "en_us").contains(language)) throw new IOException("config.json: unsupported language");
             if (title.isBlank() || title.length() > 128 || title.codePoints().anyMatch(Character::isISOControl)) throw new IOException("config.json: invalid menu_title");
-            return new Settings(version, language, title, collections, categories);
+            return new Settings(version, language, title, collections, categories, rewards,home);
         } catch (IllegalStateException | IllegalArgumentException failure) {
             throw new IOException("config.json: invalid field or JSON structure", failure);
         }

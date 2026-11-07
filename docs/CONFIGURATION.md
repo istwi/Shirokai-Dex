@@ -21,3 +21,15 @@ Esta fase implementa filtros iniciais de coleções JSON; layouts completos de m
 ## Categorias nomeadas
 
 Campo opcional `categories` e referência `collections[].category`: [guia](CATEGORIES.md). Aplicação transacional junto das coleções, sem alteração de arquivos antigos.
+
+## Recompensas locais (Fase 3)
+
+`rewards` é opcional e vazio por padrão. [Schema, permissões e limites](REWARDS.md). Somente itens simples estão habilitados; campos/tipos desconhecidos rejeitam o candidato integral.
+
+## Itens com componentes e referências salvas
+
+`items[].type` aceita ITEM/CUSTOM_ITEM/SAVED_ITEM, ou é inferido quando omitido. Referências são resolvidas no candidato; backup expandido independente até 512 KiB, mantendo configuração original em 64 KiB. [Schema](SAVED_ITEMS.md).
+
+## Pokémon e central visual
+
+`rewards[].pokemon`: [schema/limites de atributos e armazenamento](POKEMON_REWARDS.md). `home`: rows/palette/slots validados da central, [exemplos](LAYOUT.md). São campos opcionais; configurações antigas permanecem válidas. Nenhuma configuração de ambiente foi publicada.

@@ -1,0 +1,84 @@
+{
+  "status": "passed",
+  "delivery": "Local only; no commit, push, release or environment publication authorized",
+  "base_commit": "593d43f576c8fc46552e3ed982d123904c9b94d2",
+  "junit": {
+    "tests": 130,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "runtime": [
+    {
+      "timestamp": "2026-11-07T12:41:00.450Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexHistory",
+      "results": [
+        {
+          "name": "Named all/any/none conditions use the same form and count a species once across 41 forms",
+          "status": "passed"
+        },
+        {
+          "name": "Wiki and progress use identical category scope; incompatible forms do not cross-match",
+          "status": "passed"
+        },
+        {
+          "name": "Collection permissions protect named categories and stale wiki buttons",
+          "status": "passed"
+        },
+        {
+          "name": "Category reload invalidates progress caches and stale wiki navigation",
+          "status": "passed"
+        },
+        {
+          "name": "Cycles and unknown registry references reject the whole reload and preserve the last valid backup",
+          "status": "passed"
+        },
+        {
+          "name": "Valid restoration reapplies categories without modifying official progress or granting menu icons",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-11-07T12:42:29.067Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexHistoryB",
+      "results": [
+        {
+          "name": "Restart recovers validated category backup without overwriting invalid config.json",
+          "status": "passed"
+        },
+        {
+          "name": "Recovered rules drive read-only wiki and progress after migration 2 restart",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "persistence": {
+    "user_version": 2,
+    "snapshots_preserved": 2,
+    "before_after_restart_identical": true,
+    "first_observation_timestamps_preserved": true,
+    "sqlite_integrity": "ok"
+  },
+  "cleanup": {
+    "normal_stop": true,
+    "worlds_saved": true,
+    "prior_config_and_properties_restored": true,
+    "temporary_secret_removed": true,
+    "temporary_luckperms_removed": true
+  },
+  "notes": [
+    "One early restart runner attempt was refused before RCON readiness; final run after readiness passed.",
+    "Invalid-config reload and backup recovery intentionally exercised; expected rejection logs do not indicate a failed final check.",
+    "Inherited Cobblemon missing datafixer/mixin and offline authentication endpoint messages remain outside this test scope."
+  ],
+  "pending": [
+    "Capture history and administrative recalculation",
+    "Competition SNAPSHOT/LIVE and frozen registry context",
+    "Visual client and load",
+    "Installation of changed remapped JAR outside Loom"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "scope": "Submenu presentation and persisted reward-state display; local only",
+  "base_commit": "593d43f",
+  "build": "BUILD SUCCESSFUL",
+  "command": "JAVA_HOME=/workspace/.tools/jdk-21.0.13+9 python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build",
+  "junit": {
+    "tests": 218,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_tests": {
+    "RewardPresentationTest": 3,
+    "RewardStatesTest": 1
+  },
+  "verified": [
+    "Exact progress bar boundaries and unknown/empty data",
+    "Journal state precedence and no claim for completed, processing, review or cancelled operations",
+    "Changed pending plan blocks claim and retains operation identifier",
+    "SQLite state read scopes player and reward IDs, immutable result, bounded query, no reservation side effect"
+  ],
+  "pending": [
+    "Native server navigation regression for this submenu revision",
+    "Graphical client appearance and readability",
+    "Adapt existing integration expectations for hidden post-claim button"
+  ],
+  "publication": "No commit, push, release or environment publication"
+}

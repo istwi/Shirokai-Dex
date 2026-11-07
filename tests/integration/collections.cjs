@@ -47,7 +47,7 @@ async function waitCount(id, name, expected) {
 }
 async function openSelector() {
   const old = bot.currentWindow; await send('/dex');
-  await until(() => bot.currentWindow && bot.currentWindow !== old); return bot.currentWindow;
+  await until(() => bot.currentWindow && bot.currentWindow !== old); const hub=bot.currentWindow; await bot.clickWindow(20,0,0); await until(()=>bot.currentWindow&&bot.currentWindow!==hub); return bot.currentWindow;
 }
 function itemName(item) { return item ? JSON.stringify(item.customName || item.nbt || '') : ''; }
 async function closeMenu() {

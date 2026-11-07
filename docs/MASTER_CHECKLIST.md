@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Categorias nomeadas na alpha.7:** JSON reutilizável, composição de condições e associação a coleções/wiki, com validação transacional. Histórico/versão persistida/recálculo e competições continuam abertos. [Guia](CATEGORIES.md), [evidência](validation/phase2-categories.json).
+**Prioridade local atual: layout geral**, por pedido do usuário após o bloco Pokémon. Recompensas POKEMON no escopo NBT auditadas; central e grade novas, paletas/slots/gradiente e navegação testados. 214 JUnit e 30 checks reais destes blocos. [Pokémon](validation/phase3-pokemon.json), [layout](validation/layout-home.json). Não conclui todo o mod/layout; sem commit/push até autorização.
 
 ## Preparação e continuidade
 
@@ -51,7 +51,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 - [ ] Pokédex Nacional. Parcial: leitura oficial, quantidade/total e % em menu/chat; JSON e wiki inicial validados; recursos avançados ainda pendentes.
 - [ ] Shiny. Página explícita N/D; capturas shiny não são inferidas de dados vistos/obtidos.
 - [ ] Lendária. Parcial: labels de formas reais, quantidade/total e %; filtros JSON iniciais validados; recursos avançados pendentes.
-- [ ] Categorias. Regras nomeadas/condições all/any/none e filtros reais implementados; histórico, versão persistida e recálculo auditado pendentes.
+- [ ] Categorias. Regras nomeadas/condições all/any/none e filtros reais implementados; versão persistida implementada localmente; histórico de eventos e recálculo auditado pendentes.
 - [ ] Progresso oficial. Leitura, percentuais, wiki e placeholders básicos verificados; captura shiny e demais requisitos completos permanecem parciais.
 - [ ] Datapacks. Fixture com duas espécies namespaced e remoção entre reinícios testados; ecossistema real e demais regras ainda pendentes.
 - [ ] Wiki. Parcial: pesquisa, filtros de estados, ordenação, paginação e detalhes implementados/testados; seletores por tipo/label e todas as formas já paginados; resumo parcial de spawn validado; cobertura adicional, categorias avançadas e cliente visual pendentes.
@@ -75,24 +75,30 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 - [x] ~~Categorias nomeadas reutilizáveis em coleções/wiki com composição JSON e validação de grafo.~~ Alpha.7; [schema e limites](CATEGORIES.md), [testes](validation/phase2-categories.json). Não conclui histórico/recálculo.
 
+- [x] ~~Preservar versões canônicas das regras de categorias no SQLite.~~ Trabalho local sem commit; migração incremental, SHA-256, snapshots antigos e falhas de persistência/integridade testados. [Evidência](validation/phase2-category-versions.json). Não conclui histórico de capturas nem SNAPSHOT/LIVE.
+
 ## FASE 3 — Recompensas
 
-- [ ] Marcos de progresso.
+- [x] ~~Marcos por quantidade/percentual exato com desbloqueio persistente.~~ Contagens atuais observadas, evidência preservada, reinício e permissão atual testados; [evidência](validation/phase3-unlocks.json).
 - [ ] Recompensas.
-- [ ] Itens personalizados.
-- [ ] Pokémon.
+- [x] ~~CUSTOM_ITEM com codec oficial e componentes Minecraft auditados.~~ Nome/lore/encantamento/dano/custom_data testados; componentes adicionais de mods exigem validação própria. [Evidência](validation/phase3-saved-items.json).
+- [x] ~~Recompensas POKEMON com atributos reais, snapshot e equipe/PC nativos.~~ Escopo NBT e intervalo 1..60s; formatos/provedores adicionais não suportados. Falha/reinício/anti-repetição testados. [Evidência](validation/phase3-pokemon.json).
 - [ ] Impactor.
-- [ ] Itens salvos.
-- [ ] Resgate manual.
-- [ ] Persistência segura.
-- [ ] Recuperação de operações.
+- [x] ~~Itens salvos: save/list/give/delete, componentes preservados e snapshots independentes.~~ Migração 5, permissão, auditoria/limites, backup e reinício comprovados. [Guia](SAVED_ITEMS.md).
+- [ ] Resgate manual. Itens simples com prévia/segunda confirmação, espaço integral e idempotência validados; tipos avançados pendentes.
+- [ ] Persistência segura. Journal/migração 3, intenção/etapas/auditoria, concorrência e falhas simuladas testados; não há transação distribuída com inventário.
+- [ ] Recuperação de operações. PROCESSING → NEEDS_REVIEW no reinício, revisão/cancelamento/conclusão explícita auditados; retomada de etapas ainda pendente.
+
+- [x] ~~Entregar itens simples por marco com prévia, confirmação separada e journal antes dos efeitos.~~ Trabalho local: testes de servidor/reinício e falhas simuladas; [guia](REWARDS.md), [evidência](validation/phase3-items.json). Não conclui todos os tipos de recompensa.
+
+- [x] ~~Persistir o primeiro desbloqueio observado de marcos e preservá-lo após mudanças de progresso/reinício.~~ Migração 4; permissão atual obrigatória. [Evidência](validation/phase3-unlocks.json).
 
 ## FASE 4 — Capturas e estatísticas
 
 - [ ] Eventos de captura validados.
 - [ ] Deduplicação.
 - [ ] Estatísticas permanentes.
-- [ ] Categorias. Regras nomeadas/condições all/any/none e filtros reais implementados; histórico, versão persistida e recálculo auditado pendentes.
+- [ ] Categorias. Regras nomeadas/condições all/any/none e filtros reais implementados; versão persistida implementada localmente; histórico de eventos e recálculo auditado pendentes.
 - [ ] Histórico.
 - [ ] Retenção.
 - [ ] Recordes.
@@ -122,7 +128,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## FASE 7 — Personalização e integrações
 
-- [ ] Menus JSON avançados.
+- [ ] Menus JSON avançados. Central com rows/palette/slots validada; layouts completos de todos os submenus ainda pendentes.
 - [ ] Condições dos botões.
 - [ ] Integração SkiesGUIs.
 - [ ] LuckPerms.
@@ -130,6 +136,8 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 - [ ] Idiomas.
 - [ ] Notificações.
 - [ ] Ferramentas administrativas.
+
+- [x] ~~Central Shirokai, grade de recompensas e navegação inicial com paletas/gradiente e slots configuráveis.~~ Protocolo, bloqueios, /menu como jogador, ausência de integrações e regressão testados; cliente visual pendente. [Evidência](validation/layout-home.json).
 
 ## FASE 8 — Validação final
 
@@ -173,4 +181,19 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 | Categorias nomeadas | Catálogo/codec, configuração transacional, vínculo em coleções, progresso/wiki, testes Java e runner de servidor; histórico/recálculo/versão persistida pendentes | Commit `feat: add reusable named category rules for collections`, base `5ac56f2`; [evidência](validation/phase2-categories.json) |
 
+| Versões de categorias (local) | CategoryRules, migração 2, Database/core e testes de migração/reabertura/integridade/falha; nenhum commit/push por instrução do usuário | Sem commit, base `593d43f`; [evidência](validation/phase2-category-versions.json) |
+
+| Recompensas simples e desbloqueios (local) | RewardPlan/Journal/Delivery/ItemRewardAdapter/Unlock, codecs, core/menu/idiomas, migrações 3–4, testes Java e protocolo | Sem commit por pedido do usuário; [itens](validation/phase3-items.json), [desbloqueios](validation/phase3-unlocks.json) |
+
+| Itens salvos/componentes alpha.2 (local) | SavedItem/ItemPayload, tipos e backup resolvido, migração 5/auditoria, comandos/menu e revisão paginada; 179 JUnit + 10 checks reais | Sem commit; base `593d43f`; [evidência](validation/phase3-saved-items.json) |
+
+| POKEMON e primeira passagem visual (local) | Snapshots/validação/adapter NBT, journal misto, HomeMenu/HomeLayout/codec, callbacks/idiomas e probes isolados; 214 JUnit + 8 Pokémon + 22 layout/regressão | Sem commit, base `593d43f`; [Pokémon](validation/phase3-pokemon.json), [layout](validation/layout-home.json) |
+
 Ao registrar a própria entrega, use o assunto do commit em preparação e substitua pela referência exata na atualização seguinte; não crie commits infinitos apenas para gravar o hash do próprio documento.
+
+### Segunda passagem visual local
+
+- [x] ~~Testar cálculo da barra, bloqueio de resgate por estado/plano alterado e isolamento da consulta SQLite.~~ Evidência: `validation/layout-submenus.json`.
+- [ ] Validar em servidor/cliente o estilo compartilhado dos submenus e estados de resgate. Código aplicado; testes automatizados não certificam aparência nem navegação nativa.
+
+| Preparação da pré-release alpha.4 | Snapshot das alterações locais, 218 JUnit/build, JAR sem probes e limitações explícitas; sem certificação visual/carga | Tag `v0.3.0-alpha.4`, commit de preparação da release |

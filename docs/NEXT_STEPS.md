@@ -1,18 +1,27 @@
 # Próximos passos
 
+**Entrega solicitada:** pré-release `v0.3.0-alpha.4`, incluindo commit/push do snapshot atual. Referência de continuidade: essa tag. Após esta entrega, desenvolvimento futuro permanece local até nova autorização. Configuração de ambiente não deve ser publicada.
+
 ## Última tarefa realizada
 
-Categorias nomeadas alpha.7, base `5ac56f2`, commit `feat: add reusable named category rules for collections`. JSON `categories`, composição all/any/none e referência por coleção; wiki/progresso/reload compartilham o mesmo escopo de forma. [Guia](CATEGORIES.md). Evidências e resultados finais em PROJECT_STATUS e validation/phase2-categories.json.
+Passagem local de estilo compartilhado nos submenus de coleção, wiki, formas, spawn, prévia e confirmação: paleta, títulos, cartões, rodapé e barra de progresso. Prévia/grade consultam o journal assincronamente para mostrar estado real; confirmação fica oculta em operações concluídas/em processamento/revisão/canceladas. Payloads de itens de recompensa são preservados. Ver `validation/layout-submenus.json`. Snapshot incluído na preparação da pré-release `v0.3.0-alpha.4`.
 
 ## Próxima tarefa exata
 
-1. Executar protocolo AGENTS e sincronizar sem descartar trabalho. Não refazer fundação, coleções, wiki, placeholders, spawn ou categorias nomeadas.
-2. Completar a fundação de evolução das categorias (seção 7.1): definir versão/fingerprint persistido das regras e política de histórico antes de implementar capturas. Não inventar eventos, recálculo ou pontuação. Não implementar competições para simular SNAPSHOT/LIVE.
-3. Testar recuperação/reinício e mudança de regras em dados reais descartáveis; histórico/recálculo administrativo continuam abertos até existirem dados suficientes e fluxo de prévia/justificativa/confirmação/auditoria.
-4. Cobertura de spawn adicional, TAB/alias legado positivo, cliente visual, carga e instalação da nova alpha fora do Loom continuam pendentes.
-5. Trabalhar em blocos coerentes maiores, com documentação objetiva e testes relevantes; não repetir a leitura integral dos mesmos documentos dentro da mesma tarefa sem mudança. Atualizar checklist/estado/API/changelog e evidências; commitar, enviar e confirmar remoto. Não publicar ambiente nem release sem autorização específica.
+1. Conferir a tag `v0.3.0-alpha.4` e o estado remoto antes de continuar. Preservar alterações futuras localmente; nova publicação requer autorização.
+2. **Prioridade explícita atual: layout geral antes de outros sistemas.** Validar em servidor dev a harmonização aplicada: páginas de progresso, wiki/detalhes/formas/spawn e prévia/confirmação, estados reais e consulta assíncrona. Ajustar runners antigos que ainda esperam botão de resgate depois de concluído; preservar a verificação de não duplicação. Conferir itens personalizados intactos. Manter sistemas ainda não implementados visivelmente indisponíveis, sem dados fictícios.
+3. A central/grade e configuração `home` já existem: não refazer. /dex é o hub; seletor é acessado por botão, sem novos aliases que mascarem IDs personalizados. Framework de layouts JSON para todos os menus e aparência em cliente real seguem parciais. Conferir renderização/legibilidade em cliente quando disponível.
+4. Não iniciar agora moeda/Impactor, Crates, COMMAND, capturas/competições; usuário pediu retomar sistemas após revisão visual. Pokémon já funciona no escopo descrito em POKEMON_REWARDS.md; formatos/provedores adicionais ficam pendentes, não repetir essa implementação.
+5. Documentação objetiva, testes relevantes e blocos maiores; atualizar checklist e provas localmente. A autorização atual cobre apenas esta pré-release, sem configuração de ambiente.
 
 ## Arquivos importantes
+
+- Layout: `HomeMenu`, `menus/layout/HomeLayout`, `HomeLayoutCodec`, `MainMenu.show`/tamanhos e callbacks em ShirokaiDex; HomeLayoutTest, runner home-layout.cjs, fixture layout e probe separado layoutProbe. Helpers antigos de teste agora entram no seletor clicando na central.
+- Pokémon: `PokemonReward`, `PokemonRewardsCodec`, `PokemonPayload`, `PokemonRewardAdapter`, RewardPlan.steps/definition/reuse e journal compatível. `pokemonProbe` só de testes; nunca incluir no JAR. Leitura assíncrona de NBT não escreve stores nem consulta registries fora da thread do servidor.
+
+- `SavedItem`, `ItemPayload`, `RewardPlan.Item.data`, `RewardsCodec`, `ConfigManager.resolvedBackup`, migração V005 e APIs salvas no Database. Core agenda validação de payloads na thread do servidor; shutdown cancela esperas. `SavedItems*Test`, runner `saved-items.cjs` (normal/after-restart/review-list) e fixture saved-items.
+
+- Pacote `rewards`, `RewardsCodec`, migrações V003/V004, core/MainMenu/idiomas, `Reward*Test`, runners `rewards.cjs`/`reward-unlocks.cjs` e fixtures de recompensas. Versão local 0.3.0-alpha.1; 159 JUnit e 25 checks de servidor. Adaptador relê inventário NBT porque save vanilla suprime exceções; falha real foi testada e ficou em NEEDS_REVIEW após reinício.
 
 - `categories/CategoryCatalog`, `config/CategoriesCodec`, `CollectionDefinition.CategorySelection`, Settings/ConfigManager/CollectionValidator; `CategoryCatalogTest`, `CategoryIntegrationTest`, runner `tests/integration/categories.cjs` e fixture `tests/fixtures/categories/config.json`. Categoria é regra sem ACL própria; acesso pertence à coleção.
 

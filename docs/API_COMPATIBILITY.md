@@ -210,3 +210,27 @@ Fundação pode começar com as APIs identificadas, mantendo integrações opcio
 ## Categorias nomeadas — alpha.7
 
 Nenhuma API externa nova. Catálogo puro reutiliza Criteria e snapshots oficiais já auditados; validação semântica usa CollectionValidator. Wiki/progresso compartilham escopo de forma e reload valida o candidato integral. Não grava Pokédex, captura, histórico ou competição. [Schema](CATEGORIES.md), [evidência](validation/phase2-categories.json).
+
+## Versões de categorias — trabalho local
+
+Sem API de mod nova: SHA-256 JDK, serialização Gson já existente e SQLite JDBC já fixado. Migração 2 e persistência no worker existente; lifecycle aguarda banco antes de validar/persistir configuração. Não bloqueia a thread do servidor aguardando SQLite. [Evidência](validation/phase2-category-versions.json).
+
+## Recompensas de itens — trabalho local
+
+API Minecraft 1.21.1 conferida por javap no JAR mapeado fixado: ItemStack.copy/getMaxStackSize/isSameItemSameComponents, ServerPlayer.hasDisconnected, PlayerList.saveAll público (save(ServerPlayer) é protegido). Adaptador usa somente inventário principal, pilhas com mesmos componentes e thread do servidor; saveAll antecede confirmação final, sem promessa de atomicidade com SQLite. Não há integração nova com economia/Crates/Pokémon. [Evidência](validation/phase3-items.json).
+
+### Falha de salvamento vanilla
+
+PlayerDataStorage.save captura/loga Exception sem propagá-la (bytecode da versão fixada inspecionado). O adaptador não trata retorno de saveAll como prova: usa LevelResource.PLAYER_DATA_DIR, NbtIo.readCompressed(Path,NbtAccounter.create), ItemStack.parseOptional e ItemStack.matches para conferir slots/componentes. Falha/arquivo divergente resulta em revisão. Não garante fsync nem atomicidade com SQLite.
+
+## Componentes e itens salvos — local alpha.2
+
+API 1.21.1 conferida no JAR mapeado: ItemStack.save(HolderLookup.Provider), STRICT_SINGLE_ITEM_CODEC, TagParser.parseTag e RegistryOps.create(NbtOps.INSTANCE, provider). Capture/restore e validação de componentes executam na thread do servidor; somente strings/IDs imutáveis seguem ao SQLite. Validação assíncrona de config agenda codec no servidor e cancela esperas no shutdown. Não foram adicionadas dependências nem APIs de mod presumidas. [Testes reais](validation/phase3-saved-items.json).
+
+## POKEMON — implementação local auditada
+
+Auditoria da fonte 1.8.3 confirma que PokemonProperties é permissivo e que FileBackedPokemonStoreFactory serializa no servidor e grava em executor próprio, sem confirmação pública síncrona. Implementação usa Pokemon/registries reais e codec NBT para congelar UUID/valores; rejeita atributos inválidos em vez de aceitar fallback. PlayerPartyStore.add tenta equipe/PC e emite POKEMON_GAINED, não POKEMON_CAPTURED. Capacidade pública size/occupied/getBoxes/unoccupiedSlots; não usa backupStore ilimitado. Leitura dos caminhos nativos NBT foi conferida em OneToOneFileStoreAdapter e stores; nenhum acesso refletivo a factories nem escrita do Dex nesses arquivos. [Prova](validation/phase3-pokemon.json), [limites](POKEMON_REWARDS.md).
+
+## Central/layout — implementação local
+
+Menus vanilla ChestMenu 3..6 linhas, Component/TextColor por caractere para gradiente e lore curta. A central e grade usam o mesmo guard de cliques/owner; sem renderizador cliente próprio. Retorno externo usa Commands.performPrefixedCommand com player.createCommandSourceStack, sem console/elevação. Probe isolado confirmou jogador não OP; removido o probe/com LuckPerms ausente, interface e wiki continuaram funcionais. [Prova](validation/layout-home.json).

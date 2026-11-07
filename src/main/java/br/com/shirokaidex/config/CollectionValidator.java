@@ -21,6 +21,12 @@ public final class CollectionValidator {
     }
     public void validate(Settings settings) throws IOException {
         validate(settings.categories());
+        for (var reward : settings.rewards()) {
+            try { reward.json(); }
+            catch(IllegalArgumentException failure){throw new IOException("config.json rewards."+reward.id()+": encoded plan exceeds limits",failure);}
+            for (var item : reward.items()) if (item.id().equals("minecraft:air") || !items.contains(item.id()))
+                throw new IOException("config.json rewards." + reward.id() + ": unknown or empty item " + item.id());
+        }
         for (var definition : settings.collections()) {
             if (!items.contains(definition.icon())) throw new IOException("config.json collections." + definition.id() + ".icon: unknown item " + definition.icon());
             check(definition, "include_species", definition.criteria().includeSpecies(), species);

@@ -1,0 +1,1 @@
+{"schemaVersion":1,"id":"dex-layout-probe","version":"1.0.0","name":"Dex layout test probe","environment":"server","entrypoints":{"main":["br.com.shirokaidex.probe.LayoutProbe"]},"depends":{"fabricloader":">=0.17.2","fabric-api":"*"}}

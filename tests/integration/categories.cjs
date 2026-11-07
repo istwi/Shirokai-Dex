@@ -10,7 +10,9 @@ assert(/^[A-Za-z0-9_]{1,16}$/.test(PLAYER));
 const root = path.resolve(process.env.MC_TEST_RUN || path.join(__dirname, '../../run'));
 const configFile = path.join(root, 'config/shirokaidex/config.json');
 const original = fs.readFileSync(configFile, 'utf8');
-assert.deepEqual(JSON.parse(original), JSON.parse(fs.readFileSync(path.join(__dirname, '../fixtures/categories/config.json'), 'utf8')));
+const afterRestart = process.env.MC_CATEGORY_MODE === 'after-restart';
+if (afterRestart) assert(original.startsWith('{ invalid'));
+else assert.deepEqual(JSON.parse(original), JSON.parse(fs.readFileSync(path.join(__dirname, '../fixtures/categories/config.json'), 'utf8')));
 const results = [];
 let bot, rcon, error, lastSend = 0;
 function pass(name) { console.log('PASS', name); results.push({ name, status: 'passed' }); }
@@ -57,6 +59,16 @@ async function main() {
   await rcon.command(`deop ${PLAYER}`);
   const baseline=await response('/dex status',text=>text.includes('Pokédex oficial:'));
   assert(baseline.includes('0 espécies obtidas'),'Use a fresh disposable player');
+  if(afterRestart) {
+    assert((await response('/dex variants status',t=>t.startsWith('Variantes:'))).includes('0/1'));
+    assert((await response('/dex split status',t=>t.startsWith('Mesma forma:'))).includes('0/0'));
+    pass('Restart recovers validated category backup without overwriting invalid config.json');
+    const recovered=await open('/dex variants wiki');assert.deepEqual(ids(recovered),['dex_test:variants']);await close();
+    assert.equal(await response('/dex status',t=>t.includes('Pokédex oficial:')),baseline);
+    pass('Recovered rules drive read-only wiki and progress after migration 2 restart');
+    return;
+  }
+
   assert((await response('/dex split status',t=>t.startsWith('Mesma forma:'))).includes('0/0'));
   assert((await response('/dex variants status',t=>t.startsWith('Variantes:'))).includes('0/1'));
   assert((await response('/dex union status',t=>t.startsWith('Uniao:'))).includes('0/1'));
@@ -96,7 +108,7 @@ async function main() {
   try{await main();}catch(failure){exit=1;console.error(failure);results.push({name:'categories integration',status:'failed',error:failure.message});}
   finally{
     fs.writeFileSync(configFile,original);if(bot)bot.quit();if(rcon)rcon.close();
-    const report=path.resolve(__dirname,'../../build/integration-categories.json');fs.mkdirSync(path.dirname(report),{recursive:true});
+    const report=path.resolve(__dirname,afterRestart ? '../../build/integration-category-restart.json' : '../../build/integration-categories.json');fs.mkdirSync(path.dirname(report),{recursive:true});
     fs.writeFileSync(report,JSON.stringify({timestamp:new Date().toISOString(),target:'Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140',test_player:PLAYER,results},null,2));process.exitCode=exit;
   }
 })();

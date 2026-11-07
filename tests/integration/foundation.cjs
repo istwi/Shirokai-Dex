@@ -60,6 +60,9 @@ async function main() {
   bot.chat('/dex');
   await until(() => bot.currentWindow);
   let window = bot.currentWindow;
+  assert.equal(window.type, 'minecraft:generic_9x6');
+  assert.equal(window.slots[4].name,'player_head');
+  const hub=window;await bot.clickWindow(20,0,0);await until(()=>bot.currentWindow&&bot.currentWindow!==hub);window=bot.currentWindow;
   assert.equal(window.type, 'minecraft:generic_9x3');
   assert.equal(window.slots[13].name, 'book');
   assert.equal(window.slots[22].name, 'barrier');
