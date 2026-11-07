@@ -186,5 +186,8 @@
   "currency_dollars": "PokéDollars: $ {0}",
   "currency_tokens": "PokéTokens: ✦ {0}",
   "currency_amount": "Currency: {0} • Amount: {1}",
-  "currency_generic": "{1}: {0}"
+  "currency_generic": "{1}: {0}",
+  "command_title": "Authorized command — review required",
+  "command_context": "Execution context: {0}",
+  "command_review_warning": "Execution requires operator review; it does not prove durable delivery."
 }

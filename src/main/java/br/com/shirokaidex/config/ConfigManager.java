@@ -96,6 +96,7 @@ public final class ConfigManager {
             String language = null, title = null;
             List<CollectionDefinition> collections = CollectionDefinition.defaults();
             List<br.com.shirokaidex.rewards.RewardPlan> rewards = List.of();
+            var commandPolicy=br.com.shirokaidex.rewards.CommandPolicy.disabled();
             var home=br.com.shirokaidex.menus.layout.HomeLayout.defaults();
             var menus=br.com.shirokaidex.menus.layout.MenuNavigation.defaults();
             var categories = new br.com.shirokaidex.categories.CategoryCatalog(List.of());
@@ -112,6 +113,7 @@ public final class ConfigManager {
                     }
                     case "language" -> language = string(reader, key);
                     case "menu_title" -> title = string(reader, key);
+                    case "command_policy"->commandPolicy=CommandRewardsCodec.policy(reader);
                     case "home"->home=HomeLayoutCodec.read(reader);
                     case "menus"->menus=MenuNavigationCodec.read(reader);
                     case "collections" -> collections = CollectionsCodec.read(reader);
@@ -125,7 +127,7 @@ public final class ConfigManager {
             if (version == null || language == null || title == null) throw new IOException("config.json: schema_version, language and menu_title are required");
             if (!Set.of("pt_br", "en_us").contains(language)) throw new IOException("config.json: unsupported language");
             if (title.isBlank() || title.length() > 128 || title.codePoints().anyMatch(Character::isISOControl)) throw new IOException("config.json: invalid menu_title");
-            return new Settings(version, language, title, collections, categories, rewards,home,menus);
+            return new Settings(version, language, title, collections, categories, rewards,home,menus,commandPolicy);
         } catch (IllegalStateException | IllegalArgumentException failure) {
             throw new IOException("config.json: invalid field or JSON structure", failure);
         }

@@ -1,6 +1,6 @@
 # Recompensas — desenvolvimento local
 
-Escopo atual: itens vanilla/de mods e componentes/itens salvos, marcos por registros ou percentual, prévia paginada, confirmação separada e registro persistente de operações. CUSTOM_ITEM e SAVED_ITEM foram acrescentados no trabalho local alpha.2; [schema e comandos](SAVED_ITEMS.md). POKEMON foi acrescentado no [escopo NBT auditado](POKEMON_REWARDS.md). COMMAND, CURRENCY e CRATE_KEY ainda não estão habilitados. Não configurar tipos não implementados.
+Escopo atual: itens vanilla/de mods e componentes/itens salvos, marcos por registros ou percentual, prévia paginada, confirmação separada e registro persistente de operações. CUSTOM_ITEM e SAVED_ITEM foram acrescentados no trabalho local alpha.2; [schema e comandos](SAVED_ITEMS.md). POKEMON foi acrescentado no [escopo NBT auditado](POKEMON_REWARDS.md). [CURRENCY](CURRENCY_REWARDS.md) está disponível no backend auditado. [COMMAND](COMMAND_REWARDS.md) permite uma ação isolada autorizada com revisão obrigatória na alpha.10 local; CRATE_KEY dedicado permanece indisponível. Não configurar tipos não implementados.
 
 ```json
 "rewards": [

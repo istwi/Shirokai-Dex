@@ -493,16 +493,16 @@ public final class ShirokaiDex implements ModInitializer {
         var player = source.getPlayer();
         if (player == null || !validReward(player, plan)) { source.sendFailure(messages.text(language(), "reward_not_eligible")); return; }
         player.closeContainer();
-        if(!plan.pokemon().isEmpty()){
-            if(!br.com.shirokaidex.rewards.PokemonRewardAdapter.supported()){source.sendFailure(messages.text(language(),"pokemon_backend_unavailable"));return;}
+        if(!plan.pokemon().isEmpty()||!plan.commands().isEmpty()){
+            if(!plan.pokemon().isEmpty()&&!br.com.shirokaidex.rewards.PokemonRewardAdapter.supported()){source.sendFailure(messages.text(language(),"pokemon_backend_unavailable"));return;}
             database.rewardForPlayer(player.getUUID(),plan.id()).whenComplete((reserved,error)->source.getServer().execute(()->{
                 if(stopping||player.hasDisconnected()||!validReward(player,plan))return;
                 if(error!=null){source.sendFailure(messages.text(language(),"reward_error"));return;}
                 if(reserved.isPresent()&&reserved.get().state()!=br.com.shirokaidex.rewards.RewardJournal.State.PENDING){source.sendFailure(messages.text(language(),"reward_result.blocked"));source.sendSuccess(()->messages.text(language(),"saved_item_operation",reserved.get().id()),false);return;}
                 try{
-                    var prepared=reserved.isPresent()?plan.reuse(reserved.get().plan()):plan.withPokemon(plan.pokemon().stream().map(request->br.com.shirokaidex.rewards.PokemonPayload.freeze(source.getServer(),player,request)).toList());
+                    var prepared=reserved.isPresent()?plan.reuse(reserved.get().plan()):plan.withPokemon(plan.pokemon().stream().map(request->br.com.shirokaidex.rewards.PokemonPayload.freeze(source.getServer(),player,request)).toList()).withCommands(plan.commands().stream().map(request->request.freeze(player.getGameProfile().getName(),player.getUUID())).toList());
                     prepared.json();deliverReward(source,prepared);
-                }catch(RuntimeException failure){LOG.error("Pokemon reward preparation failed for {}",player.getUUID(),failure);source.sendFailure(messages.text(language(),"reward_error"));}
+                }catch(RuntimeException failure){LOG.error("Reward preparation failed for {}",player.getUUID(),failure);source.sendFailure(messages.text(language(),"reward_error"));}
             }));return;
         }
         deliverReward(source,plan);
@@ -514,6 +514,7 @@ public final class ShirokaiDex implements ModInitializer {
         if(pokemonAdapter!=null){pokemonDeliveries.add(pokemonAdapter);source.sendSuccess(()->messages.text(language(),"pokemon_processing"),false);}
         br.com.shirokaidex.rewards.RewardDelivery.Adapter adapter=pokemonAdapter==null?new br.com.shirokaidex.rewards.ItemRewardAdapter(source.getServer(),player,current->validReward(player,current)):pokemonAdapter;
         if(!plan.currencies().isEmpty())adapter=new br.com.shirokaidex.rewards.CurrencyRewardAdapter(adapter,new br.com.shirokaidex.rewards.ImpactorCurrencyPort(source.getServer(),player,current->validReward(player,current)));
+        if(!plan.commands().isEmpty())adapter=new br.com.shirokaidex.rewards.CommandRewardAdapter(source.getServer(),player,current->validReward(player,current),()->config.current().commandPolicy());
         rewardDelivery.claim(player.getUUID(), plan, adapter)
                 .whenComplete((result, failure) -> source.getServer().execute(() -> {
                     if(pokemonAdapter!=null){pokemonDeliveries.remove(pokemonAdapter);pokemonAdapter.close();}

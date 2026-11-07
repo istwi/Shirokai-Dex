@@ -264,3 +264,13 @@ Auditoria adicional nas fontes oficiais da tag 5.3.5 (`da9a2fd55cf6f0acb6e55fe15
 Checagem reflexiva isolada/somente leitura para identificar serviço/backend reais, pois API pública não expõe essa capacidade: public storage() do serviço, fields implementation/loader/root conferidos nas fontes e por javap no JAR oficial. Classe JsonLoader também confirmada. Suporta só serviço nativo com JSON, versões 5.3.5/5.3.5+metadata; SQL/HOCON/YAML/custom providers não são certificados e são bloqueados antes de efeitos. Não escreve nem altera configurações do Impactor em servidores de usuários.
 
 [Guia](CURRENCY_REWARDS.md), [evidência](validation/phase3-currency.json): ausência opcional, depósitos reais, isolamento de moedas, rejeição de referência/precisão, plano misto, falha e reinício. Não é certificação de transação distribuída, concorrência com todos os plugins ou carga.
+
+## Decisão posterior — emissão dedicada CRATE_KEY0.2.1
+
+[Auditoria do contrato público](CRATE_KEY_CONTRACT.md): `give` retorna void e checkpoint é privado ao fluxo; instância Tokens é privada, apesar de seus métodos serem públicos. UNSUPPORTED para emissão automática dedicada sob as restrições atuais; não altera o suporte de SAVED_ITEM/checkpoint validado. Conclusão estática de fonte/javap, sem teste novo de CRATE_KEY ou mudanças no provedor.
+
+## COMMAND — alpha.10 local, dispatch com revisão obrigatória
+
+Minecraft1.21.1 mapeado conferido por javap: `Commands.performPrefixedCommand(CommandSourceStack,String): void`, `getDispatcher()`, `CommandSourceStack.withSuppressedOutput()`. Parsing Brigadier usa fonte PLAYER original ou console explicitamente autorizada. Pré-condições/consumo completo/command executável conferidos antes de intenção e novamente antes do dispatch. Nenhuma API de recibo universal foi inventada: performPrefixedCommand retornar não comprova efeito persistido; operação vai a NEEDS_REVIEW, sem retry. Plano congela template/contexto e comando renderizado antes da intenção, permanecendo independente de reload.
+
+[Política/schema/limites](COMMAND_REWARDS.md), [evidência](validation/phase3-commands.json). Não usa shell, não eleva permissão do jogador nem muda outros mods. Testes nativos de scoreboard/PLAYER não certificam comandos externos; contextos privilegiados são escolha explícita de operador no arquivo.

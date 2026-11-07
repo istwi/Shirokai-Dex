@@ -43,3 +43,7 @@ Alpha.7 local amplia `menus` com rows/title/palette/buttons. Títulos aceitam `{
 ## Moedas
 
 Cada recompensa aceita `currencies`: array de até oito entradas CURRENCY, com `currency` namespaced registrado e `amount` numérico positivo exato, até 10^15 e oito casas. Decimais precisam caber na moeda do provedor. Ausência da API/moeda impede o resgate; não converte nem usa moeda principal como fallback. Consulte [CURRENCY_REWARDS.md](CURRENCY_REWARDS.md) para schema/escopo JSON e falhas.
+
+## COMMAND autorizado — alpha.10 local
+
+`command_policy` é opcional e desativado por padrão. Autorizações exatas por contexto/template e `rewards[].commands` seguem o [schema e limites próprios](COMMAND_REWARDS.md). Uma única ação isolada por marco, revisão administrativa obrigatória após tentativa de dispatch. Desativar a política preserva definições e bloqueia efeitos; reload inválido mantém toda a configuração anterior.

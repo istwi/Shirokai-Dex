@@ -186,5 +186,8 @@
   "currency_dollars": "PokéDollars: $ {0}",
   "currency_tokens": "PokéTokens: ✦ {0}",
   "currency_amount": "Moeda: {0} • Quantia: {1}",
-  "currency_generic": "{1}: {0}"
+  "currency_generic": "{1}: {0}",
+  "command_title": "Comando autorizado — revisão obrigatória",
+  "command_context": "Contexto de execução: {0}",
+  "command_review_warning": "A execução exigirá revisão administrativa; não comprova entrega persistida."
 }

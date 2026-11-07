@@ -23,6 +23,8 @@ Os modos não são intercambiáveis com uma reconexão: encerrar/salvar o servid
 
 ## Próximo bloco
 
+Checkpoint enviado e confirmado em `f714c4b`. A [auditoria posterior de emissão](CRATE_KEY_CONTRACT.md) concluiu estaticamente UNSUPPORTED para o contrato automático Crates0.2.1; essa documentação posterior permanece local. Próximo bloco independente: política/modelo de COMMAND autorizado, sem contornar a falta de API de chaves.
+
 - Envio deste bloco validado autorizado somente nesta branch. Manter a main funcional preservada; build sozinho nunca autoriza promoção.
 - CRATE_KEY dedicado continua **não implementado**. A compatibilidade validada é SAVED_ITEM + checkpoint com Crates0.2.1/mesmo segredo. Auditar contrato público de criação/acesso antes de implementar um novo tipo; reflexão privada está restrita ao probe de teste, não é API de produção.
 - Versionamento desconhecido/indisponibilidade/timeout/carga/concorrência ampla, formatos e modpacks adicionais não certificados. Sem transação distribuída, retry automático ou promessa de recuperação após perda de energia.

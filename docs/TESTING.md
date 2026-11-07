@@ -285,3 +285,13 @@ Journal deve continuar PROCESSING durante atraso de 2000ms apesar da alteração
 Regressões de itens/Pokémon usam seus runners e mundos descartáveis próprios; `remapPokemonProbeJar` produz probe separado intermediary (input `pokemon-probe-dev`, evitando colisão com saída). A primeira tentativa de remapeamento colidiu com o nome de input e foi corrigida. Runner de itens tinha matcher antigo “inventário sem espaço”; agora espera “sem espaço”, compatível com a mensagem atual de inventário/equipe/PC, sem alterar validação do produto.
 
 Não certifica outros mods/versões/segredos, concorrência ampla, timeout real, perda de energia ou carga. CRATE_KEY dedicado não está implementado. Após os testes, encerrar servidores, verificar SQLite, remover segredo temporário e conferir que produção não contém probes. Não publicar release/ambiente automaticamente.
+
+## COMMAND — alpha.10 local
+
+[Relatório](validation/phase3-commands.json), [política e escopo](COMMAND_REWARDS.md). Build/JDK21/TLS e serverDistribution; 282 JUnit (oito novos). Servidor Fabric0.17.2/MC1.21.1/Cobblemon1.8.3 empacotado fora do Loom, sem probe, em `/tmp`, mundo `command-reward-validation`, loopback/EULA aceita, perfil reservado DexCommand e fixture `tests/fixtures/commands/config.json`.
+
+`MC_TEST_RUN=/tmp/servidor MC_TEST_RCON_PASSWORD_FILE=/arquivo/temporario npm --prefix tests/integration run test:commands`: sete checks. Encerre/salve normalmente e reinicie o mesmo mundo/config; `MC_COMMAND_MODE=after-restart` com o mesmo comando: dois checks. Verificam prévia/segunda confirmação, permissões PLAYER, comando ausente, efeito scoreboard CONSOLE, mensagem PLAYER, erro de execução, intenção/snapshot/revisão/anti-repetição, revogação por política e troca de template, reload inválido, reinício e resolução supervisionada sem replay. Usar mundo novo no modo inicial.
+
+Primeiro ensaio de um teste novo ficou bloqueado por join no worker SQLite do próprio teste; o worker foi encerrado e o teste passou a encadear future sem join. Produto não foi alterado para contornar o teste. Execução final da suíte passou; uma consulta SQL independente comprova INTENT antes do efeito simulado.
+
+Comandos externos, recibos automáticos, planos mistos, crash durante dispatch, carga e cliente gráfico continuam pendentes. A suíte Java inclui regressões anteriores; os runners completos de itens/Pokémon/moedas/checkpoint não foram repetidos nesta alpha.10. A evidência alpha.9 permanece separada. Nenhuma release ou configuração de ambiente publicada.

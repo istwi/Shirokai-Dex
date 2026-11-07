@@ -1,0 +1,157 @@
+{
+  "scope": "Local alpha.10 COMMAND: exclusive single-action dispatch with mandatory manual review, not durable external acknowledgement",
+  "timestamp_utc": "2026-11-07T23:38:10.917533+00:00",
+  "base_commit": "f714c4b216743a239facbf7623fae18dbdb22d42",
+  "branch": "handoff/crates-checkpoint",
+  "main_preserved": "c89cc1b",
+  "publication": "Commit/push authorized continuously on development branch; no main merge, release or environment publication",
+  "build": {
+    "command": "JAVA_HOME=<JDK21> python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build serverDistribution",
+    "result": "BUILD SUCCESSFUL",
+    "junit": {
+      "tests": 282,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "new_junit_cases": 8,
+    "verifyModJar": "passed",
+    "jar": "shirokai-dex-0.3.0-alpha.10+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "c67af1eeca1b553b8083f93dc5222f68b5ed9c17b9d5fea51cc7acad8a91f4e8",
+    "runtime_jar_matches": true,
+    "probe_classes_in_production_jar": false
+  },
+  "runtime": {
+    "installation": "Official Fabric 0.17.2 profile, original Minecraft1.21.1 server.jar and packaged intermediary mod in mods; no project sources/classes or Loom on classpath",
+    "cobblemon": "1.8.3+1.21.1",
+    "java": "21.0.13",
+    "world": "command-reward-validation",
+    "player": "DexCommand",
+    "network": "loopback offline disposable server; RCON secret outside Git",
+    "test_probe_installed": false
+  },
+  "protocol_checks": 9,
+  "protocol": {
+    "main": {
+      "timestamp": "2026-11-07T23:33:11.443Z",
+      "target": "Packaged Fabric 0.17.2 / MC1.21.1 / Cobblemon1.8.3 / native command dispatcher",
+      "player": "DexCommand",
+      "results": [
+        {
+          "name": "Preview and second confirmation disclose exact template/context and mandatory review without executing or reserving effects",
+          "status": "passed"
+        },
+        {
+          "name": "PLAYER context preserves native permissions and missing command fails preflight before any journal intent or effect",
+          "status": "passed"
+        },
+        {
+          "name": "Native console command dispatches once after frozen intent and remains in review instead of claiming durable completion",
+          "status": "passed"
+        },
+        {
+          "name": "Unprivileged PLAYER command and runtime command failure both require review and never become falsely completed",
+          "status": "passed"
+        },
+        {
+          "name": "Disabling policy atomically revokes an old confirmation without forcing removal of reward definitions",
+          "status": "passed"
+        },
+        {
+          "name": "Template changes reject stale confirmation; unauthorized reload rejects atomically and retains the complete last-good configuration",
+          "status": "passed"
+        },
+        {
+          "name": "Command preview icons cannot leak to player inventory and browsing never replays an action",
+          "status": "passed"
+        }
+      ]
+    },
+    "restart": {
+      "timestamp": "2026-11-07T23:36:37.412Z",
+      "target": "Packaged Fabric 0.17.2 / MC1.21.1 / Cobblemon1.8.3 / native command dispatcher",
+      "player": "DexCommand",
+      "results": [
+        {
+          "name": "Review/intent states and native scoreboard persist across restart with no automatic command replay",
+          "status": "passed"
+        },
+        {
+          "name": "Existing supervised resolution requires explicit evidence and closes the journal without executing the command again",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "lifecycle": {
+    "main": [
+      "[23:32:29] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+      "[23:32:37] [Server thread/INFO]: Done (7.766s)! For help, type \"help\"",
+      "[23:33:52] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+    ],
+    "restart": [
+      "[23:35:16] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+      "[23:35:19] [Server thread/INFO]: Done (2.683s)! For help, type \"help\"",
+      "[23:37:26] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+    ]
+  },
+  "fixture_sha256": "5641a5da4b0acfde6f6e936c0b746a9630889108d8d16f3210da46d973eb31c5",
+  "journal_final_states": [
+    [
+      "failed",
+      "NEEDS_REVIEW"
+    ],
+    [
+      "once",
+      "COMPLETED"
+    ],
+    [
+      "player",
+      "NEEDS_REVIEW"
+    ]
+  ],
+  "journal_final_steps": [
+    [
+      "failed",
+      "INTENT"
+    ],
+    [
+      "once",
+      "INTENT"
+    ],
+    [
+      "player",
+      "INTENT"
+    ]
+  ],
+  "asserted_contract": [
+    "Exact opt-in context/template policy; disabled policy preserves definitions and revokes effects",
+    "Recipient rendered and frozen before persisted intent; source/context/template checked again before dispatch",
+    "PLAYER uses original permissions, CONSOLE explicitly configured and allowed; no player permission elevation",
+    "Native scoreboard dispatch increments once; player me message actually observed; runtime failure also requires review",
+    "All dispatch attempts stay INTENT/NEEDS_REVIEW rather than falsely confirming external persistence",
+    "After restart no replay; once resolved only by existing explicit admin complete with evidence, without another command execution",
+    "Unknown command or insufficient PLAYER permission refuses before reservation",
+    "Stale definition/policy confirmation and invalid reload do not leak effects or partially publish settings"
+  ],
+  "corrected_test_attempts": [
+    "A new unit test initially joined a database task from its own SQLite worker and blocked; only the matching owned test worker was terminated, then the test was corrected to compose futures. Final suite passed with a separate SQL assertion of INTENT before simulated effect."
+  ],
+  "cleanup": {
+    "servers_stopped": true,
+    "worlds_saved": true,
+    "fixture_config_restored": true,
+    "rcon_disabled": true,
+    "temporary_rcon_secret_removed": true,
+    "sqlite_integrity": "ok"
+  },
+  "limitations": [
+    "Only one isolated command action per reward; mixed or multiple commands intentionally rejected",
+    "No automatic external receipts: all attempts require operator evidence before completion",
+    "Known blocked command roots do not certify every possible alias or third-party handler; operator configuration is trusted",
+    "No tests of external mod command effects, crash during pending dispatch, power loss, load or graphical client",
+    "Existing Java suites repeated; full legacy item/Pokemon/currency/checkpoint protocol runners not repeated in alpha.10",
+    "Dedicated CRATE_KEY remains unsupported in audited automatic provider contract; COMMAND is not an alternative to elevate permissions or bypass this"
+  ],
+  "delivery_commit_subject": "feat: add explicitly authorized command reward dispatch"
+}

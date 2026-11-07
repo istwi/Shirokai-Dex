@@ -55,3 +55,7 @@ O usuário pediu enviar ao GitHub as atualizações já concluídas e depois con
 ## Autorização pontual — validação de checkpoint alpha.9
 
 Após a entrega de 274 JUnit/26 checks, o responsável respondeu “continua” à confirmação de commit/push somente em `handoff/crates-checkpoint`. Autoriza registrar/enviar esse bloco validado, preservando a main. Não autoriza release, publicação de ambiente nem mudanças em outros mods. Trabalho funcional posterior continua local até nova autorização de envio.
+
+## Autorização contínua — branch de desenvolvimento
+
+O responsável aceitou o fluxo de aceleração (“faz tudo isso então”): commits e push contínuos de blocos validados em `handoff/crates-checkpoint`, com documentação objetiva e testes relevantes. Esta autorização substitui a limitação de envio pontual anterior para trabalho nesta branch. Integração à main, releases e publicação de ambiente continuam exigindo autorização separada. Apenas um Codex; priorizar recuperação segura, captura/estatísticas, depois competições/rankings; acabamento e integrações opcionais ao final.

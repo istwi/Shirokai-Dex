@@ -11,6 +11,9 @@ public final class RewardDelivery {
         CompletableFuture<Boolean> preflight(RewardPlan plan, int firstRemainingStep);
         CompletableFuture<String> deliver(RewardPlan plan, int step);
     }
+    public static final class ManualReview extends RuntimeException {
+        public ManualReview(){super("Command dispatch attempted; operator evidence required, no automatic retry");}
+    }
     public enum Result { COMPLETED, BUSY, NOT_ELIGIBLE, BLOCKED, NEEDS_REVIEW }
     private final Database database;
     private final Set<UUID> active = ConcurrentHashMap.newKeySet();
@@ -54,7 +57,9 @@ public final class RewardDelivery {
             var op=operation.get();
             if(op==null)return CompletableFuture.<Result>failedFuture(failure);
             // Deliberately generic persisted error: adapter exceptions may contain private server data.
-            return database.reviewReward(op.id(),"Delivery interrupted or acknowledgement failed; inspect operation and external evidence before resolving")
+            Throwable cause=failure;while(cause instanceof CompletionException&&cause.getCause()!=null)cause=cause.getCause();
+            String reason=cause instanceof ManualReview?"Command dispatch attempted; external persistence requires operator evidence; no automatic retry":"Delivery interrupted or acknowledgement failed; inspect operation and external evidence before resolving";
+            return database.reviewReward(op.id(),reason)
                     .thenCompose(reviewed -> reviewed ? CompletableFuture.completedFuture(Result.NEEDS_REVIEW)
                             : database.rewardOperation(op.id()).thenApply(current -> current.isPresent() && current.get().state()==RewardJournal.State.NEEDS_REVIEW ? Result.NEEDS_REVIEW : Result.BLOCKED));
         }).thenCompose(value->value).whenComplete((value,failure)->active.remove(player));

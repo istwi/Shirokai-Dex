@@ -1,8 +1,10 @@
 # Próximos passos
 
-**Estado atual:** validação local alpha.9 em `handoff/crates-checkpoint`, base `6b97093`. Main `c89cc1b`/funcional `191a65e` preservadas. Envio deste bloco validado autorizado na resposta “continua” à confirmação de commit/push somente nesta branch; sem nova release/publicação de ambiente.
+**Estado atual:** alpha.10 COMMAND local, sobre `f714c4b`, branch `handoff/crates-checkpoint`; main preservada em `c89cc1b`. Modelo/política/execução de uma ação isolada com revisão obrigatória implementados e validados. [Guia](COMMAND_REWARDS.md), [evidência](validation/phase3-commands.json). Envio autorizado pelo fluxo contínuo da branch de desenvolvimento; referência da entrega: `feat: add explicitly authorized command reward dispatch`. Sem release/ambiente.
 
 ## Última tarefa realizada
+
+Último bloco local: COMMAND alpha.10, 282 JUnit e nove checks de servidor/reinício, conforme relatório acima. Último bloco enviado permanece alpha.9 descrito a seguir.
 
 Checkpoint nativo Crates0.2.1 exercitado fora do Loom: chave real emitida pelo provedor e congelada via SAVED_ITEM, autenticidade por Tokens.matches, ACK após writer atrasado/readback, falha de playerdata/revisão/anti-repetição, reinícios e fallback vanilla sem Crates. 274 JUnit e 26 checks de servidor (8 checkpoint + 10 itens + 8 Pokémon, incluindo reinícios); resultados e regressões detalhados na [evidência](validation/phase3-crates-checkpoint.json). Nenhum tipo CRATE_KEY novo implementado. [Passagem atualizada](CRATES_CHECKPOINT_HANDOFF.md).
 
@@ -15,12 +17,14 @@ O upload do JAR/sources/SHA256SUMS recebeu HTTP 401 Bad credentials em uploads.g
 ## Próxima tarefa exata
 
 1. Conferir árvore local/commits/remoto. Entrega identificada pelo assunto `test: validate native Crates checkpoints and delivery regressions`, base `6b97093`; envio autorizado somente nesta branch. Preservar a main validada. Revisar evidência/diff antes de considerar integração.
-2. Seguir [CRATES_CHECKPOINT_HANDOFF.md](CRATES_CHECKPOINT_HANDOFF.md). A base de checkpoint/SAVED_ITEM está validada no escopo da evidência; próximo bloco funcional é auditar contrato público de **CRATE_KEY dedicado**. Não promover reflexão privada do probe a API de produção nem chamar givekey e tratar retorno como entrega durável.
+2. Seguir [CRATES_CHECKPOINT_HANDOFF.md](CRATES_CHECKPOINT_HANDOFF.md). A base de checkpoint/SAVED_ITEM está validada no escopo da evidência; a auditoria de **CRATE_KEY dedicado** foi concluída estaticamente: o contrato automático de emissão da versão 0.2.1 é UNSUPPORTED; ver [evidência e requisitos](CRATE_KEY_CONTRACT.md). Não promover reflexão privada do probe a API de produção nem chamar givekey e tratar retorno como entrega durável.
 3. Preservar planos/componentes/permissões, journal antes do efeito, espera/readback nativo e NEEDS_REVIEW sem retry. Sem transação distribuída. Outros provedores/versões/concorrência ampla continuam pendentes.
-4. COMMAND e recuperação supervisionada completa ainda pendentes; não antecipar todos os sistemas. Capturas/estatísticas/competições/rankings e cliente gráfico/carga continuam abertos no prompt/checklist.
+4. COMMAND isolado com revisão obrigatória já foi implementado/testado; não refazer. Próximo bloco: recuperação supervisionada de operações, auditando estado/etapas e efeitos antes de qualquer retomada. Manter cancelamento/conclusão existentes e não reenviar INTENT incerto; determinar quais operações podem ser retomadas com prova suficiente, com prévia/confirmacão/permissão/auditoria. Recibos automáticos COMMAND e planos mistos dependem de contratos adicionais; não antecipar todos os sistemas. Capturas/estatísticas/competições/rankings e cliente gráfico/carga continuam abertos no prompt/checklist.
 5. Testes atuais são no JAR intermediary fora do Loom; probe separado de teste nunca deve ir ao JAR de distribuição. Nenhuma alteração em outros mods ou publicação de ambiente autorizada.
 
 ## Arquivos importantes
+
+- COMMAND alpha.10: CommandReward/CommandPolicy/CommandRewardAdapter, CommandRewardsCodec/Settings, RewardPlan.definition/reuse/commands, RewardJournal.steps/RewardDelivery.ManualReview, core/menus/traduções; CommandRewardsTest e fixture/runner commands em dois modos. Nenhuma migração SQLite nova.
 
 - Checkpoint: PlayerSaveCoordinator/ItemRewardAdapter, `src/checkpointProbe`, `tests/integration/crates-checkpoint.cjs` (quatro modos), manifestos/fixture crates-checkpoint. Remapeamento Pokémon de regressão em build.gradle; ver relatório e passagem atualizados.
 

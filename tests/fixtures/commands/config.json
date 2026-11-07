@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "Command validation",
+  "command_policy": {
+    "enabled": true,
+    "allowed": [
+      {
+        "type": "COMMAND",
+        "context": "CONSOLE",
+        "command": "scoreboard players add {player} dex_command 1",
+        "acknowledgement": "MANUAL_REVIEW"
+      },
+      {
+        "type": "COMMAND",
+        "context": "PLAYER",
+        "command": "scoreboard players add {player} dex_command 2",
+        "acknowledgement": "MANUAL_REVIEW"
+      },
+      {
+        "type": "COMMAND",
+        "context": "CONSOLE",
+        "command": "scoreboard players add {player} missing_objective 1",
+        "acknowledgement": "MANUAL_REVIEW"
+      },
+      {
+        "type": "COMMAND",
+        "context": "CONSOLE",
+        "command": "not_a_real_command {player}",
+        "acknowledgement": "MANUAL_REVIEW"
+      },
+      {
+        "type": "COMMAND",
+        "context": "PLAYER",
+        "command": "me dex-reward {player}",
+        "acknowledgement": "MANUAL_REVIEW"
+      },
+      {
+        "type": "COMMAND",
+        "context": "CONSOLE",
+        "command": "scoreboard players add {player} dex_command 5",
+        "acknowledgement": "MANUAL_REVIEW"
+      }
+    ]
+  },
+  "rewards": [
+    {
+      "id": "once",
+      "collection": "national",
+      "minimum_registered": 1,
+      "commands": [
+        {
+          "type": "COMMAND",
+          "context": "CONSOLE",
+          "command": "scoreboard players add {player} dex_command 1",
+          "acknowledgement": "MANUAL_REVIEW"
+        }
+      ]
+    },
+    {
+      "id": "denied",
+      "collection": "national",
+      "minimum_registered": 1,
+      "commands": [
+        {
+          "type": "COMMAND",
+          "context": "PLAYER",
+          "command": "scoreboard players add {player} dex_command 2",
+          "acknowledgement": "MANUAL_REVIEW"
+        }
+      ]
+    },
+    {
+      "id": "failed",
+      "collection": "national",
+      "minimum_registered": 1,
+      "commands": [
+        {
+          "type": "COMMAND",
+          "context": "CONSOLE",
+          "command": "scoreboard players add {player} missing_objective 1",
+          "acknowledgement": "MANUAL_REVIEW"
+        }
+      ]
+    },
+    {
+      "id": "missing",
+      "collection": "national",
+      "minimum_registered": 1,
+      "commands": [
+        {
+          "type": "COMMAND",
+          "context": "CONSOLE",
+          "command": "not_a_real_command {player}",
+          "acknowledgement": "MANUAL_REVIEW"
+        }
+      ]
+    },
+    {
+      "id": "player",
+      "collection": "national",
+      "minimum_registered": 1,
+      "commands": [
+        {
+          "type": "COMMAND",
+          "context": "PLAYER",
+          "command": "me dex-reward {player}",
+          "acknowledgement": "MANUAL_REVIEW"
+        }
+      ]
+    },
+    {
+      "id": "stale",
+      "collection": "national",
+      "minimum_registered": 1,
+      "commands": [
+        {
+          "type": "COMMAND",
+          "context": "CONSOLE",
+          "command": "scoreboard players add {player} dex_command 5",
+          "acknowledgement": "MANUAL_REVIEW"
+        }
+      ]
+    }
+  ]
+}

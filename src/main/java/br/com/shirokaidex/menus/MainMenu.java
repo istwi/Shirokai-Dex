@@ -146,10 +146,11 @@ public final class MainMenu extends ChestMenu {
                                   br.com.shirokaidex.rewards.RewardPlan plan, br.com.shirokaidex.menus.layout.RewardView view, int requestedPage,
                                   IntConsumer navigate, Runnable back, Runnable claim) {
         var contents = new SimpleContainer(27); Map<Integer,Runnable> actions = new HashMap<>();
-        var entries=new java.util.ArrayList<Object>();entries.addAll(plan.items());entries.addAll(plan.pokemon());entries.addAll(plan.currencies());
+        var entries=new java.util.ArrayList<Object>();entries.addAll(plan.items());entries.addAll(plan.pokemon());entries.addAll(plan.currencies());entries.addAll(plan.commands());
         var page = Wiki.paginate(entries, requestedPage, 18);
         for (int i = 0; i < page.items().size(); i++) {
             var action=page.items().get(i);
+            if(action instanceof br.com.shirokaidex.rewards.CommandReward command){contents.setItem(i,commandItem(command,settings.language(),messages));continue;}
             if(action instanceof br.com.shirokaidex.rewards.CurrencyReward money){contents.setItem(i,currencyItem(money,settings.language(),messages));continue;}
             if(action instanceof br.com.shirokaidex.rewards.PokemonReward pokemon){contents.setItem(i,pokemonItem(pokemon,settings.language(),messages));continue;}
             var entry=(br.com.shirokaidex.rewards.RewardPlan.Item)action;
@@ -183,11 +184,15 @@ public final class MainMenu extends ChestMenu {
     public static void confirmReward(ServerPlayer player,Settings settings,Messages messages,
                                      br.com.shirokaidex.rewards.RewardPlan plan,String label,Runnable confirm,Runnable back){
         var contents = new SimpleContainer(27); Map<Integer,Runnable> actions = new HashMap<>();
-        var preview=plan.items().isEmpty()?(plan.pokemon().isEmpty()?currencyItem(plan.currencies().getFirst(),settings.language(),messages):pokemonItem(plan.pokemon().getFirst(),settings.language(),messages)):br.com.shirokaidex.rewards.ItemPayload.restore(player.getServer(),plan.items().getFirst());
+        var preview=!plan.commands().isEmpty()?commandItem(plan.commands().getFirst(),settings.language(),messages):plan.items().isEmpty()?(plan.pokemon().isEmpty()?currencyItem(plan.currencies().getFirst(),settings.language(),messages):pokemonItem(plan.pokemon().getFirst(),settings.language(),messages)):br.com.shirokaidex.rewards.ItemPayload.restore(player.getServer(),plan.items().getFirst());
         if(!plan.items().isEmpty())preview.setCount(Math.min(plan.items().getFirst().count(),preview.getMaxStackSize()));contents.setItem(11,preview);
         var confirmation=new ItemStack(Items.LIME_DYE);confirmation.set(DataComponents.CUSTOM_NAME,messages.text(settings.language(),"reward_confirm"));confirmation.set(DataComponents.LORE,new ItemLore(List.of(messages.text(settings.language(),"layout.confirm_hint"))));contents.setItem(13,confirmation);actions.put(13,confirm);
         var summary=new ItemStack(Items.PAPER);summary.set(DataComponents.CUSTOM_NAME,messages.text(settings.language(),"layout.confirm_summary"));summary.set(DataComponents.LORE,new ItemLore(List.of(messages.text(settings.language(),"layout.confirm_steps",plan.steps()),messages.text(settings.language(),"layout.confirm_contents",plan.items().size(),plan.pokemon().size()))));contents.setItem(15,summary);
         if(!plan.currencies().isEmpty()){var lore=new ArrayList<>(summary.get(DataComponents.LORE).lines());for(var money:plan.currencies())lore.add(messages.text(settings.language(),"currency_amount",money.currency(),money.amount().toPlainString()));summary.set(DataComponents.LORE,new ItemLore(lore));}
+        if(!plan.commands().isEmpty()){
+            var lore=new ArrayList<>(summary.get(DataComponents.LORE).lines());lore.add(messages.text(settings.language(),"command_review_warning"));summary.set(DataComponents.LORE,new ItemLore(lore));
+            confirmation.set(DataComponents.LORE,new ItemLore(List.of(messages.text(settings.language(),"command_review_warning"))));
+        }
         navigation(contents,actions,18,messages.text(settings.language(),"menu_back"),back);
         closeButton(contents,actions,player,settings.language(),messages);
         styledShow(player,settings,messages,Screen.CONFIRMATION,messages.text(settings.language(),"reward_confirmation",label).getString(),contents,actions,Set.of(11));
@@ -206,6 +211,10 @@ public final class MainMenu extends ChestMenu {
         show(player,MenuStyle.title(MenuStyle.titleLabel(layout,title,player.getGameProfile().getName()),palette),contents,actions);
     }
 
+    private static ItemStack commandItem(br.com.shirokaidex.rewards.CommandReward command,String language,Messages messages){
+        var item=new ItemStack(Items.PAPER);item.set(DataComponents.CUSTOM_NAME,messages.text(language,"command_title"));
+        item.set(DataComponents.LORE,new ItemLore(List.of(messages.text(language,"command_context",command.context()),Component.literal(command.command()),messages.text(language,"command_review_warning"))));return item;
+    }
     private static ItemStack currencyItem(br.com.shirokaidex.rewards.CurrencyReward money,String language,Messages messages){
         var item=new ItemStack(money.currency().equals("impactor:dollars")?Items.GOLD_INGOT:money.currency().equals("impactor:tokens")?Items.NETHER_STAR:Items.GOLD_NUGGET);
         item.set(DataComponents.CUSTOM_NAME,messages.text(language,money.currency().equals("impactor:dollars")?"currency_dollars":money.currency().equals("impactor:tokens")?"currency_tokens":"currency_generic",money.amount().toPlainString(),money.currency()));

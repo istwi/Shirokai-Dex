@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0-alpha.10 — COMMAND local
+
+- Política opt-in de templates/contextos exatos, parâmetros restritos ao destinatário e uma ação isolada por marco. PLAYER preserva permissões; CONSOLE exige autorização explícita no arquivo.
+- Comando preparado congelado no plano antes da intenção, parsing/precondições revalidados e aviso na prévia/confirmação. Dispatch sempre exige NEEDS_REVIEW; retorno não comprova persistência externa. Sem retry automático.
+- 282 JUnit e nove checks de servidor/reinício, incluindo erro, revogação, rollback e resolução supervisionada sem replay. Recibos automáticos e planos mistos pendentes.
+- Envio autorizado na branch de desenvolvimento; sem release/publicação de ambiente.
+
 ## 0.3.0-alpha.9 — validação local de checkpoint Crates
 
 - Checkpoint Crates0.2.1 aguarda future e readback antes do ACK de itens; fallback vanilla somente na ausência do provedor. Provedor carregado unhealthy/indisponível bloqueia efeito.

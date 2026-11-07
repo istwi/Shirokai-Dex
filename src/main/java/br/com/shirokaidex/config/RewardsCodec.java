@@ -13,7 +13,7 @@ final class RewardsCodec {
         List<RewardPlan> result=new ArrayList<>();Set<String> ids=new HashSet<>();r.beginArray();
         while(r.hasNext()) {
             if(result.size()>=128)throw error(r,"maximum 128 rewards");
-            Set<String> keys=new HashSet<>();String id=null,collection=null;int minimum=0;BigDecimal percent=null;List<RewardPlan.Item> items=new ArrayList<>();List<br.com.shirokaidex.rewards.PokemonReward> pokemon=List.of();List<CurrencyReward> currencies=new ArrayList<>();
+            Set<String> keys=new HashSet<>();String id=null,collection=null;int minimum=0;BigDecimal percent=null;List<RewardPlan.Item> items=new ArrayList<>();List<br.com.shirokaidex.rewards.PokemonReward> pokemon=List.of();List<CurrencyReward> currencies=new ArrayList<>();List<br.com.shirokaidex.rewards.CommandReward> commands=List.of();
             r.beginObject();while(r.hasNext()){
                 String key=r.nextName();unique(r,keys,key);
                 switch(key){
@@ -32,6 +32,7 @@ final class RewardsCodec {
                             }}r.endObject();if(!type.equals("CURRENCY")||currency==null||amount==null)throw error(r,"CURRENCY requires currency and amount");currencies.add(new CurrencyReward(currency,amount));
                         }r.endArray();
                     }
+                    case "commands"->commands=CommandRewardsCodec.read(r,1);
                     case "pokemon"->pokemon=PokemonRewardsCodec.read(r);
                     case "items"->{
                         r.beginArray();while(r.hasNext()){
@@ -60,7 +61,7 @@ final class RewardsCodec {
                 }
             }r.endObject();
             if(keys.contains("minimum_registered")&&keys.contains("minimum_percent"))throw error(r,"choose one threshold");
-            RewardPlan plan=new RewardPlan(id,collection,minimum,percent,items,false,pokemon,currencies);
+            RewardPlan plan=new RewardPlan(id,collection,minimum,percent,items,false,pokemon,currencies,commands);
             if(!ids.add(plan.id()))throw error(r,"duplicate reward id "+id);result.add(plan);
         }r.endArray();return List.copyOf(result);
     }

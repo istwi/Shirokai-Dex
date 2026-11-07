@@ -2,6 +2,18 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, main validada preservada e retomada em `handoff/crates-checkpoint`; apenas um Codex por vez.
 
+## Bloco local — COMMAND alpha.10
+
+Base enviada `f714c4b`, branch `handoff/crates-checkpoint`; main preservada `c89cc1b`. Envio autorizado na branch de desenvolvimento pelo fluxo contínuo; referência: `feat: add explicitly authorized command reward dispatch`. Modelo/codec/política de template exato, preparação de destinatário congelada no plano, parsing e execução na thread do servidor, PLAYER sem elevação/CONSOLE explicitamente autorizado, prévia/confirmação e revisão obrigatória. Um comando isolado por marco, sem planos mistos. Após dispatch, etapa permanece INTENT e operação NEEDS_REVIEW; não há alegação de persistência externa nem retry. [Guia](COMMAND_REWARDS.md).
+
+Servidores encerrados com mundo salvo, SQLite integrity_check=ok e segredo RCON removido. 282 JUnit, zero falhas/erros/skips; nove checks de servidor empacotado (sete + dois após reinício), [evidência](validation/phase3-commands.json). A suíte Java anterior foi repetida; runners completos dos outros tipos não foram repetidos nesta entrega. CRATE_KEY dedicado/recibos automáticos/planos mistos/recuperação completa e fases posteriores continuam pendentes. Sem release/publicação de ambiente.
+
+## Continuação — envio e viabilidade de CRATE_KEY
+
+Checkpoint alpha.9 enviado e SHA remoto confirmado em `f714c4b216743a239facbf7623fae18dbdb22d42`, somente na branch `handoff/crates-checkpoint`; main continua `c89cc1b`. Árvore ficou limpa após esse envio. Autorização pontual aplicada ao bloco validado; auditoria posterior permanece local.
+
+Auditoria de fonte/binário confirmou ausência de contrato público suficiente para emissão automática dedicada no Crates0.2.1: `give` é void/assíncrono e exige jogador administrativo; instância Tokens é privada. Checkpoint público não resolve emissão/autenticação. [Contrato detalhado](CRATE_KEY_CONTRACT.md). CRATE_KEY continua desabilitado, sem mudanças em outros mods/reflexão privada de produção/elevação de permissão. Nenhuma funcionalidade nova declarada pronta nem teste de runtime repetido nesta auditoria documental.
+
 ## Retomada local — checkpoint Crates alpha.9
 
 Branch `handoff/crates-checkpoint`, base `6b97093`; main remota `c89cc1b` e funcional `191a65e` preservadas. Nenhuma alteração local anterior encontrada; checkout/fetch feitos sem descarte. Envio deste bloco validado autorizado pela resposta “continua” à confirmação de commit/push somente nesta branch.

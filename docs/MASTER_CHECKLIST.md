@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Retomada:** main alpha.8 preservada em `c89cc1b`/funcional `191a65e`; validação local alpha.9 na branch `handoff/crates-checkpoint`, base `6b97093`. Checkpoint nativo, chaves reais via SAVED_ITEM, falha/revisão, fallback e reinícios exercitados; 274 JUnit e 26 checks de servidor (8 checkpoint, 10 itens, 8 Pokémon). [Evidência](validation/phase3-crates-checkpoint.json). CRATE_KEY dedicado e demais fases continuam pendentes. Envio deste bloco validado autorizado somente nesta branch.
+**Retomada:** alpha.10 COMMAND local sobre `f714c4b`: template/contexto autorizado, snapshot antes da intenção, dispatch isolado e NEEDS_REVIEW obrigatório. 282 JUnit e nove checks de servidor/reinício; [evidência](validation/phase3-commands.json). Envio autorizado somente na branch de desenvolvimento; sem release/ambiente. Fase 3 permanece parcial: recibos automáticos, planos mistos, CRATE_KEY dedicado e recuperação completa pendentes.
 
 ## Preparação e continuidade
 
@@ -241,3 +241,17 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 | Passagem WIP Crates | PlayerSaveCoordinator, ItemRewardAdapter, probe/fixture e instruções exatas; build/274 JUnit, sem teste nativo novo | Branch handoff/crates-checkpoint; [passagem](CRATES_CHECKPOINT_HANDOFF.md) |
 
 | Validação local checkpoint Crates | Runner em quatro modos, remapeamento de probe Pokémon, regressões e documentação objetiva. 274 JUnit e 26 checks fora do Loom (8 checkpoint + 10 itens + 8 Pokémon); SQLite íntegro e cleanup concluído. Planos/componentes e main preservados | Commit `test: validate native Crates checkpoints and delivery regressions`;  base `6b97093`, branch `handoff/crates-checkpoint`; [evidência](validation/phase3-crates-checkpoint.json) |
+
+### Auditoria posterior — emissão CRATE_KEY
+
+- [x] ~~Avaliar contrato público de emissão dedicada no Crates0.2.1 com fonte e binário oficiais.~~ [Resultado estático](CRATE_KEY_CONTRACT.md): UNSUPPORTED no contrato automático auditado; não equivale à implementação/teste de CRATE_KEY.
+- [ ] CRATE_KEY dedicado. Requer contrato público suficiente sem acesso ao segredo/campo privado, elevação de permissão ou sucesso inferido de comando; SAVED_ITEM nativo permanece alternativa validada.
+
+| Viabilidade CRATE_KEY0.2.1 | Matriz de API pública/limites/requisitos e continuidade; fonte e javap, sem mudança de runtime ou novo teste funcional | Auditoria local posterior ao commit enviado `f714c4b`; [contrato](CRATE_KEY_CONTRACT.md) |
+
+### COMMAND — alpha.10 local
+
+- [x] ~~Entregar dispatch COMMAND isolado com política exata, plano preparado, confirmação e revisão obrigatória, sem retry.~~ 282 JUnit e nove checks nativos/reinício; [guia](COMMAND_REWARDS.md), [evidência](validation/phase3-commands.json). Isso não comprova persistência de comandos externos nem conclui COMMAND completo.
+- [ ] Recibos automáticos/planos mistos COMMAND e recuperação supervisionada completa. Nenhum INTENT incerto pode ser reenviado automaticamente.
+
+| COMMAND local | CommandReward/Policy/Adapter, codec/Settings, planos/journal/core/menus/traduções, oito testes Java, fixture/runner e guia. 282 JUnit, 7+2 checks; sem nova migração SQLite | Commit `feat: add explicitly authorized command reward dispatch`; base `f714c4b`, alpha.10; [evidência](validation/phase3-commands.json) |
