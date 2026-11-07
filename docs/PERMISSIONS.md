@@ -23,3 +23,5 @@ Exemplo de permissão válida somente no Overworld nessa distribuição Fabric:
 O valor de contexto observado foi `overworld`, não `minecraft:overworld`. Confira o contexto ativo com `lp user <uuid> info` no console antes de configurar outros mundos. A configuração do nó deve corresponder ao campo `permission` da coleção.
 
 Cada coleção JSON pode definir `permission`; vazio é público, demais nós exigem LuckPerms positivo e são revalidados a cada acesso. Sem provedor, coleções restritas são negadas e ocultadas. [Detalhes](COLLECTIONS.md).
+
+Placeholders básicos e suas prévias usam a permissão atual da coleção para o jogador do contexto; acesso negado não revela nem o total. A API retorna `N/D` para essa consulta; a prévia de comando informa negação. Não existe fallback OP. [Sintaxe e segurança](PLACEHOLDERS.md).

@@ -10,6 +10,18 @@ Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificaç�
 
 A auditoria estática inicial não executou testes funcionais. As validações posteriores da fundação estão separadas abaixo; captura, resgate e economia continuam sem testes funcionais.
 
+## Atualização: placeholders básicos — alpha.4
+
+Text Placeholder API **2.4.2+1.21**, revisão `2427627df3e73ec00a2d3623c7e60e1d076bdb67`, auditada nas classes `Placeholders`, `PlaceholderContext`, `PlaceholderResult` e `PlaceholderHandler` da tag oficial. Artefato original da release GitHub, sem código copiado nem dependência aninhada; URL/SHA-256 em `tests/fixtures/placeholders/runtime.json`. Maven Nucleoid respondeu negação do proxy; o mesmo artefato oficial foi resolvido via Ivy/GitHub com TLS ativo, sem alterar rede/versões.
+
+Assinaturas Yarn remapeadas pelo Loom ao ambiente Mojang: `Placeholders.register(ResourceLocation, PlaceholderHandler)`, `getPlaceholders()`, `remove(...)`, `parseText(Component, PlaceholderContext)`, `PlaceholderContext.of(ServerPlayer)`/`of(MinecraftServer)`, `context.player()`, `context.server()` e `hasPlayer()`. `PlaceholderResult.value(Component.literal(...))` evita o overload String que interpreta formatação. O parser real confirmou `%shirokaidex:percent national%` e argumento omitido para Nacional.
+
+`VERIFIED` para cinco métricas e contexto de jogador na thread do servidor: percent, registered, seen, total e remaining; critérios por coleção, permissões atuais, idioma, eventos oficiais e reload. Expansões leem snapshots preparados por uma fila limitada a quatro jogadores solicitados/invalidados por fim de tick, sem calcular espécies ou acessar SQLite no handler. Contexto ausente/off-thread e dados sem evidência produzem N/D; não há captura shiny reconstruída nem estatísticas fictícias.
+
+87 JUnit (nove novos), oito checks de integração normal, cinco de probe pelo parser real e 13 da fundação sem as duas dependências opcionais. A fixture externa registrou colisão de namespace e alias legado antes do startup, substituiu outro handler depois e conferiu limpeza no SERVER_STOPPED: os provedores externos foram preservados. O probe não integra o JAR distribuído. [Evidência](validation/phase2-placeholders.json), [sintaxe/limites](PLACEHOLDERS.md).
+
+`PENDING_TEST`: TAB/bridge Fabric, compatibilidade positiva do alias legado, desempenho, cliente visual e nova alpha instalada fora do Loom. O alias `dexrewards:player_dex_percent` não é registrado nesta entrega; foi verificada apenas a preservação de outro provedor existente.
+
 ## Atualização: wiki inicial — alpha.3
 
 API nova utilizada: `com.cobblemon.mod.common.pokemon.Species.getName(): String`, conferida com `javap` no artefato Maven fixado `com.cobblemon:fabric:1.8.3+1.21.1`, depois compilada e executada no servidor real. `PokemonSpecies.getByIdentifier(ResourceLocation)` resolve o ID do snapshot para obter o nome canônico. Não se presume tradução por cliente. Formas, tipos, labels, conhecimento e shiny visto reutilizam os getters auditados anteriormente e o mesmo snapshot imutável/cache do progresso.
@@ -135,13 +147,13 @@ Resolver `impactor:dollars` e `impactor:tokens` em runtime; nomes configuráveis
 
 LuckPerms API 5.4: `LuckPermsProvider.get()`, `LuckPerms.getUserManager()`, `UserManager.getUser(UUID)`, `User.getCachedData().getPermissionData().checkPermission(String)`. Usuário pode ser nulo; considerar contextos atuais e negar operação sensível se indisponível. Não substituir LuckPerms ausente por autorização administrativa aberta. Distribuição Fabric 5.4.140 verificada nos relatórios de coleções e contextos; versão instalada em produção não foi certificada.
 
-## Placeholders — PENDING_TEST
+## Placeholders — básicos VERIFIED; TAB/alias legado PENDING_TEST
 
 Text Placeholder API 2.4.2+1.21 declara Minecraft `>=1.21-` (não é prova de funcionamento em 1.21.1).
 
 `eu.pb4.placeholders.api.Placeholders.register(Identifier, PlaceholderHandler)` e `getPlaceholders()` existem. **register sobrescreve a chave**: verificar conflito antes de registrar qualquer alias, especialmente `dexrewards:player_dex_percent`.
 
-A documentação do método descreve `%namespace:placeholder argument%`; assim a candidata é `%shirokaidex:percent national%`, registrando `shirokaidex:percent`, não presumindo que `/national` seja argumento automaticamente. Testar parser e TAB separadamente. Placeholder não deve causar consulta pesada ao banco, carregamento bloqueante ou execução de comando.
+A documentação do método descreve `%namespace:placeholder argument%`; assim a candidata é `%shirokaidex:percent national%`, registrando `shirokaidex:percent`, não presumindo que `/national` seja argumento automaticamente. Parser básico agora verificado na alpha.4 acima; TAB continua separado e pendente. Placeholder não deve causar consulta pesada ao banco, carregamento bloqueante ou execução de comando.
 
 ## Menus e integrações externas
 

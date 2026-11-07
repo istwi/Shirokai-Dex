@@ -2,7 +2,21 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
-## Entrega atual — wiki inicial (alpha.3)
+## Entrega atual — placeholders básicos (alpha.4)
+
+Base sincronizada: `05a75779a5944a59d41ea0392daa537899f3c759`, sem mudanças ou commits locais pendentes. Versão `0.2.0-alpha.4+mc1.21.1-cobblemon1.8.3`; entrega identificada pelo assunto `feat: add optional collection progress placeholders`.
+
+Implementados percent, registered, seen, total e remaining por coleção via Text Placeholder API opcional 2.4.2+1.21. Sintaxe real `%shirokaidex:percent national%` e prévia `/dex <id> placeholder <métrica>`. Valores somente de leitura, permissão atual, idioma global e indisponibilidade explícita. Callback lê snapshots imutáveis preparados em fila limitada no servidor, sem consultar SQLite ou calcular espécies na expansão. [Guia](PLACEHOLDERS.md).
+
+**87 JUnit**, zero falhas/erros/skips; **8 checks normais**, **5 de probe real** e **13 da fundação sem ambas as APIs opcionais**. Confirmados eventos oficiais, reload/revisão/idioma, isolamento por jogador, parser/argumentos, contexto sem jogador/off-thread, conflitos, substituição posterior e limpeza no shutdown preservando outros provedores. [Evidência](validation/phase2-placeholders.json).
+
+Dependência compilada sem inclusão no JAR, obtida da release oficial GitHub com URL/SHA-256 fixados na fixture; Maven Nucleoid estava bloqueado. Não foram relaxados TLS/checksums nem alteradas configurações de rede. API e probe não integram o JAR de distribuição. Sem API instalada, funções existentes continuam funcionando.
+
+TAB/bridge, alias legado positivo, cliente visual, carga e nova alpha fora do Loom continuam pendentes. O Dex não registra o alias legado nesta entrega nem inventa placeholders de capturas/recompensas/competições. Snapshots frios/invalidados podem retornar N/D até o preparo; chamadas off-thread sempre retornam N/D.
+
+Servidores encerrados com stop, mundos salvos e SQLite íntegro; configuração/mod local anterior restaurado e credencial RCON temporária removida. JAR local `build/libs/shirokai-dex-0.2.0-alpha.4+mc1.21.1-cobblemon1.8.3.jar`. Nenhuma nova release ou configuração de ambiente publicada; alpha.3 publicada permanece imutável.
+
+## Entrega anterior — wiki inicial (alpha.3)
 
 Base sincronizada: `5ad1b60ddd5c6ce7353e8ce6942b54064e852128`, sem mudanças ou commits locais pendentes na retomada. Versão `0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3`; commit identificado pelo assunto `feat: add searchable paginated species wiki`.
 
@@ -38,7 +52,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Fase atual
 
-**Fase 2 — porcentagens, coleções e wiki inicial**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
+**Fase 2 — porcentagens, coleções, wiki inicial e placeholders básicos**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
 
 ## Concluído
 
@@ -58,7 +72,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Em desenvolvimento
 
-- Evolução da wiki, menus avançados, categorias e placeholders da Fase 2. Wiki inicial, coleções e critérios JSON já estão implementados; captura shiny histórica permanece indisponível.
+- Evolução da wiki, menus avançados, categorias e integrações adicionais de placeholders da Fase 2. Wiki inicial, coleções e critérios JSON já estão implementados; captura shiny histórica permanece indisponível.
 
 
 - Testes complementares: aparência/gestos em cliente Minecraft real, contextos LuckPerms adicionais e carga. O cenário de dimensão e os pacotes de inventário descritos acima foram verificados.
@@ -66,7 +80,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Pendente
 
-- Fases 2–8: wiki completa/dados de spawn, categorias/datapacks adicionais e placeholders, recompensas, capturas/estatísticas, rankings, competições, conquistas/perfis e integrações avançadas.
+- Fases 2–8: wiki completa/dados de spawn, categorias/datapacks adicionais, TAB/alias legado e placeholders avançados, recompensas, capturas/estatísticas, rankings, competições, conquistas/perfis e integrações avançadas.
 - Cliente visual e testes de carga; herança/contextos LuckPerms além do cenário de dimensão verificado.
 - Layouts JSON completos e documentação das funcionalidades ainda não implementadas.
 - Licença do código próprio e release estável. Nenhuma configuração de ambiente foi alterada/publicada nesta entrega.

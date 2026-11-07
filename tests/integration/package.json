@@ -3,6 +3,6 @@
   "private": true,
   "version": "0.1.0",
   "description": "Offline client smoke tests against an isolated loopback Fabric test server",
-  "scripts": {"test": "node foundation.cjs", "test:progress": "node progress.cjs", "test:collections": "node collections.cjs", "test:contexts": "node contexts.cjs", "test:wiki": "node wiki.cjs"},
+  "scripts": {"test": "node foundation.cjs", "test:progress": "node progress.cjs", "test:collections": "node collections.cjs", "test:contexts": "node contexts.cjs", "test:wiki": "node wiki.cjs", "test:placeholders": "node placeholders.cjs"},
   "dependencies": {"mineflayer": "4.39.0"}
 }

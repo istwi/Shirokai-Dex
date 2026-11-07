@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Wiki inicial entregue na alpha.3**, sobre coleções/fundação existentes: pesquisa, filtros de estados, ordem, paginação e detalhes por coleção. 78 JUnit, 8 checks de wiki, 9 de coleções e 12 de fundação sem LuckPerms. [Evidência](validation/phase2-wiki.json). Próximo incremento: placeholders básicos com API auditada. Spawn, cliente visual, carga, layouts avançados e captura shiny verificada seguem pendentes.
+**Placeholders básicos entregues na alpha.4**, sobre fundação, coleções e wiki existentes: cinco métricas, prévia no parser real, snapshots, permissões e preservação de provedores. 87 JUnit + 8 checks normais + 5 de probe + 13 de fundação sem APIs opcionais; cleanup real PASS. [Evidência](validation/phase2-placeholders.json). Próximo incremento: filtros e navegação de formas da wiki. TAB, alias legado positivo, spawn, cliente visual/carga e sistemas posteriores continuam pendentes.
 
 ## Preparação e continuidade
 
@@ -52,11 +52,11 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 - [ ] Shiny. Página explícita N/D; capturas shiny não são inferidas de dados vistos/obtidos.
 - [ ] Lendária. Parcial: labels de formas reais, quantidade/total e %; filtros JSON iniciais validados; recursos avançados pendentes.
 - [ ] Categorias. Filtros de labels/tipos/formas/espécies em coleções prontos; categorias nomeadas/condições avançadas e histórico ainda pendentes.
-- [ ] Progresso oficial.
+- [ ] Progresso oficial. Leitura, percentuais, wiki e placeholders básicos verificados; captura shiny e demais requisitos completos permanecem parciais.
 - [ ] Datapacks. Fixture com duas espécies namespaced e remoção entre reinícios testados; ecossistema real e demais regras ainda pendentes.
 - [ ] Wiki. Parcial: pesquisa, filtros de estados, ordenação, paginação e detalhes implementados/testados; spawn, formas além de 32, filtros adicionais e cliente visual pendentes.
 - [ ] Menus. Seletor, progresso e wiki protegidos disponíveis; layouts JSON avançados e validação visual pendentes.
-- [ ] Placeholders básicos.
+- [x] ~~Placeholders básicos.~~ Cinco métricas por coleção com Text Placeholder API opcional; parser, permissões, eventos/reload, contextos e conflitos verificados no servidor. [Guia](PLACEHOLDERS.md), [evidência](validation/phase2-placeholders.json). TAB/alias legado e placeholders completos permanecem na Fase 7.
 
 - [x] ~~Exibir % e quantidade/total nas coleções com dados confiáveis.~~ Nacional/Lendária em menu e status; duas casas, sem 100% antecipado; vazio/sem evidência = N/D. [Regra](POKEDEX.md).
 - [x] ~~Validar denominadores dinâmicos e não duplicar espécies/formas.~~ 12 testes de cálculo, fixture real, aquisição repetida e remoção entre reinícios.
@@ -161,7 +161,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 | Coleções JSON | Metadados/filtros/modos, validação, paginação e permissões; 69 JUnit, 11 regressões, 9 checks + 2 de reinício. Pausado por pedido do usuário | Commit `feat: add validated JSON Pokedex collections and permission checks`, [evidência](validation/phase2-collections.json) |
 | Contextos e menus protegidos | `scripts/server_proxy.init.gradle`, fixture/runner de contextos, 69 JUnit e 8 checks repetidos em servidor dev. Proxy/truststore repassados à JVM filha; sem mudança funcional no mod. Cliente visual/carga pendentes | Commit `test: validate contextual permissions and protected inventory menus`, base `41e0b7b`; [evidência](validation/phase2-contexts.json) |
 | Wiki inicial | `wiki/Wiki.java`, adaptador/core/menu/localização, `WikiTest`, runner wiki e smoke público; alpha.3, 78 JUnit + 8 wiki + 9 coleções + 12 fundação. Spawn/cliente visual/carga/JAR fora do Loom pendentes | Commit `feat: add searchable paginated species wiki`, base `5ad1b60`; [evidência](validation/phase2-wiki.json) |
-
 | Release alpha.3 | Workflow `42365493365` aprovado, 78 JUnit, 5 anexos baixados e checksums/proveniência/tag verificados; pré-release publicada, sem alterar a anterior | Tag `v0.2.0-alpha.3`, alvo `47817bf`; [evidência](validation/release-alpha3.json) |
+| Placeholders básicos | Pacote placeholders, lifecycle/preview, compileOnly opcional, nove testes Java novos, runner/probe; 87 JUnit e 8+5+13 checks reais, preservação de provedores e cleanup PASS. TAB/alias positivo/carga pendentes | Commit `feat: add optional collection progress placeholders`, base `05a7577`; [evidência](validation/phase2-placeholders.json) |
 
 Ao registrar a própria entrega, use o assunto do commit em preparação e substitua pela referência exata na atualização seguinte; não crie commits infinitos apenas para gravar o hash do próprio documento.

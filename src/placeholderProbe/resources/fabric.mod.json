@@ -1,0 +1,1 @@
+{"schemaVersion":1,"id":"shirokaidex-placeholder-probe","version":"1.0.0","name":"Dex development placeholder probe","environment":"server","entrypoints":{"main":["br.com.shirokaidex.test.PlaceholderProbe"]},"depends":{"fabricloader":">=0.17.2","placeholder-api":"2.4.2+1.21","shirokaidex":"*"}}

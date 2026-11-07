@@ -2,24 +2,26 @@
 
 ## Última tarefa realizada
 
-Wiki inicial implementada na alpha `0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3`, baseada em `5ad1b60ddd5c6ce7353e8ce6942b54064e852128`. Entrega identificada pelo assunto `feat: add searchable paginated species wiki`. Nenhuma fundação ou coleção existente foi reimplementada.
+Placeholders básicos implementados na alpha `0.2.0-alpha.4+mc1.21.1-cobblemon1.8.3`, base `05a75779a5944a59d41ea0392daa537899f3c759`. Entrega identificada pelo assunto `feat: add optional collection progress placeholders`.
 
-Comandos `/dex <id> wiki [pesquisa]` e botão na página da coleção; pesquisa por nome canônico/ID, paginação de 18 espécies, filtros de estados, ordenação e detalhes. Permissões/critério atual revalidados em callbacks, inclusive após reload. Spawn e captura shiny verificada explicitamente indisponíveis. [Guia e limites](WIKI.md).
+Integração opcional Text Placeholder API 2.4.2+1.21: percent/registered/seen/total/remaining por coleção e prévia pelo parser real em `/dex <id> placeholder <métrica>`. Permissões atuais e N/D explícito; fila de preparo no servidor evita cálculo/SQLite dentro do handler. Registro/limpeza preservam outros provedores; alias legado não é registrado nesta entrega. [Guia](PLACEHOLDERS.md).
 
-78 JUnit (nove novos), zero falhas/erros/skips. Oito checks de wiki, nove de regressão de coleções com LuckPerms e 12 de fundação sem LuckPerms, em servidor dev real. [Evidência](validation/phase2-wiki.json). Uma assertion inicial supôs que só a fixture seria lendária/normal; Regigigas real também é elegível. Teste corrigido para consultar o namespace da fixture, sem alterar critérios do mod.
+87 JUnit, zero falhas/erros/skips; oito checks normais, cinco de probe real e 13 de fundação sem APIs opcionais; limpeza do probe confirmou PASS. [Evidência](validation/phase2-placeholders.json). API original obtida do GitHub oficial por Ivy restrito ao módulo, pois Maven Nucleoid estava bloqueado. Nada foi embutido no JAR; TLS/checksums permaneceram ativos.
 
-Servidores encerrados, mundos salvos e SQLite íntegro; configurações/mod anteriores restaurados e senha RCON removida. Artefato em `build/libs/shirokai-dex-0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3.jar`. Não houve publicação de ambiente nem release. Pré-release v0.1.0-alpha.1 permanece imutável. Confirmar SHA e remoto pelo Git.
+Servidores encerrados, mundos salvos, SQLite íntegro e mods/configurações anteriores restaurados; senha RCON removida. Artefato local `build/libs/shirokai-dex-0.2.0-alpha.4+mc1.21.1-cobblemon1.8.3.jar`. Nenhuma nova release ou publicação de ambiente. Alpha.3 publicada permanece imutável. Confirmar SHA/push pelo Git; os workflows antigos de release estão fixados nos commits antigos e não devem publicar esta versão.
 
 ## Próxima tarefa exata
 
-1. Executar protocolo AGENTS e sincronizar sem descarte. Não reiniciar fundação, coleções ou wiki já implementadas.
-2. Continuar Fase 2 pelos **placeholders básicos**: conferir artefato/API real da Text Placeholder API 2.4.2+1.21 e remapeamento no ambiente Mojang; validar registro/expansão no servidor. Expor progresso/total por coleção sem consulta pesada e com semântica explícita para indisponível/permissões. Não sobrescrever alias já registrado; TAB e alias legado exigem testes próprios.
-3. Evoluções posteriores da wiki: auditar dados reais de spawn, filtros adicionais por tipo/categoria e consulta de todas as formas além do limite de 32; nomes localizados por cliente se houver API adequada. Manter informação desconhecida distinta de ausência confirmada de spawn natural. Não inventar biomas/horários.
-4. Com cliente Minecraft/Cobblemon real disponível, conferir aparência/gestos. Nova alpha fora do Loom e carga continuam pendentes; não reutilizar evidência antiga como certificação do JAR novo.
-5. Reutilizar fixtures/testes existentes de datapacks, percentuais, coleções e wiki. `OWNED` não equivale a captura competitiva; shiny visto não comprova captura shiny; não forçar hot reload do registro Cobblemon.
-6. Atualizar checklist/estado/auditoria/changelog, executar testes aplicáveis e commit/push autorizado com confirmação remota. Não publicar ambiente nem release sem autorização.
+1. Executar protocolo AGENTS, sincronizar sem descartar trabalho e consultar checklist/auditoria. Não refazer fundação, coleções, wiki inicial ou os cinco placeholders básicos.
+2. Continuar Fase 2 evoluindo a **wiki**: filtros adicionais por tipo/categoria e navegação de formas para retirar a limitação de 32 linhas. Reutilizar snapshots e critérios atuais; dados de spawn exigem auditoria real antes de exibir biomas/horários/dimensões. Manter informação desconhecida distinta de ausência confirmada de spawn natural.
+3. Integrações posteriores: alias legado positivo somente quando não houver provedor e com teste próprio; TAB exige distribuição/bridge Fabric compatível identificada e validação ponta a ponta. Não tratar a preservação de alias existente como implementação do alias do Dex.
+4. Com cliente real disponível, validar aparência e gestos. Carga e alpha.4 instalada fora do Loom continuam pendentes. Não alegar suporte a consumidor assíncrono: por segurança callbacks fora da thread retornam N/D.
+5. Preservar fixtures/testes por namespace, não inferir captura competitiva/estatística permanente de OWNED ou shiny visto, não forçar hot reload do registro Cobblemon e não introduzir placeholders fictícios para sistemas não implementados.
+6. Atualizar checklist/estado/auditoria/changelog, validar, commit/push autorizado e confirmar remoto. Não publicar ambiente nem nova release sem autorização específica.
 
 ## Arquivos importantes
+
+- Pacote `placeholders`, `PlaceholderTest`, `TextPlaceholderAccess`, lifecycle em `ShirokaiDex`, runner `tests/integration/placeholders.cjs`, fixture `tests/fixtures/placeholders/runtime.json` e probe separado em `src/placeholderProbe`: entrega atual. [Sintaxe e limites](PLACEHOLDERS.md).
 
 - `wiki/Wiki.java`, `WikiTest`, `MainMenu.openWiki`, `CobblemonAccess.wiki`, comandos em `ShirokaiDex`, `tests/integration/wiki.cjs` e [guia](WIKI.md): entrega atual.
 

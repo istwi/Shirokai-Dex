@@ -38,4 +38,4 @@ O total acompanha o registro real após startup. Alterações de datapack de esp
 
 ## Limites desta etapa
 
-[Coleções por JSON](COLLECTIONS.md) e filtros iniciais foram adicionados na alpha.2. Critérios avançados/categorias históricas, dados de spawn e demais evoluções da wiki, placeholders Fabric/TAB e recompensas continuam pendentes. Pesquisa/paginação por espécie já estão disponíveis na alpha.3. Nacional/Lendária são as coleções iniciais de progresso, não a Fase 2 completa. O cálculo puro e o adaptador Cobblemon estão separados para permitir essa evolução.
+[Coleções por JSON](COLLECTIONS.md) e filtros iniciais foram adicionados na alpha.2. Critérios avançados/categorias históricas, dados de spawn e demais evoluções da wiki, integração TAB e recompensas continuam pendentes. Os [placeholders básicos da Text Placeholder API](PLACEHOLDERS.md) estão disponíveis na alpha.4. Pesquisa/paginação por espécie já estão disponíveis na alpha.3. Nacional/Lendária são as coleções iniciais de progresso, não a Fase 2 completa. O cálculo puro e o adaptador Cobblemon estão separados para permitir essa evolução.

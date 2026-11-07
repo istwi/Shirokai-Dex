@@ -6,7 +6,7 @@
 ./gradlew --no-daemon build
 ```
 
-Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 78 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
+Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 87 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
 
 `DexProgressTest` adiciona 12 casos de cálculo, truncamento, vazio/indisponível, IDs namespaced, denominador dinâmico, formas e duplicação.
 
@@ -46,7 +46,7 @@ npm ci --ignore-scripts --no-audit --no-fund
 npm test
 ```
 
-Se o diretório pessoal for somente de leitura, acrescente `--cache /workspace/.cache/npm` aos comandos npm. Para outra porta loopback: `MC_TEST_PORT=25572 npm test`. O smoke conecta `DexFoundation`, verifica consulta oficial, menu, bloqueio de pickup/clique direito/Shift/hotbar, fechamento, ausência de itens indevidos, progresso inalterado e rejeição de reload sem LuckPerms. Total atual: 12 verificações, incluindo navegação do seletor para a página Nacional e wiki/detalhes sem LuckPerms. O relatório é sobrescrito por execução em `build/integration-foundation.json`, com timestamp e target.
+Se o diretório pessoal for somente de leitura, acrescente `--cache /workspace/.cache/npm` aos comandos npm. Para outra porta loopback: `MC_TEST_PORT=25572 npm test`. O smoke conecta `DexFoundation`, verifica consulta oficial, menu, bloqueio de pickup/clique direito/Shift/hotbar, fechamento, ausência de itens indevidos, progresso inalterado e rejeição de reload sem LuckPerms. Total atual: 13 verificações, incluindo navegação, wiki/detalhes e ausência das APIs opcionais. O relatório é sobrescrito por execução em `build/integration-foundation.json`, com timestamp e target.
 
 O cliente de protocolo ignora metadados de entidades, receitas, advancements e árvore de comandos customizados que a biblioteca vanilla não entende. Inventário, comandos executados e respostas testadas são reais, não mocks. Isto não valida renderização em cliente Minecraft/Cobblemon, sugestões de comandos, receitas nem mecânicas de batalha/captura.
 
@@ -123,3 +123,39 @@ O nome descartável deve ter até 16 caracteres e Pokédex inicial vazia. `MC_TE
 Oito checks agrupados verificam paginação/retorno, ordem, pesquisa/detalhes, consulta vazia/limites, critérios e leitura sem mutação, eventos/filtros, permissões com botão antigo e revalidação após reload. Relatório atual em `build/integration-wiki.json`. O smoke de fundação agora tem 12 checks, incluindo wiki e detalhes sem LuckPerms. Regressão complementar: os nove checks existentes de coleções passaram com um perfil novo.
 
 [Evidência da alpha.3](validation/phase2-wiki.json). Todas essas execuções desta entrega usaram o servidor de desenvolvimento Loom, não uma nova instalação do JAR fora dele. UI em cliente Minecraft real, spawn e carga permanecem pendentes. Encerrar com `stop`, preservar salvamento e remover senha RCON temporária, restaurando configuração e mods locais anteriores. As evidências antigas das alphas anteriores não são substituídas por esta execução.
+
+## Placeholders básicos (alpha.4)
+
+`PlaceholderTest` acrescenta nove casos para formatação/indisponibilidade, argumentos, revisão/TTL, fila coalescida, imutabilidade, invalidação/logout, backoff de falha e preservação de registros conflitantes/substituídos. Total: **87 JUnit**, sem falhas/erros/skips.
+
+O runner `tests/integration/placeholders.cjs` exige servidor de desenvolvimento descartável em loopback, RCON temporário fora do Git, LuckPerms 5.4.140, Text Placeholder API 2.4.2+1.21 e as mesmas fixtures de configuração/espécies dos testes de coleções. Artefatos/URLs/hashes em `tests/fixtures/placeholders/runtime.json`; API obtida da release oficial, sem desativar TLS. O responsável precisa ter aceitado a EULA. Preserve configuração e mods locais antes de instalar as fixtures.
+
+```sh
+cd tests/integration
+MC_TEST_RCON_PASSWORD_FILE=/caminho/seguro/temporario MC_PLACEHOLDER_PLAYER=DexPapi npm run test:placeholders
+```
+
+`MC_TEST_RUN`, `MC_TEST_PORT` e `MC_TEST_RCON_PORT` têm os padrões `run`, 25571 e 25573. Use perfil novo, sem obtenções prévias, com até 15 caracteres; o teste também conecta `<nome>B` para verificar isolamento entre jogadores. Oito checks agrupados: cinco métricas pelo parser real via prévia; shiny/coleção vazia; leitura sem mutação e métrica inválida; evento oficial antes do fallback de cinco segundos; grant/revoke; reload de revisão/idioma; restauração; logout/outro jogador. O runner usa comandos oficiais de obtenção para dados descartáveis, sem classificar essas concessões como capturas legítimas. Restaura a configuração original e, na execução aprovada, também a recarrega no servidor.
+
+Para contextos e conflitos reais, pare o servidor e construa o **probe exclusivo de desenvolvimento**, separado do JAR do mod:
+
+```sh
+# Na raiz, com JDK 21 e truststore/proxy usuais:
+JAVA_HOME=/workspace/.tools/jdk-21.0.13+9 python3 scripts/gradle_cloud.py \
+  -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon placeholderProbeJar
+cp build/test-mods/*-placeholder-probe.jar run/mods/dex-placeholder-probe.jar
+```
+
+Reinicie o servidor Loom com as APIs e a configuração/fixture originais; aguarde readiness. O probe registra um handler externo para `shirokaidex:remaining` e um alias legado externo antes do startup. Expõe somente um comando de teste com nível administrativo 4, usado via RCON pelo runner:
+
+```sh
+cd tests/integration
+MC_TEST_RCON_PASSWORD_FILE=/caminho/seguro/temporario \
+  MC_PLACEHOLDER_MODE=probe MC_PLACEHOLDER_PLAYER=DexProbe npm run test:placeholders
+```
+
+Cinco checks: parser/argumentos; provedores de namespace/alias preservados; contexto de servidor sem jogador e expansão assíncrona; permissões diretamente pelo parser; substituição posterior de handler. Depois envie `stop` e **confira `DEX_PROBE cleanup: PASS` no log desta execução**, sem `FAIL`: verifica que o Dex removeu somente seus registros e preservou os handlers externos/substituídos. O probe usa espera limitada de cinco segundos apenas no teste assíncrono para detectar bloqueio; o mod de produção não bloqueia aguardando trabalho do servidor.
+
+Remova o probe e ambas as dependências opcionais, reinicie e execute `npm test`: 13 checks da fundação passaram, incluindo consulta/wiki e prévia explicitamente indisponível, sem falha de class loading. Ao terminar, `stop`, verificar salvamento/SQLite e restaurar os mods/configuração anteriores; remover a credencial temporária RCON. O probe nunca deve ser instalado em produção ou incluído nos assets de distribuição.
+
+Relatórios: `build/integration-placeholders.json`, `build/integration-placeholders-probe.json`, `build/integration-foundation.json`; [evidência persistida](validation/phase2-placeholders.json). Execuções em servidor de desenvolvimento real, não nova certificação fora do Loom. TAB, alias legado positivo, cliente visual e carga continuam pendentes.

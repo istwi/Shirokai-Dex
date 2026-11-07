@@ -5,7 +5,11 @@
   "name": "Shirokai Dex",
   "description": "Pokédex experimental do Shirokai: coleções, progresso oficial e wiki de espécies.",
   "environment": "server",
-  "entrypoints": {"main": ["br.com.shirokaidex.core.ShirokaiDex"]},
+  "entrypoints": {
+    "main": [
+      "br.com.shirokaidex.core.ShirokaiDex"
+    ]
+  },
   "depends": {
     "fabricloader": ">=0.17.2",
     "fabric-api": ">=0.116.6+1.21.1",
@@ -14,5 +18,8 @@
     "java": ">=21",
     "cobblemon": "1.8.3+1.21.1"
   },
-  "suggests": {"luckperms": "*"}
+  "suggests": {
+    "luckperms": "*",
+    "placeholder-api": ">=2.4.2"
+  }
 }

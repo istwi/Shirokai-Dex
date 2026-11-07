@@ -98,6 +98,8 @@ async function main() {
   pass('Official progress unchanged and no display items left in player inventory');
   await command('/dex admin reload', message => /Unknown|incomplete|desconhecido|incompleto|Incorrect argument|Argumento incorreto/i.test(message));
   pass('Administrative reload rejected without LuckPerms permission');
+  await command('/dex national placeholder total', message => message.includes('Text Placeholder API'));
+  pass('Missing optional Text Placeholder API leaves public Dex/wiki functional and reports preview unavailable');
 }
 
 (async () => {

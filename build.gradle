@@ -5,12 +5,19 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '2.2.20'
 }
 
-version = '0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3'
+version = '0.2.0-alpha.4+mc1.21.1-cobblemon1.8.3'
 group = 'br.com.shirokaidex'
 base { archivesName = 'shirokai-dex' }
 
 repositories {
     mavenCentral()
+    // Official versioned GitHub artifact; optional API, no bundled dependency.
+    ivy {
+        url = 'https://github.com/Patbox/TextPlaceholderAPI/releases/download'
+        patternLayout { artifact '[revision]/[artifact]-[revision].[ext]' }
+        metadataSources { artifact() }
+        content { includeModule('eu.pb4', 'placeholder-api') }
+    }
     maven { url = 'https://artefacts.cobblemon.com/releases/' }
 }
 
@@ -26,6 +33,7 @@ dependencies {
     implementation include('org.xerial:sqlite-jdbc:3.47.1.0')
     implementation 'com.google.code.gson:gson:2.10.1'
     compileOnly 'net.luckperms:api:5.4'
+    modCompileOnly('eu.pb4:placeholder-api:2.4.2+1.21') { transitive = false }
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -42,3 +50,17 @@ processResources {
     filesMatching('fabric.mod.json') { expand(version: project.version) }
 }
 test { useJUnitPlatform() }
+
+// Development-only probe for actual API parser/context/conflict tests; never packaged in the mod.
+sourceSets {
+    placeholderProbe {
+        compileClasspath += sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
+}
+tasks.register('placeholderProbeJar', Jar) {
+    dependsOn tasks.named('compilePlaceholderProbeJava'), tasks.named('processPlaceholderProbeResources')
+    from sourceSets.placeholderProbe.output
+    archiveClassifier = 'placeholder-probe'
+    destinationDirectory = layout.buildDirectory.dir('test-mods')
+}

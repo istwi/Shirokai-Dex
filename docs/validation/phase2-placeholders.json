@@ -1,0 +1,251 @@
+{
+  "base_commit": "05a75779a5944a59d41ea0392daa537899f3c759",
+  "version": "0.2.0-alpha.4+mc1.21.1-cobblemon1.8.3",
+  "toolchain": {
+    "java": "Temurin 21.0.13+9",
+    "gradle": "8.14.3",
+    "loom": "1.11.8"
+  },
+  "runtime_artifacts": {
+    "placeholder_api": {
+      "version": "2.4.2+1.21",
+      "source_commit": "2427627df3e73ec00a2d3623c7e60e1d076bdb67",
+      "url": "https://github.com/Patbox/TextPlaceholderAPI/releases/download/2.4.2%2B1.21/placeholder-api-2.4.2%2B1.21.jar",
+      "sha256": "c0187ee299527ac7a3e0b1e83601dcdc0de631e286fe41e6be1a75958ea8e443"
+    },
+    "luckperms": {
+      "version": "5.4.140",
+      "source": "https://cdn.modrinth.com/data/Vebnzrzj/versions/l47d4ZWk/LuckPerms-Fabric-5.4.140.jar",
+      "sha512": "386ff4d18981c830d21ddaa599d70c1c5430c1475e2c5960275bad535cbd572c77e38b3841f0a71e3ea4a795c56d45ff8c4a8dba3799dae26bff5a382c6e0a64"
+    }
+  },
+  "unit_suites": [
+    {
+      "name": "br.com.shirokaidex.config.CollectionsConfigTest",
+      "tests": "31",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:58:56.282Z"
+    },
+    {
+      "name": "br.com.shirokaidex.config.ConfigManagerTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:58:56.524Z"
+    },
+    {
+      "name": "br.com.shirokaidex.database.DatabaseTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:58:56.584Z"
+    },
+    {
+      "name": "br.com.shirokaidex.placeholders.PlaceholderTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:58:57.073Z"
+    },
+    {
+      "name": "br.com.shirokaidex.pokedex.ConfiguredProgressTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:58:57.085Z"
+    },
+    {
+      "name": "br.com.shirokaidex.pokedex.DexProgressTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:58:57.092Z"
+    },
+    {
+      "name": "br.com.shirokaidex.wiki.WikiTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:58:57.100Z"
+    }
+  ],
+  "protocol_reports": {
+    "placeholders": {
+      "timestamp": "2026-11-07T11:02:01.182Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / Text Placeholder API 2.4.2+1.21 / LuckPerms 5.4.140",
+      "test_player": "DexPapi",
+      "results": [
+        {
+          "name": "All five preview metrics expand through the real API using collection-aware counts and locale percent",
+          "status": "passed"
+        },
+        {
+          "name": "Unknown shiny capture evidence and empty collections remain distinct from known zero",
+          "status": "passed"
+        },
+        {
+          "name": "Expansions do not modify official progress and unknown metrics are rejected",
+          "status": "passed"
+        },
+        {
+          "name": "Official Pokédex event refreshes the queued immutable snapshot before the five-second fallback",
+          "status": "passed"
+        },
+        {
+          "name": "Preview command permissions follow live grants and revocations without OP fallback",
+          "status": "passed"
+        },
+        {
+          "name": "Configuration reload replaces snapshot revision, criteria and language without serving the previous definition",
+          "status": "passed"
+        },
+        {
+          "name": "Restoring valid configuration refreshes counts and pt_br formatting",
+          "status": "passed"
+        },
+        {
+          "name": "Logout/new-player lifecycle does not leak another player snapshot",
+          "status": "passed"
+        }
+      ]
+    },
+    "placeholders-probe": {
+      "timestamp": "2026-11-07T11:03:32.023Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / Text Placeholder API 2.4.2+1.21 / LuckPerms 5.4.140",
+      "test_player": "DexProbe",
+      "results": [
+        {
+          "name": "Real API parser accepts default/explicit collection syntax and rejects invalid or injected arguments",
+          "status": "passed"
+        },
+        {
+          "name": "Existing namespaced and legacy providers remain untouched; preview refuses an unowned handler",
+          "status": "passed"
+        },
+        {
+          "name": "Missing-player and off-thread contexts return N/D without blocking or reading game state",
+          "status": "passed"
+        },
+        {
+          "name": "Raw API expansions recheck LuckPerms on every request and do not expose restricted counts",
+          "status": "passed"
+        },
+        {
+          "name": "A later provider replacement is respected; shutdown cleanup is verified separately from server logs",
+          "status": "passed"
+        }
+      ]
+    },
+    "foundation": {
+      "timestamp": "2026-11-07T11:06:06.137Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3",
+      "results": [
+        {
+          "name": "Fabric login with Cobblemon and without LuckPerms/other optional integrations",
+          "status": "passed"
+        },
+        {
+          "name": "Official Pokédex query against dynamic registry (907 implemented species)",
+          "status": "passed"
+        },
+        {
+          "name": "Initial server-side inventory menu opens",
+          "status": "passed"
+        },
+        {
+          "name": "Collection selector navigates to national progress page",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks pickup without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks right click without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks shift click without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks hotbar swap without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Close button closes the menu",
+          "status": "passed"
+        },
+        {
+          "name": "Public wiki and species details work without LuckPerms or other optional integrations",
+          "status": "passed"
+        },
+        {
+          "name": "Official progress unchanged and no display items left in player inventory",
+          "status": "passed"
+        },
+        {
+          "name": "Administrative reload rejected without LuckPerms permission",
+          "status": "passed"
+        },
+        {
+          "name": "Missing optional Text Placeholder API leaves public Dex/wiki functional and reports preview unavailable",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "startup_evidence": [
+    "[11:00:48] [shirokaidex-sqlite/INFO] (shirokaidex) Shirokai Dex ready: configuration validated, SQLite migration 1 applied/verified",
+    "[11:00:56] [Server thread/INFO] (Minecraft) Done (7.787s)! For help, type \"help\"",
+    "[11:00:56] [Server thread/INFO] (shirokaidex) Text Placeholder API integration enabled; existing providers preserved"
+  ],
+  "probe_evidence": [
+    "[11:03:08] [Server thread/WARN] (shirokaidex) Placeholder shirokaidex:remaining already registered; preserving its provider",
+    "[11:03:08] [Server thread/INFO] (shirokaidex) Text Placeholder API integration enabled; existing providers preserved",
+    "[11:04:08] [Server thread/INFO] (dex-placeholder-probe) DEX_PROBE cleanup: PASS"
+  ],
+  "runtime": "Dedicated development Loom servers, Minecraft 1.21.1/Fabric 0.17.2/Cobblemon 1.8.3; disposable loopback/offline world with collections and species fixtures; normal and probe runs with both optional APIs, foundation run with neither",
+  "semantics": {
+    "metrics": [
+      "percent",
+      "registered",
+      "seen",
+      "total",
+      "remaining"
+    ],
+    "syntax": "%shirokaidex:percent national%",
+    "legacy_alias": "Not registered by Dex; preservation of another provider tested",
+    "unavailable": "N/D for unknown evidence, unauthorized/missing collection, non-player/off-thread context, unprepared revision or unavailable service",
+    "preparation": "Coalesced server-thread request/invalidation queue; at most four requested players per END_SERVER_TICK; no species or SQLite work in expansion handlers",
+    "fallback": "Reading a snapshot aged >=5 seconds queues refresh; same-revision previous data can be returned until queued work completes; configuration revision changes return N/D until preparation"
+  },
+  "jar": {
+    "name": "shirokai-dex-0.2.0-alpha.4+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "ca8a2efe8fd66c4b53a39d91129ecd460b748218813ac2f91bf5c25620bbcb0d",
+    "scope": "Final development build; optional API and probe not bundled; not validated installed outside Loom"
+  },
+  "verification": {
+    "probe_shutdown": "DEX_PROBE cleanup: PASS; existing/replaced providers preserved and owned handlers removed",
+    "api_absence": "45-mod server without placeholder-api, LuckPerms or probe completed all 13 foundation checks",
+    "local_state": "All test servers stopped with stop; worlds saved; original local properties/LuckPerms JAR restored; test JSON/API/probe removed; temporary RCON secret removed",
+    "sqlite_integrity_check": "ok",
+    "new_release": "none",
+    "environment_publication": "none"
+  },
+  "limitations": [
+    "No TAB/bridge verification",
+    "No positive legacy-alias integration; alias intentionally not registered",
+    "No visual client/load test or current-alpha packaged-server test outside Loom",
+    "Statistical capture/reward/ranking placeholders not implemented; no historical evidence invented",
+    "Off-thread consumers receive N/D; cold or invalidated snapshots can temporarily return N/D"
+  ]
+}

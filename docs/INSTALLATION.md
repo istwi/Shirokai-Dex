@@ -21,7 +21,7 @@ Para iniciar `runServer` na nuvem, acrescente `--init-script scripts/server_prox
 
 JDK local usado na validação: Temurin 21.0.13+9, tarball oficial `OpenJDK21U-jdk_x64_linux_hotspot_21.0.13_9.tar.gz`, obtido da release `jdk-21.0.13+9` do repositório `adoptium/temurin21-binaries`. SHA-256 verificado com o arquivo oficial: `d7f5d5cf865a2902b70ff549b97586a7d3f234e016f041ab447ea740c7d66d1c`. Não presumir que `/workspace/.tools/jdk-21.0.13+9` exista em outras máquinas.
 
-Arquivo de mod: `build/libs/shirokai-dex-0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3.jar`. O arquivo `-sources.jar` é código-fonte e **não deve ser instalado**. O JDBC SQLite é incluído no JAR; não instalar outro SQLite mod por conta desta dependência. LuckPerms é opcional na inicialização, mas obrigatório para o reload administrativo.
+Arquivo de mod: `build/libs/shirokai-dex-0.2.0-alpha.4+mc1.21.1-cobblemon1.8.3.jar`. O arquivo `-sources.jar` é código-fonte e **não deve ser instalado**. O JDBC SQLite é incluído no JAR; não instalar outro SQLite mod por conta desta dependência. LuckPerms é opcional na inicialização, mas obrigatório para o reload administrativo.
 
 Instale o JAR principal na pasta `mods` de um servidor de testes com as dependências. Faça backup antes de iniciar. Este Dex não exige mod próprio no cliente; o Cobblemon e outros mods do servidor continuam tendo seus próprios requisitos de cliente.
 
@@ -34,3 +34,5 @@ A versão de desenvolvimento 0.2.0-alpha.1 adiciona [porcentagens e páginas de 
 A alpha de desenvolvimento 0.2.0-alpha.2 acrescenta [coleções JSON](COLLECTIONS.md), validação semântica, permissões e paginação; [evidência atual](validation/phase2-collections.json). LuckPerms Fabric 5.4.140 foi testado com grant/revoke global e reload; continua opcional para coleções públicas.
 
 A alpha.3 de desenvolvimento acrescenta a [wiki de espécies](WIKI.md), com protocolo validado no servidor de desenvolvimento e [evidência própria](validation/phase2-wiki.json). O JAR desta versão ainda não foi novamente validado instalado fora do Loom; as evidências antigas dessa modalidade pertencem às alphas anteriores. Nenhuma release nova foi publicada.
+
+Alpha.4: [placeholders básicos](PLACEHOLDERS.md), mediante instalação separada da Text Placeholder API 2.4.2+1.21. Essa dependência é opcional e não está aninhada no JAR do Dex; o build obtém o artefato oficial pelo GitHub. A pré-release publicada alpha.3 permanece separada e imutável. Nenhuma nova release é publicada automaticamente pelo build.

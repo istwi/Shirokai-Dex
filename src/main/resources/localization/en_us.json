@@ -56,5 +56,8 @@
   "wiki.filter.UNSEEN": "Unseen",
   "wiki.filter.SHINY_SEEN": "Shiny seen",
   "wiki.order.NAME": "Name",
-  "wiki.order.ID": "Identifier"
+  "wiki.order.ID": "Identifier",
+  "placeholder_unavailable": "Text Placeholder API is unavailable. Other Dex features remain available.",
+  "placeholder_metric_invalid": "Invalid metric. Use percent, registered, seen, total or remaining.",
+  "placeholder_preview": "Placeholder {0} {1}: {2}"
 }

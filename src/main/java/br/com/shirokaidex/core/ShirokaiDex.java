@@ -6,6 +6,8 @@ import br.com.shirokaidex.database.Database;
 import br.com.shirokaidex.localization.Messages;
 import br.com.shirokaidex.menus.MainMenu;
 import br.com.shirokaidex.wiki.Wiki;
+import br.com.shirokaidex.placeholders.*;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import br.com.shirokaidex.permissions.Permissions;
 import br.com.shirokaidex.pokedex.*;
 import br.com.shirokaidex.config.Settings;
@@ -35,6 +37,8 @@ public final class ShirokaiDex implements ModInitializer {
     private final ExecutorService configWorker = Executors.newSingleThreadExecutor(r -> new Thread(r, "shirokaidex-config"));
     private final CobblemonAccess cobblemon = new CobblemonAccess();
     private final Messages messages = new Messages();
+    private final PlaceholderCache placeholderCache = new PlaceholderCache();
+    private PlaceholderBridge placeholderBridge;
     private ConfigManager config;
     private Database database;
     private volatile boolean ready;
@@ -59,6 +63,9 @@ public final class ShirokaiDex implements ModInitializer {
                 root.then(literal(collection.id()).requires(source -> canAccess(source.getPlayer(), collection.id()))
                         .executes(context -> collection(context.getSource(), collection.id(), true))
                         .then(literal("status").executes(context -> collection(context.getSource(), collection.id(), false)))
+                        .then(literal("placeholder").then(argument("metric", StringArgumentType.word())
+                                .suggests((context, builder) -> { PlaceholderValues.METRICS.stream().filter(value -> value.startsWith(builder.getRemaining())).sorted().forEach(builder::suggest); return builder.buildFuture(); })
+                                .executes(context -> placeholder(context.getSource(), collection.id(), StringArgumentType.getString(context, "metric")))))
                         .then(literal("wiki").executes(context -> wiki(context.getSource(), collection.id(), Wiki.Request.initial("")))
                                 .then(argument("query", StringArgumentType.greedyString()).executes(context -> wiki(context.getSource(), collection.id(), Wiki.Request.initial(StringArgumentType.getString(context, "query")))))));
             }
@@ -73,13 +80,16 @@ public final class ShirokaiDex implements ModInitializer {
                     })
                     .executes(context -> collection(context.getSource(), StringArgumentType.getString(context, "collection"), true))
                     .then(literal("status").executes(context -> collection(context.getSource(), StringArgumentType.getString(context, "collection"), false)))
+                    .then(literal("placeholder").then(argument("metric", StringArgumentType.word())
+                            .suggests((context, builder) -> { PlaceholderValues.METRICS.stream().filter(value -> value.startsWith(builder.getRemaining())).sorted().forEach(builder::suggest); return builder.buildFuture(); })
+                            .executes(context -> placeholder(context.getSource(), StringArgumentType.getString(context, "collection"), StringArgumentType.getString(context, "metric")))))
                     .then(literal("wiki").executes(context -> wiki(context.getSource(), StringArgumentType.getString(context, "collection"), Wiki.Request.initial("")))
                             .then(argument("query", StringArgumentType.greedyString()).executes(context -> wiki(context.getSource(), StringArgumentType.getString(context, "collection"), Wiki.Request.initial(StringArgumentType.getString(context, "query")))))));
             dispatcher.register(root);
         });
         CobblemonEvents.POKEDEX_DATA_CHANGED_POST.subscribe((Consumer<PokedexDataChangedEvent.Post>) event -> {
             MinecraftServer server = activeServer;
-            if (server != null) server.execute(() -> cobblemon.invalidate(event.getPlayerUUID()));
+            if (server != null) server.execute(() -> { cobblemon.invalidate(event.getPlayerUUID()); if (placeholderBridge != null) placeholderCache.invalidate(event.getPlayerUUID()); });
         });
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             activeServer = server; stopping = false; cobblemon.clear();
@@ -97,16 +107,46 @@ public final class ShirokaiDex implements ModInitializer {
                 }
             });
         });
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            if (FabricLoader.getInstance().isModLoaded("placeholder-api")) {
+                try {
+                    placeholderBridge = TextPlaceholderAccess.install(this::placeholderValue, LOG);
+                    LOG.info("Text Placeholder API integration enabled; existing providers preserved");
+                } catch (RuntimeException | LinkageError failure) {
+                    LOG.error("Text Placeholder API integration unavailable; Dex remains enabled", failure);
+                }
+            }
+        });
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            if (!ready || placeholderBridge == null) return;
+            // Only requested/invalidated players, at most four per tick. No global player scan.
+            for (int i = 0; i < 4; i++) {
+                var uuid = placeholderCache.poll(); if (uuid == null) break;
+                var player = server.getPlayerList().getPlayer(uuid); if (player == null) continue;
+                Settings settings = config.current();
+                try { placeholderCache.publish(uuid, settings, System.nanoTime(), cobblemon.collections(player, settings.collections())); }
+                catch (RuntimeException failure) {
+                    placeholderCache.publish(uuid, settings, System.nanoTime(), java.util.Map.of());
+                    LOG.error("Placeholder snapshot failed for {}; retry deferred", uuid, failure);
+                }
+            }
+        });
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             cobblemon.invalidate(handler.player.getUUID());
+            if (placeholderBridge != null) placeholderCache.invalidate(handler.player.getUUID());
             var uuid = handler.player.getUUID();
             String name = handler.player.getGameProfile().getName();
             Instant time = Instant.now();
             if (initialization != null) initialization.thenCompose(unused -> database.recordLogin(uuid, name, time))
                     .exceptionally(failure -> { LOG.error("Could not persist player login {}", uuid, failure); return null; });
         });
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> cobblemon.invalidate(handler.player.getUUID()));
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; ready = false; activeServer = null; cobblemon.clear(); });
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> { cobblemon.invalidate(handler.player.getUUID()); placeholderCache.remove(handler.player.getUUID()); });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; ready = false; activeServer = null; cobblemon.clear(); placeholderCache.clear();
+            if (placeholderBridge != null) {
+                try { placeholderBridge.close(); }
+                catch (RuntimeException | LinkageError failure) { LOG.error("Placeholder cleanup failed", failure); }
+                finally { placeholderBridge = null; }
+            } });
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             configWorker.shutdown();
             try {
@@ -203,6 +243,28 @@ public final class ShirokaiDex implements ModInitializer {
         }
     }
 
+    private String placeholderValue(ServerPlayer player, String metric, String argument) {
+        if (!ready || player == null || activeServer == null || !activeServer.isSameThread()
+                || activeServer.getPlayerList().getPlayer(player.getUUID()) != player) return PlaceholderValues.UNKNOWN;
+        String id = PlaceholderValues.collection(argument);
+        Settings settings = config.current();
+        if (id == null) return PlaceholderValues.UNKNOWN;
+        var definition = settings.collections().stream().filter(value -> value.id().equals(id)).findFirst().orElse(null);
+        if (definition == null || !Permissions.has(player, definition.permission())) return PlaceholderValues.UNKNOWN;
+        var values = placeholderCache.read(player.getUUID(), settings, System.nanoTime());
+        return PlaceholderValues.format(metric, values.get(id), settings.language());
+    }
+    private int placeholder(CommandSourceStack source, String id, String metric) {
+        if (!ready) { source.sendFailure(messages.text(language(), "not_ready")); return 0; }
+        if (source.getPlayer() == null) { source.sendFailure(messages.text(language(), "players_only")); return 0; }
+        if (!canAccess(source.getPlayer(), id)) { source.sendFailure(messages.text(language(), "collection_denied")); return 0; }
+        if (placeholderBridge == null) { source.sendFailure(messages.text(language(), "placeholder_unavailable")); return 0; }
+        if (!PlaceholderValues.METRICS.contains(metric)) { source.sendFailure(messages.text(language(), "placeholder_metric_invalid")); return 0; }
+        String value = placeholderBridge.preview(source.getPlayer(), metric, id);
+        source.sendSuccess(() -> messages.text(language(), "placeholder_preview", metric, id, value), false);
+        return 1;
+    }
+
     private int reload(CommandSourceStack source) {
         if (!Permissions.mayReload(source.getPlayer()) || !ready) return 0;
         CompletableFuture.runAsync(() -> {
@@ -213,7 +275,8 @@ public final class ShirokaiDex implements ModInitializer {
             source.getServer().execute(() -> {
                 if (stopping) return;
                 if (failure == null) {
-                    cobblemon.clear();
+                    cobblemon.clear(); placeholderCache.clear();
+                    if (placeholderBridge != null) source.getServer().getPlayerList().getPlayers().forEach(player -> placeholderCache.invalidate(player.getUUID()));
                     source.getServer().getPlayerList().getPlayers().forEach(player -> source.getServer().getCommands().sendCommands(player));
                 }
                 if (failure == null) source.sendSuccess(() -> messages.text(language(), "reload_ok"), false);

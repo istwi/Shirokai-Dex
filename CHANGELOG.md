@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0-alpha.4 — placeholders básicos (desenvolvimento)
+
+- Integração opcional com Text Placeholder API 2.4.2+1.21: percent, registered, seen, total e remaining por coleção; prévia `/dex <id> placeholder <métrica>`.
+- Expansão lê snapshots preparados fora do handler, sem consulta SQLite, com permissões atuais, revisão de configuração e N/D explícito para indisponível/contextos inadequados.
+- Registro não substitui provedores existentes; limpeza preserva handlers substituídos por outro mod. Alias legado não registrado; TAB ainda pendente.
+- 87 JUnit, oito checks de integração, cinco de probe real e 13 de fundação sem APIs opcionais, mais limpeza real no shutdown. Dependência e probe não são incluídos no JAR distribuído.
+- Nenhuma nova release nem configuração de ambiente publicada; alpha.3 permanece imutável.
+
 ## 0.2.0-alpha.3 — wiki inicial (pré-release)
 
 - Wiki por coleção via botão e `/dex <id> wiki [pesquisa]`, com 18 espécies por página, ordenação por nome/ID e filtros vistas/obtidas/não vistas/shiny vistas.
