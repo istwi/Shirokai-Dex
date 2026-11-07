@@ -10,6 +10,10 @@ Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificaç�
 
 A auditoria estática inicial não executou testes funcionais. As validações posteriores da fundação estão separadas abaixo; captura, resgate e economia continuam sem testes funcionais.
 
+## Atualização: resumos de spawn — alpha.6
+
+Pool mundial auditado e exercitado em servidor: resumos parciais de regras simples, IDs namespaced, biomas/tags, dimensões e ticks, sem avaliar spawn ou inferir forma. APIs e limites na seção de menus abaixo; [17 checks de protocolo e 102 JUnit](validation/phase2-spawns.json).
+
 ## Atualização: filtros e formas da wiki — alpha.5
 
 Nenhum novo getter Cobblemon: tipos, labels, formas e estados vêm do snapshot imutável já auditado. `MenuType.GENERIC_9x4` foi conferido por `javap` no Minecraft mapeado 1.21.1, compilado e exercitado pelo protocolo real; wiki passa a quatro linhas, enquanto seletor/progresso permanecem em três.
@@ -181,7 +185,13 @@ Em `dev.shirokaicrates.ShirokaiCrates`, o registro real é `/crates givekey <pla
 
 `service.CrateService.give(ServerPlayerEntity admin, ServerPlayerEntity target, String id, int count, boolean fragment)` confere permissão, saúde, crate existente, espaço e estado busy; cria token via `tokens.create`, insere e solicita checkpoint. Retorna `void`, sem recibo idempotente para o Dex. Não há contrato de integração pública verificado para recompensas automáticas. Alternativa futura: contrato público com ID de operação e confirmação persistente no Crates, ou adaptador de item salvo somente após validar componentes e semântica dos tokens. `CRATE_KEY` permanece desabilitado até testes e definição do contrato; nenhuma alteração foi feita no Crates.
 
-Wiki inicial (`VERIFIED` no escopo da alpha.3 acima); spawn (`PENDING_TEST`): não foi validada uma consulta universal de biomas/horários, sobretudo para spawners de outros mods/datapacks. Mostrar “Informação de aparecimento indisponível.”; ausência de informação não prova ausência de spawn natural.
+Wiki e resumos de spawn do pool mundial (`VERIFIED` no escopo da alpha.6): `CobblemonSpawnPools.INSTANCE.getWORLD_SPAWN_POOL().getDetails()`, `PokemonSpawnDetail.getPokemon()`, `SpawnDetail.getConditions()/getAnticonditions()/getCompositeCondition()`. Snapshot somente na thread do servidor, sem avaliar ou alterar regras. Outros tipos/destinos não resolvidos são contados como ignorados.
+
+`PokemonProperties.getSpecies()/getForm()` preservam a declaração. Resolver espécie por `PokemonSpecies.getByIdentifier(ResourceLocation)`; `getByName` prefixa o namespace Cobblemon e falhou na primeira tentativa com ID já namespaced. Correção coberta por teste unitário e fixture real `dex_test:ordinary`.
+
+`SpawningCondition.getBiomes()/getDimensions()/getTimeRange()`: seletores conhecidos `RegistryLikeIdentifierCondition.getIdentifier()` e `RegistryLikeTagCondition.getTag().location()`, preservando `#`; `TimeRange.getRanges()` fornece `IntRange`. Bytecode e servidor confirmaram **day = 23460..23999 e 0..12541**, **night = 12542..23459**, não faixas inventadas. Condições positivas são alternativas; anticondições rejeitam; composição adicional não é simplificada.
+
+[Validação](validation/phase2-spawns.json): regras nativas e namespaced, exclusões, conjunto desabilitado, paginação, permissões/reload e remoção entre reinícios. Não testa o nascimento real de Pokémon. Formas por aspectos, regras globais, custom selectors, herd/NPC/outros spawners, pesos/clima/luz/altura permanecem fora do resumo. Não é consulta universal nem prova de ausência de spawn natural. [Escopo da interface](WIKI.md#aparecimento-e-limites).
 
 ## Acesso e testes executados
 

@@ -2,24 +2,22 @@
 
 ## Última tarefa realizada
 
-Filtros e navegação completa de formas da wiki na alpha `0.2.0-alpha.5+mc1.21.1-cobblemon1.8.3`, base `ef99403dbc2c3463cd1e55e91abe2202046e8a89`. Entrega identificada por `feat: add wiki type filters and complete form pagination`.
+Alpha.6: resumos parciais de spawn na wiki, base `a4ecd4f07b4396f63fa1b7a73261ca894821220a`, commit `feat: show audited world spawn rule summaries in wiki`. Pool mundial somente de leitura: biomas/tags, dimensões e ticks, alternativas/exclusões separadas, forma declarada sem inferir aplicabilidade. IDs namespaced resolvidos por identificador. [Guia](WIKI.md#aparecimento-e-limites).
 
-Seletores paginados de tipo/label, combinados na mesma forma com critérios JSON e estados. Todas as formas em páginas de 18, sem corte de 32; consulta/filtros preservados. Menus de wiki com quatro linhas vanilla, demais menus permanecem com três. Permissões/definições atuais revalidadas a cada navegação. [Guia](WIKI.md).
-
-95 JUnit (oito novos), zero falhas/erros/skips; oito checks novos e oito de regressão da wiki em servidor real. Fixture própria comprovou 41 formas, sem confundir progresso da padrão com variantes. Callback antigo após reload ajusta página/critério/idioma; inventário e progresso não são modificados pela navegação. [Evidência](validation/phase2-wiki-facets.json).
-
-Servidores encerrados e mundos salvos; SQLite íntegro; propriedades anteriores restauradas e RCON temporário removido. JAR local alpha.5 em build/libs. Nenhuma nova release ou configuração de ambiente publicada. Alpha.3 e workflows de publicação antigos continuam imutáveis/fixados nos seus commits; não usá-los para publicar esta versão. Conferir SHA/push pelo Git.
+102 JUnit e 17 checks de protocolo (7 spawn, 2 remoção entre reinícios, 8 regressão wiki). Nenhum nascimento real testado; ausência de regra simples não é ausência universal de spawn. [Evidência](validation/phase2-spawns.json). Servidores encerrados, SQLite íntegro, propriedades restauradas e segredo temporário removido. JAR local alpha.6; release publicada continua alpha.3. Não usar workflows antigos fixados em outros commits para publicar esta versão.
 
 ## Próxima tarefa exata
 
-1. Executar protocolo AGENTS e sincronizar sem descarte. Não refazer coleções, filtros/formas da wiki ou placeholders básicos.
-2. Continuar Fase 2 pela **auditoria dos dados de spawn do Cobblemon 1.8.3**: localizar fonte/API real de condições e sua correspondência com espécie/forma. Implementar somente informações demonstradas no servidor, mantendo desconhecido distinto de ausência confirmada de spawn natural; considerar que outros spawners/datapacks podem não estar cobertos. Não inventar biomas, dimensões, horários ou suporte universal.
-3. Categorias nomeadas/condições avançadas/histórico continuam parciais; os novos seletores são labels do registro, não essa implementação completa. Reutilizar critérios existentes.
-4. Integrações posteriores: alias legado positivo sem conflito e com teste próprio; TAB requer distribuição/bridge compatível e validação própria. Chamadas assíncronas dos placeholders continuam retornando N/D.
-5. Cliente visual, carga e nova alpha instalada fora do Loom seguem pendentes. Preservar fixtures separadas e reiniciar para trocar espécies; não fazer hot reload de registros oficiais nem tratar obtenção por comando como captura competitiva.
-6. Atualizar checklist/estado/auditoria/changelog, validar e fazer commit/push autorizado com confirmação remota. Não publicar ambiente nem release nova sem autorização específica.
+1. Executar protocolo AGENTS, conferir commits locais/remoto e preservar trabalho. Não refazer coleções, filtros/formas, placeholders básicos ou resumo de spawn.
+2. Continuar Fase 2 com **categorias nomeadas reutilizáveis por JSON**, conforme seção 7 do prompt. Auditar/reutilizar critérios existentes e classificar somente por dados reais; classificação desconhecida exige configuração explícita. Definir esquema/validação/permissões, associar à consulta/coleções sem duplicar o denominador nem confundir labels do registro com categorias administrativas.
+3. Histórico/recálculo de categorias e modo SNAPSHOT/LIVE de competições continuam abertos: não fabricar eventos passados nem antecipar todos os sistemas. Implementar somente a fundação coerente com evidências.
+4. Spawn continua parcial: composições, aspectos/formas, extensões e condições adicionais precisam de auditoria/testes próprios. Não interpretar ausência no pool como ausência de spawn natural; trocar espécies/fixtures entre reinícios, sem hot reload de registros oficiais.
+5. TAB/alias legado positivo, cliente visual, carga e instalação da nova alpha fora do Loom permanecem pendentes.
+6. Atualizar checklist/estado/auditoria/changelog; validar, commitar e enviar ao GitHub com confirmação remota. Não publicar ambiente nem release sem autorização específica.
 
 ## Arquivos importantes
+
+- `spawning/SpawnAccess.java`, `SpawnCatalog.java`, `SpawnCatalogTest`, lifecycle em `ShirokaiDex`, `MainMenu.spawnItem`, `tests/integration/spawns.cjs` e `tests/fixtures/spawning`: entrega alpha.6.
 
 - `Wiki.java` (Request/Facet/Slice), `MainMenu.openWiki`/`formItem`, `WikiFacetsTest`, `tests/integration/wiki-facets.cjs` e `tests/fixtures/wiki-facets`: entrega atual.
 

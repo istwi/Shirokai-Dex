@@ -2,6 +2,7 @@ package br.com.shirokaidex.menus;
 
 import br.com.shirokaidex.config.Settings;
 import br.com.shirokaidex.wiki.Wiki;
+import br.com.shirokaidex.spawning.SpawnCatalog;
 import br.com.shirokaidex.localization.Messages;
 import br.com.shirokaidex.pokedex.*;
 import net.minecraft.core.component.DataComponents;
@@ -61,7 +62,7 @@ public final class MainMenu extends ChestMenu {
         show(player, settings.menuTitle() + " — " + displayName(definition, settings.language(), messages), contents, actions);
     }
     public static void openWiki(ServerPlayer player, Settings settings, Messages messages, CollectionDefinition definition,
-                                Wiki.Request request, Wiki.Page page, Consumer<Wiki.Request> navigate, Runnable back, Runnable searchHelp) {
+                                Wiki.Request request, Wiki.Page page, SpawnCatalog spawns, Consumer<Wiki.Request> navigate, Runnable back, Runnable searchHelp) {
         var contents = new SimpleContainer(36);
         Map<Integer, Runnable> actions = new HashMap<>();
         String language = settings.language();
@@ -81,6 +82,21 @@ public final class MainMenu extends ChestMenu {
             if (options.number() + 1 < options.pages()) navigation(contents, actions, 26, messages.text(language, "page_next"), () -> navigate.accept(request.pick(request.facet(), options.number() + 1)));
             navigation(contents, actions, 23, messages.text(language, "wiki_back"), () -> navigate.accept(request.page(page.number())));
             title = messages.text(language, request.facet() == Wiki.Facet.TYPE ? "wiki_types_title" : "wiki_categories_title", options.number() + 1, options.pages()).getString();
+        } else if (page.detail().isPresent() && request.spawnPage() >= 0) {
+            var row = page.detail().get();
+            var cards = Wiki.paginate(spawns.cards(row.id()), request.spawnPage(), 18);
+            for (int i = 0; i < cards.items().size(); i++) contents.setItem(i, spawnItem(cards.items().get(i), language, messages));
+            if (cards.items().isEmpty()) {
+                var empty = new ItemStack(Items.PAPER);
+                empty.set(DataComponents.CUSTOM_NAME, messages.text(language, spawns.available() ? "spawn_none" : "wiki_spawn_unknown"));
+                empty.set(DataComponents.LORE, new ItemLore(List.of(messages.text(language, "spawn_scope"))));contents.setItem(13,empty);
+            }
+            if (cards.number() > 0) navigation(contents, actions, 18, messages.text(language,"page_previous"), () -> navigate.accept(request.spawns(cards.number()-1)));
+            if (cards.number()+1 < cards.pages()) navigation(contents, actions, 26, messages.text(language,"page_next"), () -> navigate.accept(request.spawns(cards.number()+1)));
+            navigation(contents, actions, 23, messages.text(language,"wiki_details_back"), () -> navigate.accept(request.detail(row.id())));
+            var scope = new ItemStack(Items.PAPER);scope.set(DataComponents.CUSTOM_NAME,messages.text(language,"spawn_scope"));
+            scope.set(DataComponents.LORE,new ItemLore(List.of(spawns.available()?messages.text(language,"spawn_skipped",spawns.skipped()):messages.text(language,"wiki_spawn_unknown"),messages.text(language,"spawn_form_warning"))));contents.setItem(27,scope);
+            title = messages.text(language,"spawn_title",row.name(),cards.number()+1,cards.pages()).getString();
         } else if (page.detail().isPresent() && request.formPage() >= 0) {
             var row = page.detail().get();
             var forms = Wiki.forms(row, request.formPage(), 18);
@@ -91,14 +107,15 @@ public final class MainMenu extends ChestMenu {
             title = messages.text(language, "wiki_forms_title", row.name(), forms.number() + 1, forms.pages(), forms.total()).getString();
         } else if (page.detail().isPresent()) {
             var row = page.detail().get();
-            contents.setItem(13, wikiItem(row, language, messages, true));
+            contents.setItem(13, wikiItem(row, language, messages, true, spawns.available()));
             navigation(contents, actions, 15, messages.text(language, "wiki_forms_open", row.forms().size()), () -> navigate.accept(request.forms(0)));
+            navigation(contents, actions, 16, messages.text(language, "spawn_open"), () -> navigate.accept(request.spawns(0)));
             navigation(contents, actions, 18, messages.text(language, "wiki_back"), () -> navigate.accept(request.page(page.number())));
             navigation(contents, actions, 23, messages.text(language, "wiki_collection_back"), back);
         } else {
             for (int i = 0; i < page.rows().size(); i++) {
                 var row = page.rows().get(i);
-                contents.setItem(i, wikiItem(row, language, messages, false));
+                contents.setItem(i, wikiItem(row, language, messages, false, spawns.available()));
                 actions.put(i, () -> navigate.accept(request.detail(row.id())));
             }
             if (page.rows().isEmpty()) {
@@ -121,7 +138,7 @@ public final class MainMenu extends ChestMenu {
     private static String facetName(String value, String language, Messages messages) {
         return value.isEmpty() ? messages.text(language, "wiki_facet_all").getString() : value;
     }
-    private static ItemStack wikiItem(Wiki.Row row, String language, Messages messages, boolean detail) {
+    private static ItemStack wikiItem(Wiki.Row row, String language, Messages messages, boolean detail, boolean spawnAvailable) {
         var item = new ItemStack(Items.BOOK);
         item.set(DataComponents.CUSTOM_NAME, Component.literal(row.name()));
         List<Component> lore = new ArrayList<>();
@@ -134,7 +151,7 @@ public final class MainMenu extends ChestMenu {
             Set<String> types = new TreeSet<>(); row.forms().forEach(form -> types.addAll(form.types()));
             lore.add(messages.text(language, "wiki_types", String.join(", ", types)));
             lore.add(messages.text(language, "wiki_forms_count", row.forms().size()));
-            lore.add(messages.text(language, "wiki_spawn_unknown"));
+            lore.add(messages.text(language, spawnAvailable ? "spawn_hint" : "wiki_spawn_unknown"));
         } else lore.add(messages.text(language, "wiki_details"));
         item.set(DataComponents.LORE, new ItemLore(lore));
         return item;
@@ -150,6 +167,18 @@ public final class MainMenu extends ChestMenu {
                 messages.text(language, "wiki_shiny_seen", yesNo(form.shinySeen(), language, messages)),
                 messages.text(language, "collection_unavailable"))));
         return item;
+    }
+    private static ItemStack spawnItem(SpawnCatalog.Card card, String language, Messages messages) {
+        var item = new ItemStack(Items.PAPER);
+        item.set(DataComponents.CUSTOM_NAME, Component.literal(card.rule()+" — "+messages.text(language,"spawn.kind."+card.kind()).getString()+(card.kind()==SpawnCatalog.Kind.RULE?"":" "+card.group()+" ["+card.part()+"/"+card.parts()+"]")));
+        List<Component> lore = new ArrayList<>();
+        lore.add(messages.text(language,"spawn_declared_form",card.declaredForm().isEmpty()?messages.text(language,"spawn_not_declared").getString():card.declaredForm()));
+        if(card.kind()==SpawnCatalog.Kind.RULE)lore.add(messages.text(language,"spawn_rule_header"));
+        else if(card.values().isEmpty())lore.add(messages.text(language,"spawn_values_unknown"));
+        for(var value:card.values())lore.add(messages.text(language,"spawn.field."+value.field(),value.value()));
+        if(card.composite())lore.add(messages.text(language,"spawn_composite"));
+        lore.add(messages.text(language,"spawn_partial"));lore.add(messages.text(language,"spawn_form_warning"));
+        item.set(DataComponents.LORE,new ItemLore(lore));return item;
     }
     private static String yesNo(boolean value, String language, Messages messages) {
         return messages.text(language, value ? "wiki_yes" : "wiki_no").getString();

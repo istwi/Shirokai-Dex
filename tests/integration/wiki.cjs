@@ -69,10 +69,10 @@ async function main() {
   pass('Wiki supports deterministic ordering by identifier');
   menu=await open('/dex duo wiki DEX_TEST:ORDINARY'); assert.deepEqual(ids(menu),['dex_test:ordinary']);
   menu=await click(0); const details=data(menu.slots[13]);
-  for (const text of ['normal','Vista: Não','Obtida: Não','Shiny vista: Não','Informação de aparecimento indisponível','Capturas shiny verificadas: indisponível']) assert(details.includes(text),text);
+  for (const text of ['normal','Vista: Não','Obtida: Não','Shiny vista: Não','Veja as regras conhecidas','Capturas shiny verificadas: indisponível']) assert(details.includes(text),text);
   menu=await click(18); assert.deepEqual(ids(menu),['dex_test:ordinary']);
   menu=await open('/dex duo wiki Dex Test Ordinary'); assert.deepEqual(ids(menu),['dex_test:ordinary']);
-  pass('Search accepts canonical names and case-insensitive namespaced IDs; details show real forms/types and explicit unknown spawn/capture data');
+  pass('Search accepts canonical names and case-insensitive namespaced IDs; details show real forms/types, the partial spawn entry point and unavailable verified capture data');
   menu=await open('/dex duo wiki no_such_species'); assert.equal(menu.slots[13].name,'paper'); assert.equal(ids(menu).length,0);
   menu=await click(24); assert.equal(ids(menu).length,2);
   menu=await open('/dex future_species wiki'); assert.equal(ids(menu).length,0); assert(title(menu).includes('(0)'));

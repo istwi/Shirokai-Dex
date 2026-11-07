@@ -6,6 +6,7 @@ import br.com.shirokaidex.database.Database;
 import br.com.shirokaidex.localization.Messages;
 import br.com.shirokaidex.menus.MainMenu;
 import br.com.shirokaidex.wiki.Wiki;
+import br.com.shirokaidex.spawning.*;
 import br.com.shirokaidex.placeholders.*;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import br.com.shirokaidex.permissions.Permissions;
@@ -39,6 +40,8 @@ public final class ShirokaiDex implements ModInitializer {
     private final Messages messages = new Messages();
     private final PlaceholderCache placeholderCache = new PlaceholderCache();
     private PlaceholderBridge placeholderBridge;
+    private SpawnCatalog spawnCatalog = SpawnCatalog.unavailable();
+    private boolean spawnRefreshPending;
     private ConfigManager config;
     private Database database;
     private volatile boolean ready;
@@ -108,6 +111,7 @@ public final class ShirokaiDex implements ModInitializer {
             });
         });
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            spawnRefreshPending = true;
             if (FabricLoader.getInstance().isModLoaded("placeholder-api")) {
                 try {
                     placeholderBridge = TextPlaceholderAccess.install(this::placeholderValue, LOG);
@@ -117,7 +121,15 @@ public final class ShirokaiDex implements ModInitializer {
                 }
             }
         });
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, manager, success) -> server.execute(() -> {
+            spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = success;
+        }));
         ServerTickEvents.END_SERVER_TICK.register(server -> {
+            if (spawnRefreshPending && ready) {
+                spawnRefreshPending = false;
+                try { spawnCatalog = SpawnAccess.capture(server); }
+                catch (RuntimeException failure) { spawnCatalog = SpawnCatalog.unavailable(); LOG.error("World spawn information unavailable", failure); }
+            }
             if (!ready || placeholderBridge == null) return;
             // Only requested/invalidated players, at most four per tick. No global player scan.
             for (int i = 0; i < 4; i++) {
@@ -141,7 +153,7 @@ public final class ShirokaiDex implements ModInitializer {
                     .exceptionally(failure -> { LOG.error("Could not persist player login {}", uuid, failure); return null; });
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> { cobblemon.invalidate(handler.player.getUUID()); placeholderCache.remove(handler.player.getUUID()); });
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; ready = false; activeServer = null; cobblemon.clear(); placeholderCache.clear();
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; ready = false; activeServer = null; cobblemon.clear(); placeholderCache.clear(); spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = false;
             if (placeholderBridge != null) {
                 try { placeholderBridge.close(); }
                 catch (RuntimeException | LinkageError failure) { LOG.error("Placeholder cleanup failed", failure); }
@@ -233,7 +245,7 @@ public final class ShirokaiDex implements ModInitializer {
         if (request.query().length() > 128) { source.sendFailure(messages.text(language(), "wiki_query_long")); return 0; }
         try {
             var page = Wiki.select(cobblemon.wiki(player), definition, request, 18);
-            MainMenu.openWiki(player, settings, messages, definition, request, page,
+            MainMenu.openWiki(player, settings, messages, definition, request, page, spawnCatalog,
                     next -> wiki(source, id, next), () -> collection(source, id, true),
                     () -> { player.closeContainer(); source.sendSuccess(() -> messages.text(language(), "wiki_search_hint", id), false); });
             return 1;

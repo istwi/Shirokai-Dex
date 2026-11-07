@@ -2,7 +2,19 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
-## Entrega atual — filtros e formas da wiki (alpha.5)
+## Entrega atual — resumo de spawn (alpha.6)
+
+Base `a4ecd4f07b4396f63fa1b7a73261ca894821220a`; commit identificado por `feat: show audited world spawn rule summaries in wiki`. Versão `0.2.0-alpha.6+mc1.21.1-cobblemon1.8.3`.
+
+Wiki consulta snapshot somente de leitura do pool mundial, preparado no servidor no lifecycle/reload. Mostra regras/alternativas/exclusões separadas, IDs/tags de biomas, dimensões e intervalos de ticks. Espécies namespaced resolvidas por identificador; formas declaradas preservadas sem inferir aplicação por aspectos. Fonte indisponível distinta de nenhuma regra simples conhecida. [Guia e limites](WIKI.md#aparecimento-e-limites).
+
+**102 JUnit**, zero falhas/erros/skips; **7 checks de spawn + 2 após remoção da fixture entre reinícios + 8 de regressão da wiki**, em servidor dev real. Incluem dados nativos/namespaced, conjunto desabilitado, 19 cards paginados, ticks reais, exclusões, inventário/progresso somente de leitura, permissão e critérios atuais. [Evidência](validation/phase2-spawns.json).
+
+Primeira tentativa corrigida: `getByName` duplicava namespace para espécies de datapack; usado `getByIdentifier`, com teste de regressão. Uma expectativa do runner após reload foi corrigida para preservar a pesquisa que já estava ativa. Nenhuma API fictícia ou registro oficial modificado. Sem teste de nascimento real, interpretação universal das condições/spawners ou garantia por forma. Cliente visual/carga e JAR desta alpha fora do Loom pendentes.
+
+Servidores encerrados com mundos salvos, SQLite íntegro, propriedades anteriores restauradas e RCON temporário removido. JAR local em `build/libs/shirokai-dex-0.2.0-alpha.6+mc1.21.1-cobblemon1.8.3.jar`. Nenhuma nova release/configuração de ambiente publicada; alpha.3 permanece imutável.
+
+## Entrega anterior — filtros e formas da wiki (alpha.5)
 
 Base sincronizada `ef99403dbc2c3463cd1e55e91abe2202046e8a89`, sem mudanças/commits locais pendentes. Versão `0.2.0-alpha.5+mc1.21.1-cobblemon1.8.3`; entrega identificada por `feat: add wiki type filters and complete form pagination`.
 
@@ -64,7 +76,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Fase atual
 
-**Fase 2 — coleções, wiki com filtros/formas e placeholders básicos**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
+**Fase 2 — coleções, wiki com filtros/formas e resumo parcial de spawn, placeholders básicos**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
 
 ## Concluído
 
@@ -92,7 +104,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Pendente
 
-- Fases 2–8: wiki completa/dados de spawn, categorias/datapacks adicionais, TAB/alias legado e placeholders avançados, recompensas, capturas/estatísticas, rankings, competições, conquistas/perfis e integrações avançadas.
+- Fases 2–8: wiki completa/cobertura adicional de spawn, categorias/datapacks adicionais, TAB/alias legado e placeholders avançados, recompensas, capturas/estatísticas, rankings, competições, conquistas/perfis e integrações avançadas.
 - Cliente visual e testes de carga; herança/contextos LuckPerms além do cenário de dimensão verificado.
 - Layouts JSON completos e documentação das funcionalidades ainda não implementadas.
 - Licença do código próprio e release estável. Nenhuma configuração de ambiente foi alterada/publicada nesta entrega.
@@ -131,9 +143,7 @@ Servidores locais eram offline e limitados a loopback; não validam autenticaç�
 
 ## Última alteração relevante e sincronização
 
-Base anterior enviada/confirmada: `8c1e7f365be918b866ac137c020e2337db14e721` (checklist/checksum). Esta entrega é identificada pelo assunto `feat: implement and validate Fabric foundation alpha`; inclui código, testes, documentos e evidência do JAR. Obter o SHA com Git, sem atualização circular do hash deste documento.
-
-Entrega funcional enviada e confirmada no remoto: `9cab47d7d4dcd6c95793cc57e4b1b60d87b49b45`, com árvore local limpa. Workflows desse commit iniciaram; aprovação remota/artifact ainda dependem do resultado observado no GitHub. Atualização documental posterior apenas registra essa referência e corrige os notices; a próxima sessão deve conferir também esse commit documental e quaisquer posteriores.
+Entrega alpha.6: `feat: show audited world spawn rule summaries in wiki`, base `a4ecd4f`. Commit/push autorizados pelo usuário; conferir SHA com Git para evitar referência circular neste documento. Histórico das entregas e releases permanece abaixo e na checklist.
 
 ## Publicação alpha confirmada
 

@@ -1,0 +1,145 @@
+{
+  "enabled": true,
+  "spawns": [
+    {
+      "type": "pokemon",
+      "spawnablePositionType": "grounded",
+      "bucket": "common",
+      "level": "5-10",
+      "weight": 1.0,
+      "id": "dex-spawn-a",
+      "pokemon": "dex_test:ordinary",
+      "condition": {
+        "biomes": [
+          "minecraft:plains",
+          "#minecraft:is_forest"
+        ],
+        "dimensions": [
+          "minecraft:overworld"
+        ],
+        "timeRange": "day"
+      },
+      "anticondition": {
+        "biomes": [
+          "minecraft:desert"
+        ]
+      }
+    },
+    {
+      "type": "pokemon",
+      "spawnablePositionType": "grounded",
+      "bucket": "common",
+      "level": "5-10",
+      "weight": 1.0,
+      "id": "dex-spawn-b",
+      "pokemon": "dex_test:ordinary form=normal",
+      "condition": {
+        "biomes": [
+          "minecraft:taiga"
+        ],
+        "dimensions": [
+          "minecraft:the_nether"
+        ],
+        "timeRange": "night"
+      }
+    },
+    {
+      "type": "pokemon",
+      "spawnablePositionType": "grounded",
+      "bucket": "common",
+      "level": "5-10",
+      "weight": 1.0,
+      "id": "dex-spawn-extra-00",
+      "pokemon": "dex_test:ordinary",
+      "condition": {
+        "biomes": [
+          "minecraft:plains"
+        ]
+      }
+    },
+    {
+      "type": "pokemon",
+      "spawnablePositionType": "grounded",
+      "bucket": "common",
+      "level": "5-10",
+      "weight": 1.0,
+      "id": "dex-spawn-extra-01",
+      "pokemon": "dex_test:ordinary",
+      "condition": {
+        "biomes": [
+          "minecraft:plains"
+        ]
+      }
+    },
+    {
+      "type": "pokemon",
+      "spawnablePositionType": "grounded",
+      "bucket": "common",
+      "level": "5-10",
+      "weight": 1.0,
+      "id": "dex-spawn-extra-02",
+      "pokemon": "dex_test:ordinary",
+      "condition": {
+        "biomes": [
+          "minecraft:plains"
+        ]
+      }
+    },
+    {
+      "type": "pokemon",
+      "spawnablePositionType": "grounded",
+      "bucket": "common",
+      "level": "5-10",
+      "weight": 1.0,
+      "id": "dex-spawn-extra-03",
+      "pokemon": "dex_test:ordinary",
+      "condition": {
+        "biomes": [
+          "minecraft:plains"
+        ]
+      }
+    },
+    {
+      "type": "pokemon",
+      "spawnablePositionType": "grounded",
+      "bucket": "common",
+      "level": "5-10",
+      "weight": 1.0,
+      "id": "dex-spawn-extra-04",
+      "pokemon": "dex_test:ordinary",
+      "condition": {
+        "biomes": [
+          "minecraft:plains"
+        ]
+      }
+    },
+    {
+      "type": "pokemon",
+      "spawnablePositionType": "grounded",
+      "bucket": "common",
+      "level": "5-10",
+      "weight": 1.0,
+      "id": "dex-spawn-extra-05",
+      "pokemon": "dex_test:ordinary",
+      "condition": {
+        "biomes": [
+          "minecraft:plains"
+        ]
+      }
+    },
+    {
+      "type": "pokemon",
+      "spawnablePositionType": "grounded",
+      "bucket": "common",
+      "level": "5-10",
+      "weight": 1.0,
+      "id": "dex-spawn-extra-06",
+      "pokemon": "dex_test:ordinary",
+      "condition": {
+        "biomes": [
+          "minecraft:plains"
+        ]
+      }
+    }
+  ]
+}

@@ -88,7 +88,7 @@ async function main() {
   assert.equal(wiki.slots[0].name, 'book');
   await bot.clickWindow(0, 0, 0);
   await until(() => bot.currentWindow && bot.currentWindow !== wiki);
-  assert(JSON.stringify(bot.currentWindow.slots[13].components).includes('Informação de aparecimento indisponível'));
+  assert(JSON.stringify(bot.currentWindow.slots[13].components).includes('Veja as regras conhecidas'));
   await bot.clickWindow(22, 0, 0);
   await until(() => !bot.currentWindow);
   pass('Public wiki and species details work without LuckPerms or other optional integrations');

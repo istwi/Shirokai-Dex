@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0-alpha.6 — declarações de spawn na wiki (desenvolvimento)
+
+- Resumo paginado e somente de leitura do pool mundial: IDs/tags de bioma, dimensões e intervalos de ticks; alternativas e exclusões separadas. IDs de espécies preservam namespaces.
+- Forma declarada preservada sem inferir aplicação por aspectos; condições compostas sinalizadas, sem avaliação. Fonte indisponível distinta de nenhuma regra simples conhecida, sem prometer spawn natural.
+- Snapshot no lifecycle/reload, com permissões/critérios atuais em cada navegação. 102 JUnit e 17 checks de protocolo em servidor dev, incluindo remoção da fixture entre reinícios e regressão da wiki.
+- Cobertura adicional, cliente visual/carga e instalação desta alpha fora do Loom pendentes. Nenhuma nova release ou configuração de ambiente publicada.
+
 ## 0.2.0-alpha.5 — filtros e formas da wiki (desenvolvimento)
 
 - Seletores paginados de tipos/labels reais da coleção, combinados na mesma forma com critérios JSON e filtros de estado. Pesquisa e ordenação são preservadas.

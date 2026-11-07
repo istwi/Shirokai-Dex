@@ -6,7 +6,7 @@
 ./gradlew --no-daemon build
 ```
 
-Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 95 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
+Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 102 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
 
 `DexProgressTest` adiciona 12 casos de cálculo, truncamento, vazio/indisponível, IDs namespaced, denominador dinâmico, formas e duplicação.
 
@@ -179,3 +179,19 @@ MC_TEST_RCON_PASSWORD_FILE=/caminho/seguro/temporario \
 Após esse teste, o servidor foi encerrado e a fixture antiga de coleções/progresso foi validada em outro mundo com perfil novo: **os oito checks de `npm run test:wiki` passaram**. Não fazer hot reload de espécies para trocar fixtures; reiniciar a instância é obrigatório. A configuração válida original foi restaurada/recarregada pelo teste, e os servidores foram encerrados com mundos salvos. Propriedades locais anteriores restauradas, senha temporária removida e SQLite com integrity_check=ok.
 
 Resultados atuais: `build/integration-wiki-facets.json` e `build/integration-wiki.json`; [evidência](validation/phase2-wiki-facets.json), incluindo fingerprints da fixture conferidos contra os bytes instalados no mundo de teste. As evidências antigas não são substituídas. Não houve teste visual/carga ou instalação desta alpha fora do Loom, nem nova certificação de TAB/alias legado.
+
+## Resumos de spawn — alpha.6
+
+[Relatório](validation/phase2-spawns.json): 102 JUnit (sete em `SpawnCatalogTest`) e 17 checks de protocolo, com LuckPerms e sem Placeholder API opcional. Build via helper cloud/JDK 21, TLS/checksums mantidos.
+
+Em servidor descartável loopback com RCON, use a configuração de `tests/fixtures/collections/config.json`, o datapack de espécies `tests/fixtures/datapacks/dex-progress` e o pack `tests/fixtures/spawning/datapacks/dex-spawn` no diretório datapacks do mundo. Inicie até `Done` e execute:
+
+```sh
+MC_TEST_RCON_PASSWORD_FILE=/caminho/temporario npm --prefix tests/integration run test:spawns
+```
+
+São sete checks: regras nativas e namespaced, 19 cards sem perda, biomas/tags, dimensões, faixas reais de ticks, exclusões, forma declarada, conjunto desabilitado, leitura sem mutação, permissões e reload de configuração. O runner exige a fixture exata; use `MC_SPAWN_PLAYER` para um perfil descartável novo. Não concede progresso oficial.
+
+Encerre normalmente, retire somente o pack de spawn e reinicie preservando as espécies. Execute `MC_SPAWN_MODE=after-removal` com o mesmo comando: dois checks confirmam remoção de regras antigas e permanência das nativas. Execute também `test:wiki` (oito regressões), com `MC_WIKI_PLAYER` novo. Encerre, confira integridade SQLite e restaure a configuração anterior; remova o segredo RCON. Não inclua dados runtime no Git.
+
+O primeiro ensaio revelou resolução incorreta de namespace via `getByName`, corrigida por `getByIdentifier`; os sete checks finais passaram. A expectativa do runner após reload foi ajustada para a consulta preservada, sem alterar filtros do produto. Testes validam declarações carregadas, não spawn efetivo, cliente visual, carga ou a distribuição alpha.6 fora do Loom. Composições e extensões não interpretadas continuam explicitamente parciais.

@@ -1,4 +1,4 @@
-# Wiki de espécies — alpha.5
+# Wiki de espécies — alpha.6
 
 A wiki consulta o registro real de espécies **implementadas** e a Pokédex oficial do próprio jogador. Está disponível em cada coleção pública ou autorizada, incluindo coleções JSON e a coleção Shiny cujo progresso de captura continua N/D.
 
@@ -53,10 +53,16 @@ Esses controles afetam somente a consulta da wiki, sem alterar o JSON, progresso
 
 ## Aparecimento e limites
 
-Os detalhes exibem **Informação de aparecimento indisponível.** Não foi integrada uma fonte confiável para biomas, dimensões, horários ou condições de spawners. Isso significa informação não consultada, e não prova de que a espécie não tem spawn natural. Não há biomas ou horários inventados.
+Nos detalhes, **Ver regras conhecidas de spawn** abre páginas de declarações do pool mundial carregado do Cobblemon. São mostrados IDs de bioma, tags `#namespace:tag`, dimensões e intervalos de ticks Minecraft que existam nas condições suportadas. Alternativas e exclusões ficam separadas por regra; uma lista longa continua nas páginas seguintes.
+
+É um resumo **parcial por espécie**, não uma previsão de aparecimento. A forma declarada é preservada quando existe; aspectos/propriedades personalizadas não são convertidos em formas e a aplicação à forma selecionada não é inferida. Tags não são expandidas em biomas. Ticks não são convertidos em horas reais. Composições de condições são sinalizadas, sem avaliação. Pesos, clima, luz, altura, regras globais, outros tipos de spawn/spawners e extensões de terceiros não são interpretados integralmente.
+
+**Nenhuma regra simples conhecida no pool consultado** significa que a consulta funcionou, mas não encontrou uma declaração suportada para a espécie. **Informação de aparecimento indisponível** significa que a fonte não pôde ser consultada. Nenhum dos resultados prova ausência universal de spawn natural.
+
+O snapshot é preparado no servidor após iniciar e após o evento de conclusão bem-sucedida de reload de datapacks; falha deixa a fonte indisponível. O Dex não provoca reload do registro de espécies. Para trocar fixtures/espécies nos testes, reinicie o servidor. Alterações programáticas por outros mods fora desses eventos podem exigir reinício.
 
 As mensagens da interface seguem o idioma global pt_br/en_us. Nomes de espécies, formas e tipos são os valores canônicos do registro nesta versão, não traduções personalizadas por cliente. Ícones são livros vanilla, sem modelo 3D nem novo mod cliente do Dex.
 
 Toda navegação com dados reconsulta a definição/permissão atual. Revogação de acesso ou reload não permite usar um botão antigo para abrir espécie que deixou de ser elegível. O snapshot compartilhado com o progresso tem cache de até cinco segundos e invalidação pelos eventos oficiais já utilizados. Não há varredura global por tick, escrita de progresso ou consulta SQLite por página.
 
-[Validação da alpha.5](validation/phase2-wiki-facets.json): testes Java e protocolo em servidor de desenvolvimento. Aparência em cliente Minecraft real, carga, dados de spawn, categorias avançadas e personalização completa dos layouts continuam pendentes. Esta é uma wiki inicial; não conclui toda a Fase 2.
+[Validação da alpha.6](validation/phase2-spawns.json): testes Java e protocolo em servidor de desenvolvimento. Aparência em cliente Minecraft real, carga, cobertura adicional de spawn, categorias avançadas e personalização completa dos layouts continuam pendentes. Esta é uma wiki inicial; não conclui toda a Fase 2.

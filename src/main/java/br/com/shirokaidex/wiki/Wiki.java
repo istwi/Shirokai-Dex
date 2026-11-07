@@ -18,19 +18,20 @@ public final class Wiki {
     }
     public enum Facet { NONE, TYPE, CATEGORY }
     public record Request(String query, Filter filter, Order order, int page, String detail,
-                          String type, String category, int formPage, Facet facet, int optionPage) {
+                          String type, String category, int formPage, Facet facet, int optionPage, int spawnPage) {
         public Request(String query, Filter filter, Order order, int page, String detail) {
-            this(query, filter, order, page, detail, "", "", -1, Facet.NONE, 0);
+            this(query, filter, order, page, detail, "", "", -1, Facet.NONE, 0, -1);
         }
         public static Request initial(String query) { return new Request(query, Filter.ALL, Order.NAME, 0, null); }
-        public Request page(int value) { return new Request(query, filter, order, value, null, type, category, -1, Facet.NONE, 0); }
-        public Request detail(String id) { return new Request(query, filter, order, page, id, type, category, -1, Facet.NONE, 0); }
-        public Request forms(int value) { return new Request(query, filter, order, page, detail, type, category, value, Facet.NONE, 0); }
-        public Request filtered(Filter value) { return new Request(query, value, order, 0, null, type, category, -1, Facet.NONE, 0); }
-        public Request ordered(Order value) { return new Request(query, filter, value, 0, null, type, category, -1, Facet.NONE, 0); }
-        public Request type(String value) { return new Request(query, filter, order, 0, null, value, category, -1, Facet.NONE, 0); }
-        public Request category(String value) { return new Request(query, filter, order, 0, null, type, value, -1, Facet.NONE, 0); }
-        public Request pick(Facet value, int option) { return new Request(query, filter, order, page, null, type, category, -1, value, option); }
+        public Request page(int value) { return new Request(query, filter, order, value, null, type, category, -1, Facet.NONE, 0, -1); }
+        public Request detail(String id) { return new Request(query, filter, order, page, id, type, category, -1, Facet.NONE, 0, -1); }
+        public Request forms(int value) { return new Request(query, filter, order, page, detail, type, category, value, Facet.NONE, 0, -1); }
+        public Request filtered(Filter value) { return new Request(query, value, order, 0, null, type, category, -1, Facet.NONE, 0, -1); }
+        public Request ordered(Order value) { return new Request(query, filter, value, 0, null, type, category, -1, Facet.NONE, 0, -1); }
+        public Request type(String value) { return new Request(query, filter, order, 0, null, value, category, -1, Facet.NONE, 0, -1); }
+        public Request category(String value) { return new Request(query, filter, order, 0, null, type, value, -1, Facet.NONE, 0, -1); }
+        public Request spawns(int value) { return new Request(query, filter, order, page, detail, type, category, -1, Facet.NONE, 0, value); }
+        public Request pick(Facet value, int option) { return new Request(query, filter, order, page, null, type, category, -1, value, option, -1); }
     }
     public record Page(List<Row> rows, int total, int number, int pages, Optional<Row> detail,
                        List<String> types, List<String> categories) {

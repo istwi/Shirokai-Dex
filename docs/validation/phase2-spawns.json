@@ -1,0 +1,157 @@
+{
+  "timestamp": "2026-11-07T12:18:03.170898+00:00",
+  "version": "0.2.0-alpha.6+mc1.21.1-cobblemon1.8.3",
+  "base_commit": "a4ecd4f07b4396f63fa1b7a73261ca894821220a",
+  "delivery_commit_subject": "feat: show audited world spawn rule summaries in wiki",
+  "build": {
+    "command": "JAVA_HOME=<JDK21> python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build",
+    "result": "BUILD SUCCESSFUL",
+    "junit": {
+      "tests": 102,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "jar": "build/libs/shirokai-dex-0.2.0-alpha.6+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "e61099e6f5eede824fa189ee67e5a7751a64224326563a8a0153ddabd3df0c0c"
+  },
+  "protocol": {
+    "spawn": {
+      "timestamp": "2026-11-07T12:07:34.242Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexSpawn3",
+      "results": [
+        {
+          "name": "Namespaced rules are read from the loaded pool and all rule/group cards paginate without loss",
+          "status": "passed"
+        },
+        {
+          "name": "Biome IDs/tags, declared dimension and both day ranges are preserved; exclusions remain separate",
+          "status": "passed"
+        },
+        {
+          "name": "Declared form and Minecraft tick ranges are shown without inventing a default form or a spawn prediction",
+          "status": "passed"
+        },
+        {
+          "name": "Disabled spawn set is absent; a known empty result is distinct from consultation failure",
+          "status": "passed"
+        },
+        {
+          "name": "Spawn inspection is read only: no paper icons or official progress changes",
+          "status": "passed"
+        },
+        {
+          "name": "Native rules resolve correctly and old spawn-page actions recheck current permission",
+          "status": "passed"
+        },
+        {
+          "name": "Reload revalidates a stale species/rule view instead of exposing old collection data",
+          "status": "passed"
+        }
+      ]
+    },
+    "removed": {
+      "timestamp": "2026-11-07T12:16:11.968Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexSpawnRemoved",
+      "results": [
+        {
+          "name": "Restart after fixture removal clears old rules and reports no known simple rule, not an unavailable source",
+          "status": "passed"
+        },
+        {
+          "name": "Native loaded-world rules remain queryable after custom rules are removed",
+          "status": "passed"
+        }
+      ]
+    },
+    "wiki_regression": {
+      "timestamp": "2026-11-07T12:16:51.995Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexWiki6",
+      "results": [
+        {
+          "name": "Collection button opens a dynamic wiki; pagination is stable and reversible",
+          "status": "passed"
+        },
+        {
+          "name": "Wiki supports deterministic ordering by identifier",
+          "status": "passed"
+        },
+        {
+          "name": "Search accepts canonical names and case-insensitive namespaced IDs; details show real forms/types and explicit unknown spawn/capture data",
+          "status": "passed"
+        },
+        {
+          "name": "Empty results, reset, valid unimplemented species and oversized search have explicit bounded behavior",
+          "status": "passed"
+        },
+        {
+          "name": "Collection filters and shiny-unavailable semantics are preserved; browsing and discard do not mutate official progress or give icons",
+          "status": "passed"
+        },
+        {
+          "name": "Seen/obtained/unseen/shiny-seen filters track official Cobblemon events without treating granted Pokémon as verified shiny captures",
+          "status": "passed"
+        },
+        {
+          "name": "Restricted wiki commands and stale species buttons enforce current LuckPerms permissions",
+          "status": "passed"
+        },
+        {
+          "name": "Stale wiki navigation revalidates reloaded collection criteria and returns safely to the collection",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "fixture_sha256": {
+    "tests/fixtures/spawning/datapacks/dex-spawn/data/dex_test/spawn_pool_world/disabled.json": "ac2a66db02bde8283f7c358a1ce6d7eeaf87ed8a06f5c79377fb380f81453ac8",
+    "tests/fixtures/spawning/datapacks/dex-spawn/data/dex_test/spawn_pool_world/rules.json": "6858a39e64c5d010ac2bed2d1ef58924e23d354d4f5d271408c3baf2959a0ca0",
+    "tests/fixtures/spawning/datapacks/dex-spawn/pack.mcmeta": "46009306ec5b0cc539cfbe3984572149d5121e9ede221a2ac97bc8edd790a9b6",
+    "tests/fixtures/datapacks/dex-progress/data/dex_test/species/future.json": "207af081e523ffe21bda7d9fb9e261eabd87c752ac5f176e3c680f678eaa598e",
+    "tests/fixtures/datapacks/dex-progress/data/dex_test/species/legend.json": "168bca01e68f935901b5f420f69ca12f1282f62faae9d7bd67b707ed17b75d89",
+    "tests/fixtures/datapacks/dex-progress/data/dex_test/species/ordinary.json": "da425bf7a35decfaf0946bae4d2ab2f1b5c73b11c1b3ce7abde8ff4648ad5324",
+    "tests/fixtures/datapacks/dex-progress/pack.mcmeta": "7e862f3ff62b192b7d79c709905a25c7a5a2b4dd1d58ff7172c51748bdaef5f8"
+  },
+  "lifecycle": {
+    "with_fixture": [
+      "[12:03:31] [Server thread/INFO] (Minecraft) Done (2.430s)! For help, type \"help\"",
+      "[12:14:45] [Server thread/INFO] (Minecraft) Stopping server",
+      "[12:14:46] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved"
+    ],
+    "after_removal": [
+      "[12:15:37] [Server thread/INFO] (Minecraft) Done (2.530s)! For help, type \"help\"",
+      "[12:17:26] [Server thread/INFO] (Minecraft) Stopping server",
+      "[12:17:27] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved"
+    ]
+  },
+  "cleanup": {
+    "sqlite_integrity": "ok",
+    "server_properties_restored": true,
+    "temporary_configs_removed": true,
+    "temporary_rcon_secret_removed": true,
+    "server_stopped": true
+  },
+  "audited_facts": [
+    "Only loaded world-pool PokemonSpawnDetail declarations are summarized; enabled=false fixture is absent.",
+    "Resolve namespaced species by PokemonSpecies.getByIdentifier, not getByName.",
+    "Keep biome IDs and #tag selectors raw; dimensions are declared IDs.",
+    "day: 23460..23999 and 0..12541; night: 12542..23459 (Minecraft ticks).",
+    "Positive condition groups remain separate from anticonditions; composite conditions flagged without interpretation.",
+    "Declared form preserved; applicability to selected forms/aspects not inferred."
+  ],
+  "corrected_attempts": [
+    "Initial getByName resolution double-prefixed namespaced fixture species; corrected to getByIdentifier and retested.",
+    "Reload runner expected a different species despite retained search; assertion corrected to empty results with original search."
+  ],
+  "limits": [
+    "No actual Pokemon spawn was invoked or verified.",
+    "No universal coverage: composite/global rules, custom selectors, weather/light/height/weights, herd/NPC/third-party spawners not fully interpreted.",
+    "No known supported rule differs from unavailable source; neither proves universal absence of natural spawn.",
+    "No visual client/load/new packaged alpha outside Loom verification.",
+    "Snapshot lifecycle/data-pack reload paths implemented; data-pack removal verified across restarts, not live registry hot reload.",
+    "No new release or environment configuration publication."
+  ]
+}
