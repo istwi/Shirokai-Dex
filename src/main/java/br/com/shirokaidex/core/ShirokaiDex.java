@@ -5,6 +5,7 @@ import br.com.shirokaidex.config.ConfigManager;
 import br.com.shirokaidex.database.Database;
 import br.com.shirokaidex.localization.Messages;
 import br.com.shirokaidex.menus.MainMenu;
+import br.com.shirokaidex.wiki.Wiki;
 import br.com.shirokaidex.permissions.Permissions;
 import br.com.shirokaidex.pokedex.*;
 import br.com.shirokaidex.config.Settings;
@@ -57,7 +58,9 @@ public final class ShirokaiDex implements ModInitializer {
             for (var collection : DexCollection.values()) {
                 root.then(literal(collection.id()).requires(source -> canAccess(source.getPlayer(), collection.id()))
                         .executes(context -> collection(context.getSource(), collection.id(), true))
-                        .then(literal("status").executes(context -> collection(context.getSource(), collection.id(), false))));
+                        .then(literal("status").executes(context -> collection(context.getSource(), collection.id(), false)))
+                        .then(literal("wiki").executes(context -> wiki(context.getSource(), collection.id(), Wiki.Request.initial("")))
+                                .then(argument("query", StringArgumentType.greedyString()).executes(context -> wiki(context.getSource(), collection.id(), Wiki.Request.initial(StringArgumentType.getString(context, "query")))))));
             }
             root.then(argument("collection", StringArgumentType.word())
                     .suggests((context, builder) -> {
@@ -69,7 +72,9 @@ public final class ShirokaiDex implements ModInitializer {
                         return builder.buildFuture();
                     })
                     .executes(context -> collection(context.getSource(), StringArgumentType.getString(context, "collection"), true))
-                    .then(literal("status").executes(context -> collection(context.getSource(), StringArgumentType.getString(context, "collection"), false))));
+                    .then(literal("status").executes(context -> collection(context.getSource(), StringArgumentType.getString(context, "collection"), false)))
+                    .then(literal("wiki").executes(context -> wiki(context.getSource(), StringArgumentType.getString(context, "collection"), Wiki.Request.initial("")))
+                            .then(argument("query", StringArgumentType.greedyString()).executes(context -> wiki(context.getSource(), StringArgumentType.getString(context, "collection"), Wiki.Request.initial(StringArgumentType.getString(context, "query")))))));
             dispatcher.register(root);
         });
         CobblemonEvents.POKEDEX_DATA_CHANGED_POST.subscribe((Consumer<PokedexDataChangedEvent.Post>) event -> {
@@ -161,7 +166,7 @@ public final class ShirokaiDex implements ModInitializer {
         if (!Permissions.has(player, definition.permission())) { source.sendFailure(messages.text(language(), "collection_denied")); return 0; }
         try {
             var value = cobblemon.collections(player, settings.collections()).get(id);
-            if (menu) MainMenu.openCollection(player, settings, messages, definition, value, () -> selector(source, 0));
+            if (menu) MainMenu.openCollection(player, settings, messages, definition, value, () -> selector(source, 0), () -> wiki(source, id, Wiki.Request.initial("")));
             else source.sendSuccess(() -> {
                 String name = MainMenu.displayName(definition, settings.language(), messages);
                 if (value.progress().registered().isEmpty()) return messages.text(settings.language(), "collection_unknown_status", name).copy()
@@ -173,6 +178,27 @@ public final class ShirokaiDex implements ModInitializer {
             return 1;
         } catch (RuntimeException failure) {
             LOG.error("Collection query failed for {}", player.getUUID(), failure);
+            source.sendFailure(messages.text(language(), "query_failed")); return 0;
+        }
+    }
+
+    private int wiki(CommandSourceStack source, String id, Wiki.Request request) {
+        if (!ready) { source.sendFailure(messages.text(language(), "not_ready")); return 0; }
+        ServerPlayer player = source.getPlayer();
+        if (player == null) { source.sendFailure(messages.text(language(), "players_only")); return 0; }
+        Settings settings = config.current();
+        var definition = settings.collections().stream().filter(value -> value.id().equals(id)).findFirst().orElse(null);
+        if (definition == null) { source.sendFailure(messages.text(language(), "collection_missing", id)); return 0; }
+        if (!Permissions.has(player, definition.permission())) { source.sendFailure(messages.text(language(), "collection_denied")); return 0; }
+        if (request.query().length() > 128) { source.sendFailure(messages.text(language(), "wiki_query_long")); return 0; }
+        try {
+            var page = Wiki.select(cobblemon.wiki(player), definition, request, 18);
+            MainMenu.openWiki(player, settings, messages, definition, request, page,
+                    next -> wiki(source, id, next), () -> collection(source, id, true),
+                    () -> { player.closeContainer(); source.sendSuccess(() -> messages.text(language(), "wiki_search_hint", id), false); });
+            return 1;
+        } catch (RuntimeException failure) {
+            LOG.error("Wiki query failed for {}", player.getUUID(), failure);
             source.sendFailure(messages.text(language(), "query_failed")); return 0;
         }
     }

@@ -1,6 +1,7 @@
 package br.com.shirokaidex.menus;
 
 import br.com.shirokaidex.config.Settings;
+import br.com.shirokaidex.wiki.Wiki;
 import br.com.shirokaidex.localization.Messages;
 import br.com.shirokaidex.pokedex.*;
 import net.minecraft.core.component.DataComponents;
@@ -50,13 +51,69 @@ public final class MainMenu extends ChestMenu {
         show(player, title, contents, actions);
     }
     public static void openCollection(ServerPlayer player, Settings settings, Messages messages,
-                                      CollectionDefinition definition, ProgressCalculator.CollectionProgress value, Runnable back) {
+                                      CollectionDefinition definition, ProgressCalculator.CollectionProgress value, Runnable back, Runnable wiki) {
         var contents = new SimpleContainer(27);
         Map<Integer, Runnable> actions = new HashMap<>();
         contents.setItem(13, collectionItem(definition, value, settings.language(), messages));
+        navigation(contents, actions, 15, messages.text(settings.language(), "wiki_open"), wiki);
         navigation(contents, actions, 18, messages.text(settings.language(), "menu_back"), back);
         closeButton(contents, actions, player, settings.language(), messages);
         show(player, settings.menuTitle() + " — " + displayName(definition, settings.language(), messages), contents, actions);
+    }
+    public static void openWiki(ServerPlayer player, Settings settings, Messages messages, CollectionDefinition definition,
+                                Wiki.Request request, Wiki.Page page, Consumer<Wiki.Request> navigate, Runnable back, Runnable searchHelp) {
+        var contents = new SimpleContainer(27);
+        Map<Integer, Runnable> actions = new HashMap<>();
+        String language = settings.language();
+        if (page.detail().isPresent()) {
+            contents.setItem(13, wikiItem(page.detail().get(), language, messages, true));
+            navigation(contents, actions, 18, messages.text(language, "wiki_back"), () -> navigate.accept(request.page(page.number())));
+        } else {
+            for (int i = 0; i < page.rows().size(); i++) {
+                var row = page.rows().get(i);
+                contents.setItem(i, wikiItem(row, language, messages, false));
+                actions.put(i, () -> navigate.accept(request.detail(row.id())));
+            }
+            if (page.rows().isEmpty()) {
+                var empty = new ItemStack(Items.PAPER);
+                empty.set(DataComponents.CUSTOM_NAME, messages.text(language, "wiki_empty")); contents.setItem(13, empty);
+            }
+            if (page.number() > 0) navigation(contents, actions, 18, messages.text(language, "page_previous"), () -> navigate.accept(request.page(page.number() - 1)));
+            if (page.number() + 1 < page.pages()) navigation(contents, actions, 26, messages.text(language, "page_next"), () -> navigate.accept(request.page(page.number() + 1)));
+            navigation(contents, actions, 19, messages.text(language, "wiki_filter", messages.text(language, "wiki.filter." + request.filter()).getString()),
+                    () -> navigate.accept(new Wiki.Request(request.query(), request.filter().next(), request.order(), 0, null)));
+            navigation(contents, actions, 20, messages.text(language, "wiki_order", messages.text(language, "wiki.order." + request.order()).getString()),
+                    () -> navigate.accept(new Wiki.Request(request.query(), request.filter(), request.order().next(), 0, null)));
+            navigation(contents, actions, 21, messages.text(language, "wiki_search", request.query()), searchHelp);
+            navigation(contents, actions, 24, messages.text(language, "wiki_clear"), () -> navigate.accept(Wiki.Request.initial("")));
+        }
+        navigation(contents, actions, 23, messages.text(language, "wiki_collection_back"), back);
+        closeButton(contents, actions, player, language, messages);
+        show(player, messages.text(language, "wiki_title", displayName(definition, language, messages), page.number() + 1, page.pages(), page.total()).getString(), contents, actions);
+    }
+    private static ItemStack wikiItem(Wiki.Row row, String language, Messages messages, boolean detail) {
+        var item = new ItemStack(Items.BOOK);
+        item.set(DataComponents.CUSTOM_NAME, Component.literal(row.name()));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.literal(row.id()));
+        lore.add(messages.text(language, "wiki_seen", yesNo(row.seen(), language, messages)));
+        lore.add(messages.text(language, "wiki_owned", yesNo(row.owned(), language, messages)));
+        lore.add(messages.text(language, "wiki_shiny_seen", yesNo(row.shinySeen(), language, messages)));
+        lore.add(messages.text(language, "collection_unavailable"));
+        if (detail) {
+            // One bounded line per form; conditions refer only to forms eligible for this collection.
+            for (var form : row.forms().stream().sorted(Comparator.comparing(ProgressCalculator.Form::name)).limit(32).toList()) {
+                lore.add(messages.text(language, "wiki_form", form.name(), String.join(", ", new TreeSet<>(form.types())),
+                        yesNo(form.seen(), language, messages), yesNo(form.owned(), language, messages), yesNo(form.shinySeen(), language, messages)));
+            }
+            if (row.forms().size() > 32) lore.add(messages.text(language, "wiki_more_forms", row.forms().size() - 32));
+            lore.add(messages.text(language, "wiki_spawn_unknown"));
+        } else lore.add(messages.text(language, "wiki_details"));
+        item.set(DataComponents.LORE, new ItemLore(lore));
+        return item;
+    }
+    private static String yesNo(boolean value, String language, Messages messages) {
+        return messages.text(language, value ? "wiki_yes" : "wiki_no").getString();
     }
     private static void navigation(SimpleContainer contents, Map<Integer, Runnable> actions, int slot, Component name, Runnable action) {
         var arrow = new ItemStack(Items.ARROW); arrow.set(DataComponents.CUSTOM_NAME, name);

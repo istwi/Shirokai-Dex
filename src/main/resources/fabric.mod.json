@@ -3,7 +3,7 @@
   "id": "shirokaidex",
   "version": "${version}",
   "name": "Shirokai Dex",
-  "description": "Fundação experimental da Pokédex do Shirokai. Fase 1.",
+  "description": "Pokédex experimental do Shirokai: coleções, progresso oficial e wiki de espécies.",
   "environment": "server",
   "entrypoints": {"main": ["br.com.shirokaidex.core.ShirokaiDex"]},
   "depends": {

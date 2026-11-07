@@ -93,3 +93,7 @@ Coleções com permissão são ocultadas no seletor e nas sugestões dinâmicas 
 Um reload válido invalida os snapshots de progresso e atualiza a árvore de comandos dos jogadores online. Isso não recarrega o registro de espécies do Cobblemon. No startup, o backup também deve passar pela validação semântica antes de ser usado; arquivo inválido original permanece para diagnóstico.
 
 Wiki, busca, ranking, recompensas, categorias históricas, modelos complexos de condições e placeholders de terceiros ainda não estão concluídos.
+
+## Wiki da coleção (alpha.3)
+
+`/dex <id> wiki [pesquisa]` e o botão na página da coleção abrem a wiki usando os mesmos critérios de espécies/formas/tipos/labels e a mesma permissão. Espécies não implementadas permanecem fora da lista. Navegação e detalhes revalidam configuração e autorização inclusive após reload/revogação. [Pesquisa, controles e limites](WIKI.md).

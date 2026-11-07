@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0-alpha.3 — wiki inicial (desenvolvimento)
+
+- Wiki por coleção via botão e `/dex <id> wiki [pesquisa]`, com 18 espécies por página, ordenação por nome/ID e filtros vistas/obtidas/não vistas/shiny vistas.
+- Detalhes com nomes canônicos, IDs, formas/tipos e estado oficial; spawn e captura shiny verificada explicitamente indisponíveis.
+- Reutiliza critérios/permissões e snapshot do progresso; ações antigas revalidam acesso e configuração após reload.
+- Nove testes Java novos (78 no total), integração da wiki e regressão das coleções em servidor real; limites documentados em `docs/WIKI.md`. Sem nova release ou publicação de ambiente.
+
 ## Não lançado — validação complementar da alpha.2
 
 - Runner/fixture de contexto por dimensão: LuckPerms `world=overworld`, reload autorizado/negado, retorno e revogação com menu aberto, sem OP.

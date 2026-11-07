@@ -2,24 +2,26 @@
 
 ## Última tarefa realizada
 
-Retomada autorizada após a pausa. Base sincronizada: `41e0b7b3266af4ff2d2b17c2c352b779f68949f7` (coleções JSON). Fundação e coleções já existiam; não foram reimplementadas. Entrega atual identificada pelo assunto `test: validate contextual permissions and protected inventory menus`.
+Wiki inicial implementada na alpha `0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3`, baseada em `5ad1b60ddd5c6ce7353e8ce6942b54064e852128`. Entrega identificada pelo assunto `feat: add searchable paginated species wiki`. Nenhuma fundação ou coleção existente foi reimplementada.
 
-Build atual aprovado com **69 JUnit**, zero falhas/erros/skips. Novo runner de contextos/menus: **8 checks aprovados**, repetidos com novo perfil descartável em servidor de desenvolvimento real, LuckPerms Fabric 5.4.140. Grant/reload por dimensão, retorno/revogação, descarte, double-click, drag, clone criativo/clique externo e integridade de inventário/progresso verificados. [Evidência](validation/phase2-contexts.json), [reprodução](TESTING.md).
+Comandos `/dex <id> wiki [pesquisa]` e botão na página da coleção; pesquisa por nome canônico/ID, paginação de 18 espécies, filtros de estados, ordenação e detalhes. Permissões/critério atual revalidados em callbacks, inclusive após reload. Spawn e captura shiny verificada explicitamente indisponíveis. [Guia e limites](WIKI.md).
 
-Init script opt-in `scripts/server_proxy.init.gradle` repassa proxy/truststore do Gradle à JVM filha de `runServer`; corrigiu falha de download LuckPerms por proxy ausente sem relaxar TLS. LuckPerms usa `world=overworld`, sem namespace, e comandos RCON assíncronos precisam de espaçamento/validação observável. Nenhuma alteração no mod nem mudança de dependências foi necessária. Servidor encerrado, mundos salvos, SQLite íntegro, configuração local anterior restaurada e segredo temporário removido.
+78 JUnit (nove novos), zero falhas/erros/skips. Oito checks de wiki, nove de regressão de coleções com LuckPerms e 12 de fundação sem LuckPerms, em servidor dev real. [Evidência](validation/phase2-wiki.json). Uma assertion inicial supôs que só a fixture seria lendária/normal; Regigigas real também é elegível. Teste corrigido para consultar o namespace da fixture, sem alterar critérios do mod.
 
-Nenhuma release ou configuração de ambiente foi publicada. A pré-release v0.1.0-alpha.1 permanece imutável; o workflow publish-alpha.yml é específico dela. Conferir SHA/push desta entrega com Git; o assunto identifica o commit sem autorreferência circular.
+Servidores encerrados, mundos salvos e SQLite íntegro; configurações/mod anteriores restaurados e senha RCON removida. Artefato em `build/libs/shirokai-dex-0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3.jar`. Não houve publicação de ambiente nem release. Pré-release v0.1.0-alpha.1 permanece imutável. Confirmar SHA e remoto pelo Git.
 
 ## Próxima tarefa exata
 
-1. Execute o protocolo de AGENTS, sincronize sem descarte e leia checklist/estado/auditoria. Confira o código e não use o antigo resumo “somente esqueleto” como estado atual.
-2. Continuar a Fase 2 com a wiki navegável por espécie, pesquisa/filtros/ordenação/paginação e evolução das categorias. Reutilizar coleções JSON, filtros, modelos e percentuais existentes; auditar os métodos de nome/formas/tipos/dados de spawn antes da integração. Informação de spawn desconhecida deve permanecer explicitamente indisponível.
-3. Quando houver cliente Minecraft/Cobblemon real: validar aparência e gestos na interface. Os pacotes já testados não certificam renderização. Contextos LuckPerms adicionais/herança e desempenho continuam complementares; não refazer grants globais e dimensão já verificados.
-4. Reutilizar a fixture namespaced e os testes de totais entre reinícios para expandir datapacks/formas. O registro Cobblemon não é seguro para hot reload; não chamar reload de espécies para forçar o teste.
-5. Não tratar OWNED como captura competitiva nem inferir captura shiny a partir de shiny visto. Capturas, recompensas/economia e competições continuam fora desta entrega.
-6. Atualizar checklist, estado, próximos passos, auditoria e changelog; executar testes aplicáveis, commit/push autorizado e confirmação remota. Não publicar ambiente nem release sem autorização.
+1. Executar protocolo AGENTS e sincronizar sem descarte. Não reiniciar fundação, coleções ou wiki já implementadas.
+2. Continuar Fase 2 pelos **placeholders básicos**: conferir artefato/API real da Text Placeholder API 2.4.2+1.21 e remapeamento no ambiente Mojang; validar registro/expansão no servidor. Expor progresso/total por coleção sem consulta pesada e com semântica explícita para indisponível/permissões. Não sobrescrever alias já registrado; TAB e alias legado exigem testes próprios.
+3. Evoluções posteriores da wiki: auditar dados reais de spawn, filtros adicionais por tipo/categoria e consulta de todas as formas além do limite de 32; nomes localizados por cliente se houver API adequada. Manter informação desconhecida distinta de ausência confirmada de spawn natural. Não inventar biomas/horários.
+4. Com cliente Minecraft/Cobblemon real disponível, conferir aparência/gestos. Nova alpha fora do Loom e carga continuam pendentes; não reutilizar evidência antiga como certificação do JAR novo.
+5. Reutilizar fixtures/testes existentes de datapacks, percentuais, coleções e wiki. `OWNED` não equivale a captura competitiva; shiny visto não comprova captura shiny; não forçar hot reload do registro Cobblemon.
+6. Atualizar checklist/estado/auditoria/changelog, executar testes aplicáveis e commit/push autorizado com confirmação remota. Não publicar ambiente nem release sem autorização.
 
 ## Arquivos importantes
+
+- `wiki/Wiki.java`, `WikiTest`, `MainMenu.openWiki`, `CobblemonAccess.wiki`, comandos em `ShirokaiDex`, `tests/integration/wiki.cjs` e [guia](WIKI.md): entrega atual.
 
 - `scripts/server_proxy.init.gradle`, `tests/integration/contexts.cjs`, `tests/fixtures/contexts/config.json` e [evidência de contextos](validation/phase2-contexts.json): complemento de validação mais recente.
 

@@ -2,6 +2,8 @@
 
 O percentual foi solicitado explicitamente pelo usuário e já consta no prompt mestre. Esta etapa adiciona consulta por coleção e porcentagem; não conclui todos os sistemas da Fase 2.
 
+A alpha.3 acrescenta a [wiki de espécies](WIKI.md), com pesquisa, filtros, ordenação, paginação e detalhes somente de leitura em cada coleção.
+
 ## Como aparece
 
 - `/dex`: seletor com Nacional, Shiny e Lendária; cada ícone mostra seu estado de progresso.
@@ -36,4 +38,4 @@ O total acompanha o registro real após startup. Alterações de datapack de esp
 
 ## Limites desta etapa
 
-[Coleções por JSON](COLLECTIONS.md) e filtros iniciais foram adicionados na alpha.2. Critérios avançados/categorias históricas, wiki/pesquisa/paginação por espécie, placeholders Fabric/TAB e recompensas continuam pendentes. Nacional/Lendária são as coleções iniciais de progresso, não a Fase 2 completa. O cálculo puro e o adaptador Cobblemon estão separados para permitir essa evolução.
+[Coleções por JSON](COLLECTIONS.md) e filtros iniciais foram adicionados na alpha.2. Critérios avançados/categorias históricas, dados de spawn e demais evoluções da wiki, placeholders Fabric/TAB e recompensas continuam pendentes. Pesquisa/paginação por espécie já estão disponíveis na alpha.3. Nacional/Lendária são as coleções iniciais de progresso, não a Fase 2 completa. O cálculo puro e o adaptador Cobblemon estão separados para permitir essa evolução.

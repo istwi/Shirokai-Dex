@@ -1,0 +1,229 @@
+{
+  "base_commit": "5ad1b60ddd5c6ce7353e8ce6942b54064e852128",
+  "version": "0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3",
+  "toolchain": {
+    "java": "Temurin 21.0.13+9",
+    "gradle": "8.14.3",
+    "loom": "1.11.8"
+  },
+  "api_audit": {
+    "new_method": "com.cobblemon.mod.common.pokemon.Species.getName(): String; signature inspected with javap on the pinned binary, then compiled and exercised on the real development server",
+    "artifact": "com.cobblemon:fabric:1.8.3+1.21.1",
+    "sha256": "4bc3b09d25b93b74a5822dc35b06bd6f5fa8bae36ed43a8d2b3904156a61269c",
+    "reused_methods": "PokemonSpecies.getByIdentifier and the existing immutable official progress/form/type snapshot",
+    "spawn": "No spawn data provider integrated; UI says information unavailable, not no natural spawn"
+  },
+  "unit_suites": [
+    {
+      "name": "br.com.shirokaidex.config.CollectionsConfigTest",
+      "tests": "31",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:42:23.922Z"
+    },
+    {
+      "name": "br.com.shirokaidex.config.ConfigManagerTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:42:24.158Z"
+    },
+    {
+      "name": "br.com.shirokaidex.database.DatabaseTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:42:24.196Z"
+    },
+    {
+      "name": "br.com.shirokaidex.pokedex.ConfiguredProgressTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:42:24.749Z"
+    },
+    {
+      "name": "br.com.shirokaidex.pokedex.DexProgressTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:42:24.758Z"
+    },
+    {
+      "name": "br.com.shirokaidex.wiki.WikiTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:42:24.768Z"
+    }
+  ],
+  "protocol_reports": {
+    "wiki": {
+      "timestamp": "2026-11-07T10:38:35.964Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+      "test_player": "DexWiki",
+      "results": [
+        {
+          "name": "Collection button opens a dynamic wiki; pagination is stable and reversible",
+          "status": "passed"
+        },
+        {
+          "name": "Wiki supports deterministic ordering by identifier",
+          "status": "passed"
+        },
+        {
+          "name": "Search accepts canonical names and case-insensitive namespaced IDs; details show real forms/types and explicit unknown spawn/capture data",
+          "status": "passed"
+        },
+        {
+          "name": "Empty results, reset, valid unimplemented species and oversized search have explicit bounded behavior",
+          "status": "passed"
+        },
+        {
+          "name": "Collection filters and shiny-unavailable semantics are preserved; browsing and discard do not mutate official progress or give icons",
+          "status": "passed"
+        },
+        {
+          "name": "Seen/obtained/unseen/shiny-seen filters track official Cobblemon events without treating granted Pokémon as verified shiny captures",
+          "status": "passed"
+        },
+        {
+          "name": "Restricted wiki commands and stale species buttons enforce current LuckPerms permissions",
+          "status": "passed"
+        },
+        {
+          "name": "Stale wiki navigation revalidates reloaded collection criteria and returns safely to the collection",
+          "status": "passed"
+        }
+      ]
+    },
+    "collections": {
+      "timestamp": "2026-11-07T10:39:26.276Z",
+      "test_player": "DexCollections3",
+      "results": [
+        {
+          "name": "JSON species whitelist resolves namespaced species; unimplemented species remains valid but has no eligible progress",
+          "status": "passed"
+        },
+        {
+          "name": "Selector paginates more than 18 collections and hides restricted collection on every page",
+          "status": "passed"
+        },
+        {
+          "name": "Custom owned/seen collections combine species, labels, types, forms and exclude precedence correctly",
+          "status": "passed"
+        },
+        {
+          "name": "Explicit SHINY_SEEN uses official seen state while SHINY_CAPTURED remains unavailable",
+          "status": "passed"
+        },
+        {
+          "name": "Type-filtered collection resolves real Cobblemon elemental types",
+          "status": "passed"
+        },
+        {
+          "name": "LuckPerms positive permission works and stale GUI button rechecks revocation without leaking its icon",
+          "status": "passed"
+        },
+        {
+          "name": "Administrative reload succeeds with an explicit LuckPerms grant and was denied before the grant",
+          "status": "passed"
+        },
+        {
+          "name": "Invalid registry reference rejects the whole reload including title/language and preserves last-good backup",
+          "status": "passed"
+        },
+        {
+          "name": "Valid reload atomically applies metadata/filters and invalidates cached collection percentage",
+          "status": "passed"
+        }
+      ]
+    },
+    "foundation": {
+      "timestamp": "2026-11-07T10:41:14.400Z",
+      "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3",
+      "results": [
+        {
+          "name": "Fabric login with Cobblemon and without LuckPerms/other optional integrations",
+          "status": "passed"
+        },
+        {
+          "name": "Official Pokédex query against dynamic registry (907 implemented species)",
+          "status": "passed"
+        },
+        {
+          "name": "Initial server-side inventory menu opens",
+          "status": "passed"
+        },
+        {
+          "name": "Collection selector navigates to national progress page",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks pickup without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks right click without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks shift click without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Menu blocks hotbar swap without transferring the display item",
+          "status": "passed"
+        },
+        {
+          "name": "Close button closes the menu",
+          "status": "passed"
+        },
+        {
+          "name": "Public wiki and species details work without LuckPerms or other optional integrations",
+          "status": "passed"
+        },
+        {
+          "name": "Official progress unchanged and no display items left in player inventory",
+          "status": "passed"
+        },
+        {
+          "name": "Administrative reload rejected without LuckPerms permission",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "runtime": "Dedicated development Loom server, Minecraft 1.21.1/Fabric 0.17.2/Cobblemon 1.8.3, offline and loopback only; collections/datapack fixtures installed; wiki and collections with LuckPerms Fabric 5.4.140, foundation without LuckPerms",
+  "startup_evidence": [
+    "[10:36:46] [main/INFO] (Cobblemon) Loaded 1028 Pokémon species",
+    "[10:36:50] [shirokaidex-sqlite/INFO] (shirokaidex) Shirokai Dex ready: configuration validated, SQLite migration 1 applied/verified",
+    "[10:36:50] [Server thread/INFO] (luckperms) Successfully enabled. (took 434ms)",
+    "[10:37:00] [Server thread/INFO] (Minecraft) Done (9.224s)! For help, type \"help\"",
+    "[10:39:55] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved"
+  ],
+  "jar": {
+    "name": "shirokai-dex-0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "99a696e2d5284be7df240f12f29ab3ae0d7e334315bddac3ee1f29a4c2e3a63f",
+    "scope": "Final build output; this new alpha was not tested installed outside Loom"
+  },
+  "diagnosed_attempt": "Initial fixture category assertion expected only the custom legendary normal species, but real Regigigas also matches. Test query was scoped to dex_test namespace; dynamic application classification was preserved. No game code was altered to suppress the result.",
+  "shutdown": {
+    "server": "Both development servers stopped with stop; all dimensions saved",
+    "sqlite_integrity_check": "ok",
+    "local_state": "Original server.properties and LuckPerms JAR restored; test config JSON removed; temporary RCON secret removed"
+  },
+  "limitations": [
+    "No Minecraft visual client or load test",
+    "No current-alpha packaged-server test outside Loom",
+    "No reliable spawn biome/dimension/time provider",
+    "Canonical names/types/forms, not per-client translations; details cap at 32 forms with explicit overflow notice",
+    "Wiki initial only; full JSON layouts, broader category filters and complete Phase 2 remain pending"
+  ]
+}

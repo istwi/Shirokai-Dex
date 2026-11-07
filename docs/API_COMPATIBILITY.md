@@ -10,6 +10,16 @@ Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificaç�
 
 A auditoria estática inicial não executou testes funcionais. As validações posteriores da fundação estão separadas abaixo; captura, resgate e economia continuam sem testes funcionais.
 
+## Atualização: wiki inicial — alpha.3
+
+API nova utilizada: `com.cobblemon.mod.common.pokemon.Species.getName(): String`, conferida com `javap` no artefato Maven fixado `com.cobblemon:fabric:1.8.3+1.21.1`, depois compilada e executada no servidor real. `PokemonSpecies.getByIdentifier(ResourceLocation)` resolve o ID do snapshot para obter o nome canônico. Não se presume tradução por cliente. Formas, tipos, labels, conhecimento e shiny visto reutilizam os getters auditados anteriormente e o mesmo snapshot imutável/cache do progresso.
+
+A wiki usa somente espécies implementadas e os critérios reais da coleção, incluindo a forma padrão. Testes com a fixture namespaced confirmaram nome, IDs, tipos e estados. A primeira assertion de integração presumiu que a categoria lendária/normal conteria só a fixture; o registro real também contém Regigigas. O teste passou a restringir a consulta ao namespace da fixture, preservando a classificação dinâmica do mod.
+
+`VERIFIED` neste escopo: pesquisa por nome/ID, paginação e ordenação, filtros visto/obtido/não visto/shiny visto, detalhes, atualização por eventos oficiais, isolamento de ícones, permissões e revalidação após reload. 78 JUnit, 8 checks de wiki, 9 de coleções e 12 de fundação sem LuckPerms em servidor dev. [Evidência](validation/phase2-wiki.json).
+
+Spawn continua `PENDING_TEST`: não foi integrada uma consulta de biomas/horários/dimensões. A GUI informa indisponibilidade; não afirma ausência de spawn natural. Captura shiny permanece indisponível, sem inferência a partir de shiny visto/obtido. Cliente visual, carga e instalação do novo JAR fora do Loom não foram validados nesta entrega. [Comportamento e limites](WIKI.md).
+
 ## Atualização: contextos por dimensão e protocolo de inventário
 
 Complemento sobre `41e0b7b`, sem alteração nas APIs utilizadas pelo mod: build atual com 69 JUnit aprovado; 8 checks em servidor Loom/Fabric/Cobblemon real com LuckPerms Fabric 5.4.140, repetidos com um perfil novo. [Evidência](validation/phase2-contexts.json).
@@ -147,7 +157,7 @@ Em `dev.shirokaicrates.ShirokaiCrates`, o registro real é `/crates givekey <pla
 
 `service.CrateService.give(ServerPlayerEntity admin, ServerPlayerEntity target, String id, int count, boolean fragment)` confere permissão, saúde, crate existente, espaço e estado busy; cria token via `tokens.create`, insere e solicita checkpoint. Retorna `void`, sem recibo idempotente para o Dex. Não há contrato de integração pública verificado para recompensas automáticas. Alternativa futura: contrato público com ID de operação e confirmação persistente no Crates, ou adaptador de item salvo somente após validar componentes e semântica dos tokens. `CRATE_KEY` permanece desabilitado até testes e definição do contrato; nenhuma alteração foi feita no Crates.
 
-Spawn/wiki (`PENDING_TEST`): não foi validada uma consulta universal de biomas/horários, sobretudo para spawners de outros mods/datapacks. Mostrar “Informação de aparecimento indisponível.”; ausência de informação não prova ausência de spawn natural.
+Wiki inicial (`VERIFIED` no escopo da alpha.3 acima); spawn (`PENDING_TEST`): não foi validada uma consulta universal de biomas/horários, sobretudo para spawners de outros mods/datapacks. Mostrar “Informação de aparecimento indisponível.”; ausência de informação não prova ausência de spawn natural.
 
 ## Acesso e testes executados
 

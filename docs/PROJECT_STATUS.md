@@ -2,6 +2,18 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
+## Entrega atual — wiki inicial (alpha.3)
+
+Base sincronizada: `5ad1b60ddd5c6ce7353e8ce6942b54064e852128`, sem mudanças ou commits locais pendentes na retomada. Versão `0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3`; commit identificado pelo assunto `feat: add searchable paginated species wiki`.
+
+Implementada wiki por coleção via botão e `/dex <id> wiki [pesquisa]`: 18 espécies por página, busca por nome canônico/ID, ordenação nome/ID, filtros todas/vistas/obtidas/não vistas/shiny vistas e detalhes de formas/tipos/estados. Critérios e permissões reutilizados; clique antigo revalida acesso e elegibilidade após revogação/reload. Snapshot compartilhado com o progresso, sem escrita na Pokédex nem varredura por tick. [Guia](WIKI.md).
+
+Validação atual: **78 JUnit**, zero falhas/erros/skips; **8 checks de wiki**, **9 de regressão de coleções com LuckPerms** e **12 de fundação sem LuckPerms**, em servidor dev real com datapack namespaced. Navegação não alterou progresso nem entregou ícones; atualização por evento oficial e revalidação após reload foram testadas. [Evidência](validation/phase2-wiki.json).
+
+Dados de spawn continuam indisponíveis, sem inferir ausência de spawn natural. Captura shiny permanece N/D. Nomes de espécie/tipo/forma são canônicos; detalhes limitam a 32 formas com aviso. Cliente visual, carga e instalação desta nova alpha fora do Loom continuam pendentes. Wiki completa/menus JSON avançados e o restante da Fase 2 não estão concluídos.
+
+Servidores encerrados com `stop`, mundos salvos, SQLite íntegro e configurações/mod local anteriores restaurados; segredo RCON temporário removido. JAR em `build/libs/shirokai-dex-0.2.0-alpha.3+mc1.21.1-cobblemon1.8.3.jar`. Nenhuma release nem configuração de ambiente publicada.
+
 ## Retomada — permissões por dimensão e menus protegidos
 
 Desenvolvimento retomado por solicitação do usuário, a partir do remoto `41e0b7b3266af4ff2d2b17c2c352b779f68949f7`, sem alterações ou commits locais pendentes. A descrição de “somente esqueleto” recebida na retomada era histórica: fundação, percentuais e coleções JSON já estavam implementados. Nenhuma dessas funcionalidades foi reimplementada.
@@ -26,7 +38,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Fase atual
 
-**Início da Fase 2 — porcentagens e coleções iniciais**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
+**Fase 2 — porcentagens, coleções e wiki inicial**, sobre a fundação validada. Nacional/Lendária exibem quantidade/total e %, Shiny é explicitamente N/D enquanto não houver evidência confiável de captura. A Fase 2 completa ainda está pendente. Auditoria da Fase 0 é incremental: consulta básica comprovada; captura, criação/entrega de Pokémon e economia não estão funcionalmente verificadas. Não é mod completo nem release estável.
 
 ## Concluído
 
@@ -46,7 +58,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Em desenvolvimento
 
-- Wiki/menus avançados, evolução de categorias e placeholders da Fase 2. Coleções e critérios JSON já estão implementados; captura shiny histórica permanece indisponível.
+- Evolução da wiki, menus avançados, categorias e placeholders da Fase 2. Wiki inicial, coleções e critérios JSON já estão implementados; captura shiny histórica permanece indisponível.
 
 
 - Testes complementares: aparência/gestos em cliente Minecraft real, contextos LuckPerms adicionais e carga. O cenário de dimensão e os pacotes de inventário descritos acima foram verificados.
@@ -54,7 +66,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Pendente
 
-- Fases 2–8: Pokédex completas, categorias/datapacks/wiki, recompensas, capturas/estatísticas, rankings, competições, conquistas/perfis e integrações avançadas.
+- Fases 2–8: wiki completa/dados de spawn, categorias/datapacks adicionais e placeholders, recompensas, capturas/estatísticas, rankings, competições, conquistas/perfis e integrações avançadas.
 - Cliente visual e testes de carga; herança/contextos LuckPerms além do cenário de dimensão verificado.
 - Layouts JSON completos e documentação das funcionalidades ainda não implementadas.
 - Licença do código próprio e release estável. Nenhuma configuração de ambiente foi alterada/publicada nesta entrega.

@@ -10,6 +10,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import br.com.shirokaidex.pokedex.*;
 import br.com.shirokaidex.config.CollectionValidator;
 import java.util.*;
+import br.com.shirokaidex.wiki.Wiki;
+import net.minecraft.resources.ResourceLocation;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 public final class CobblemonAccess {
     private record Cached(long created, List<ProgressCalculator.Species> entries,
                           Map<DexCollection, ProgressCalculator.CollectionProgress> defaults,
-                          List<CollectionDefinition> definitions, Map<String, ProgressCalculator.CollectionProgress> configured) { }
+                          List<CollectionDefinition> definitions, Map<String, ProgressCalculator.CollectionProgress> configured, List<Wiki.Entry> wiki) { }
     private final Map<UUID, Cached> cache = new HashMap<>();
     public record Progress(int total, int seen, int owned) { }
     public Progress progress(ServerPlayer player) {
@@ -35,9 +37,10 @@ public final class CobblemonAccess {
         var previous = cached(player);
         if (previous.definitions().equals(definitions)) return previous.configured();
         var values = ProgressCalculator.calculate(previous.entries(), definitions);
-        cache.put(player.getUUID(), new Cached(previous.created(), previous.entries(), previous.defaults(), List.copyOf(definitions), values));
+        cache.put(player.getUUID(), new Cached(previous.created(), previous.entries(), previous.defaults(), List.copyOf(definitions), values, previous.wiki()));
         return values;
     }
+    public List<Wiki.Entry> wiki(ServerPlayer player) { return cached(player).wiki(); }
     private Cached cached(ServerPlayer player) {
         if (!player.server.isSameThread()) throw new IllegalStateException("Pokédex access requires the server thread");
         long now = System.nanoTime();
@@ -45,7 +48,8 @@ public final class CobblemonAccess {
         if (previous != null && now - previous.created() < TimeUnit.SECONDS.toNanos(5)) return previous;
         var dex = Cobblemon.INSTANCE.getPlayerDataManager().getPokedexData(player);
         var entries = snapshot(PokemonSpecies.INSTANCE.getImplemented(), dex);
-        var value = new Cached(now, entries, ProgressCalculator.calculate(entries), List.of(), Map.of());
+        var wiki = entries.stream().map(entry -> new Wiki.Entry(PokemonSpecies.INSTANCE.getByIdentifier(ResourceLocation.parse(entry.id())).getName(), entry)).toList();
+        var value = new Cached(now, entries, ProgressCalculator.calculate(entries), List.of(), Map.of(), wiki);
         cache.put(player.getUUID(), value); return value;
     }
     private static List<ProgressCalculator.Species> snapshot(Collection<Species> speciesEntries, PokedexManager dex) {

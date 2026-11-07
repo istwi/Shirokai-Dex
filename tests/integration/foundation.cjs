@@ -81,6 +81,17 @@ async function main() {
   await bot.clickWindow(22, 0, 0);
   await until(() => !bot.currentWindow);
   pass('Close button closes the menu');
+  bot.chat('/dex national wiki');
+  await until(() => bot.currentWindow);
+  const wiki = bot.currentWindow;
+  assert(JSON.stringify(wiki.title).includes('Wiki'));
+  assert.equal(wiki.slots[0].name, 'book');
+  await bot.clickWindow(0, 0, 0);
+  await until(() => bot.currentWindow && bot.currentWindow !== wiki);
+  assert(JSON.stringify(bot.currentWindow.slots[13].components).includes('Informação de aparecimento indisponível'));
+  await bot.clickWindow(22, 0, 0);
+  await until(() => !bot.currentWindow);
+  pass('Public wiki and species details work without LuckPerms or other optional integrations');
   const after = await command('/dex status', message => message.includes('Pokédex oficial:'));
   assert.equal(after, before);
   assert(!bot.inventory.items().some(item => ['book', 'barrier', 'amethyst_shard', 'nether_star', 'arrow'].includes(item.name)));

@@ -6,7 +6,7 @@
 ./gradlew --no-daemon build
 ```
 
-Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 69 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
+Na nuvem, use JDK 21 e `python3 scripts/gradle_cloud.py`, conforme [instalação](INSTALLATION.md). Última execução local: 78 casos, zero falhas/erros/skips. `ConfigManagerTest`: 16 casos de parsing estrito, campos duplicados/tipos, reload inválido, backup e recuperação após reinício. `DatabaseTest`: 4 casos de migração/reabertura, 100 atualizações para um UUID, versão futura, rollback e operações após fechamento.
 
 `DexProgressTest` adiciona 12 casos de cálculo, truncamento, vazio/indisponível, IDs namespaced, denominador dinâmico, formas e duplicação.
 
@@ -46,7 +46,7 @@ npm ci --ignore-scripts --no-audit --no-fund
 npm test
 ```
 
-Se o diretório pessoal for somente de leitura, acrescente `--cache /workspace/.cache/npm` aos comandos npm. Para outra porta loopback: `MC_TEST_PORT=25572 npm test`. O smoke conecta `DexFoundation`, verifica consulta oficial, menu, bloqueio de pickup/clique direito/Shift/hotbar, fechamento, ausência de itens indevidos, progresso inalterado e rejeição de reload sem LuckPerms. Total atual: 11 verificações na execução aprovada, incluindo navegação do seletor para a página Nacional. O relatório é sobrescrito por execução em `build/integration-foundation.json`, com timestamp e target.
+Se o diretório pessoal for somente de leitura, acrescente `--cache /workspace/.cache/npm` aos comandos npm. Para outra porta loopback: `MC_TEST_PORT=25572 npm test`. O smoke conecta `DexFoundation`, verifica consulta oficial, menu, bloqueio de pickup/clique direito/Shift/hotbar, fechamento, ausência de itens indevidos, progresso inalterado e rejeição de reload sem LuckPerms. Total atual: 12 verificações, incluindo navegação do seletor para a página Nacional e wiki/detalhes sem LuckPerms. O relatório é sobrescrito por execução em `build/integration-foundation.json`, com timestamp e target.
 
 O cliente de protocolo ignora metadados de entidades, receitas, advancements e árvore de comandos customizados que a biblioteca vanilla não entende. Inventário, comandos executados e respostas testadas são reais, não mocks. Isto não valida renderização em cliente Minecraft/Cobblemon, sugestões de comandos, receitas nem mecânicas de batalha/captura.
 
@@ -88,7 +88,7 @@ Fixtures em tests/fixtures/collections e datapacks/dex-progress (agora inclui es
 
 Depois dos 9 checks, um JSON inválido foi colocado no arquivo ativo, servidor encerrado e reiniciado; `MC_COLLECTIONS_MODE=after-restart` com o mesmo perfil validou backup semântico, progresso persistido e navegação nos dois sentidos. O runner usa comandos oficiais de obtenção de Pokémon e grants LuckPerms pelo RCON; não concede registros artificiais de Pokédex. Encerrar o servidor e restaurar configurações originais; senha temporária não deve sobreviver ao teste.
 
-Wiki, visualização em cliente real, desempenho e captura shiny histórica seguem pendentes. A documentação histórica das alphas anteriores mantém seus próprios relatórios imutáveis; contextos de dimensão foram verificados no complemento abaixo.
+Na alpha.2 a wiki ainda era pendente; a alpha.3 adiciona a versão inicial descrita abaixo. Visualização em cliente real, desempenho e captura shiny histórica seguem pendentes. A documentação histórica das alphas anteriores mantém seus próprios relatórios imutáveis; contextos de dimensão foram verificados no complemento abaixo.
 
 ## Contextos de dimensão e pacotes de inventário
 
@@ -107,3 +107,19 @@ MC_TEST_RCON_PASSWORD_FILE=/caminho/seguro/temporario \
 Oito checks agrupados verificam: permissão/reload por `world=overworld`; negação e ocultação no Nether; restauração no retorno/revogação com GUI aberta; descarte individual/pilha; double-click com cursor forjado; fases de arraste esquerdo/direito; clone criativo/clique externo; contagens autoritativas do inventário, ausência de itens largados, reabertura e progresso oficial intacto. Os testes aguardam atualizações completas do servidor, sem confundir predição local do cliente com estado confirmado. Os pacotes são reais; o runner não modifica o mod para ignorar assertions.
 
 Relatório por execução: `build/integration-contexts.json`. [Evidência preservada](validation/phase2-contexts.json). Esta execução complementar usa o servidor de desenvolvimento Loom; não é uma nova certificação do JAR instalado fora do Loom, autenticação online, cliente visual ou carga. Ao terminar, envie `stop`, confira salvamento/fechamento e remova a senha RCON temporária e sua propriedade; restaure a configuração local anterior.
+
+## Wiki inicial (alpha.3)
+
+`WikiTest` acrescenta nove casos de seleção pura: nomes/IDs, desempate/ordem, paginação limitada, filtros de estados, critérios e exclusões, conhecimento por forma elegível, Shiny sem histórico, revalidação de detalhes e consulta vazia/inválida. Total atual: **78 JUnit**, zero falhas/erros/skips.
+
+Runner `npm run test:wiki`, no diretório `tests/integration`, exige servidor descartável loopback com LuckPerms 5.4.140, RCON e as fixtures `tests/fixtures/collections/config.json` e `tests/fixtures/datapacks/dex-progress`. Instale o datapack em `<mundo>/datapacks/dex-progress` com o servidor parado, preservando configurações existentes, e aguarde `Shirokai Dex ready`, `Done` e RCON. O responsável já precisa ter aceitado a EULA. Não utilizar perfis ou dados de produção.
+
+```sh
+MC_TEST_RCON_PASSWORD_FILE=/caminho/seguro/temporario MC_WIKI_PLAYER=DexWiki npm run test:wiki
+```
+
+O nome descartável deve ter até 16 caracteres e Pokédex inicial vazia. `MC_TEST_PORT`, `MC_TEST_RCON_PORT` e `MC_TEST_RUN` usam 25571, 25573 e `run` por padrão. O runner confere a fixture antes de operar; usa comandos oficiais Cobblemon para obter Pokémon de teste, grants LuckPerms pelo UUID e reload com critérios alterados. Isso não classifica os Pokémon concedidos como capturas legítimas. A configuração original é restaurada no disco ao terminar; na execução aprovada também foi recarregada e conferida no servidor.
+
+Oito checks agrupados verificam paginação/retorno, ordem, pesquisa/detalhes, consulta vazia/limites, critérios e leitura sem mutação, eventos/filtros, permissões com botão antigo e revalidação após reload. Relatório atual em `build/integration-wiki.json`. O smoke de fundação agora tem 12 checks, incluindo wiki e detalhes sem LuckPerms. Regressão complementar: os nove checks existentes de coleções passaram com um perfil novo.
+
+[Evidência da alpha.3](validation/phase2-wiki.json). Todas essas execuções desta entrega usaram o servidor de desenvolvimento Loom, não uma nova instalação do JAR fora dele. UI em cliente Minecraft real, spawn e carga permanecem pendentes. Encerrar com `stop`, preservar salvamento e remover senha RCON temporária, restaurando configuração e mods locais anteriores. As evidências antigas das alphas anteriores não são substituídas por esta execução.
