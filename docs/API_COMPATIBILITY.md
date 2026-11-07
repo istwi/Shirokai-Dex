@@ -1,0 +1,122 @@
+# Auditoria de compatibilidade — Fase 0
+
+Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificação de funcionamento em servidor. O repositório estava vazio, sem HEAD, fontes, build ou testes. Java local confirmado: OpenJDK 21.0.13.
+
+## Estados e evidências
+
+- `VERIFIED`: apenas o fato explicitamente acompanhado de evidência foi confirmado.
+- `PENDING_TEST`: API localizada, mas integração, compilação ou comportamento em servidor ainda não testados.
+- `UNSUPPORTED`: contrato solicitado não demonstrado pela API examinada; não implica impossibilidade de todas as alternativas.
+
+Nenhum teste de captura, resgate, economia, GUI ou servidor Fabric foi executado nesta etapa da auditoria.
+
+## Fontes fixadas
+
+| Dependência | Revisão consultada | Evidência |
+|---|---|---|
+| Cobblemon 1.8.3 | `ffe005511dd0d3ba68377fa3f95906b3837d9a0e` | [tag oficial](https://gitlab.com/cable-mc/cobblemon/-/tree/1.8.3), `gradle.properties`, `gradle/libs.versions.toml` |
+| Impactor 5.3.5 | `da9a2fd55cf6f0acb6e55fe157745f3bdc17ab84` | [tag oficial](https://github.com/NickImpact/Impactor/tree/5.3.5), `gradle.properties` |
+| Impactor API, submódulo da versão 5.3.5 | `dbcce5b992bfb6f94e82f2f3b60e81f61ae4cc2e` | [fonte da API](https://github.com/NickImpact/ImpactorAPI/tree/dbcce5b992bfb6f94e82f2f3b60e81f61ae4cc2e) |
+| Text Placeholder API 2.4.2+1.21 | `2427627df3e73ec00a2d3623c7e60e1d076bdb67` | [tag](https://github.com/Patbox/TextPlaceholderAPI/tree/2.4.2%2B1.21), `fabric.mod.json` |
+| LuckPerms API 5.4 | `99c3d68d3a618677800fd674363855ae143f4452` | [tag](https://github.com/LuckPerms/LuckPerms/tree/v5.4); não fixa a versão do mod instalado |
+| SGUI 1.6.1+1.21.1 | `5d1662183504f2f8cf0359d9c6f3af037699edba` | [tag](https://github.com/Patbox/sgui/tree/1.6.1%2B1.21.1), `gradle.properties` |
+
+As fontes foram obtidas com Git via HTTPS. Não foi copiado código de DexRewards. As versões opcionais acima são candidatas à integração, não prova de compatibilidade binária do conjunto.
+
+## Plataforma e artefato Cobblemon
+
+`VERIFIED` (metadados): Cobblemon 1.8.3 declara Minecraft 1.21.1 e Java 21; catálogo Fabric Loader 0.17.2, Fabric API 0.116.6+1.21.1, Fabric Language Kotlin 1.13.6+kotlin.2.2.20.
+
+Coordenada real: `com.cobblemon:fabric:1.8.3+1.21.1`, repositório `https://artefacts.cobblemon.com/releases/`. O [POM](https://artefacts.cobblemon.com/releases/com/cobblemon/fabric/1.8.3+1.21.1/fabric-1.8.3+1.21.1.pom) retornou HTTP 200 e contém o mesmo `gitCommit` da tag auditada. Não substituir por latest: o catálogo já anuncia versões posteriores.
+
+## Capturas e origem — PENDING_TEST
+
+Pacote `com.cobblemon.mod.common`:
+
+- `api.events.CobblemonEvents.POKEMON_CAPTURED`: `EventObservable<PokemonCapturedEvent>`.
+- `api.events.pokemon.PokemonCapturedEvent`: propriedades `pokemon`, `player`, `pokeBallEntity`; não possui um ID exclusivo de evento nem enum de origem.
+- Única emissão encontrada na árvore auditada: `entity/pokeball/EmptyPokeBallEntity.kt`, `shakeBall`, aproximadamente linhas 343–372. Exige captura bem-sucedida, Pokémon selvagem vivo e future ainda não concluído; adiciona ao armazenamento e então publica o evento.
+- O evento acontece depois da atribuição ao jogador: **não exigir `pokemon.isWild()` no listener**, pois a captura já ocorreu.
+- Troca, criação, transferência e concessão direta não devem ser inferidas a partir de eventos genéricos de armazenamento. Não há emissão deste evento nesses caminhos na pesquisa da versão auditada.
+
+Limite: outro mod pode publicar o evento ou alterar o fluxo. A observação de um evento não é uma autenticação contra mods hostis. Eventos especiais precisam de adaptador explícito. Pokémon criados administrativamente e depois capturados de fato não têm necessariamente uma origem administrativa reconhecível neste contrato.
+
+Estratégia candidata: snapshot imutável na thread do servidor; persistir chave de deduplicação composta pelo UUID do Pokémon e UUID da entidade de Poké Ball, com unicidade em SQLite. Validar recaptura do mesmo Pokémon, repetição do mesmo callback, reinício e captura simultânea antes de adotar. Não usar somente espécie/horário nem UUID do Pokémon isolado, pois pode haver recaptura legítima após soltura.
+
+## Pokédex oficial — PENDING_TEST
+
+- `api.storage.player.PlayerInstancedDataStoreManager.getPokedexData(ServerPlayer)` e sobrecarga UUID retornam `api.pokedex.PokedexManager`.
+- `AbstractPokedexManager.getSpeciesRecord(ResourceLocation)` consulta sem criar registro; `getHighestKnowledgeForSpecies` e `getKnowledgeForSpecies` também estão presentes.
+- `SpeciesDexRecord.getKnowledge()` / `hasAtLeast(...)`, registros por forma; enum `PokedexEntryProgress`: usar os valores atuais, não presumir o antigo `CAUGHT`.
+- `FormDexRecord` guarda `knowledge` e estados **vistos** shiny/normal; `hasSeenShinyState(boolean)` confirma observação, não captura daquela variante.
+- `CobblemonEvents.POKEDEX_DATA_CHANGED_POST` pode invalidar cache; `PRE` é cancelável. A aplicação deve somente consultar, sem chamar `obtain`, `encounter`, `getOrCreateSpeciesRecord` ou comandos de concessão para fabricar progresso.
+
+**UNSUPPORTED pelo registro isolado:** reconstrução de “shiny capturado” pelo cruzamento `OWNED && shiny visto`. Ver um shiny e obter um normal produz essa combinação sem comprovar captura shiny. Alternativa correta: evidência própria de capturas shiny a partir da instalação, mantendo o progresso oficial separado; não reconstruir histórico inexistente. A Pokédex oficial também registra obtenção, que não equivale a captura selvagem competitiva.
+
+## Registro dinâmico e categorias — PENDING_TEST
+
+- `api.pokemon.PokemonSpecies.species`, `.implemented`, `getByIdentifier(ResourceLocation)` e `reload(Map<ResourceLocation, Species>)` existem. Dados são carregados do caminho de recursos `species`.
+- `pokemon.Species` fornece identificador, formas, tipos e labels; `Pokemon.isLegendary()`, `isMythical()`, `isUltraBeast()` usam labels da forma.
+- Resolver IDs com namespace; não converter todos para `cobblemon:`. Enumerar após carregamento/reload; não manter catálogo fixo. Política de inclusão de espécies não implementadas precisa ser explícita.
+- Datapacks podem definir ou omitir labels: permitir inclusão/exclusão JSON e informar classificação indisponível. Não presumir Paradox ou uma lista universal de lendários.
+- Registro real do ecossistema Complete Cobblemon Collection ainda não instalado/testado. Testar adição/remoção e preservação de desbloqueios.
+
+## Criação e entrega de Pokémon — PENDING_TEST
+
+- `api.pokemon.PokemonProperties.parse(String, delimiter, assigner)`; propriedades reais incluem `species`, `form`, `level`, `shiny`, `ivs`, `evs`, `nature`, `ability`, `gender`, `pokeball`, `moves`, `heldItem`.
+- `create(ServerPlayer?)` cria, aplica propriedades, inicializa e executa `roll`. Campo shiny omitido usa a regra aleatória configurada do Cobblemon.
+- A existência do parser **não valida integralmente configurações**: conferir valores, formas, habilidades e movimentos nos registros antes de entregar; alguns resolvedores usam fallback, por exemplo `Species.getFormByName` retorna forma padrão se não encontrar.
+- `api.storage.party.PlayerPartyStore.add(Pokemon): Boolean` tenta equipe e overflow no PC; tratar resultado falso. Não assumir espaço ilimitado nem sucesso só por chamar o método.
+- Inventário, armazenamento Pokémon e banco não participam de uma transação atômica comum. Não repetir automaticamente entrega cujo resultado ficou incerto.
+
+## Economia Impactor — PENDING_TEST
+
+Impactor 5.3.5 declara Minecraft 1.21.1, Fabric Loader 0.16.9 e Fabric API 0.107.0+1.21.1. A versão do plugin e a versão Maven de cada módulo de API precisam ser distinguidas.
+
+No submódulo auditado, pacote `net.impactdev.impactor.api.economy`:
+
+- `EconomyService.instance()`; `currencies()`; `account(Currency, UUID): CompletableFuture<Account>`.
+- `currency.CurrencyProvider.currency(net.kyori.adventure.key.Key): Optional<Currency>`.
+- `accounts.Account.balance(): BigDecimal`, `deposit(BigDecimal): EconomyTransaction`, alternativas assíncronas documentadas na interface.
+
+Resolver `impactor:dollars` e `impactor:tokens` em runtime; nomes configuráveis não comprovam que essas moedas existem. Se ausentes, rejeitar recompensa de forma explícita, sem usar moeda principal como fallback. Verificar resultado da transação e persistência da implementação. Não foi demonstrada idempotência externa por ID de operação fornecido pelo chamador; falhas incertas exigem `NEEDS_REVIEW`.
+
+## Permissões — PENDING_TEST
+
+LuckPerms API 5.4: `LuckPermsProvider.get()`, `LuckPerms.getUserManager()`, `UserManager.getUser(UUID)`, `User.getCachedData().getPermissionData().checkPermission(String)`. Usuário pode ser nulo; considerar contextos atuais e negar operação sensível se indisponível. Não substituir LuckPerms ausente por autorização administrativa aberta. Nenhuma versão do mod Fabric LuckPerms do servidor foi informada/testada.
+
+## Placeholders — PENDING_TEST
+
+Text Placeholder API 2.4.2+1.21 declara Minecraft `>=1.21-` (não é prova de funcionamento em 1.21.1).
+
+`eu.pb4.placeholders.api.Placeholders.register(Identifier, PlaceholderHandler)` e `getPlaceholders()` existem. **register sobrescreve a chave**: verificar conflito antes de registrar qualquer alias, especialmente `dexrewards:player_dex_percent`.
+
+A documentação do método descreve `%namespace:placeholder argument%`; assim a candidata é `%shirokaidex:percent national%`, registrando `shirokaidex:percent`, não presumindo que `/national` seja argumento automaticamente. Testar parser e TAB separadamente. Placeholder não deve causar consulta pesada ao banco, carregamento bloqueante ou execução de comando.
+
+## Menus e integrações externas
+
+SGUI 1.6.1+1.21.1 (`PENDING_TEST`): `eu.pb4.sgui.api.gui.SimpleGui(ScreenHandlerType<?>, ServerPlayerEntity, boolean)`, `setTitle(Text)`, `setSlot(...)`, `open(): boolean`. Fonte usa Yarn, enquanto Cobblemon usa nomes Mojang: remapeamento pelo Loom deve ser validado. GUI de inventário evita renderização personalizada; comportamento real de cliques/arraste e proteção ainda precisa ser testado com cliente.
+
+SkiesGUIs (`PENDING_TEST`): versão/artefato não fornecidos. Integração prevista por comandos públicos; nenhum uso de API interna. O comando `/menu` pode não existir: informar falha em vez de presumir sucesso.
+
+TAB (`PENDING_TEST`): distribuição, versão e bridge Fabric não fornecidas. Suporte da Placeholder API não comprova automaticamente suporte no TAB.
+
+Shirokai Crates 0.2.1 (`PENDING_TEST`): fonte indicada pelo usuário em [istwi/Shirokai-Crates](https://github.com/istwi/Shirokai-Crates), HEAD auditado `05b3995c4d4466ef17c6171ad07d4f0eab512db9`; `build.gradle` declara 0.2.1. Isso não confirma a versão instalada no servidor.
+
+Em `dev.shirokaicrates.ShirokaiCrates`, o registro real é `/crates givekey <player> <id> <count>`, count entre 1 e 2304; `permitted` exige entidade `ServerPlayerEntity` e permissão `shirokaicrates.give` ou `shirokaicrates.admin`. O helper `run` também trabalha com jogador. **UNSUPPORTED neste fluxo:** executar a entrega como console. Não conceder permissão administrativa ao destinatário como alternativa.
+
+`service.CrateService.give(ServerPlayerEntity admin, ServerPlayerEntity target, String id, int count, boolean fragment)` confere permissão, saúde, crate existente, espaço e estado busy; cria token via `tokens.create`, insere e solicita checkpoint. Retorna `void`, sem recibo idempotente para o Dex. Não há contrato de integração pública verificado para recompensas automáticas. Alternativa futura: contrato público com ID de operação e confirmação persistente no Crates, ou adaptador de item salvo somente após validar componentes e semântica dos tokens. `CRATE_KEY` permanece desabilitado até testes e definição do contrato; nenhuma alteração foi feita no Crates.
+
+Spawn/wiki (`PENDING_TEST`): não foi validada uma consulta universal de biomas/horários, sobretudo para spawners de outros mods/datapacks. Mostrar “Informação de aparecimento indisponível.”; ausência de informação não prova ausência de spawn natural.
+
+## Acesso e testes executados
+
+- Java 21 executado; checkout vazio e ausência de instruções AGENTS confirmados.
+- Tags Cobblemon, Impactor e submódulo, LuckPerms, Placeholder API e SGUI obtidas e inspecionadas.
+- POM Cobblemon e catálogo Maven oficial consultados com TLS ativo; commit do POM corresponde à tag.
+- `api.modrinth.com` e `maven.cobblemon.com` retornaram bloqueio HTTP 403 no proxy. O Maven oficial alternativo acima respondeu; não desabilitar TLS nem ampliar rede automaticamente.
+- Compilação dos adaptadores, testes unitários/integrados e servidor Fabric: **pendentes**. Inspeção de fonte não é teste funcional.
+
+## Critérios para avançar
+
+Fundação pode começar com as APIs identificadas, mantendo integrações opcionais isoladas. Antes de concluir a Fase 1: resolver artefatos fixados, compilar, executar testes reais de configuração/migração e inicializar servidor Fabric com Cobblemon 1.8.3. Antes da Fase 2: resolver a limitação shiny sem falsificar dados; validar datapacks e eventos no servidor. Recompensas, competições e chaves permanecem fora da fundação.
