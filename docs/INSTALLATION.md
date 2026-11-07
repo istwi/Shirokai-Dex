@@ -38,3 +38,7 @@ A alpha.3 de desenvolvimento acrescenta a [wiki de espécies](WIKI.md), com prot
 Alpha.4: [placeholders básicos](PLACEHOLDERS.md), mediante instalação separada da Text Placeholder API 2.4.2+1.21. Essa dependência é opcional e não está aninhada no JAR do Dex; o build obtém o artefato oficial pelo GitHub. A pré-release publicada alpha.3 permanece separada e imutável. Nenhuma nova release é publicada automaticamente pelo build.
 
 Alpha.5: seletores dinâmicos de tipo/label e navegação de todas as formas da wiki, em inventário vanilla de quatro linhas. Os critérios da coleção e os estados por forma continuam sendo revalidados, sem alteração de dependências ou do formato de configuração. [Guia](WIKI.md).
+
+## Correção alpha.5: escolher o arquivo instalável
+
+Instale somente `shirokai-dex-0.3.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar` em `mods`, substituindo os arquivos antigos do Shirokai Dex. Não altere os demais mods. `-sources.jar` é material para desenvolvedores, não um mod. Na alpha.4 ele continha descritor Fabric sem a classe compilada, causando ClassNotFoundException quando instalado; o problema foi reproduzido em servidor real. Alpha.5 remove esse descritor das fontes e o artefato de instalação do Actions contém apenas o binário e SHA256SUMS.

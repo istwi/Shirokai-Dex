@@ -29,3 +29,7 @@ Em permissões por dimensão, confira `lp user <uuid> info`: LuckPerms Fabric 5.
 ## Mensagens do próprio Cobblemon
 
 No primeiro login de usuários novos, o Cobblemon auditado registrou mensagens `.old File ... corrupt or missing`; não havia dados históricos desses usuários e o Dex não escreveu esses arquivos. O startup também registra avisos de data fixers/mixins opcionais. Diagnostique cada mensagem pela origem; não classifique tudo como erro do Dex nem silencie falhas de inicialização reais.
+
+## ClassNotFoundException: br.com.shirokaidex.core.ShirokaiDex
+
+Confira o nome dos arquivos em `mods`. O sources.jar alpha.4 declarava o entrypoint, mas continha somente fontes Java; instalar esse arquivo reproduz o erro. Remova fontes/versões duplicadas apenas do Shirokai Dex e instale o JAR alpha.5 sem `-sources` no nome. O build novo valida a classe do entrypoint no ZIP remapeado e separa o arquivo instalável no Actions. Se persistir com o binário correto, guarde o log completo e SHA256SUMS para investigar outra causa; não renomeie o entrypoint sem evidência.

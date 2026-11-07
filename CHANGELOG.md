@@ -120,3 +120,10 @@ Sem release, sem JAR e sem funcionalidades entregues até esta etapa.
 - Grade/prévia exibem estado persistido do resgate; operações encerradas ou incertas não oferecem confirmação.
 - Consulta assíncrona protegida contra telas/configurações/permissões desatualizadas; componentes dos prêmios preservados.
 - Sem publicação. Repetição em servidor e cliente pendente.
+
+## 0.3.0-alpha.5 — correção da distribuição
+
+- Impede que fontes Java sejam descobertas como mod Fabric: remove descritor do sources.jar.
+- Separa artefato instalável no Actions e inclui SHA256SUMS; não distribui fontes no mesmo ZIP.
+- Verifica versão, entrypoint compilado Java 21, ModInitializer/onInitialize, namespace remapeado e dependências no JAR final antes da distribuição.
+- Reproduzida ClassNotFoundException ao instalar fontes alpha.4; o usuário confirmou ter instalado esse arquivo. Sem alterações em outros mods ou sistemas de jogo.

@@ -3,6 +3,7 @@ name: Build Java 21 (experimental)
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,13 +18,24 @@ jobs:
           distribution: temurin
           java-version: '21'
       - name: Compile, test and build remapped JAR
-        run: ./gradlew --no-daemon build
-      - name: Upload experimental JAR and sources
+        run: ./gradlew --no-daemon clean build serverDistribution
+      - name: Upload installable server mod only
         uses: actions/upload-artifact@v4
         with:
           name: shirokai-dex-alpha-mc1.21.1-cobblemon1.8.3-${{ github.sha }}
-          path: build/libs/*.jar
+          path: build/server-mod/*
           if-no-files-found: error
+      - name: Download published artifact for integrity check
+        uses: actions/download-artifact@v4
+        with:
+          name: shirokai-dex-alpha-mc1.21.1-cobblemon1.8.3-${{ github.sha }}
+          path: build/downloaded-server-mod
+      - name: Verify published JAR matches the inspected build
+        run: |
+          diff build/server-mod/SHA256SUMS build/downloaded-server-mod/SHA256SUMS
+          cd build/downloaded-server-mod
+          sha256sum --check SHA256SUMS
+          cat SHA256SUMS
       - name: Upload JUnit report
         if: always()
         uses: actions/upload-artifact@v4

@@ -234,3 +234,7 @@ Auditoria da fonte 1.8.3 confirma que PokemonProperties é permissivo e que File
 ## Central/layout — implementação local
 
 Menus vanilla ChestMenu 3..6 linhas, Component/TextColor por caractere para gradiente e lore curta. A central e grade usam o mesmo guard de cliques/owner; sem renderizador cliente próprio. Retorno externo usa Commands.performPrefixedCommand com player.createCommandSourceStack, sem console/elevação. Probe isolado confirmou jogador não OP; removido o probe/com LuckPerms ausente, interface e wiki continuaram funcionais. [Prova](validation/layout-home.json).
+
+## Empacotamento alpha.5
+
+EntryPoint `br.com.shirokaidex.core.ShirokaiDex` e implementação `net.fabricmc.api.ModInitializer` corretos; o erro reportado foi reproduzido com sources.jar alpha.4 e confirmado pelo usuário como arquivo instalado. O fonte declarava um entrypoint sem bytecode. Alpha.5 remove o descritor das fontes e valida o JAR final; nenhuma API/versão de dependência alterada. Evidência em `validation/entrypoint-alpha5.json`.

@@ -1,0 +1,48 @@
+{
+  "version": "0.3.0-alpha.5+mc1.21.1-cobblemon1.8.3",
+  "cause": "User confirmed installing alpha.4 sources.jar; reproduced exact missing entrypoint error in Fabric server. Source archive had fabric.mod.json but no compiled entrypoint.",
+  "unchanged": "Correct fabric.mod.json main entrypoint, Java package and ModInitializer implementation; no gameplay or dependency changes.",
+  "fix": [
+    "Exclude fabric.mod.json from sourcesJar",
+    "Verify compiled production entrypoint, class major 65, ModInitializer, public onInitialize and intermediary namespace",
+    "Distribute only validated binary and SHA256SUMS in Actions",
+    "CI downloads uploaded artifact and compares its SHA256SUMS and JAR hash"
+  ],
+  "build_command": "JAVA_HOME=/workspace/.tools/jdk-21.0.13+9 python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon clean build serverDistribution",
+  "build": "BUILD SUCCESSFUL",
+  "junit": {
+    "tests": 218,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "jar": {
+    "name": "shirokai-dex-0.3.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "7fc8c3074fbacb55ab65f1a64b63a5c8c2f6a2c555ce49383c47779c1a663acb",
+    "entrypoint": "br/com/shirokaidex/core/ShirokaiDex.class",
+    "class_major": 65,
+    "entrypoint_verified": true,
+    "sources_have_descriptor": false
+  },
+  "production_server": {
+    "minecraft": "1.21.1",
+    "fabric_loader": "0.17.2",
+    "java": "21.0.13",
+    "cobblemon": "1.8.3+1.21.1",
+    "environment": "Isolated /tmp server, packaged remapped JAR outside Loom, loopback only",
+    "old_sources_only": "Exact ClassNotFoundException reproduced",
+    "new_binary_and_new_sources": "Server reached Done; sources ignored as non-Fabric; Dex ready and SQLite schema 5 verified",
+    "command_check": "dex command responded to console (player-only guard)",
+    "sqlite_integrity": "ok",
+    "shutdown": "stop command issued; world save observed",
+    "nonfatal_messages": [
+      "Cobblemon optional mixin targets/data fixer messages",
+      "Authlib public key fetch UnknownHostException in isolated offline test"
+    ]
+  },
+  "limitations": [
+    "Does not certify graphical client, load, all gameplay or compatibility with user modpack",
+    "Previous Actions artifact could not be downloaded in this environment due blob storage HTTP 403; new workflow independently checks the published artifact in CI"
+  ],
+  "reference": "fix: prevent source archives from loading as Fabric mods"
+}

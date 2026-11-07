@@ -20,7 +20,7 @@ Validação desta etapa: **214 JUnit sem falhas/erros/skips e 30 checks reais**,
 
 Com JDK 21 completo: `./gradlew --no-daemon build`.
 
-Em cloud com proxy herdado: `python3 scripts/gradle_cloud.py --no-daemon build`, usando a truststore do ambiente quando necessária. Não desabilite TLS/checksums. Artefato: `build/libs/shirokai-dex-0.3.0-alpha.4+mc1.21.1-cobblemon1.8.3.jar`; não instalar `-sources.jar`.
+Em cloud com proxy herdado: `python3 scripts/gradle_cloud.py --no-daemon build`, usando a truststore do ambiente quando necessária. Não desabilite TLS/checksums. Distribuição: execute também `./gradlew serverDistribution`. Artefato: `build/server-mod/shirokai-dex-0.3.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar`; não instalar `-sources.jar`.
 
 Leia [instalação](docs/INSTALLATION.md), [configuração](docs/CONFIGURATION.md), [comandos](docs/COMMANDS.md), [permissões](docs/PERMISSIONS.md), [banco](docs/DATABASE.md) e [diagnóstico](docs/TROUBLESHOOTING.md). O workflow [Java 21](.github/workflows/build.yml) gera artifact identificado pelo commit quando passa; confira o resultado no GitHub.
 

@@ -4,7 +4,7 @@
 
 ## Última tarefa realizada
 
-Passagem local de estilo compartilhado nos submenus de coleção, wiki, formas, spawn, prévia e confirmação: paleta, títulos, cartões, rodapé e barra de progresso. Prévia/grade consultam o journal assincronamente para mostrar estado real; confirmação fica oculta em operações concluídas/em processamento/revisão/canceladas. Payloads de itens de recompensa são preservados. Ver `validation/layout-submenus.json`. Snapshot incluído na preparação da pré-release `v0.3.0-alpha.4`.
+Correção de distribuição alpha.5 para impedir descoberta do sources.jar como mod. Erro original reproduzido em servidor Fabric real e causa confirmada pelo usuário. EntryPoint Java não mudou; novas verificações inspecionam o bytecode do JAR remapeado. Artefato Actions agora contém somente JAR instalável e SHA256SUMS. Referência: commit `fix: prevent source archives from loading as Fabric mods`; evidência `validation/entrypoint-alpha5.json`.
 
 ## Pendência de distribuição
 
@@ -12,7 +12,7 @@ O upload do JAR/sources/SHA256SUMS recebeu HTTP 401 Bad credentials em uploads.g
 
 ## Próxima tarefa exata
 
-1. Conferir a tag `v0.3.0-alpha.4` e o estado remoto antes de continuar. Preservar alterações futuras localmente; nova publicação requer autorização.
+1. Conferir o commit da correção alpha.5 e seu artefato no Actions antes de continuar. O usuário autorizou commit/push desta correção. Preservar alterações futuras localmente; nova publicação requer autorização.
 2. **Prioridade explícita atual: layout geral antes de outros sistemas.** Validar em servidor dev a harmonização aplicada: páginas de progresso, wiki/detalhes/formas/spawn e prévia/confirmação, estados reais e consulta assíncrona. Ajustar runners antigos que ainda esperam botão de resgate depois de concluído; preservar a verificação de não duplicação. Conferir itens personalizados intactos. Manter sistemas ainda não implementados visivelmente indisponíveis, sem dados fictícios.
 3. A central/grade e configuração `home` já existem: não refazer. /dex é o hub; seletor é acessado por botão, sem novos aliases que mascarem IDs personalizados. Framework de layouts JSON para todos os menus e aparência em cliente real seguem parciais. Conferir renderização/legibilidade em cliente quando disponível.
 4. Não iniciar agora moeda/Impactor, Crates, COMMAND, capturas/competições; usuário pediu retomar sistemas após revisão visual. Pokémon já funciona no escopo descrito em POKEMON_REWARDS.md; formatos/provedores adicionais ficam pendentes, não repetir essa implementação.

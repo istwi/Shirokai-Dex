@@ -197,3 +197,12 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 - [ ] Validar em servidor/cliente o estilo compartilhado dos submenus e estados de resgate. Código aplicado; testes automatizados não certificam aparência nem navegação nativa.
 
 | Preparação da pré-release alpha.4 | Snapshot das alterações locais, 218 JUnit/build, JAR sem probes e limitações explícitas; sem certificação visual/carga | Tag `v0.3.0-alpha.4`, commit de preparação da release |
+
+### Correção de inicialização alpha.5
+
+- [x] ~~Reproduzir erro de entrypoint ao instalar fontes e confirmar causa.~~ Fontes alpha.4 reproduzem ClassNotFoundException; usuário confirmou instalação acidental do sources.jar.
+- [x] ~~Proteger empacotamento e separar artefato instalável das fontes.~~ `verifyModJar` valida bytecode final; Actions usa `build/server-mod`. Ver `validation/entrypoint-alpha5.json`.
+
+| Correção de inicialização alpha.5 | build.gradle, workflow, documentação/evidência; fontes não são mod e distribuição valida bytecode final | Commit `fix: prevent source archives from loading as Fabric mods` |
+
+- [x] ~~Validar inicialização alpha.5 fora do Loom.~~ Fabric 0.17.2 / MC1.21.1 / Java21 / Cobblemon1.8.3: Done + Dex ready, SQLite íntegro; fontes novas ignoradas. Evidência em `validation/entrypoint-alpha5.json`. Não certifica modpack/carga/cliente gráfico.

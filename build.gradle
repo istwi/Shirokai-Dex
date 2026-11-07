@@ -5,7 +5,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '2.2.20'
 }
 
-version = '0.3.0-alpha.4+mc1.21.1-cobblemon1.8.3'
+version = '0.3.0-alpha.5+mc1.21.1-cobblemon1.8.3'
 group = 'br.com.shirokaidex'
 base { archivesName = 'shirokai-dex' }
 
@@ -90,4 +90,52 @@ tasks.register('layoutProbeJar', Jar) {
     from sourceSets.layoutProbe.output
     archiveClassifier = 'layout-probe'
     destinationDirectory = layout.buildDirectory.dir('test-mods')
+}
+
+// Source archives are developer material, never candidates for Fabric mod discovery.
+tasks.named('sourcesJar') { exclude 'fabric.mod.json' }
+
+tasks.register('verifyModJar') {
+    dependsOn tasks.named('remapJar'), tasks.named('remapSourcesJar')
+    inputs.file(tasks.named('remapJar').flatMap { it.archiveFile })
+    inputs.file(tasks.named('remapSourcesJar').flatMap { it.archiveFile })
+    doLast {
+        def binary = tasks.named('remapJar').get().archiveFile.get().asFile
+        new java.util.jar.JarFile(binary).withCloseable { jar ->
+            def metadata = new groovy.json.JsonSlurper().parse(jar.getInputStream(jar.getJarEntry('fabric.mod.json')))
+            if (metadata.version != project.version.toString()) throw new GradleException('Packaged version mismatch')
+            metadata.entrypoints.main.each { entrypoint ->
+                def path = entrypoint.replace('.', '/') + '.class'
+                def entry = jar.getJarEntry(path)
+                if (entry == null) throw new GradleException("Missing compiled entrypoint: $path")
+                def node = new org.objectweb.asm.tree.ClassNode()
+                new org.objectweb.asm.ClassReader(jar.getInputStream(entry)).accept(node, 0)
+                if (node.name != path - '.class' || node.version != 65 ||
+                    !node.interfaces.contains('net/fabricmc/api/ModInitializer') ||
+                    !node.methods.any { it.name == 'onInitialize' && it.desc == '()V' && (it.access & 1) != 0 }) {
+                    throw new GradleException("Invalid Java 21 ModInitializer: $entrypoint")
+                }
+            }
+            if (jar.manifest.mainAttributes.getValue('Fabric-Mapping-Namespace') != 'intermediary')
+                throw new GradleException('Expected production intermediary namespace')
+            if (jar.entries().toList().any { it.name.contains('/probe/') }) throw new GradleException('Test probe in production JAR')
+            metadata.jars.each { if (jar.getJarEntry(it.file) == null) throw new GradleException("Missing nested dependency: ${it.file}") }
+        }
+        new java.util.jar.JarFile(tasks.named('remapSourcesJar').get().archiveFile.get().asFile).withCloseable { jar ->
+            if (jar.getJarEntry('fabric.mod.json') != null) throw new GradleException('Source archive must not be discoverable as a mod')
+        }
+        logger.lifecycle("Verified production entrypoint and safe source archive: ${binary.name}")
+    }
+}
+tasks.named('check') { dependsOn tasks.named('verifyModJar') }
+
+tasks.register('serverDistribution', Sync) {
+    dependsOn tasks.named('verifyModJar')
+    from(tasks.named('remapJar').flatMap { it.archiveFile })
+    into layout.buildDirectory.dir('server-mod')
+    doLast {
+        def jar = tasks.named('remapJar').get().archiveFile.get().asFile
+        def hash = java.security.MessageDigest.getInstance('SHA-256').digest(jar.bytes).encodeHex().toString()
+        new File(destinationDir, 'SHA256SUMS').text = hash + '  ' + jar.name + '\n'
+    }
 }

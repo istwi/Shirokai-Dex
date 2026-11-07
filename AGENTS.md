@@ -43,3 +43,7 @@ O usuário pediu manter o desenvolvimento somente no ambiente local. **Não cria
 ## Autorização pontual de publicação (2026-11-07)
 
 O usuário pediu uma release no GitHub. Autoriza commit/push do estado atual e publicação da pré-release `v0.3.0-alpha.4`, com JAR e limitações documentadas. Não autoriza publicação de configuração de ambiente. Após esta entrega, mudanças futuras voltam a permanecer locais até nova autorização.
+
+## Autorização pontual — correção de inicialização alpha.5
+
+O usuário autorizou investigar/corrigir a inicialização, atualizar documentação, fazer commit/push e gerar novo artifact JAR. Escopo: empacotamento e distribuição do Shirokai Dex; sem mudanças nos demais mods ou publicação de ambiente.

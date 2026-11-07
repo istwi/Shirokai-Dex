@@ -2,6 +2,12 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
+## Correção de inicialização — alpha.5
+
+Causa confirmada pelo usuário e reproduzida em Fabric 0.17.2 / Minecraft 1.21.1 / Java 21: instalação acidental do `sources.jar` alpha.4. O descritor do código-fonte declarava `br.com.shirokaidex.core.ShirokaiDex`, mas o pacote continha `.java`, não `.class`. O binário alpha.4 local contém a classe correta; não foi necessário alterar entrypoint, pacote ou sistemas do mod.
+
+Correção de distribuição em `build.gradle` e `.github/workflows/build.yml`: remover `fabric.mod.json` das fontes, verificar bytecode Java 21/ModInitializer/onInitialize e namespace intermediary no JAR final, checar dependências embutidas e ausência de probes. Artefato do Actions passa a conter somente JAR instalável e SHA256SUMS, gerados em `build/server-mod` após build limpo. Versão nova `0.3.0-alpha.5+mc1.21.1-cobblemon1.8.3`. Build limpo e 218 JUnit sem falhas/erros/skips. Servidor Fabric 1.21.1 real fora do Loom chegou a Done e Dex ready, com schema 5 e SQLite íntegro; fontes novas ignoradas. Validação e checksums em `validation/entrypoint-alpha5.json`.
+
 ## Entrega para pré-release v0.3.0-alpha.4
 
 Publicação solicitada explicitamente pelo usuário. Snapshot reúne versões de categorias, recompensas ITEM/CUSTOM_ITEM/SAVED_ITEM/POKEMON, desbloqueios permanentes e layout central/submenus. Referência desta entrega: tag `v0.3.0-alpha.4` (commit de preparação). Build e 218 JUnit aprovados, zero falhas/erros/skips. Evidências anteriores de servidor estão em `docs/validation`; a segunda passagem dos submenus ainda não foi repetida em servidor/cliente gráfico. JAR fora do Loom e carga seguem sem certificação. Código enviado em `0989d29`. Rascunho criado; upload dos anexos bloqueado por HTTP 401 Bad credentials em uploads.github.com (API GitHub e push funcionam). Pré-release será publicada com código-fonte e aviso explícito de ausência do JAR; artefatos ficam locais em build/libs. As seções abaixo preservam o histórico local de cada bloco, não o estado de sincronização desta entrega.
