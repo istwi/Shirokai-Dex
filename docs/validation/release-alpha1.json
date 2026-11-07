@@ -1,0 +1,48 @@
+{
+  "tag_name": "v0.1.0-alpha.1",
+  "target_commitish": "c11b3660aaf567d161b03ac91c32d9d1de2501af",
+  "html_url": "https://github.com/istwi/Shirokai-Dex/releases/tag/v0.1.0-alpha.1",
+  "draft": false,
+  "prerelease": true,
+  "published_at": "2026-11-07T09:04:39Z",
+  "workflow_run": "https://github.com/istwi/Shirokai-Dex/actions/runs/42358003410",
+  "workflow_conclusion": "success",
+  "downloaded_and_checksums_verified": true,
+  "assets": [
+    {
+      "name": "BUILD_PROVENANCE.json",
+      "size": 348,
+      "state": "uploaded",
+      "digest": "sha256:7bdde5a998f415581b4455b6392f12126b6fa57496ad01dec64430a89d307cf5",
+      "browser_download_url": "https://github.com/istwi/Shirokai-Dex/releases/download/v0.1.0-alpha.1/BUILD_PROVENANCE.json"
+    },
+    {
+      "name": "phase1-foundation.json",
+      "size": 3085,
+      "state": "uploaded",
+      "digest": "sha256:d3522295c4d19e720204d9e32e418339a661a676f6760d637c2383cb7b5021ff",
+      "browser_download_url": "https://github.com/istwi/Shirokai-Dex/releases/download/v0.1.0-alpha.1/phase1-foundation.json"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "size": 427,
+      "state": "uploaded",
+      "digest": "sha256:a0ebee39484da45e8f91558563fb7172fe1b2744fa9c2efe2fdfc745e752a05e",
+      "browser_download_url": "https://github.com/istwi/Shirokai-Dex/releases/download/v0.1.0-alpha.1/SHA256SUMS.txt"
+    },
+    {
+      "name": "shirokai-dex-0.1.0-alpha.1+mc1.21.1-cobblemon1.8.3-sources.jar",
+      "size": 14159,
+      "state": "uploaded",
+      "digest": "sha256:b43664d0b23f37ecbab738753e514b8f02e31f8dc789215abc8ec67f9cfd6f4f",
+      "browser_download_url": "https://github.com/istwi/Shirokai-Dex/releases/download/v0.1.0-alpha.1/shirokai-dex-0.1.0-alpha.1%2Bmc1.21.1-cobblemon1.8.3-sources.jar"
+    },
+    {
+      "name": "shirokai-dex-0.1.0-alpha.1+mc1.21.1-cobblemon1.8.3.jar",
+      "size": 14253061,
+      "state": "uploaded",
+      "digest": "sha256:a381b1505701267422f53ab0c107ebe8444a41a21ac527a838d98085068c13c7",
+      "browser_download_url": "https://github.com/istwi/Shirokai-Dex/releases/download/v0.1.0-alpha.1/shirokai-dex-0.1.0-alpha.1%2Bmc1.21.1-cobblemon1.8.3.jar"
+    }
+  ]
+}

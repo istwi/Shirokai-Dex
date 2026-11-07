@@ -2,7 +2,7 @@
 
 ## 0.1.0-alpha.1 — fundação experimental
 
-- Preparada publicação autorizada como pré-release por workflow manual, com alvo fixo, validação de testes, checksums e procedência; upload direto da sessão foi recusado (401).
+- Publicada a pré-release `v0.1.0-alpha.1`, alvo `c11b366`, por workflow aprovado com 20 testes e 5 anexos. Downloads, checksums e proveniência conferidos; upload direto recusado foi resolvido pelo Actions.
 
 - Implementados lifecycle Fabric, configuração validada com backup/recuperação e SQLite com migração transacional em executor dedicado.
 - Adicionados `/dex`, `/dex status`, menu inicial somente de leitura e consulta da Pokédex oficial/registro dinâmico Cobblemon.

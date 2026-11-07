@@ -2,7 +2,7 @@
 
 ## Última tarefa realizada
 
-Publicação alpha autorizada pelo usuário: rascunho v0.1.0-alpha.1 criado; upload direto falhou com HTTP 401. Workflow manual `.github/workflows/publish-alpha.yml` preparado para publicar o alvo fixo c11b366 usando o token do próprio Actions. Verificar execução e os 5 anexos antes de afirmar publicação; não recriar release se já publicada. O relatório local e o checksum dos binários CI são evidências separadas.
+Publicação solicitada concluída: [v0.1.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.1.0-alpha.1), tag em `c11b366`, 5 anexos e workflow `42358003410` aprovado. Downloads, SHA-256 e proveniência conferidos; ver `docs/validation/release-alpha1.json`. Workflow de publicação foi adicionado no commit `7255055`. Não executar novamente para essa versão: já está pública, como pré-release. Continuar as tarefas técnicas abaixo, sem sobrescrever seus assets.
 
 
 Fundação Fase 1: build/proxy/JDK, Fabric lifecycle, configuração segura, SQLite/migração, comando/menu inicial e consulta oficial Cobblemon. 20 casos JUnit e smoke de 10 checks aprovados; smoke repetido após reinício e com JAR instalado fora do Loom. Veja [evidências](validation/phase1-foundation.json).

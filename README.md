@@ -6,6 +6,8 @@ Disponível nesta alpha: `/dex`, resumo somente de leitura da Pokédex oficial, 
 
 Validação local: **20 casos JUnit aprovados** e **10 verificações de protocolo** aprovadas em servidor real, repetidas após reinício e com JAR instalado fora do Loom. Não é release estável. Consulte [testes e limites](docs/TESTING.md).
 
+[Baixar a pré-release 0.1.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.1.0-alpha.1) — JAR, fontes, checksums e relatório de validação.
+
 ## Instalar e desenvolver
 
 Com JDK 21 completo: `./gradlew --no-daemon build`.

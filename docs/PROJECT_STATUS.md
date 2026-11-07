@@ -62,6 +62,10 @@ Base anterior enviada/confirmada: `8c1e7f365be918b866ac137c020e2337db14e721` (ch
 
 Entrega funcional enviada e confirmada no remoto: `9cab47d7d4dcd6c95793cc57e4b1b60d87b49b45`, com árvore local limpa. Workflows desse commit iniciaram; aprovação remota/artifact ainda dependem do resultado observado no GitHub. Atualização documental posterior apenas registra essa referência e corrige os notices; a próxima sessão deve conferir também esse commit documental e quaisquer posteriores.
 
-## Publicação alpha solicitada
+## Publicação alpha confirmada
 
-O usuário autorizou publicar a alpha. Builds e continuidade dos commits 9cab47d/c11b366 passaram no GitHub Actions. Criado rascunho v0.1.0-alpha.1 com alvo c11b366; upload direto recebeu HTTP 401 no host de anexos, embora API/Git funcionem. Workflow manual Publish foundation alpha foi preparado para compilar esse alvo exato, exigir 20 testes aprovados, anexar JAR/fontes/checksums/proveniência e só então publicar como pré-release. Não necessita chave pessoal. Conferir resultado antes de declarar publicado.
+Usuário autorizou publicar. [Pré-release v0.1.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.1.0-alpha.1) publicada, não draft e não estável, com tag apontando para `c11b3660aaf567d161b03ac91c32d9d1de2501af`. Workflow [42358003410](https://github.com/istwi/Shirokai-Dex/actions/runs/42358003410) terminou com sucesso e executou os 20 casos JUnit novamente.
+
+Cinco anexos: JAR instalável, sources JAR, SHA256SUMS.txt, BUILD_PROVENANCE.json e phase1-foundation.json. Todos foram baixados da release; checksums e proveniência verificados. Evidência em [release-alpha1.json](validation/release-alpha1.json). O relatório phase1 descreve o teste local de servidor e seu hash local; os binários publicados são de CI e têm checksums próprios, sem confundir as duas evidências.
+
+Upload direto da sessão recebeu HTTP 401; resolvido pelo token do próprio GitHub Actions, sem chave pessoal nem alteração do ambiente. O workflow é específico desta alpha e recusa nova publicação se a release já não estiver em rascunho. Não recriar ou sobrescrever a release.
