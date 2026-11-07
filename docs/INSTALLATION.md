@@ -17,6 +17,8 @@ python3 scripts/gradle_cloud.py --no-daemon build
 
 O helper deriva HTTP/HTTPS proxy das variáveis existentes e usa cache gravável em `/workspace/.cache/shirokai-gradle` quando não há `GRADLE_USER_HOME` definido. Não salva credenciais nem altera configuração global. Caso o JDK local não use a CA do ambiente, use a truststore fornecida pelo sistema; na máquina validada foi necessário acrescentar `-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts`. Não desabilite TLS.
 
+Para iniciar `runServer` na nuvem, acrescente `--init-script scripts/server_proxy.init.gradle`: ele repassa as propriedades de proxy/truststore ao processo Java filho. Veja o comando e os critérios de readiness em [testes](TESTING.md). O proxy do Gradle sozinho não basta para os downloads de dependências feitos pelo LuckPerms em runtime.
+
 JDK local usado na validação: Temurin 21.0.13+9, tarball oficial `OpenJDK21U-jdk_x64_linux_hotspot_21.0.13_9.tar.gz`, obtido da release `jdk-21.0.13+9` do repositório `adoptium/temurin21-binaries`. SHA-256 verificado com o arquivo oficial: `d7f5d5cf865a2902b70ff549b97586a7d3f234e016f041ab447ea740c7d66d1c`. Não presumir que `/workspace/.tools/jdk-21.0.13+9` exista em outras máquinas.
 
 Arquivo de mod: `build/libs/shirokai-dex-0.2.0-alpha.2+mc1.21.1-cobblemon1.8.3.jar`. O arquivo `-sources.jar` é código-fonte e **não deve ser instalado**. O JDBC SQLite é incluído no JAR; não instalar outro SQLite mod por conta desta dependência. LuckPerms é opcional na inicialização, mas obrigatório para o reload administrativo.

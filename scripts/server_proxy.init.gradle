@@ -1,0 +1,13 @@
+// JavaExec forks (including Loom runServer) do not inherit the Gradle JVM's -D flags.
+// Keep this opt-in; values come from gradle_cloud.py and the caller's trust settings.
+allprojects {
+    tasks.withType(JavaExec).configureEach {
+        [
+            'http.proxyHost', 'http.proxyPort', 'https.proxyHost', 'https.proxyPort',
+            'http.nonProxyHosts', 'javax.net.ssl.trustStore', 'javax.net.ssl.trustStoreType'
+        ].each { key ->
+            def value = System.getProperty(key)
+            if (value != null) systemProperty(key, value)
+        }
+    }
+}

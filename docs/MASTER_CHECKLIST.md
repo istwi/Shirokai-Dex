@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Pausado a pedido do usuário, após entrega de coleções JSON (0.2.0-alpha.2).** 69 JUnit, 11 regressões sem LuckPerms, 9 checks de coleções com LuckPerms real/JAR instalado e 2 de reinício aprovados. [Evidência](validation/phase2-collections.json). Percentuais e filtros reutilizados; Shiny capturado segue N/D. Quando autorizado: wiki e demais pendências da Fase 2, sem reimplementar coleções JSON.
+**Retomado: complemento de validação sobre coleções JSON (0.2.0-alpha.2).** Build atual: 69 JUnit; 8 checks adicionais de contextos por dimensão e pacotes de inventário, repetidos com perfil novo em servidor dev real. [Evidência](validation/phase2-contexts.json). Coleções, percentuais e fundação já existem; próxima implementação é wiki/pesquisa/filtros/paginação da Fase 2. Cliente visual, carga e Shiny capturado seguem pendentes.
 
 ## Preparação e continuidade
 
@@ -38,12 +38,12 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 - [x] ~~Estrutura Gradle.~~ Build e JAR remapeado aprovados.
 - [x] ~~Inicialização Fabric.~~ Servidor dev e JAR isolado iniciaram com Cobblemon 1.8.3.
-- [x] ~~Sistema de configuração.~~ Parsing estrito, reload seguro e recuperação testados; comando com LuckPerms positivo ainda pendente.
+- [x] ~~Sistema de configuração.~~ Parsing estrito, reload seguro e recuperação testados; reload positivo/global e por dimensão verificado nos relatórios de coleções/contextos.
 - [x] ~~SQLite.~~ Driver incluído e carregado no JAR instalado; executor dedicado.
 - [x] ~~Migrações.~~ Transação, rollback, versão futura e reabertura testados.
 - [x] ~~Logs.~~ Readiness, recuperação e falhas registradas no servidor.
 - [x] ~~Comando `/dex`.~~ Menu e `/dex status` testados via cliente de protocolo.
-- [x] ~~Menu inicial.~~ 10 verificações de smoke com itens somente de leitura; gestos adicionais/cliente visual pendentes.
+- [x] ~~Menu inicial.~~ 10 verificações de smoke com itens somente de leitura; pacotes de drag/double-click/descarte/clone testados no complemento de contextos; cliente visual pendente.
 - [x] ~~Integração básica com Cobblemon.~~ Leitura real de registros oficiais e 905 espécies implementadas; datapacks externos e demais integrações pendentes.
 
 ## FASE 2 — Pokédex
@@ -63,8 +63,10 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 - [x] ~~Adicionar seletor e páginas das três coleções iniciais.~~ Navegação e lore transmitida testadas; Shiny não numérica até evidência.
 
 - [x] ~~Configurar coleções por JSON com metadados, filtros, modo e permissão.~~ Validação de referências reais, 1–64 coleções e compatibilidade com config antigo; [regras](COLLECTIONS.md).
-- [x] ~~Validar reload atômico e permissões com LuckPerms real.~~ Grant/revoke global, botão antigo, negação, rollback e recuperação após reinício testados; contextos específicos ainda pendentes.
+- [x] ~~Validar reload atômico e permissões com LuckPerms real.~~ Grant/revoke global, botão antigo, negação, rollback e recuperação após reinício testados; cenário de dimensão e revogação contextual verificados no complemento; outros contextos/herança pendentes.
 - [x] ~~Paginar seletor de coleções configuradas.~~ Fixture com 31 coleções; navegação de ida/volta e ocultação/revalidação verificadas.
+
+- [x] ~~Validar permissões por dimensão e pacotes adicionais de inventário.~~ Oito checks em servidor dev real, com repetição em perfil novo; não equivale a cliente visual/carga. [Evidência](validation/phase2-contexts.json).
 
 ## FASE 3 — Recompensas
 
@@ -151,9 +153,8 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 | Fundação alpha | Inicialização, config, SQLite/migrações, menu, comandos, consulta oficial, helper de build e CI; 20 casos Java + 10 checks de protocolo, com reinício e JAR instalado. [Arquivos e testes](PROJECT_STATUS.md) | `9cab47d7d4dcd6c95793cc57e4b1b60d87b49b45`, confirmado no remoto |
 | Passagem da fundação | Registrada referência exata da entrega funcional e notices atualizados; sem mudança de código | Commit `docs: record synchronized foundation validation` |
 | Pré-release alpha.1 | Publicada pelo Actions após 20 testes; 5 anexos, downloads/checksums e commit da tag conferidos | `v0.1.0-alpha.1`, alvo `c11b366`; [evidência](validation/release-alpha1.json) |
-
 | Porcentagens — início Fase 2 | Nacional/Lendária, cache invalidado por evento, páginas/lore/status, Shiny N/D; 32 JUnit e testes de protocolo/datapack | Commit `feat: add verified Pokedex completion percentages`, [evidência](validation/phase2-percentages.json) |
-
 | Coleções JSON | Metadados/filtros/modos, validação, paginação e permissões; 69 JUnit, 11 regressões, 9 checks + 2 de reinício. Pausado por pedido do usuário | Commit `feat: add validated JSON Pokedex collections and permission checks`, [evidência](validation/phase2-collections.json) |
+| Contextos e menus protegidos | `scripts/server_proxy.init.gradle`, fixture/runner de contextos, 69 JUnit e 8 checks repetidos em servidor dev. Proxy/truststore repassados à JVM filha; sem mudança funcional no mod. Cliente visual/carga pendentes | Commit `test: validate contextual permissions and protected inventory menus`, base `41e0b7b`; [evidência](validation/phase2-contexts.json) |
 
 Ao registrar a própria entrega, use o assunto do commit em preparação e substitua pela referência exata na atualização seguinte; não crie commits infinitos apenas para gravar o hash do próprio documento.

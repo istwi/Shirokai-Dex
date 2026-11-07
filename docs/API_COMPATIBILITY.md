@@ -10,6 +10,16 @@ Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificaç�
 
 A auditoria estática inicial não executou testes funcionais. As validações posteriores da fundação estão separadas abaixo; captura, resgate e economia continuam sem testes funcionais.
 
+## Atualização: contextos por dimensão e protocolo de inventário
+
+Complemento sobre `41e0b7b`, sem alteração nas APIs utilizadas pelo mod: build atual com 69 JUnit aprovado; 8 checks em servidor Loom/Fabric/Cobblemon real com LuckPerms Fabric 5.4.140, repetidos com um perfil novo. [Evidência](validation/phase2-contexts.json).
+
+`User.getCachedData().getPermissionData().checkPermission(...)` considerou o contexto ativo do jogador: grant `world=overworld` autorizou coleção e reload, mudança ao Nether negou/ocultou e o retorno restaurou acesso. A saída de `lp user <uuid> info` confirmou `world=overworld` (não `minecraft:overworld`). Revogação contextual com botão aberto foi rejeitada no clique. Isso verifica esse cenário; não todas as combinações de herança/contextos.
+
+`MainMenu.clicked`, `quickMoveStack` e `canTakeItemForPickAll` foram exercitados por pacotes vanilla reais: descarte unitário/pilha, double-click com cursor forjado, fases de drag esquerdo/direito, clone criativo e clique externo. Nenhum ícone foi transferido/largado; contagens server-side de itens próprios e progresso oficial foram preservados. Predição local do cliente não foi usada como evidência de estado final. Cliente visual e carga permanecem pendentes.
+
+No desenvolvimento cloud, `scripts/server_proxy.init.gradle` repassa propriedades JVM de proxy/truststore para `JavaExec`. A primeira tentativa sem isso falhou no download dinâmico de dependências LuckPerms; com o init script opt-in, as verificações do provedor e o startup concluíram sem desabilitar TLS/checksums. O erro não era uma API inexistente nem um defeito funcional do Dex. As seções antigas abaixo preservam a evolução da auditoria e devem ser lidas com essas atualizações.
+
 ## Atualização: coleções JSON e LuckPerms real
 
 Verificados em servidor Fabric 1.21.1: FormData.getTypes() / ElementalType.getName(), labels e formas para filtros; ícones conferidos em BuiltInRegistries.ITEM antes da publicação da candidata. O validador recebe somente dados imutáveis capturados na thread do servidor; não acessa Minecraft no executor de configuração. Modos OWNED/SEEN/SHINY_SEEN foram executados; SHINY_CAPTURED não ganhou fonte histórica e permanece N/D.
@@ -111,9 +121,9 @@ No submódulo auditado, pacote `net.impactdev.impactor.api.economy`:
 
 Resolver `impactor:dollars` e `impactor:tokens` em runtime; nomes configuráveis não comprovam que essas moedas existem. Se ausentes, rejeitar recompensa de forma explícita, sem usar moeda principal como fallback. Verificar resultado da transação e persistência da implementação. Não foi demonstrada idempotência externa por ID de operação fornecido pelo chamador; falhas incertas exigem `NEEDS_REVIEW`.
 
-## Permissões — PENDING_TEST
+## Permissões — cenário global e dimensão VERIFIED; demais contextos PENDING_TEST
 
-LuckPerms API 5.4: `LuckPermsProvider.get()`, `LuckPerms.getUserManager()`, `UserManager.getUser(UUID)`, `User.getCachedData().getPermissionData().checkPermission(String)`. Usuário pode ser nulo; considerar contextos atuais e negar operação sensível se indisponível. Não substituir LuckPerms ausente por autorização administrativa aberta. Nenhuma versão do mod Fabric LuckPerms do servidor foi informada/testada.
+LuckPerms API 5.4: `LuckPermsProvider.get()`, `LuckPerms.getUserManager()`, `UserManager.getUser(UUID)`, `User.getCachedData().getPermissionData().checkPermission(String)`. Usuário pode ser nulo; considerar contextos atuais e negar operação sensível se indisponível. Não substituir LuckPerms ausente por autorização administrativa aberta. Distribuição Fabric 5.4.140 verificada nos relatórios de coleções e contextos; versão instalada em produção não foi certificada.
 
 ## Placeholders — PENDING_TEST
 
@@ -141,7 +151,7 @@ Spawn/wiki (`PENDING_TEST`): não foi validada uma consulta universal de biomas/
 
 ## Acesso e testes executados
 
-- Atualização posterior: propriedades JVM de proxy permitiram baixar a distribuição Gradle. O checksum inicialmente salvo tinha 66 caracteres e foi corrigido após nova consulta ao SHA-256 oficial de 64 caracteres (`https://services.gradle.org/distributions/gradle-8.14.3-bin.zip.sha256`). Não houve relaxamento de TLS/checksum; a execução após a correção ainda está pendente.
+- Histórico do bootstrap: propriedades JVM de proxy permitiram baixar a distribuição Gradle. O checksum inicialmente salvo tinha 66 caracteres e foi corrigido após consulta ao SHA-256 oficial de 64 caracteres (`https://services.gradle.org/distributions/gradle-8.14.3-bin.zip.sha256`). A execução corrigida já passou nas entregas posteriores, inclusive no build de 69 testes desta retomada; não permanece bloqueada. TLS/checksum continuam ativos.
 
 - Java 21 executado; checkout vazio e ausência de instruções AGENTS confirmados.
 - Tags Cobblemon, Impactor e submódulo, LuckPerms, Placeholder API e SGUI obtidas e inspecionadas.

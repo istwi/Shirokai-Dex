@@ -12,6 +12,14 @@ Exemplo de concessão por um administrador LuckPerms:
 
 O Dex usa usuário carregado e dados de permissão em cache/contextos do LuckPerms. Não usa nível OP como substituto quando LuckPerms está ausente. API opcional isolada em classe própria; a ausência do mod foi testada em servidor real e não impede a inicialização.
 
-Grant/revoke global, reload positivo/negativo e botão antigo após revogação foram testados com LuckPerms Fabric 5.4.140. Contextos específicos ainda requerem testes. `/dex` e `/dex status` são públicos nesta fundação; permissões de coleções e botões avançados serão adicionadas na fase correspondente.
+Grant/revoke global, reload positivo/negativo e botão antigo após revogação foram testados com LuckPerms Fabric 5.4.140. A validação complementar em servidor de desenvolvimento confirmou contexto por dimensão: `world=overworld` permite a coleção/reload, a ida ao Nether nega e oculta a coleção, e o retorno restaura o acesso. Revogação contextual também bloqueia botão já aberto. [Evidência](validation/phase2-contexts.json). `/dex` e `/dex status` são públicos; coleções JSON já têm permissões opcionais. Condições avançadas de botões continuam pendentes.
+
+Exemplo de permissão válida somente no Overworld nessa distribuição Fabric:
+
+```text
+/lp user <uuid> permission set shirokaidex.collection.dimension true world=overworld
+```
+
+O valor de contexto observado foi `overworld`, não `minecraft:overworld`. Confira o contexto ativo com `lp user <uuid> info` no console antes de configurar outros mundos. A configuração do nó deve corresponder ao campo `permission` da coleção.
 
 Cada coleção JSON pode definir `permission`; vazio é público, demais nós exigem LuckPerms positivo e são revalidados a cada acesso. Sem provedor, coleções restritas são negadas e ocultadas. [Detalhes](COLLECTIONS.md).

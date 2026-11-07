@@ -1,5 +1,12 @@
 # Changelog
 
+## Não lançado — validação complementar da alpha.2
+
+- Runner/fixture de contexto por dimensão: LuckPerms `world=overworld`, reload autorizado/negado, retorno e revogação com menu aberto, sem OP.
+- Pacotes de descarte, double-click, drag esquerdo/direito, clone criativo e clique externo com cursor forjado; contagens de inventário e progresso oficial preservados.
+- Init script opt-in para repassar proxy/truststore do Gradle à JVM de `runServer`, corrigindo download de dependências LuckPerms no fluxo cloud.
+- Build/69 JUnit e 8 checks de protocolo aprovados, estes repetidos com novo perfil em servidor dev real. Sem mudança funcional no mod, versão de dependências ou publicação de release/ambiente. Cliente visual e carga continuam pendentes.
+
 ## 0.2.0-alpha.2 — coleções JSON
 
 - Metadados, ícones, modos OWNED/SEEN/SHINY_SEEN e filtros combinados por coleção; SHINY_CAPTURED permanece indisponível sem evidência.

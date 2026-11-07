@@ -8,6 +8,8 @@ Disponível: `/dex`, resumo somente de leitura da Pokédex oficial, menu inicial
 
 Validação local: **69 casos JUnit aprovados**, **11 checks de regressão**, **9 de coleções com LuckPerms real** e **2 de reinício**, aprovados em servidor real e com JAR instalado fora do Loom. Não é release estável. Consulte [testes e limites](docs/TESTING.md).
 
+Complemento atual: build/69 JUnit repetidos e **8 checks adicionais** de permissões por dimensão e proteção contra pacotes de inventário, aprovados e repetidos com novo perfil em servidor de desenvolvimento real. [Evidência](docs/validation/phase2-contexts.json). Cliente visual e carga continuam pendentes.
+
 [Baixar a pré-release anterior 0.1.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.1.0-alpha.1) — JAR, fontes, checksums e relatório de validação.
 
 ## Instalar e desenvolver

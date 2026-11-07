@@ -1,0 +1,124 @@
+{
+  "base_commit": "41e0b7b3266af4ff2d2b17c2c352b779f68949f7",
+  "version": "0.2.0-alpha.2+mc1.21.1-cobblemon1.8.3",
+  "runtime": "Development Loom server; offline and loopback only; EULA accepted by user in this chat",
+  "java": "Temurin 21.0.13+9",
+  "gradle": "8.14.3",
+  "loom": "1.11.8",
+  "unit_suites": [
+    {
+      "name": "br.com.shirokaidex.config.CollectionsConfigTest",
+      "tests": "31",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:19:07.617Z"
+    },
+    {
+      "name": "br.com.shirokaidex.config.ConfigManagerTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:19:07.765Z"
+    },
+    {
+      "name": "br.com.shirokaidex.database.DatabaseTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:19:07.793Z"
+    },
+    {
+      "name": "br.com.shirokaidex.pokedex.ConfiguredProgressTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:19:08.196Z"
+    },
+    {
+      "name": "br.com.shirokaidex.pokedex.DexProgressTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-07T10:19:08.203Z"
+    }
+  ],
+  "protocol_report": {
+    "timestamp": "2026-11-07T10:25:07.574Z",
+    "target": "Minecraft 1.21.1 / Fabric 0.17.2 / Cobblemon 1.8.3 / LuckPerms 5.4.140",
+    "test_player": "DexContext2",
+    "results": [
+      {
+        "name": "Overworld-scoped LuckPerms grants expose collection and allow administrative reload without OP",
+        "status": "passed"
+      },
+      {
+        "name": "Dimension change denies collection and reload and hides the restricted button in the Nether",
+        "status": "passed"
+      },
+      {
+        "name": "Return to Overworld restores access; contextual revocation also rejects an already open GUI button",
+        "status": "passed"
+      },
+      {
+        "name": "Single-item and whole-stack discard packets cannot remove display icons",
+        "status": "passed"
+      },
+      {
+        "name": "Double-click with a forged carried icon cannot collect menu or inventory books",
+        "status": "passed"
+      },
+      {
+        "name": "Left/right drag start, add-slot and finish packets cannot distribute forged icons",
+        "status": "passed"
+      },
+      {
+        "name": "Creative clone and outside-click packets cannot create or drop display items",
+        "status": "passed"
+      },
+      {
+        "name": "Server inventory counts, absence of dropped items, reopened menu and official progress remain intact",
+        "status": "passed"
+      }
+    ]
+  },
+  "repeatability": "8 checks passed on DexContext, then all 8 passed on a new disposable DexContext2 profile; report retained from the latter",
+  "luckperms": {
+    "version": "5.4.140",
+    "source": "https://cdn.modrinth.com/data/Vebnzrzj/versions/l47d4ZWk/LuckPerms-Fabric-5.4.140.jar",
+    "sha512": "386ff4d18981c830d21ddaa599d70c1c5430c1475e2c5960275bad535cbd572c77e38b3841f0a71e3ea4a795c56d45ff8c4a8dba3799dae26bff5a382c6e0a64"
+  },
+  "jar": {
+    "name": "shirokai-dex-0.2.0-alpha.2+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "8c03d5d8f940ecddebe9c6a534bd21a7859944648f25e715e6eb4d1240ddcfe8",
+    "scope": "Build output only; this task did not retest the packaged JAR outside Loom"
+  },
+  "startup_evidence": [
+    "[shirokaidex-sqlite/INFO] (shirokaidex) Shirokai Dex ready: configuration validated, SQLite migration 1 applied/verified",
+    "[Server thread/INFO] (luckperms) Successfully enabled. (took 532ms)",
+    "[Server thread/INFO] (Minecraft) Done (7.660s)! For help, type \"help\"",
+    "[Server thread/INFO] (Minecraft) RCON running on 127.0.0.1:25573",
+    "[luckperms-command-executor/INFO] (Minecraft) [LP]     Contexts: (gamemode=creative) (world=overworld)"
+  ],
+  "diagnosed_attempts": [
+    "Initial runServer failed because the forked JVM lacked proxy properties; opt-in server_proxy.init.gradle restored LuckPerms dependency downloads with TLS enabled.",
+    "Runner initially sent asynchronous LuckPerms RCON commands too quickly; it now uses UUIDs and spaces commands.",
+    "LuckPerms active player context reported world=overworld, rather than the Minecraft resource identifier; corrected test configuration.",
+    "Stale GUI check now waits for authoritative inventory synchronization after client click prediction; no application change was necessary."
+  ],
+  "limitations": [
+    "No visual Minecraft client, online authentication or load test",
+    "Only the documented dimension permission scenario and listed inventory packet sequences were exercised",
+    "Wiki, placeholders and capture/reward/competition features remain outside this delivery"
+  ],
+  "shutdown": {
+    "server": "stop completed successfully; all dimensions saved; RCON listener stopped",
+    "sqlite_integrity_check": "ok",
+    "temporary_rcon_secret": "removed",
+    "local_server_configuration": "restored; test JSON files removed"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "Context validation",
+  "collections": [
+    {"id": "national"},
+    {"id": "shiny"},
+    {"id": "legendary"},
+    {
+      "id": "dimension_locked",
+      "name": "Dimensional",
+      "icon": "minecraft:diamond",
+      "permission": "shirokaidex.collection.dimension",
+      "criteria": {"include_species": ["cobblemon:pikachu"]}
+    }
+  ]
+}

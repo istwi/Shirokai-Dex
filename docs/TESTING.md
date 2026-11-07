@@ -30,6 +30,16 @@ max-players=4
 
 Inicie `./gradlew --no-daemon runServer` em terminal interativo. Aguarde **ambas** as mensagens `Shirokai Dex ready` e `Done (...)!`, sem falha fatal. O Gradle pode terminar com código zero mesmo que Minecraft não tenha iniciado; não usar somente o resultado da tarefa como readiness.
 
+Em cloud, o proxy da JVM do Gradle não é automaticamente herdado pela JVM do Minecraft. Use o init script opt-in para repassar proxy e truststore ao `JavaExec` do Loom:
+
+```sh
+JAVA_HOME=/workspace/.tools/jdk-21.0.13+9 python3 scripts/gradle_cloud.py \
+  -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts \
+  --init-script scripts/server_proxy.init.gradle --no-daemon runServer
+```
+
+Execute na raiz do checkout, com o JDK 21 completo existente na máquina. O init script não modifica configurações globais nem desabilita TLS. LuckPerms baixa dependências adicionais na primeira inicialização; sem proxy no processo filho, esse download pode falhar com `UnknownHostException`, mesmo com o build aprovado.
+
 ```sh
 cd tests/integration
 npm ci --ignore-scripts --no-audit --no-fund
@@ -46,8 +56,8 @@ O mesmo smoke passou com o JAR final em um servidor isolado fora do Loom, usando
 
 ## Pendências explícitas
 
-- LuckPerms instalado: permissão positiva, contextos e reload administrativo de ponta a ponta.
-- Cliente Minecraft/Cobblemon real: aparência, arraste, double-click, teclas de descarte e demais interações não cobertas.
+- Cliente Minecraft/Cobblemon real: aparência e gestos físicos na interface. Arraste, double-click e descarte têm cobertura complementar por pacotes, descrita abaixo; isso não comprova renderização/experiência visual.
+- Contextos LuckPerms adicionais, herança complexa e regras personalizadas além do cenário de dimensão verificado.
 - Datapacks adicionais, mudança de espécies entre versões e política de progresso shiny.
 - Capturas, recompensas e falhas externas: ainda não implementadas.
 - Testes de carga: não realizados; não há alegação de capacidade de jogadores.
@@ -78,4 +88,22 @@ Fixtures em tests/fixtures/collections e datapacks/dex-progress (agora inclui es
 
 Depois dos 9 checks, um JSON inválido foi colocado no arquivo ativo, servidor encerrado e reiniciado; `MC_COLLECTIONS_MODE=after-restart` com o mesmo perfil validou backup semântico, progresso persistido e navegação nos dois sentidos. O runner usa comandos oficiais de obtenção de Pokémon e grants LuckPerms pelo RCON; não concede registros artificiais de Pokédex. Encerrar o servidor e restaurar configurações originais; senha temporária não deve sobreviver ao teste.
 
-Wiki, visualização em cliente real, contextos de dimensão, desempenho e captura shiny histórica seguem pendentes. A documentação histórica das alphas anteriores mantém seus próprios relatórios imutáveis.
+Wiki, visualização em cliente real, desempenho e captura shiny histórica seguem pendentes. A documentação histórica das alphas anteriores mantém seus próprios relatórios imutáveis; contextos de dimensão foram verificados no complemento abaixo.
+
+## Contextos de dimensão e pacotes de inventário
+
+Runner: `npm run test:contexts`, com a fixture `tests/fixtures/contexts/config.json` em `run/config/shirokaidex/config.json`. Prepare um servidor **descartável**, offline e limitado a loopback, com LuckPerms Fabric 5.4.140 e RCON autenticado também em loopback. A EULA precisa estar aceita pelo responsável. Não use dados reais: o runner troca dimensão/modo de jogo, limpa o inventário do perfil de teste e concede 7 pedras e 2 livros para conferir contagens. O perfil não recebe OP nem permissão administrativa global.
+
+Com o servidor parado, preserve qualquer configuração existente antes de instalar a fixture. Configure RCON com uma senha temporária fora do Git e forneça somente o caminho do arquivo ao runner. Depois inicie pelo comando cloud acima e aguarde `Shirokai Dex ready`, `Done` e readiness RCON.
+
+```sh
+cd tests/integration
+MC_TEST_RCON_PASSWORD_FILE=/caminho/seguro/temporario \
+  MC_CONTEXT_PLAYER=DexContext npm run test:contexts
+```
+
+`MC_TEST_RUN` aponta para o diretório do servidor (padrão `run` na raiz do checkout); `MC_TEST_PORT` e `MC_TEST_RCON_PORT` usam 25571 e 25573 por padrão. `MC_CONTEXT_PLAYER` deve identificar um perfil descartável, com até 16 caracteres. A fixture é conferida antes de executar operações. Comandos LuckPerms usam o UUID real do perfil conectado e são espaçados, pois o executor assíncrono pode recusar outro comando como ocupado.
+
+Oito checks agrupados verificam: permissão/reload por `world=overworld`; negação e ocultação no Nether; restauração no retorno/revogação com GUI aberta; descarte individual/pilha; double-click com cursor forjado; fases de arraste esquerdo/direito; clone criativo/clique externo; contagens autoritativas do inventário, ausência de itens largados, reabertura e progresso oficial intacto. Os testes aguardam atualizações completas do servidor, sem confundir predição local do cliente com estado confirmado. Os pacotes são reais; o runner não modifica o mod para ignorar assertions.
+
+Relatório por execução: `build/integration-contexts.json`. [Evidência preservada](validation/phase2-contexts.json). Esta execução complementar usa o servidor de desenvolvimento Loom; não é uma nova certificação do JAR instalado fora do Loom, autenticação online, cliente visual ou carga. Ao terminar, envie `stop`, confira salvamento/fechamento e remova a senha RCON temporária e sua propriedade; restaure a configuração local anterior.

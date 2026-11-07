@@ -2,11 +2,19 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
-## Pausa solicitada
+## Retomada — permissões por dimensão e menus protegidos
 
-Usuário pediu salvar no GitHub e pausar. Não retomar implementação até nova solicitação. Entrega atual: `0.2.0-alpha.2+mc1.21.1-cobblemon1.8.3`, identificada pelo commit de assunto `feat: add validated JSON Pokedex collections and permission checks`, baseada no remoto `e4eb78f`.
+Desenvolvimento retomado por solicitação do usuário, a partir do remoto `41e0b7b3266af4ff2d2b17c2c352b779f68949f7`, sem alterações ou commits locais pendentes. A descrição de “somente esqueleto” recebida na retomada era histórica: fundação, percentuais e coleções JSON já estavam implementados. Nenhuma dessas funcionalidades foi reimplementada.
 
-## Atualização mais recente — coleções JSON
+Build repetido neste ambiente com JDK 21, Gradle 8.14.3, cache gravável, proxy e TLS/checksums ativos: **69 JUnit aprovados, zero falhas/erros/skips**. Novo runner `tests/integration/contexts.cjs` e fixture `tests/fixtures/contexts/config.json`: **8 checks de protocolo aprovados**, depois repetidos com um novo perfil descartável, em servidor Loom/Fabric/Cobblemon real com LuckPerms 5.4.140. [Evidência](validation/phase2-contexts.json).
+
+Confirmados grant/reload por `world=overworld`, negação/ocultação no Nether, retorno, revogação com GUI já aberta, descarte individual/pilha, double-click, fases de arraste esquerdo/direito, clone criativo e clique externo com cursor forjado. Contagens autoritativas do inventário, ausência de itens largados, reabertura e Pokédex oficial permaneceram intactas. Cliente visual, autenticação online e carga continuam pendentes.
+
+Corrigido o fluxo de desenvolvimento cloud com `scripts/server_proxy.init.gradle`: o `JavaExec` de `runServer` agora pode receber explicitamente proxy/truststore usados pelo Gradle. A tentativa inicial falhou no download de dependências LuckPerms por falta de proxy na JVM filha; o comando opt-in foi validado com downloads verificados e startup real. Sem mudança no código do mod ou em versões de dependências.
+
+Servidor encerrado com `stop`, mundos salvos e SQLite com `integrity_check=ok`. Configuração local anterior restaurada e senha RCON temporária removida. Nenhuma release nem configuração de ambiente foi publicada. Entrega identificada pelo assunto de commit `test: validate contextual permissions and protected inventory menus`, baseada em `41e0b7b`.
+
+## Entrega anterior — coleções JSON
 
 Implementados campo opcional collections no config.json, metadados/ícones/permissões, filtros por whitelist/exclusão/labels/tipos/formas, modos OWNED/SEEN/SHINY_SEEN e SHINY_CAPTURED explicitamente indisponível. 1–64 coleções, seletor paginado em blocos de 18, comandos dinâmicos e revalidação da permissão no clique. Compatibilidade com JSON antigo preservada.
 
@@ -24,7 +32,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 - Nova alpha local `0.2.0-alpha.1+mc1.21.1-cobblemon1.8.3`: seletor/páginas Nacional, Lendária e Shiny; status por coleção, porcentagens com duas casas e sem falso 100%. [Comportamento](POKEDEX.md).
 - Cache por UUID até 5 segundos, invalidado por evento oficial pós-Pokédex, login/logout/reload/lifecycle; cálculo puro separado do adaptador. Nacional usa agregado oficial; Lendária exige forma elegível obtida.
-- Validação atual: **32 casos JUnit** e regressão/progresso em servidor dev e JAR fora do Loom, incluindo datapack e sua remoção. [Relatório](validation/phase2-percentages.json).
+- Validação histórica de porcentagens: **32 casos JUnit** e regressão/progresso em servidor dev e JAR fora do Loom, incluindo datapack e sua remoção. [Relatório](validation/phase2-percentages.json).
 
 
 - Build Gradle 8.14.3/Loom 1.11.8 com checksum oficial, helper de proxy/cache e JDK 21 completo verificado. Plugin Kotlin 2.2.20 habilita metadata remapping; ICU 71.1 compõe o runtime dev dedicado.
@@ -32,22 +40,22 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 - Configuração imutável estrita, reload assíncrono, backup validado atômico e recuperação sem sobrescrever JSON inválido.
 - SQLite em worker dedicado; migração transacional, WAL/foreign keys, cadastro por UUID e fechamento.
 - `/dex`, `/dex status`, menu inicial de 27 slots somente de leitura e consulta oficial Cobblemon. Espécies enumeradas dinamicamente; nenhum registro oficial alterado.
-- `/dex admin reload` protegido por LuckPerms sem fallback OP/console; negação sem provedor comprovada, permissão positiva pendente.
+- `/dex admin reload` protegido por LuckPerms sem fallback OP/console; negação sem provedor comprovada, permissão positiva/global e por dimensão agora verificada nos relatórios de coleções/contextos.
 - Mensagens em recursos separados pt_br/en_us, com idioma global configurável nesta fase.
 - Workflow Java 21 com build/testes e upload de JAR/sources/JUnit condicionado ao sucesso. Checklist e continuidade mantidas.
 
 ## Em desenvolvimento
 
-- Coleções e critérios configuráveis JSON, wiki/menus avançados e placeholders da Fase 2. Esta entrega não implementa esses sistemas nem captura shiny histórica.
+- Wiki/menus avançados, evolução de categorias e placeholders da Fase 2. Coleções e critérios JSON já estão implementados; captura shiny histórica permanece indisponível.
 
 
-- Testes complementares: LuckPerms positivo/contextos e interações/aparência em cliente Minecraft real.
+- Testes complementares: aparência/gestos em cliente Minecraft real, contextos LuckPerms adicionais e carga. O cenário de dimensão e os pacotes de inventário descritos acima foram verificados.
 - Preparação incremental da Fase 2, respeitando limitações reais de shiny e de espécies/datapacks.
 
 ## Pendente
 
 - Fases 2–8: Pokédex completas, categorias/datapacks/wiki, recompensas, capturas/estatísticas, rankings, competições, conquistas/perfis e integrações avançadas.
-- Permissão positiva e reload administrativo de ponta a ponta com LuckPerms instalado, demais gestos de menu e testes de carga.
+- Cliente visual e testes de carga; herança/contextos LuckPerms além do cenário de dimensão verificado.
 - Layouts JSON completos e documentação das funcionalidades ainda não implementadas.
 - Licença do código próprio e release estável. Nenhuma configuração de ambiente foi alterada/publicada nesta entrega.
 
