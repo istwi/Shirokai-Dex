@@ -5,7 +5,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '2.2.20'
 }
 
-version = '0.3.0-alpha.8+mc1.21.1-cobblemon1.8.3'
+version = '0.3.0-alpha.9+mc1.21.1-cobblemon1.8.3'
 group = 'br.com.shirokaidex'
 base { archivesName = 'shirokai-dex' }
 
@@ -140,4 +140,24 @@ tasks.register('serverDistribution', Sync) {
         def hash = java.security.MessageDigest.getInstance('SHA-256').digest(jar.bytes).encodeHex().toString()
         new File(destinationDir, 'SHA256SUMS').text = hash + '  ' + jar.name + '\n'
     }
+}
+
+// Test-only controlled delay in Crates' writer queue, to reproduce the real save race.
+sourceSets {
+    checkpointProbe {
+        compileClasspath += sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
+}
+tasks.register('checkpointProbeJar', Jar) {
+    dependsOn tasks.named('compileCheckpointProbeJava'), tasks.named('processCheckpointProbeResources')
+    from sourceSets.checkpointProbe.output
+    archiveClassifier = 'checkpoint-probe-dev'
+    destinationDirectory = layout.buildDirectory.dir('test-mods')
+}
+tasks.register('remapCheckpointProbeJar', net.fabricmc.loom.task.RemapJarTask) {
+    dependsOn tasks.named('checkpointProbeJar')
+    inputFile.set(tasks.named('checkpointProbeJar').flatMap { it.archiveFile })
+    archiveClassifier = 'checkpoint-probe'
+    destinationDirectory = layout.buildDirectory.dir('test-mods')
 }

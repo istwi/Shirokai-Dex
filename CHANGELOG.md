@@ -151,3 +151,7 @@ Sem release, sem JAR e sem funcionalidades entregues até esta etapa.
 - Prévia/segunda confirmação monetárias, planos históricos compatíveis e limites estritos.
 - Dependência API compileOnly 5.3.5, sem empacotar/instalar Impactor ou alterar suas configurações no servidor do usuário.
 - Alterações continuam locais; nenhuma publicação.
+
+## WIP separado — alpha.9
+
+Coordenação do checkpoint assíncrono Crates0.2.1 em desenvolvimento, em handoff/crates-checkpoint. Compilação/JAR/274 JUnit aprovados, teste funcional ainda pendente. Não é release nem integração CRATE_KEY concluída. Trabalho interrompido para passagem a outro Codex.

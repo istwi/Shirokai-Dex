@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "✦ Shirokai Dex",
+  "rewards": [
+    {
+      "id": "keys_saved",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "plain",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:diamond",
+          "count": 2
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "id": "failed",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:gold_ingot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "vanilla",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:emerald",
+          "count": 2
+        }
+      ]
+    }
+  ]
+}

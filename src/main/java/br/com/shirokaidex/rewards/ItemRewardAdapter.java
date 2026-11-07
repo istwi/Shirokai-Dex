@@ -18,22 +18,26 @@ public final class ItemRewardAdapter implements RewardDelivery.Adapter {
         this.server=server;this.player=player;this.valid=valid;
     }
     @Override public CompletableFuture<Boolean> preflight(RewardPlan plan,int firstRemainingStep) {
-        return onServer(()->available(plan)&&simulate(plan.items().subList(firstRemainingStep,plan.items().size())).isPresent());
+        return onServer(()->available(plan)&&(firstRemainingStep>=plan.items().size()||PlayerSaveCoordinator.ready(server,player))&&simulate(plan.items().subList(firstRemainingStep,plan.items().size())).isPresent());
     }
     @Override public CompletableFuture<String> deliver(RewardPlan plan,int step) {
         return onServer(()->{
-            if(!available(plan))throw new IllegalStateException("Player, configuration or permission changed");
+            if(!available(plan)||!PlayerSaveCoordinator.ready(server,player))throw new IllegalStateException("Player, configuration, permission or persistence changed");
             // Recheck after persisted intent, since inventory may have changed while SQLite was working.
             if(simulate(plan.items().subList(step,plan.items().size())).isEmpty())throw new IllegalStateException("Inventory capacity changed");
             var next=simulate(List.of(plan.items().get(step))).orElseThrow();
             for(int slot=0;slot<36;slot++)player.getInventory().setItem(slot,next.get(slot));
             player.getInventory().setChanged();player.containerMenu.broadcastFullState();
             // The final acknowledgement follows a vanilla player save. This is not a distributed transaction.
-            if(step+1==plan.items().size()){server.getPlayerList().saveAll();verifySavedInventory();}
-            return "Inventory slots updated on server thread; step="+step+"; final_save_readback_verified="+(step+1==plan.items().size());
-        });
+            String evidence="Inventory slots updated on server thread; step="+step+"; final_save_readback_verified="+(step+1==plan.items().size());
+            if(step+1==plan.items().size()){
+                List<ItemStack> expected=new ArrayList<>();for(int slot=0;slot<36;slot++)expected.add(player.getInventory().getItem(slot).copy());
+                return PlayerSaveCoordinator.save(server,player).thenCompose(unused->onServer(()->{verifySavedInventory(expected);return evidence;}));
+            }
+            return CompletableFuture.completedFuture(evidence);
+        }).thenCompose(future->future);
     }
-    private void verifySavedInventory() throws java.io.IOException {
+    private void verifySavedInventory(List<ItemStack> expected) throws java.io.IOException {
         // Vanilla PlayerDataStorage.save logs and suppresses write exceptions. Returning from saveAll is insufficient.
         var path=server.getWorldPath(net.minecraft.world.level.storage.LevelResource.PLAYER_DATA_DIR).resolve(player.getUUID()+".dat");
         var data=net.minecraft.nbt.NbtIo.readCompressed(path,net.minecraft.nbt.NbtAccounter.create(16L*1024*1024));
@@ -43,7 +47,7 @@ public final class ItemRewardAdapter implements RewardDelivery.Adapter {
             var entry=inventory.getCompound(i);int slot=Byte.toUnsignedInt(entry.getByte("Slot"));
             if(slot<36)saved.set(slot,ItemStack.parseOptional(server.registryAccess(),entry));
         }
-        for(int i=0;i<36;i++)if(!ItemStack.matches(saved.get(i),player.getInventory().getItem(i)))
+        for(int i=0;i<36;i++)if(!ItemStack.matches(saved.get(i),expected.get(i)))
             throw new java.io.IOException("Player inventory save readback differs; external result requires review");
     }
     private boolean available(RewardPlan plan) { return server.getPlayerList().getPlayer(player.getUUID())==player&&!player.hasDisconnected()&&valid.test(plan); }

@@ -232,3 +232,10 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 | CURRENCY (local) | Modelo/codec/planos/journal/adapter opcional/readback/menus, 20 casos novos e runner em três modos; 274 JUnit + 8 checks | Sem commit, base `7defc0c`; [evidência](validation/phase3-currency.json) |
 
 | Sincronização autorizada alpha.6/7/8 | Snapshot de menus e CURRENCY, evidências de 274 JUnit e testes nativos, documentos de continuidade atualizados | Commit `feat: add configurable menu presentation and Impactor currency rewards`, base `7defc0c`; sem nova release |
+
+### WIP separado — checkpoint Crates
+
+- [x] ~~Conferir fonte/HEAD e binário oficial Crates0.2.1 para salvamento coordenado.~~ Hash/métodos reais auditados; isso não prova entrega integrada.
+- [ ] Testar coordenação assíncrona/itens/chaves em servidor e reinício. Implementação/probe compilados na branch handoff/crates-checkpoint; usuário interrompeu antes do teste funcional.
+
+| Passagem WIP Crates | PlayerSaveCoordinator, ItemRewardAdapter, probe/fixture e instruções exatas; build/274 JUnit, sem teste nativo novo | Branch handoff/crates-checkpoint; [passagem](CRATES_CHECKPOINT_HANDOFF.md) |

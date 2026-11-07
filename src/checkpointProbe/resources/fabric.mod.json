@@ -1,0 +1,1 @@
+{"schemaVersion":1,"id":"shirokaidex_checkpoint_probe","version":"1.0.0","name":"Dex checkpoint validation fixture","environment":"server","entrypoints":{"main":["br.com.shirokaidex.probe.CheckpointProbe"]},"depends":{"fabricloader":">=0.17.2","fabric-api":"*","shirokaidex":"*","shirokaicrates":"0.2.1"}}

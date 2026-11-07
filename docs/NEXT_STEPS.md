@@ -2,6 +2,10 @@
 
 **Estado atual:** envio do snapshot alpha.6/7/8 autorizado pelo usuário. Referência: commit `feat: add configurable menu presentation and Impactor currency rewards`, base `7defc0c`. Depois do envio, continuar integração de chaves Crates localmente. Sem autorização de nova release/publicação de ambiente.
 
+## Parada solicitada pelo responsável
+
+Main com alpha.6/7/8 validada: `191a65e`. Trabalho novo incompleto está separado em `handoff/crates-checkpoint`. Próximo Codex deve abrir [CRATES_CHECKPOINT_HANDOFF.md](CRATES_CHECKPOINT_HANDOFF.md), testar nativamente o checkpoint e só depois integrar. Não refazer menus/moedas nem afirmar suporte CRATE_KEY pronto. Sessão encerrada por pedido do usuário.
+
 ## Última tarefa realizada
 
 CURRENCY integrado ao plano/journal/preflight/menus, com API Impactor5.3.5 e backend JSON nativo auditado. Aguarda save e leitura de saldo, pois o provedor suprime erros; confere identidade e precisão e não usa moeda principal como fallback. Build/JAR verificados; 274 JUnit sem falhas/erros/skips e 8 checks de servidor (sem API, real e restart). Guia/evidência: CURRENCY_REWARDS.md e validation/phase3-currency.json. Native saldo final do teste: dólares15/tokens4/item1; operação incerta continua bloqueada.
