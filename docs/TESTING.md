@@ -295,3 +295,7 @@ Não certifica outros mods/versões/segredos, concorrência ampla, timeout real,
 Primeiro ensaio de um teste novo ficou bloqueado por join no worker SQLite do próprio teste; o worker foi encerrado e o teste passou a encadear future sem join. Produto não foi alterado para contornar o teste. Execução final da suíte passou; uma consulta SQL independente comprova INTENT antes do efeito simulado.
 
 Comandos externos, recibos automáticos, planos mistos, crash durante dispatch, carga e cliente gráfico continuam pendentes. A suíte Java inclui regressões anteriores; os runners completos de itens/Pokémon/moedas/checkpoint não foram repetidos nesta alpha.10. A evidência alpha.9 permanece separada. Nenhuma release ou configuração de ambiente publicada.
+
+## Executor reutilizável e recuperação — alpha.11
+
+[Comandos e requisitos](RECOVERY.md#automatização-dos-testes), [evidência](validation/phase3-recovery.json): 290 JUnit, nove checks recovery e nove regressões COMMAND. O executor cria mundo novo, preserva base, espera Done + Dex ready, para/salva antes de seeding/restart, testa e limpa RCON em finally. Concurrency de operadores é testada em Java; callback obsoleto por permissão/desconexão/reload e identidade/payload são testados nativamente. Não reexecuta INTENT nem presume durabilidade de prefixo.

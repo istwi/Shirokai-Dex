@@ -201,6 +201,10 @@ public final class Database implements AutoCloseable {
     public CompletableFuture<br.com.shirokaidex.rewards.RewardJournal.Operation> reserveReward(UUID player, br.com.shirokaidex.rewards.RewardPlan plan, String actor) {
         return submit(() -> transaction(() -> br.com.shirokaidex.rewards.RewardJournal.reserve(connection, player, plan,actor)));
     }
+    public CompletableFuture<Boolean> rewardResumable(UUID id){return submit(()->br.com.shirokaidex.rewards.RewardJournal.resumable(connection,id));}
+    public CompletableFuture<java.util.Optional<br.com.shirokaidex.rewards.RewardJournal.Operation>> authorizeRewardResume(UUID id,UUID player,br.com.shirokaidex.rewards.RewardPlan plan,String actor,String reason){
+        return submit(()->transaction(()->br.com.shirokaidex.rewards.RewardJournal.authorizeResume(connection,id,player,plan,actor,reason)));
+    }
     public CompletableFuture<java.util.Optional<br.com.shirokaidex.rewards.RewardJournal.Operation>> rewardOperation(UUID id) {
         return submit(() -> br.com.shirokaidex.rewards.RewardJournal.find(connection, id));
     }

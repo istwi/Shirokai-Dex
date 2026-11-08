@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Retomada:** alpha.10 COMMAND local sobre `f714c4b`: template/contexto autorizado, snapshot antes da intenção, dispatch isolado e NEEDS_REVIEW obrigatório. 282 JUnit e nove checks de servidor/reinício; [evidência](validation/phase3-commands.json). Envio autorizado somente na branch de desenvolvimento; sem release/ambiente. Fase 3 permanece parcial: recibos automáticos, planos mistos, CRATE_KEY dedicado e recuperação completa pendentes.
+**Retomada:** alpha.11 recuperação segura de operações sem etapas, plano/ID preservados e executor reutilizável de servidor. 290 JUnit e 18 checks reais com reinícios; [evidência](validation/phase3-recovery.json). COMMAND alpha.10 enviado em `73e5d78`; próximos essenciais: captura legítima/estatísticas, depois competições/rankings. Autorização contínua na branch; main/release/ambiente separados.
 
 ## Preparação e continuidade
 
@@ -255,3 +255,11 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 - [ ] Recibos automáticos/planos mistos COMMAND e recuperação supervisionada completa. Nenhum INTENT incerto pode ser reenviado automaticamente.
 
 | COMMAND local | CommandReward/Policy/Adapter, codec/Settings, planos/journal/core/menus/traduções, oito testes Java, fixture/runner e guia. 282 JUnit, 7+2 checks; sem nova migração SQLite | Commit `feat: add explicitly authorized command reward dispatch`; base `f714c4b`, alpha.10; [evidência](validation/phase3-commands.json) |
+
+### Recuperação segura e testes reutilizáveis — alpha.11
+
+- [x] ~~Retomar explicitamente PENDING/NEEDS_REVIEW comprovadamente sem etapas, com prévia/confirmação/motivo/auditoria e revalidações atuais.~~ ID/plano preservados; oito JUnit novos, permissões/desconexão/reload e inventário real/reinício. [Guia](RECOVERY.md).
+- [x] ~~Automatizar boot, fixture offline, suíte e reinício/cleanup no servidor empacotado reutilizando dependências auditadas.~~ Suites recovery e commands, 18 checks e logs/save/segredo conferidos. Não é teste de todos os tipos/modpacks.
+- [ ] Retomada parcial de etapas com resultado externo incerto. INTENT e prefixos reconhecidos não são reenviados; sem recibos/prova suficiente continuam em revisão.
+
+| Recuperação e executor | RewardJournal/Database/Delivery/core/GUI/traduções, oito testes Java, fixture/runner/seeder e executor. 290 JUnit e 9+9 checks empacotados/reinícios. Sem migração nova nem alteração em outros mods | Commit `feat: add safe supervised reward recovery and reusable server suites`, base `73e5d78`; [evidência](validation/phase3-recovery.json) |

@@ -1,12 +1,12 @@
 # Próximos passos
 
-**Estado atual:** alpha.10 COMMAND local, sobre `f714c4b`, branch `handoff/crates-checkpoint`; main preservada em `c89cc1b`. Modelo/política/execução de uma ação isolada com revisão obrigatória implementados e validados. [Guia](COMMAND_REWARDS.md), [evidência](validation/phase3-commands.json). Envio autorizado pelo fluxo contínuo da branch de desenvolvimento; referência da entrega: `feat: add explicitly authorized command reward dispatch`. Sem release/ambiente.
+**Estado atual:** alpha.11, recuperação segura e testes automatizados; base enviada `73e5d78`, branch `handoff/crates-checkpoint`, main preservada `c89cc1b`. Autorização contínua de commits/push na branch. [Guia](RECOVERY.md), [evidência](validation/phase3-recovery.json). Referência da entrega: `feat: add safe supervised reward recovery and reusable server suites`. Sem release/publicação de ambiente.
 
 ## Última tarefa realizada
 
-Último bloco local: COMMAND alpha.10, 282 JUnit e nove checks de servidor/reinício, conforme relatório acima. Último bloco enviado permanece alpha.9 descrito a seguir.
+Recuperação administrativa apenas de operações sem etapas, com prévia/confirmacão, motivo e auditoria. Plano/ID preservados, permissões atuais de operador/destinatário, desconexão/reload e concorrência seguros no escopo demonstrado. 290 JUnit e 18 checks de servidor (9 recuperação + 9 regressão COMMAND, com reinícios). INTENT/prefixo confirmado não são reenviados. Schema continua 5.
 
-Checkpoint nativo Crates0.2.1 exercitado fora do Loom: chave real emitida pelo provedor e congelada via SAVED_ITEM, autenticidade por Tokens.matches, ACK após writer atrasado/readback, falha de playerdata/revisão/anti-repetição, reinícios e fallback vanilla sem Crates. 274 JUnit e 26 checks de servidor (8 checkpoint + 10 itens + 8 Pokémon, incluindo reinícios); resultados e regressões detalhados na [evidência](validation/phase3-crates-checkpoint.json). Nenhum tipo CRATE_KEY novo implementado. [Passagem atualizada](CRATES_CHECKPOINT_HANDOFF.md).
+Executor `scripts/integration_server.py` e fixture/runner/seeder de recuperação reutilizam os assets de um servidor empacotado, criam mundos novos e fazem boot/teste/reinício/cleanup. Não dependem de processos vivos. COMMAND alpha.10 já foi enviado em `73e5d78`; não refazer. Checkpoint alpha.9/SAVED_ITEM permanece validado; CRATE_KEY dedicado continua sem contrato público suficiente no Crates0.2.1.
 
 ## Pendência de distribuição
 
@@ -16,13 +16,16 @@ O upload do JAR/sources/SHA256SUMS recebeu HTTP 401 Bad credentials em uploads.g
 
 ## Próxima tarefa exata
 
-1. Conferir árvore local/commits/remoto. Entrega identificada pelo assunto `test: validate native Crates checkpoints and delivery regressions`, base `6b97093`; envio autorizado somente nesta branch. Preservar a main validada. Revisar evidência/diff antes de considerar integração.
-2. Seguir [CRATES_CHECKPOINT_HANDOFF.md](CRATES_CHECKPOINT_HANDOFF.md). A base de checkpoint/SAVED_ITEM está validada no escopo da evidência; a auditoria de **CRATE_KEY dedicado** foi concluída estaticamente: o contrato automático de emissão da versão 0.2.1 é UNSUPPORTED; ver [evidência e requisitos](CRATE_KEY_CONTRACT.md). Não promover reflexão privada do probe a API de produção nem chamar givekey e tratar retorno como entrega durável.
-3. Preservar planos/componentes/permissões, journal antes do efeito, espera/readback nativo e NEEDS_REVIEW sem retry. Sem transação distribuída. Outros provedores/versões/concorrência ampla continuam pendentes.
-4. COMMAND isolado com revisão obrigatória já foi implementado/testado; não refazer. Próximo bloco: recuperação supervisionada de operações, auditando estado/etapas e efeitos antes de qualquer retomada. Manter cancelamento/conclusão existentes e não reenviar INTENT incerto; determinar quais operações podem ser retomadas com prova suficiente, com prévia/confirmacão/permissão/auditoria. Recibos automáticos COMMAND e planos mistos dependem de contratos adicionais; não antecipar todos os sistemas. Capturas/estatísticas/competições/rankings e cliente gráfico/carga continuam abertos no prompt/checklist.
-5. Testes atuais são no JAR intermediary fora do Loom; probe separado de teste nunca deve ir ao JAR de distribuição. Nenhuma alteração em outros mods ou publicação de ambiente autorizada.
+1. Conferir Git/status/remotos, preservar mudanças e usar autorização contínua somente na branch de desenvolvimento. Main/release/ambiente continuam sob autorização separada. Trabalhar em blocos maiores e reduzir documentação repetida.
+2. Próximo bloco funcional: **captura legítima e estatísticas permanentes**, seções 10–12 do prompt. Auditar origem, deduplicação por IDs confiáveis e datas/timezone configurável antes de pontuação. Não inferir captura de obtenção, shiny visto, troca, ovo ou prêmio.
+3. APIs candidatas reais: `PokemonCapturedEvent.getPokemon/getPlayer/getPokeBallEntity`; `EmptyPokeBallEntity.getCapturingPokemon`; `PokemonEntity.getSpawnCause`; `PokemonSpawnAction` atribui a causa ao criar entidade. Confirmar ordenação/validade no evento e persistência através de unload/reinício. Origem ausente/desconhecida não vira captura legítima por suposição. Validar captura nativa positiva, não só emissão artificial de evento/probe.
+4. Usar executor `scripts/integration_server.py` para repetir suítes. Base precisa de server.jar/profile/dependências originais; caminhos locais são caches, não fonte de continuidade. Em outra máquina seguir INSTALLATION/TESTING. Preservar TLS/checksums/proxy.
+5. Recuperação parcial com INTENT/prefixo e recibos automáticos continuam abertos; manter bloqueio/revisão. COMMAND isolado e recuperação sem etapas já estão implementados: não refazer. Recibos/integrações opcionais/acabamento visual podem ficar para depois dos essenciais.
+6. Atualizar checklist/status/next, evidência objetiva e testes relevantes, commitar/push na branch e confirmar SHA remoto. Não publicar releases/main/ambiente automaticamente.
 
 ## Arquivos importantes
+
+- Alpha.11: RewardJournal.resumable/authorizeResume, Database.authorizeRewardResume, RewardDelivery.resume, previewRewardResume/deliverReward no core, MainMenu.confirmRecovery, RewardRecoveryTest; fixture/runner/seeder recovery e `scripts/integration_server.py`.
 
 - COMMAND alpha.10: CommandReward/CommandPolicy/CommandRewardAdapter, CommandRewardsCodec/Settings, RewardPlan.definition/reuse/commands, RewardJournal.steps/RewardDelivery.ManualReview, core/menus/traduções; CommandRewardsTest e fixture/runner commands em dois modos. Nenhuma migração SQLite nova.
 

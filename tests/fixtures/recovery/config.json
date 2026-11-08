@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "Recovery validation",
+  "collections": [
+    {
+      "id": "national"
+    },
+    {
+      "id": "locked",
+      "name": "Locked",
+      "permission": "shirokaidex.recovery.claim"
+    }
+  ],
+  "rewards": [
+    {
+      "id": "fresh",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:diamond",
+          "count": 2,
+          "payload_snbt": "{id:\"minecraft:diamond\",count:1,components:{\"minecraft:custom_name\":'\"Recovery Gem\"'}}"
+        }
+      ]
+    },
+    {
+      "id": "review_empty",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "uncertain",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:gold_ingot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "prefix",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:emerald",
+          "count": 2
+        },
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "changed",
+      "collection": "national",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:redstone",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "permission",
+      "collection": "locked",
+      "minimum_registered": 1,
+      "items": [
+        {
+          "id": "minecraft:lapis_lazuli",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

@@ -189,5 +189,7 @@
   "currency_generic": "{1}: {0}",
   "command_title": "Comando autorizado — revisão obrigatória",
   "command_context": "Contexto de execução: {0}",
-  "command_review_warning": "A execução exigirá revisão administrativa; não comprova entrega persistida."
+  "command_review_warning": "A execução exigirá revisão administrativa; não comprova entrega persistida.",
+  "reward_resume_notice": "Retomada supervisionada: permitida somente sem nenhuma etapa iniciada.",
+  "reward_resume_blocked": "Retomada bloqueada: confira etapas, plano, destinatário online e permissões."
 }

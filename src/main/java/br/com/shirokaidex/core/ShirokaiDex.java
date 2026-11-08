@@ -378,12 +378,38 @@ public final class ShirokaiDex implements ModInitializer {
         root.then(literal("list").executes(context->rewardAdminList(context.getSource(),0))
                 .then(argument("page",com.mojang.brigadier.arguments.IntegerArgumentType.integer(1,100001)).executes(context->rewardAdminList(context.getSource(),com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context,"page")-1))));
         root.then(literal("status").then(argument("operation", StringArgumentType.word()).executes(context -> rewardAdmin(context.getSource(), StringArgumentType.getString(context, "operation"), "status", ""))));
+        root.then(literal("resume").then(argument("operation",StringArgumentType.word()).then(argument("reason",StringArgumentType.greedyString())
+                .executes(context->previewRewardResume(context.getSource(),StringArgumentType.getString(context,"operation"),StringArgumentType.getString(context,"reason"))))));
         for (String action : List.of("cancel", "complete")) {
             root.then(literal(action).then(argument("operation", StringArgumentType.word())
                     .then(literal("confirm").then(argument("evidence", StringArgumentType.greedyString())
                             .executes(context -> rewardAdmin(context.getSource(), StringArgumentType.getString(context, "operation"), action, StringArgumentType.getString(context, "evidence")))))));
         }
         return root;
+    }
+    private int previewRewardResume(CommandSourceStack source,String raw,String reason){
+        var actor=source.getPlayer();if(!ready||actor==null||!Permissions.has(actor,"shirokaidex.admin.rewards"))return 0;
+        java.util.UUID id;try{id=java.util.UUID.fromString(raw);}catch(IllegalArgumentException failure){source.sendFailure(messages.text(language(),"reward_admin_invalid"));return 0;}
+        if(reason.strip().length()<8||reason.length()>2048||reason.codePoints().anyMatch(Character::isISOControl)){source.sendFailure(messages.text(language(),"reward_admin_invalid"));return 0;}
+        database.rewardOperation(id).thenCombine(database.rewardResumable(id),(found,safe)->safe?found:java.util.Optional.<br.com.shirokaidex.rewards.RewardJournal.Operation>empty()).whenComplete((found,failure)->source.getServer().execute(()->{
+            if(stopping||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.rewards"))return;
+            if(failure!=null||found.isEmpty()){source.sendFailure(messages.text(language(),"reward_resume_blocked"));return;}
+            var operation=found.get();var target=source.getServer().getPlayerList().getPlayer(operation.player());
+            var definition=config.current().rewards().stream().filter(value->value.id().equals(operation.reward())).findFirst();
+            if(target==null||definition.isEmpty()){source.sendFailure(messages.text(language(),"reward_resume_blocked"));return;}
+            try{
+                var plan=definition.get().reuse(operation.plan());
+                if(!validReward(target,plan)){source.sendFailure(messages.text(language(),"reward_resume_blocked"));return;}
+                MainMenu.confirmRecovery(actor,config.current(),messages,plan,operation.id().toString()+" → "+target.getGameProfile().getName(),reason,()->{
+                    actor.closeContainer();
+                    if(!resumeAllowed(actor,target,plan)){source.sendFailure(messages.text(language(),"reward_resume_blocked"));return;}
+                    deliverReward(source,target,plan,operation.id(),reason);
+                },()->actor.closeContainer());
+            }catch(RuntimeException invalid){source.sendFailure(messages.text(language(),"reward_resume_blocked"));}
+        }));return 1;
+    }
+    private boolean resumeAllowed(ServerPlayer actor,ServerPlayer target,br.com.shirokaidex.rewards.RewardPlan plan){
+        return !actor.hasDisconnected()&&Permissions.has(actor,"shirokaidex.admin.rewards")&&!target.hasDisconnected()&&target.getServer().getPlayerList().getPlayer(target.getUUID())==target&&validReward(target,plan);
     }
     private int rewardAdminList(CommandSourceStack source,int page){
         var actor=source.getPlayer();if(!ready||actor==null||!Permissions.has(actor,"shirokaidex.admin.rewards"))return 0;
@@ -508,22 +534,26 @@ public final class ShirokaiDex implements ModInitializer {
         deliverReward(source,plan);
     }
     private void deliverReward(CommandSourceStack source,br.com.shirokaidex.rewards.RewardPlan plan){
-        var player=source.getPlayer();if(player==null||!validReward(player,plan))return;
+        var player=source.getPlayer();if(player==null)return;deliverReward(source,player,plan,null,"");
+    }
+    private void deliverReward(CommandSourceStack source,ServerPlayer player,br.com.shirokaidex.rewards.RewardPlan plan,java.util.UUID recovery,String recoveryReason){
+        var actor=source.getPlayer();if(actor==null||!(recovery==null?validReward(player,plan):resumeAllowed(actor,player,plan)))return;
+        java.util.function.Predicate<br.com.shirokaidex.rewards.RewardPlan> permitted=current->recovery==null?validReward(player,current):resumeAllowed(actor,player,current);
         if(!plan.currencies().isEmpty()&&(!FabricLoader.getInstance().isModLoaded("impactor")||!br.com.shirokaidex.rewards.ImpactorCurrencyPort.supported())){source.sendFailure(messages.text(language(),"currency_backend_unavailable"));return;}
-        br.com.shirokaidex.rewards.PokemonRewardAdapter pokemonAdapter=plan.pokemon().isEmpty()?null:new br.com.shirokaidex.rewards.PokemonRewardAdapter(source.getServer(),player,current->validReward(player,current));
+        br.com.shirokaidex.rewards.PokemonRewardAdapter pokemonAdapter=plan.pokemon().isEmpty()?null:new br.com.shirokaidex.rewards.PokemonRewardAdapter(source.getServer(),player,permitted);
         if(pokemonAdapter!=null){pokemonDeliveries.add(pokemonAdapter);source.sendSuccess(()->messages.text(language(),"pokemon_processing"),false);}
-        br.com.shirokaidex.rewards.RewardDelivery.Adapter adapter=pokemonAdapter==null?new br.com.shirokaidex.rewards.ItemRewardAdapter(source.getServer(),player,current->validReward(player,current)):pokemonAdapter;
-        if(!plan.currencies().isEmpty())adapter=new br.com.shirokaidex.rewards.CurrencyRewardAdapter(adapter,new br.com.shirokaidex.rewards.ImpactorCurrencyPort(source.getServer(),player,current->validReward(player,current)));
-        if(!plan.commands().isEmpty())adapter=new br.com.shirokaidex.rewards.CommandRewardAdapter(source.getServer(),player,current->validReward(player,current),()->config.current().commandPolicy());
-        rewardDelivery.claim(player.getUUID(), plan, adapter)
+        br.com.shirokaidex.rewards.RewardDelivery.Adapter adapter=pokemonAdapter==null?new br.com.shirokaidex.rewards.ItemRewardAdapter(source.getServer(),player,permitted):pokemonAdapter;
+        if(!plan.currencies().isEmpty())adapter=new br.com.shirokaidex.rewards.CurrencyRewardAdapter(adapter,new br.com.shirokaidex.rewards.ImpactorCurrencyPort(source.getServer(),player,permitted));
+        if(!plan.commands().isEmpty())adapter=new br.com.shirokaidex.rewards.CommandRewardAdapter(source.getServer(),player,permitted,()->config.current().commandPolicy());
+        (recovery==null?rewardDelivery.claim(player.getUUID(),plan,adapter):rewardDelivery.resume(recovery,player.getUUID(),plan,adapter,actor.getUUID().toString(),recoveryReason))
                 .whenComplete((result, failure) -> source.getServer().execute(() -> {
                     if(pokemonAdapter!=null){pokemonDeliveries.remove(pokemonAdapter);pokemonAdapter.close();}
-                    if (stopping || player.hasDisconnected()) return;
+                    if (stopping || actor.hasDisconnected()) return;
                     if (failure != null) { LOG.error("Reward delivery failed for {}", player.getUUID(), failure); source.sendFailure(messages.text(language(), "reward_error")); }
                     else {
                         source.sendSuccess(() -> messages.text(language(), "reward_result." + result.name().toLowerCase(java.util.Locale.ROOT)), false);
                         database.rewardForPlayer(player.getUUID(),plan.id()).thenAccept(value->value.ifPresent(op->source.getServer().execute(()->{
-                            if(!stopping&&!player.hasDisconnected())source.sendSuccess(()->messages.text(language(),"saved_item_operation",op.id()),false);
+                            if(!stopping&&!actor.hasDisconnected())source.sendSuccess(()->messages.text(language(),"saved_item_operation",op.id()),false);
                         })));
                     }
                 }));

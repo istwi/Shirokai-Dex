@@ -2,15 +2,15 @@
 
 Fundação experimental de mod server-side para Minecraft 1.21.1, Fabric, Java 21 e Cobblemon 1.8.3.
 
-Na versão de desenvolvimento da branch `handoff/crates-checkpoint`, 0.3.0-alpha.10, Nacional e Lendária mostram **quantidade/total e porcentagem** em menu e status. Shiny é N/D enquanto não houver prova confiável de captura. [Regras e comandos](docs/POKEDEX.md).
+Na versão de desenvolvimento da branch `handoff/crates-checkpoint`, 0.3.0-alpha.11, Nacional e Lendária mostram **quantidade/total e porcentagem** em menu e status. Shiny é N/D enquanto não houver prova confiável de captura. [Regras e comandos](docs/POKEDEX.md).
 
 Disponível: `/dex`, resumo somente de leitura da Pokédex oficial, menu inicial protegido, configuração validada com recuperação e SQLite com migração versionada. Coleções com filtros/modos/permissões por JSON e seletor paginado estão disponíveis: veja [configuração das coleções](docs/COLLECTIONS.md). A [wiki de espécies](docs/WIKI.md) permite pesquisa, filtros por estado/tipo/label, ordenação e páginas de espécies e de todas as formas. [Placeholders básicos](docs/PLACEHOLDERS.md) expõem progresso, vistas, total e restantes pela Text Placeholder API opcional. [Recompensas](docs/REWARDS.md) têm marcos, desbloqueio permanente, prévia/segunda confirmação e journal de resgates. [Itens salvos/componentes](docs/SAVED_ITEMS.md) incluem save/list/give/delete, snapshots imutáveis e backup independente. Tipos avançados, capturas, rankings e competições continuam pendentes.
 
-Validação alpha.10: **282 JUnit e nove checks de servidor/reinício**, conforme [relatório](docs/validation/phase3-commands.json). Base funcional alpha.8 enviada em `191a65e`: menus, itens/Pokémon e [moedas Impactor 5.3.5](docs/CURRENCY_REWARDS.md) no escopo auditado. Nesta branch, 274 JUnit e testes nativos de checkpoint/chaves via SAVED_ITEM, falha/reinício e fallback vanilla estão registrados na [passagem](docs/CRATES_CHECKPOINT_HANDOFF.md). Cliente visual/carga e demais sistemas continuam pendentes.
+Validação alpha.11: **290 JUnit e 18 checks de servidor/reinício**, conforme [relatório](docs/validation/phase3-recovery.json). [Recuperação segura](docs/RECOVERY.md) retoma operações sem etapas com confirmação/auditoria e preserva bloqueio de resultados incertos. Base funcional alpha.8 enviada em `191a65e`: menus, itens/Pokémon e [moedas Impactor 5.3.5](docs/CURRENCY_REWARDS.md) no escopo auditado. Nesta branch, 274 JUnit e testes nativos de checkpoint/chaves via SAVED_ITEM, falha/reinício e fallback vanilla estão registrados na [passagem](docs/CRATES_CHECKPOINT_HANDOFF.md). Cliente visual/carga e demais sistemas continuam pendentes.
 
 `/dex` abre a [central Shirokai](docs/LAYOUT.md), com resumo real, paletas, gradiente e atalhos. Recompensas incluem [Pokémon no escopo NBT auditado](docs/POKEMON_REWARDS.md). Checkpoint Crates0.2.1/SAVED_ITEM foi validado na alpha.9. [COMMAND isolado](docs/COMMAND_REWARDS.md) exige política explícita e revisão após dispatch na alpha.10 local. CRATE_KEY dedicado, capturas e competições seguem pendentes.
 
-**Alpha.10 autorizada para envio na branch de desenvolvimento; main preservada.** Nenhuma nova release foi publicada nesta validação; os links abaixo são versões anteriores.
+**Commits/push autorizados continuamente na branch de desenvolvimento; main preservada.** Nenhuma nova release foi publicada nesta validação; os links abaixo são versões anteriores.
 
 [Baixar a pré-release 0.2.0-alpha.3](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.2.0-alpha.3) — JAR, fontes, checksums e relatório de validação.
 
@@ -20,7 +20,7 @@ Validação alpha.10: **282 JUnit e nove checks de servidor/reinício**, conform
 
 Com JDK 21 completo: `./gradlew --no-daemon build`.
 
-Em cloud com proxy herdado: `python3 scripts/gradle_cloud.py --no-daemon build`, usando a truststore do ambiente quando necessária. Não desabilite TLS/checksums. Distribuição: execute também `./gradlew serverDistribution`. Artefato: `build/server-mod/shirokai-dex-0.3.0-alpha.10+mc1.21.1-cobblemon1.8.3.jar`; não instalar `-sources.jar`.
+Em cloud com proxy herdado: `python3 scripts/gradle_cloud.py --no-daemon build`, usando a truststore do ambiente quando necessária. Não desabilite TLS/checksums. Distribuição: execute também `./gradlew serverDistribution`. Artefato: `build/server-mod/shirokai-dex-0.3.0-alpha.11+mc1.21.1-cobblemon1.8.3.jar`; não instalar `-sources.jar`.
 
 Leia [instalação](docs/INSTALLATION.md), [configuração](docs/CONFIGURATION.md), [comandos](docs/COMMANDS.md), [permissões](docs/PERMISSIONS.md), [banco](docs/DATABASE.md) e [diagnóstico](docs/TROUBLESHOOTING.md). O workflow [Java 21](.github/workflows/build.yml) gera artifact identificado pelo commit quando passa; confira o resultado no GitHub.
 

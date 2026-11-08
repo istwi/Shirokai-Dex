@@ -19,14 +19,21 @@ public final class RewardDelivery {
     private final Set<UUID> active = ConcurrentHashMap.newKeySet();
     public RewardDelivery(Database database) { this.database=Objects.requireNonNull(database); }
     public CompletableFuture<Result> claim(UUID player, RewardPlan plan, Adapter adapter) {return claim(player,plan,adapter,player.toString());}
-    public CompletableFuture<Result> claim(UUID player, RewardPlan plan, Adapter adapter,String actor) {
+    public CompletableFuture<Result> claim(UUID player, RewardPlan plan, Adapter adapter,String actor) {return execute(player,plan,adapter,actor,null,"");}
+    public CompletableFuture<Result> resume(UUID operation,UUID player,RewardPlan plan,Adapter adapter,String actor,String reason){
+        return execute(player,plan,adapter,actor,Objects.requireNonNull(operation),reason);
+    }
+    private CompletableFuture<Result> execute(UUID player,RewardPlan plan,Adapter adapter,String actor,UUID recovery,String recoveryReason) {
         if(!active.add(player)) return CompletableFuture.completedFuture(Result.BUSY);
         AtomicReference<RewardJournal.Operation> operation=new AtomicReference<>();
         CompletableFuture<Result> result;
         try {
             result=adapter.preflight(plan,0).thenCompose(eligible->{
                 if(!eligible)return CompletableFuture.completedFuture(Result.NOT_ELIGIBLE);
-                return database.reserveReward(player,plan,actor).thenCompose(op->{
+                var reservation=recovery==null?database.reserveReward(player,plan,actor).thenApply(Optional::of):database.authorizeRewardResume(recovery,player,plan,actor,recoveryReason);
+                return reservation.thenCompose(found->{
+                    if(found.isEmpty())return CompletableFuture.completedFuture(Result.BLOCKED);
+                    var op=found.get();
                     operation.set(op);
                     if(op.state()!=RewardJournal.State.PENDING || !op.plan().equals(plan.json()))return CompletableFuture.completedFuture(Result.BLOCKED);
                     return database.beginReward(op.id()).thenCompose(began->{

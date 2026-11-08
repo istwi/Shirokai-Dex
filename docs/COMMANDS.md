@@ -31,3 +31,7 @@ Desde a alpha.2: `/dex <id>` e `/dex <id> status` também atendem coleções JSO
 ## Central e grade de recompensas
 
 `/dex` agora abre a central; Pokédex abre o seletor, e Recompensas abre a grade paginada. Comandos diretos `/dex <coleção>` e `/dex rewards <id>` permanecem. Não foram adicionados aliases que mascarem IDs de coleções existentes. O botão externo VOLTAR AO MENU executa `/menu` como o jogador quando registrado. [Navegação e limites](LAYOUT.md).
+
+## Retomada administrativa sem etapas
+
+`/dex admin reward resume <operação> <justificativa>` — permissão `shirokaidex.admin.rewards`; abre confirmação protegida para entregar ao destinatário online usando o plano original. Somente PENDING/NEEDS_REVIEW sem etapas; justificativa 8..2048 caracteres. [Escopo e bloqueios](RECOVERY.md).

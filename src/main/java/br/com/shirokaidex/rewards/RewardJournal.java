@@ -38,6 +38,19 @@ public final class RewardJournal {
             s.setString(1,id.toString());try(ResultSet rs=s.executeQuery()){return rs.next()?Optional.of(row(rs)):Optional.empty();}
         }
     }
+    /** A durable intent may already have caused an effect: only an empty step journal permits replay. */
+    public static boolean resumable(Connection c,UUID id)throws SQLException {
+        var op=find(c,id);if(op.isEmpty()||(op.get().state()!=State.PENDING&&op.get().state()!=State.NEEDS_REVIEW))return false;
+        try(var query=c.prepareStatement("SELECT count(*) FROM reward_steps WHERE operation_id=?")){
+            query.setString(1,id.toString());try(var rows=query.executeQuery()){return rows.next()&&rows.getInt(1)==0;}
+        }
+    }
+    public static Optional<Operation> authorizeResume(Connection c,UUID id,UUID player,RewardPlan plan,String actor,String reason)throws SQLException {
+        text(actor);text(reason);if(reason.strip().length()<8)throw new IllegalArgumentException("Resume reason must have at least eight characters");
+        var found=find(c,id);if(found.isEmpty()||plan.manual()||!found.get().player().equals(player)||!found.get().plan().equals(plan.json())||!resumable(c,id))return Optional.empty();
+        if(found.get().state()==State.NEEDS_REVIEW&&!transition(c,id,State.NEEDS_REVIEW,State.PENDING,actor,"Operator verified empty step journal; resume requested"))return Optional.empty();
+        audit(c,id,"RESUME_AUTHORIZED",actor,reason);return find(c,id);
+    }
     public static boolean begin(Connection c, UUID id) throws SQLException { return transition(c,id,State.PENDING,State.PROCESSING,"system","Preconditions checked; processing requested"); }
     public static boolean intent(Connection c, UUID id, int index) throws SQLException {
         Operation operation=find(c,id).orElseThrow(()->new SQLException("Unknown operation"));

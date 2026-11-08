@@ -189,5 +189,7 @@
   "currency_generic": "{1}: {0}",
   "command_title": "Authorized command — review required",
   "command_context": "Execution context: {0}",
-  "command_review_warning": "Execution requires operator review; it does not prove durable delivery."
+  "command_review_warning": "Execution requires operator review; it does not prove durable delivery.",
+  "reward_resume_notice": "Supervised resume: allowed only when no step has started.",
+  "reward_resume_blocked": "Resume blocked: check steps, preserved plan, online recipient and permissions."
 }

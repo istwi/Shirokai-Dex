@@ -274,3 +274,11 @@ Checagem reflexiva isolada/somente leitura para identificar serviço/backend rea
 Minecraft1.21.1 mapeado conferido por javap: `Commands.performPrefixedCommand(CommandSourceStack,String): void`, `getDispatcher()`, `CommandSourceStack.withSuppressedOutput()`. Parsing Brigadier usa fonte PLAYER original ou console explicitamente autorizada. Pré-condições/consumo completo/command executável conferidos antes de intenção e novamente antes do dispatch. Nenhuma API de recibo universal foi inventada: performPrefixedCommand retornar não comprova efeito persistido; operação vai a NEEDS_REVIEW, sem retry. Plano congela template/contexto e comando renderizado antes da intenção, permanecendo independente de reload.
 
 [Política/schema/limites](COMMAND_REWARDS.md), [evidência](validation/phase3-commands.json). Não usa shell, não eleva permissão do jogador nem muda outros mods. Testes nativos de scoreboard/PLAYER não certificam comandos externos; contextos privilegiados são escolha explícita de operador no arquivo.
+
+## Recuperação sem efeitos — alpha.11
+
+Sem APIs externas novas: journal SQLite verifica transacionalmente identidade/plano/state e ausência total de reward_steps antes de autorizar retomada. Guard ativo por destinatário e os mesmos adaptadores/preconditions preservados. Fonte PLAYER/CONSOLE em COMMAND continua sendo do destinatário/configuração, não do operador que abriu a prévia. [Teste/limites](validation/phase3-recovery.json).
+
+## Auditoria inicial da captura — ainda PENDING_TEST
+
+Binário oficial Cobblemon1.8.3: `PokemonCapturedEvent(Pokemon,ServerPlayer,EmptyPokeBallEntity)`, getters `getPokemon/getPlayer/getPokeBallEntity`, `EmptyPokeBallEntity.getCapturingPokemon`, `PokemonEntity.getSpawnCause` e SpawnCause.getSpawner reais. Referências ao setter setSpawnCause no JAR ocorrem em PokemonSpawnAction e na própria entidade; bytecode de PokemonSpawnAction obtém causa de SpawnablePosition e atribui à entidade criada. EmptyPokeBallEntity emite POKEMON_CAPTURED na conclusão do fluxo nativo. Isso não comprova origem/persistência/ordenação em servidor: confirmar metadados no instante do evento e após unload/reinício antes de contabilizar capturas legítimas; não criar estatística a partir de eventos artificiais ou simples obtenção.

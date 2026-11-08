@@ -2,6 +2,14 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, main validada preservada e retomada em `handoff/crates-checkpoint`; apenas um Codex por vez.
 
+## Entrega atual — recuperação segura e executor de testes (alpha.11)
+
+Base COMMAND enviada `73e5d78`; trabalho na branch `handoff/crates-checkpoint`, com autorização contínua de commit/push, main preservada em `c89cc1b`. Retomada administrativa com prévia/confirmação e justificativa, exclusivamente para PENDING/NEEDS_REVIEW sem nenhuma etapa iniciada. ID/plano/componentes originais preservados; permissões do operador e destinatário e identidade do plano revalidadas. INTENT/prefixo entregue continuam bloqueados para revisão, sem retry. [Guia](RECOVERY.md).
+
+290 JUnit e 18 checks de servidor empacotado: nove recuperação/reinício e nove regressão COMMAND. [Evidência](validation/phase3-recovery.json). Executor reutilizável prepara mundos novos a partir de dependências já auditadas, inicializa schema real, semeia fixtures offline, testa, encerra/reinicia, verifica e limpa RCON. Sem mudança de schema nesta entrega; sem release/ambiente/main publicados. Entrega identificada por `feat: add safe supervised reward recovery and reusable server suites`.
+
+Próximo bloco funcional: captura legítima/estatísticas. Auditoria localizou evento e SpawnCause reais, mas a classificação de origem e teste positivo nativo ainda precisam ser comprovados; não declarar eventos injetados/comandos como capturas naturais. Fases de competições/rankings dependem dessa base.
+
 ## Bloco local — COMMAND alpha.10
 
 Base enviada `f714c4b`, branch `handoff/crates-checkpoint`; main preservada `c89cc1b`. Envio autorizado na branch de desenvolvimento pelo fluxo contínuo; referência: `feat: add explicitly authorized command reward dispatch`. Modelo/codec/política de template exato, preparação de destinatário congelada no plano, parsing e execução na thread do servidor, PLAYER sem elevação/CONSOLE explicitamente autorizado, prévia/confirmação e revisão obrigatória. Um comando isolado por marco, sem planos mistos. Após dispatch, etapa permanece INTENT e operação NEEDS_REVIEW; não há alegação de persistência externa nem retry. [Guia](COMMAND_REWARDS.md).

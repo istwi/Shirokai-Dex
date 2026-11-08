@@ -62,3 +62,7 @@ Entradas `currencies` podem acompanhar itens/Pokémon ou formar uma recompensa i
 ## Checkpoint opcional — alpha.9 na branch de validação
 
 `PlayerSaveCoordinator` usa os métodos públicos do Crates 0.2.1 auditado, verifica saúde/barreira e aguarda o future antes do readback da última etapa de itens. Sem Crates, mantém fallback vanilla. Provedor carregado desconhecido, indisponível ou unhealthy bloqueia itens, sem fallback silencioso. Timeout de 30s afeta somente a espera dependente; não cancela a gravação/barreira nativa. Falha após intenção mantém NEEDS_REVIEW, sem repetição automática. [Escopo e evidência](CRATES_CHECKPOINT_HANDOFF.md).
+
+## Recuperação supervisionada — alpha.11
+
+[Retomada segura](RECOVERY.md) usa operação original apenas quando nenhuma etapa foi iniciada. Exige motivo, prévia/confirmação, permissão administrativa e elegibilidade atual do destinatário online. Qualquer INTENT/prefixo permanece bloqueado; não há reenvio automático nem reconstrução de entrega a partir do saldo/inventário atual.

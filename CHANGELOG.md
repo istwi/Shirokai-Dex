@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0-alpha.11 — recuperação segura e executor de testes
+
+- Retomada administrativa com plano/ID preservados, motivo, prévia/segunda confirmação e auditoria. Só aceita operações sem qualquer etapa; INTENT/prefixo/fechadas/alteradas continuam bloqueados. Permissões atuais de operador/destinatário e contexto revalidados.
+- Executor de servidor empacotado reutiliza assets auditados, cria mundo novo, semeia fixtures somente parado, testa/reinicia/limpa RCON. 290 JUnit e 18 checks reais de recuperação/COMMAND com reinícios.
+- Próximo essencial: origem de captura e estatísticas. Sem nova release/main/ambiente publicados.
+
 ## 0.3.0-alpha.10 — COMMAND local
 
 - Política opt-in de templates/contextos exatos, parâmetros restritos ao destinatário e uma ação isolada por marco. PLAYER preserva permissões; CONSOLE exige autorização explícita no arquivo.

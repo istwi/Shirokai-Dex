@@ -183,11 +183,21 @@ public final class MainMenu extends ChestMenu {
     }
     public static void confirmReward(ServerPlayer player,Settings settings,Messages messages,
                                      br.com.shirokaidex.rewards.RewardPlan plan,String label,Runnable confirm,Runnable back){
+        confirmReward(player,settings,messages,plan,label,confirm,back,List.of());
+    }
+    public static void confirmRecovery(ServerPlayer player,Settings settings,Messages messages,br.com.shirokaidex.rewards.RewardPlan plan,String label,String reason,Runnable confirm,Runnable back){
+        confirmReward(player,settings,messages,plan,label,confirm,back,List.of(messages.text(settings.language(),"reward_resume_notice"),Component.literal(reason)));
+    }
+    private static void confirmReward(ServerPlayer player,Settings settings,Messages messages,br.com.shirokaidex.rewards.RewardPlan plan,String label,Runnable confirm,Runnable back,List<Component> extra){
         var contents = new SimpleContainer(27); Map<Integer,Runnable> actions = new HashMap<>();
         var preview=!plan.commands().isEmpty()?commandItem(plan.commands().getFirst(),settings.language(),messages):plan.items().isEmpty()?(plan.pokemon().isEmpty()?currencyItem(plan.currencies().getFirst(),settings.language(),messages):pokemonItem(plan.pokemon().getFirst(),settings.language(),messages)):br.com.shirokaidex.rewards.ItemPayload.restore(player.getServer(),plan.items().getFirst());
         if(!plan.items().isEmpty())preview.setCount(Math.min(plan.items().getFirst().count(),preview.getMaxStackSize()));contents.setItem(11,preview);
         var confirmation=new ItemStack(Items.LIME_DYE);confirmation.set(DataComponents.CUSTOM_NAME,messages.text(settings.language(),"reward_confirm"));confirmation.set(DataComponents.LORE,new ItemLore(List.of(messages.text(settings.language(),"layout.confirm_hint"))));contents.setItem(13,confirmation);actions.put(13,confirm);
         var summary=new ItemStack(Items.PAPER);summary.set(DataComponents.CUSTOM_NAME,messages.text(settings.language(),"layout.confirm_summary"));summary.set(DataComponents.LORE,new ItemLore(List.of(messages.text(settings.language(),"layout.confirm_steps",plan.steps()),messages.text(settings.language(),"layout.confirm_contents",plan.items().size(),plan.pokemon().size()))));contents.setItem(15,summary);
+        if(!extra.isEmpty()){
+            var lore=new ArrayList<>(summary.get(DataComponents.LORE).lines());lore.addAll(extra);summary.set(DataComponents.LORE,new ItemLore(lore));
+            confirmation.set(DataComponents.LORE,new ItemLore(extra));
+        }
         if(!plan.currencies().isEmpty()){var lore=new ArrayList<>(summary.get(DataComponents.LORE).lines());for(var money:plan.currencies())lore.add(messages.text(settings.language(),"currency_amount",money.currency(),money.amount().toPlainString()));summary.set(DataComponents.LORE,new ItemLore(lore));}
         if(!plan.commands().isEmpty()){
             var lore=new ArrayList<>(summary.get(DataComponents.LORE).lines());lore.add(messages.text(settings.language(),"command_review_warning"));summary.set(DataComponents.LORE,new ItemLore(lore));
