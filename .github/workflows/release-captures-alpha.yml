@@ -1,0 +1,75 @@
+name: Publish authorized captures alpha
+
+on:
+  push:
+    branches: [handoff/crates-checkpoint]
+    paths:
+      - .github/workflows/release-captures-alpha.yml
+      - docs/releases/v0.4.0-alpha.1.md
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-captures-alpha-1
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event.head_commit.message == 'release: prepare v0.4.0-alpha.1'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: v0.4.0-alpha.1
+      SOURCE_SHA: 78dfe72f8cef55f20c3645dc132ea6c3d97ad6f0
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: publication
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          path: source
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Rebuild and test exact authorized source
+        working-directory: source
+        run: ./gradlew --no-daemon clean build serverDistribution
+      - name: Prepare verified release assets
+        run: python3 publication/scripts/prepare_captures_release.py --source source --output release-assets
+      - name: Create draft and attach assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo 'Release already exists; refusing to overwrite it.'
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" --target "$SOURCE_SHA" --draft --prerelease \
+            --title 'Shirokai Dex 0.4.0-alpha.1 — experimental' \
+            --notes-file publication/docs/releases/v0.4.0-alpha.1.md
+          gh release upload "$RELEASE_TAG" release-assets/*
+      - name: Download draft assets and verify every hash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "$RELEASE_TAG" --dir downloaded-release
+          cd downloaded-release
+          sha256sum --check SHA256SUMS.txt
+          diff BUILD_PROVENANCE.json ../release-assets/BUILD_PROVENANCE.json
+          diff phase4-captures.json ../release-assets/phase4-captures.json
+          test "$(find . -maxdepth 1 -type f | wc -l)" -eq 4
+      - name: Publish only after attachment validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit "$RELEASE_TAG" --draft=false --prerelease
+      - name: Preserve publication evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: captures-alpha-publication-${{ github.run_id }}
+          path: release-assets/*
+          if-no-files-found: error

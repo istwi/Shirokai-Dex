@@ -2,6 +2,10 @@
 
 **Estado atual:** captura/estatísticas iniciais 0.4.0-alpha.1 sobre `26c4472`, branch `handoff/crates-checkpoint`, autorização contínua. Main preservada `c89cc1b`. [Guia](CAPTURES.md), [evidência](validation/phase4-captures.json). Referência: `feat: track verified native captures and permanent statistics`. Sem release/merge/ambiente.
 
+## Publicação em andamento
+
+Pedido explícito de release: `v0.4.0-alpha.1`, alvo `78dfe72`. Workflow `.github/workflows/release-captures-alpha.yml` roda somente no commit de preparação com assunto exato e fonte fixa. Não reexecutar cegamente se draft/release já existir; inspecionar primeiro. Confirmar run, tag, assets, checksums e proveniência antes de atualizar status para publicada. Após publicação, continuar proveniência persistente conforme próxima tarefa abaixo. Main/ambiente preservados.
+
 ## Última tarefa realizada
 
 Captura nativa comprovada no escopo PlayerSpawner/pool mundial, correlação pré-hit/pós-captura e identidade Pokébola/Pokémon/jogador. Schema6, dedup persistente, snapshots de categorias/regras e agregados permanentes; resumo próprio `/dex profile captures` e consultas por espécie/categoria. Períodos respeitam statistics_timezone (UTC padrão). 304 JUnit e 18 checks nativos/reinício, incluindo regressão de recuperação no schema6.

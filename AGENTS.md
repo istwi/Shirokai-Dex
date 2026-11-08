@@ -59,3 +59,7 @@ Após a entrega de 274 JUnit/26 checks, o responsável respondeu “continua” 
 ## Autorização contínua — branch de desenvolvimento
 
 O responsável aceitou o fluxo de aceleração (“faz tudo isso então”): commits e push contínuos de blocos validados em `handoff/crates-checkpoint`, com documentação objetiva e testes relevantes. Esta autorização substitui a limitação de envio pontual anterior para trabalho nesta branch. Integração à main, releases e publicação de ambiente continuam exigindo autorização separada. Apenas um Codex; priorizar recuperação segura, captura/estatísticas, depois competições/rankings; acabamento e integrações opcionais ao final.
+
+## Publicação pontual — 0.4.0-alpha.1
+
+O responsável pediu uma release no GitHub, atualização dos documentos e continuação do projeto. Autoriza publicar a pré-release experimental v0.4.0-alpha.1 no commit funcional validado 78dfe72, com JAR/checksums/proveniência/evidência e workflow de publicação na branch. Não autoriza merge na main nem publicação de ambiente. Depois, desenvolvimento segue com a autorização contínua da branch.

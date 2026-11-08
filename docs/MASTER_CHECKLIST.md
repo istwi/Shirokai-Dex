@@ -273,3 +273,9 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 - [ ] Histórico/admin/revisão/limites/recordes/retention e ligação do ledger à coleção Shiny. Permanentes e categorias preservados; não concluir toda a Fase 4.
 
 | Capturas/estatísticas | CaptureRecord/Tracker/Access/Ledger, V006/Database, timezone/CLI/core/traduções; 14 JUnit novos, probe/fixture/runner e executor. 304 JUnit e 9+9 checks; origem perdida permanece desconhecida | Commit `feat: track verified native captures and permanent statistics`, base `26c4472`; [evidência](validation/phase4-captures.json) |
+
+### Publicação autorizada — v0.4.0-alpha.1
+
+- [ ] Publicar pré-release experimental e conferir anexos/tag/proveniência. Preparação autorizada: workflow de fonte fixa, 304 JUnit, draft→upload→download/checksum→publicação; [notas](releases/v0.4.0-alpha.1.md). Não confundir preparação com sucesso.
+
+| Preparação release0.4 | Notas, empacotador e workflow novo de fonte fixa 78dfe72; antigos não alterados. Build remoto da fonte já aprovado; publicação ainda depende do run/anexos | Commit `release: prepare v0.4.0-alpha.1`; sem merge/main/ambiente |

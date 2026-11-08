@@ -2,6 +2,10 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, main validada preservada e retomada em `handoff/crates-checkpoint`; apenas um Codex por vez.
 
+## Publicação solicitada — v0.4.0-alpha.1
+
+Responsável autorizou pré-release experimental no commit funcional `78dfe72f8cef55f20c3645dc132ea6c3d97ad6f0`, preservando main/ambiente. Build remoto [42431184283](https://github.com/istwi/Shirokai-Dex/actions/runs/42431184283) já aprovado. Download de artifact via Cloud recebeu bloqueio no host de armazenamento; publicação usa workflow novo fixado nesse source SHA, sem alterar os workflows históricos. Constrói/testa 304 JUnit, cria draft, anexa quatro assets, baixa/verifica checksums e só então publica. [Notas](releases/v0.4.0-alpha.1.md). Ainda não declarar publicada sem verificar resultado/anexos.
+
 ## Entrega atual — captura/estatísticas iniciais (0.4.0-alpha.1)
 
 Base enviada `26c4472`, branch `handoff/crates-checkpoint`, autorização contínua de commits/push; main preservada `c89cc1b`. Eventos nativos pré-acerto/captura cruzados com evidência de origem PlayerSpawner/pool mundial. Ledger deduplicado por Pokébola+Pokémon, classificação/shiny/regras congeladas, totais permanentes e contagens por espécie/categoria. Estatísticas próprias por CLI e períodos com fuso configurável, sem reconstrução histórica. [Guia e limites](CAPTURES.md).
