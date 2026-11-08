@@ -1,5 +1,9 @@
 # Changelog
 
+## Publicação v0.4.0-alpha.1
+
+- Pré-release no commit78dfe72 publicada pelo workflow42432155833 após 304 JUnit, upload/download e checksum. Quatro anexos conferidos independentemente; JAR coincide com o binário nativo testado. Main/releases anteriores/ambiente preservados. [Evidência](docs/validation/release-captures-alpha1.json).
+
 ## 0.4.0-alpha.1 — captura/estatísticas iniciais
 
 - Correlação nativa pré-hit/captura com origem PlayerSpawner/pool mundial; sem prova fica UNKNOWN. Eventos não são reconstruídos da Pokédex ou de concessões por comando.

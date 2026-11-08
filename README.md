@@ -12,6 +12,8 @@ Validação 0.4.0-alpha.1: **304 JUnit e 18 checks de servidor/reinício**, [rel
 
 **Commits/push autorizados continuamente na branch de desenvolvimento; main preservada.** Nenhuma nova release foi publicada nesta validação; os links abaixo são versões anteriores.
 
+[Baixar a pré-release 0.4.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.4.0-alpha.1) — JAR instalável, checksums, proveniência e relatório. Schema6; faça backup e leia os [limites de captura](docs/CAPTURES.md). [Publicação verificada](docs/validation/release-captures-alpha1.json).
+
 [Baixar a pré-release 0.2.0-alpha.3](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.2.0-alpha.3) — JAR, fontes, checksums e relatório de validação.
 
 [Baixar a pré-release anterior 0.1.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.1.0-alpha.1) — JAR, fontes, checksums e relatório de validação.

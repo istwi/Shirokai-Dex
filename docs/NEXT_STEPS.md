@@ -2,9 +2,9 @@
 
 **Estado atual:** captura/estatísticas iniciais 0.4.0-alpha.1 sobre `26c4472`, branch `handoff/crates-checkpoint`, autorização contínua. Main preservada `c89cc1b`. [Guia](CAPTURES.md), [evidência](validation/phase4-captures.json). Referência: `feat: track verified native captures and permanent statistics`. Sem release/merge/ambiente.
 
-## Publicação em andamento
+## Publicação concluída
 
-Pedido explícito de release: `v0.4.0-alpha.1`, alvo `78dfe72`. Workflow `.github/workflows/release-captures-alpha.yml` roda somente no commit de preparação com assunto exato e fonte fixa. Não reexecutar cegamente se draft/release já existir; inspecionar primeiro. Confirmar run, tag, assets, checksums e proveniência antes de atualizar status para publicada. Primeiro run 42431952113 falhou por YAML antes de iniciar; condição corrigida, sem draft criado. Após publicação, continuar proveniência persistente conforme próxima tarefa abaixo. Main/ambiente preservados.
+[v0.4.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.4.0-alpha.1) publicada e verificada, tag/source `78dfe72`. Workflow [42432155833](https://github.com/istwi/Shirokai-Dex/actions/runs/42432155833) passou e quatro anexos foram baixados/conferidos também neste ambiente. JAR coincide com o binário nativo validado; 304 JUnit/18 checks documentados. [Evidência](validation/release-captures-alpha1.json). Não alterar essa release/workflow de source fixo para distribuir desenvolvimento posterior. Próximo bloco continua proveniência persistente; main/ambiente não publicados.
 
 ## Última tarefa realizada
 
@@ -14,11 +14,9 @@ Caso positivo usou Pokébola/motor reais em criaturas realmente geradas pelo poo
 
 COMMAND enviado em `73e5d78`, recuperação/executor em `26c4472`. Não refazer blocos já validados. CRATE_KEY dedicado continua sem contrato público suficiente no Crates0.2.1.
 
-## Pendência de distribuição
+## Histórico de distribuição
 
-Alpha.5 foi publicada como artifact no Actions run 42400989186, com conferência de hash após upload. A limitação abaixo refere-se a anexos de release, não a esse artifact. Alpha.6/alpha.7/alpha.8 foram sincronizadas na main; a evidência do artifact alpha.8 está na passagem Crates.
-
-O upload do JAR/sources/SHA256SUMS recebeu HTTP 401 Bad credentials em uploads.github.com, embora API e push estejam autorizados. A release informa ausência de JAR anexado. Corrigir o acesso do ambiente ao host de uploads e enviar os arquivos já validados de build/libs antes de recomendar instalação. Nunca solicitar token em chat.
+O bloqueio antigo de uploads da alpha.4 permaneceu limitado àquela tentativa. A release0.4.0-alpha.1 foi publicada pelo Actions com anexos e validada independentemente; não permanece bloqueada. Download de artifacts do Actions via host de armazenamento continua bloqueado no Cloud, mas download dos anexos da release pública funcionou. Não solicitar credencial em chat nem alterar ambiente automaticamente.
 
 ## Próxima tarefa exata
 

@@ -276,8 +276,10 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 
 ### Publicação autorizada — v0.4.0-alpha.1
 
-- [ ] Publicar pré-release experimental e conferir anexos/tag/proveniência. Preparação autorizada: workflow de fonte fixa, 304 JUnit, draft→upload→download/checksum→publicação; [notas](releases/v0.4.0-alpha.1.md). Não confundir preparação com sucesso.
+- [x] ~~Publicar pré-release experimental v0.4.0-alpha.1 e conferir anexos/tag/proveniência.~~ Workflow42432155833 aprovado; quatro assets baixados e hashes/entrypoint/tag conferidos. Binário publicado igual ao nativo testado. [Evidência](validation/release-captures-alpha1.json).
 
 | Preparação release0.4 | Notas, empacotador e workflow novo de fonte fixa 78dfe72; antigos não alterados. Build remoto da fonte já aprovado; publicação ainda depende do run/anexos | Commit `release: prepare v0.4.0-alpha.1`; sem merge/main/ambiente |
 
 Correção de preparação: condição do workflow convertida em escalar YAML após run42431952113 rejeitado antes de jobs; source/tag permanecem os mesmos e nenhum draft foi criado.
+
+| Release0.4 publicada | Tag78dfe72, workflow42432155833 aprovado, quatro anexos baixados/conferidos, hash do JAR igual ao teste nativo; sem main/ambiente | Commit `docs: record verified captures alpha release`; [evidência](validation/release-captures-alpha1.json) |

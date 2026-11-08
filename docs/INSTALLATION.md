@@ -1,5 +1,7 @@
 # Instalação — alpha experimental
 
+Pré-release atual publicada: [v0.4.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.4.0-alpha.1). Instalar somente o JAR sem sources/probe; conferir SHA256SUMS. Quatro anexos/tag/proveniência validados, com binário idêntico ao testado nativamente. [Evidência](validation/release-captures-alpha1.json).
+
 Alvo: Minecraft 1.21.1, servidor dedicado Fabric Loader 0.17.2+, Java **21**, Fabric API 0.116.6+1.21.1, Cobblemon **1.8.3+1.21.1** e Fabric Language Kotlin 1.13.6+kotlin.2.2.20. Confira as versões exatas antes de instalar. Não use esta alpha no servidor de produção sem os testes de staging.
 
 Gere o artefato com JDK 21 completo:

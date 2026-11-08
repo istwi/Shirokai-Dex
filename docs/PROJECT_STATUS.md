@@ -2,9 +2,11 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, main validada preservada e retomada em `handoff/crates-checkpoint`; apenas um Codex por vez.
 
-## Publicação solicitada — v0.4.0-alpha.1
+## Pré-release v0.4.0-alpha.1 publicada e conferida
 
-Responsável autorizou pré-release experimental no commit funcional `78dfe72f8cef55f20c3645dc132ea6c3d97ad6f0`, preservando main/ambiente. Build remoto [42431184283](https://github.com/istwi/Shirokai-Dex/actions/runs/42431184283) já aprovado. Download de artifact via Cloud recebeu bloqueio no host de armazenamento; publicação usa workflow novo fixado nesse source SHA, sem alterar os workflows históricos. Constrói/testa 304 JUnit, cria draft, anexa quatro assets, baixa/verifica checksums e só então publica. [Notas](releases/v0.4.0-alpha.1.md). Primeiro run 42431952113 falhou antes dos jobs por sintaxe YAML na condição; corrigida sem mudar source/tag, nenhum draft criado. Ainda não declarar publicada sem verificar resultado/anexos.
+[Release experimental](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.4.0-alpha.1), não draft, tag fixada em `78dfe72f8cef55f20c3645dc132ea6c3d97ad6f0`. Workflow [42432155833](https://github.com/istwi/Shirokai-Dex/actions/runs/42432155833) aprovado: 304 JUnit e publicação só após download/checksums. Quatro anexos baixados também neste ambiente e conferidos por digest GitHub/manifesto: JAR, BUILD_PROVENANCE, relatório nativo e SHA256SUMS. Binário CI/publicado coincide com o JAR testado nativamente. [Evidência](validation/release-captures-alpha1.json).
+
+Primeira tentativa foi rejeitada por YAML antes dos jobs; condição corrigida, sem draft naquela tentativa. Releases antigas e main permanecem intactas; sem publicação de ambiente. Continuar proveniência persistente na branch, sem modificar esta tag/anexos nem publicar outra release automaticamente.
 
 ## Entrega atual — captura/estatísticas iniciais (0.4.0-alpha.1)
 
