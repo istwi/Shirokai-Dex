@@ -4,7 +4,7 @@ Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, main validada prese
 
 ## Publicação solicitada — v0.4.0-alpha.1
 
-Responsável autorizou pré-release experimental no commit funcional `78dfe72f8cef55f20c3645dc132ea6c3d97ad6f0`, preservando main/ambiente. Build remoto [42431184283](https://github.com/istwi/Shirokai-Dex/actions/runs/42431184283) já aprovado. Download de artifact via Cloud recebeu bloqueio no host de armazenamento; publicação usa workflow novo fixado nesse source SHA, sem alterar os workflows históricos. Constrói/testa 304 JUnit, cria draft, anexa quatro assets, baixa/verifica checksums e só então publica. [Notas](releases/v0.4.0-alpha.1.md). Ainda não declarar publicada sem verificar resultado/anexos.
+Responsável autorizou pré-release experimental no commit funcional `78dfe72f8cef55f20c3645dc132ea6c3d97ad6f0`, preservando main/ambiente. Build remoto [42431184283](https://github.com/istwi/Shirokai-Dex/actions/runs/42431184283) já aprovado. Download de artifact via Cloud recebeu bloqueio no host de armazenamento; publicação usa workflow novo fixado nesse source SHA, sem alterar os workflows históricos. Constrói/testa 304 JUnit, cria draft, anexa quatro assets, baixa/verifica checksums e só então publica. [Notas](releases/v0.4.0-alpha.1.md). Primeiro run 42431952113 falhou antes dos jobs por sintaxe YAML na condição; corrigida sem mudar source/tag, nenhum draft criado. Ainda não declarar publicada sem verificar resultado/anexos.
 
 ## Entrega atual — captura/estatísticas iniciais (0.4.0-alpha.1)
 

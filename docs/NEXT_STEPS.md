@@ -4,7 +4,7 @@
 
 ## Publicação em andamento
 
-Pedido explícito de release: `v0.4.0-alpha.1`, alvo `78dfe72`. Workflow `.github/workflows/release-captures-alpha.yml` roda somente no commit de preparação com assunto exato e fonte fixa. Não reexecutar cegamente se draft/release já existir; inspecionar primeiro. Confirmar run, tag, assets, checksums e proveniência antes de atualizar status para publicada. Após publicação, continuar proveniência persistente conforme próxima tarefa abaixo. Main/ambiente preservados.
+Pedido explícito de release: `v0.4.0-alpha.1`, alvo `78dfe72`. Workflow `.github/workflows/release-captures-alpha.yml` roda somente no commit de preparação com assunto exato e fonte fixa. Não reexecutar cegamente se draft/release já existir; inspecionar primeiro. Confirmar run, tag, assets, checksums e proveniência antes de atualizar status para publicada. Primeiro run 42431952113 falhou por YAML antes de iniciar; condição corrigida, sem draft criado. Após publicação, continuar proveniência persistente conforme próxima tarefa abaixo. Main/ambiente preservados.
 
 ## Última tarefa realizada
 

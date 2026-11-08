@@ -279,3 +279,5 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 - [ ] Publicar pré-release experimental e conferir anexos/tag/proveniência. Preparação autorizada: workflow de fonte fixa, 304 JUnit, draft→upload→download/checksum→publicação; [notas](releases/v0.4.0-alpha.1.md). Não confundir preparação com sucesso.
 
 | Preparação release0.4 | Notas, empacotador e workflow novo de fonte fixa 78dfe72; antigos não alterados. Build remoto da fonte já aprovado; publicação ainda depende do run/anexos | Commit `release: prepare v0.4.0-alpha.1`; sem merge/main/ambiente |
+
+Correção de preparação: condição do workflow convertida em escalar YAML após run42431952113 rejeitado antes de jobs; source/tag permanecem os mesmos e nenhum draft foi criado.
