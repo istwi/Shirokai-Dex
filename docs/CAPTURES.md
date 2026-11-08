@@ -1,4 +1,8 @@
-# Capturas e estatísticas — 0.4.0-alpha.1
+# Capturas e estatísticas — histórico e desenvolvimento
+
+## Desenvolvimento alpha.3 — batalha PvE
+
+Captura de Pokémon realmente gerado pelo PlayerSpawner foi validada em batalha iniciada pelo BattleBuilder.pve, com Master Ball física e fluxo nativo. LIVE_NATIVE, replay e reinício preservam classificação/totais. [Evidência](validation/phase4-battle.json). Não certifica batalhas duplas, pesca ou extensões. Alpha.1 publicada permanece com seu escopo histórico; alpha.3 está somente na branch de desenvolvimento.
 
 ## Desenvolvimento 0.4.0-alpha.2 — proveniência persistente
 

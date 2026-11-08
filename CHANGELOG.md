@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0-alpha.3 — desenvolvimento
+
+- Validação de captura PvE real com Pokébola física, origem observada e replay/reinício, reutilizando o ledger existente; sem mudança de schema/política de origem.
+- Probe e suíte de captura ampliados; auditoria estática identifica FishingSpawnCause/BasicSpawner. Pesca continua sem certificação funcional. [Evidência](docs/validation/phase4-battle.json).
+
+
 ## 0.4.0-alpha.2 — desenvolvimento, sem nova release
 
 - Prova nativa observada persistente, vinculada ao Pokémon/entidade e consumida uma vez. Reload não inventa origem; correlação pré-hit continua obrigatória.

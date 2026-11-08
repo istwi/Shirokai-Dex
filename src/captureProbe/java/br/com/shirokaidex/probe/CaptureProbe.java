@@ -26,7 +26,7 @@ public final class CaptureProbe implements ModInitializer {
         CobblemonEvents.POKEMON_CAPTURED.subscribe((Consumer<PokemonCapturedEvent>) event->{if(event.getPlayer().getGameProfile().getName().equals("DexCapture"))last=event;});
         CommandRegistrationCallback.EVENT.register((dispatcher,registry,environment)->{
             var root=literal("dexcaptureprobe").requires(source->source.getPlayer()==null&&source.getServer().getWorldData().getLevelName().equals("native-capture-validation"));
-            for(String mode:List.of("scan","throw","unknown","replay","park","parked","status"))root.then(literal(mode).executes(context->run(context.getSource(),mode)));
+            for(String mode:List.of("scan","throw","unknown","replay","park","parked","status","battle","battlethrow"))root.then(literal(mode).executes(context->run(context.getSource(),mode)));
             dispatcher.register(root);
         });
     }
@@ -39,8 +39,10 @@ public final class CaptureProbe implements ModInitializer {
         if(mode.equals("scan")){int count=(int)candidates.stream().filter(p->p.getSpawnCause()!=null).count();source.sendSuccess(()->Component.literal("Natural candidate: "+selected.isPresent()+"; caused wild entities: "+count),false);return selected.isPresent()?1:0;}
         PokemonEntity pokemon;
         if(mode.equals("unknown")){var properties=new PokemonProperties();properties.setSpecies("pikachu");properties.setLevel(5);pokemon=properties.createEntity(server.overworld());server.overworld().addFreshEntity(pokemon);}
+        else if(mode.equals("battlethrow")){pokemon=aimed;if(pokemon==null||com.cobblemon.mod.common.battles.BattleRegistry.getBattleByParticipatingPlayer(player)==null)throw new IllegalStateException("Native battle required");}
         else{if(selected.isEmpty()){source.sendSuccess(()->Component.literal("No matching native candidate"),false);return 0;}pokemon=selected.get();}
         if(mode.equals("park")){pokemon.addTag("dex-capture-parked");pokemon.setPersistenceRequired();pokemon.setNoAi(true);pokemon.moveTo(player.getX()+3,player.getY(),player.getZ());source.sendSuccess(()->Component.literal("Native candidate parked: "+pokemon.getPokemon().getUuid()),false);return 1;}
+        if(!mode.equals("battlethrow")){
         // Clear only a tiny owned test arena so terrain cannot intercept the physical projectile.
         int bx=player.blockPosition().getX(),by=player.blockPosition().getY()+1,bz=player.blockPosition().getZ();
         for(int x=bx-1;x<=bx+5;x++)for(int z=bz-1;z<=bz+1;z++){
@@ -48,6 +50,8 @@ public final class CaptureProbe implements ModInitializer {
             for(int y=by;y<=by+3;y++)server.overworld().setBlock(new net.minecraft.core.BlockPos(x,y,z),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
         }
         player.teleportTo(bx+0.5,by,bz+0.5);pokemon.setNoAi(true);pokemon.moveTo(bx+3.5,by,bz+0.5);
+        }
+        if(mode.equals("battle")){aimed=pokemon;var result=com.cobblemon.mod.common.battles.BattleBuilder.INSTANCE.pve(player,pokemon);source.sendSuccess(()->Component.literal("Native battle start: "+result.getClass().getSimpleName()),false);return 1;}
         var ball=new EmptyPokeBallEntity(PokeBalls.INSTANCE.getMASTER_BALL(),server.overworld(),player,CobblemonEntities.EMPTY_POKEBALL);
         ball.setNoGravity(true);ball.setPos(player.getX()+1,player.getY()+0.3,player.getZ());ball.setDeltaMovement(0.65,0,0);server.overworld().addFreshEntity(ball);thrown=ball;aimed=pokemon;
         var id=pokemon.getPokemon().getUuid();var cause=pokemon.getSpawnCause();source.sendSuccess(()->Component.literal("Native ball launched: "+id+"; spawn cause: "+(cause==null?"unknown":cause.getSpawner().getClass().getSimpleName())),false);return 1;

@@ -1,5 +1,12 @@
 # Estado do projeto
 
+## Desenvolvimento 0.4.0-alpha.3 — captura em batalha
+
+Validada batalha PvE nativa com Pokémon realmente gerado pelo PlayerSpawner: BattleBuilder.pve inicia a batalha, Pokébola física conclui a captura e o ledger existente registra LIVE_NATIVE uma vez. Replay não duplica; totais e classificação sobrevivem ao reinício. Sem mudança na política de origem nem no schema7. Probe separado, nunca instalado no JAR de produção. [Evidência](validation/phase4-battle.json).
+
+313 JUnit e dez checks nativos de captura/reinício neste bloco. Pesca tem FishingSpawnCause/BasicSpawner próprio e permanece não certificada/UNKNOWN; não ampliar whitelist por suposição. Próximo: fixture nativa de pesca e depois ligação do ledger à coleção Shiny. Nenhuma nova release/main/ambiente.
+
+
 ## Desenvolvimento 0.4.0-alpha.2 — proveniência persistente
 
 A origem nativa observada agora persiste no schema7. ENTITY_LOAD do Fabric e pré-hit só registram prova quando o Pokémon é selvagem e tem PlayerSpawner/pool mundial auditados. A prova vincula UUID lógico do Pokémon e UUID da entidade física; não é reconstruída de criaturas antigas. Depois do reload, causa ausente só pode usar essa prova com correlação pré-hit/Pokébola/alvo/jogador válida. Toda observação concluída consome a prova correspondente, inclusive UNKNOWN; carga e pré-hit não reabrem prova consumida. Replay não altera classificação anterior.

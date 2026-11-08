@@ -311,3 +311,7 @@ Ensaios corrigidos: cenário inicial de projétil não concluiu captura, ajustad
 ## Proveniência — desenvolvimento 0.4.0-alpha.2
 
 313 JUnit aprovados, incluindo nove testes de prova/consumo/migração6→7. Repetir build/serverDistribution/remapCaptureProbeJar e integration_server.py --suite captures; o executor escolhe o probe correspondente à versão exata. Suíte captura/reinício: três capturas legítimas (duas LIVE_NATIVE, uma PERSISTED_NATIVE após reload), uma UNKNOWN administrativa, replay sem duplicação e snapshots preservados. Regressão recovery usa schema7. Evidência e hashes: [phase4-provenance.json](validation/phase4-provenance.json). Release alpha.1 mantém seu relatório histórico separado.
+
+## Batalha PvE — alpha.3
+
+Mesmo executor --suite captures, build/serverDistribution/remapCaptureProbeJar. Dez checks nativos: oito antes e dois depois do reinício. Fixture continua com Pikachu shiny natural; probe inicia PvE real, exige batalha ativa e lança bola na mesma entidade. Final: quatro capturas legítimas (três LIVE_NATIVE/uma PERSISTED_NATIVE) e uma UNKNOWN administrativa. Replay de batalha e reload não duplicam. 313 JUnit, sem novos testes de produção porque a política/ledger não mudaram. Recuperação não repetida nesta alpha.3; relatório alpha.2 separado. [Evidência](validation/phase4-battle.json).

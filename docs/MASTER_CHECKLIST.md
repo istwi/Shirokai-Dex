@@ -291,3 +291,11 @@ Correção de preparação: condição do workflow convertida em escalar YAML ap
 - [ ] Certificar batalha/pesca/outros spawners, carga e retenção. Fase4 continua aberta.
 
 | Proveniência alpha.2 | NativeSpawnProof/Observation/Provenance, CaptureAccess/Tracker/Ledger, core/Database/V007; nove JUnit novos, runner/probe por versão e seeder schema7. Captura/reinício nativos; sem nova release/main/ambiente | Commit `feat: preserve observed native spawn provenance across reloads`; base `a082358`; [evidência](validation/phase4-provenance.json) |
+
+### Captura PvE — 0.4.0-alpha.3
+
+- [x] ~~Validar captura física em batalha PvE nativa no escopo PlayerSpawner/pool mundial.~~ BattleBuilder.pve real, Master Ball real, LIVE_NATIVE, replay sem duplicação e reinício; [evidência](validation/phase4-battle.json).
+- [x] ~~Auditar contrato estático de origem da pesca no Cobblemon1.8.3.~~ FishingSpawnCause/BasicSpawner identificados; isso não certifica captura por pesca.
+- [ ] Validar pesca pelo motor real, batalhas duplas e extensões; Shiny/histórico/recordes e demais Fase4 continuam abertos.
+
+| Captura PvE alpha.3 | CaptureProbe/teste de captura ampliados, versão e documentação; 313 JUnit, dez checks nativos incluindo batalha/reinício. Sem mudança na política de origem/schema7 | Commit `test: validate native battle capture provenance`; base `3f4adaf`; [evidência](validation/phase4-battle.json) |

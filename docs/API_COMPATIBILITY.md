@@ -292,3 +292,9 @@ THROWN_POKEBALL_HIT com ThrownPokeballHitEvent.getPokeBall/getPokemon, POKEMON_C
 ## Proveniência persistente — 0.4.0-alpha.2
 
 Fabric ServerEntityEvents.ENTITY_LOAD observa a entidade realmente carregada; não usa SpawnEvent cancelável como confirmação de spawn. PokemonEntity.getSpawnCause/getUUID e Pokemon.getUuid/isWild são lidos na thread do servidor; somente snapshots imutáveis seguem ao SQLite. PlayerSpawner exato e WORLD_SPAWN_POOL permanecem exigidos para criar prova. Causa ausente após reload aceita prova persistida apenas para o mesmo par de identidades e correlação real pré-hit/captura. Nenhum NBT/código de outro mod é alterado. Cobblemon1.8.3/Fabric0.17.2/MC1.21.1; [teste](validation/phase4-provenance.json). Outros modos continuam não certificados.
+
+## Batalha e auditoria de pesca — alpha.3
+
+BattleBuilder.INSTANCE.pve(ServerPlayer,PokemonEntity) retorna BattleStartResult; SuccessfulBattleStart confirma criação real. Probe exige BattleRegistry.getBattleByParticipatingPlayer antes de lançar a bola na mesma entidade. EmptyPokeBallEntity verifica batalha/participante/turno, usa forceChoose(ForcePassActionResponse) e emite THROWN_POKEBALL_HIT antes de concluir POKEMON_CAPTURED; captura PvE positiva validada no servidor, sem emitir evento artificial inicial. Reutiliza prova PlayerSpawner existente. [Evidência](validation/phase4-battle.json).
+
+Pesca: FishingSpawnerFactory.createSharedSpawner cria BasicSpawner com nome fishing, pool configurável (default WORLD_SPAWN_POOL) e fishingBuckets. FishingSpawnCause.affectSpawn delega à causa base e adiciona aspecto fished. Portanto, classe exata PlayerSpawner não abrange essa origem. Nome/aspecto isolados não comprovam origem legítima; API encontrada não autoriza ampliar whitelist sem teste de vara/anzol nativo. FishingSpawnCause/FishingSpawnerFactory inspecionados com javap no binário oficial1.8.3, SHA2564bc3b09d25b93b74a5822dc35b06bd6f5fa8bae36ed43a8d2b3904156a61269c.

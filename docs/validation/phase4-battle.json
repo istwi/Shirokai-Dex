@@ -1,0 +1,144 @@
+{
+  "scope": "Native single wild PvE battle capture with observed PlayerSpawner provenance; fishing remains unverified",
+  "timestamp_utc": "2026-11-08T01:23:32.874596+00:00",
+  "base_commit": "3f4adafff74e1391cca8054d136a2d341116abfd",
+  "delivery_commit_subject": "test: validate native battle capture provenance",
+  "branch": "handoff/crates-checkpoint",
+  "version": "0.4.0-alpha.3+mc1.21.1-cobblemon1.8.3",
+  "publication": "Development branch only; no release/main/environment publication",
+  "build": {
+    "command": "JAVA_HOME=<JDK21> python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build serverDistribution remapCaptureProbeJar",
+    "result": "BUILD SUCCESSFUL",
+    "junit": {
+      "tests": 313,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "jar": "shirokai-dex-0.4.0-alpha.3+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "0bec917cb623af621f0c90221f92d6d359f389eb60a58e58258ebd8ef6a604d7",
+    "native_binary_matches": true,
+    "verifyModJar": "passed; production excludes probes",
+    "probe_sha256": "4824403d0b450fd57c76111bb478eba2d50062c34e22994e7d9f4defb141cb0c"
+  },
+  "runtime": {
+    "minecraft": "1.21.1",
+    "cobblemon": "1.8.3",
+    "fabric_loader": "0.17.2",
+    "java": "21.0.13",
+    "automation": "scripts/integration_server.py --base <prepared-official-assets> --suite captures --root <new-/tmp-dir>",
+    "suite": {
+      "suite": "captures",
+      "starts": 2,
+      "jar": "shirokai-dex-0.4.0-alpha.3+mc1.21.1-cobblemon1.8.3.jar",
+      "sha256": "0bec917cb623af621f0c90221f92d6d359f389eb60a58e58258ebd8ef6a604d7",
+      "result": "passed"
+    },
+    "schema": 7,
+    "integrity": "ok",
+    "rcon_disabled_secret_removed": true,
+    "all_boots_normally_saved": true
+  },
+  "protocol_checks": 10,
+  "protocol": {
+    "": {
+      "timestamp": "2026-11-08T01:22:25.290Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+      "results": [
+        {
+          "name": "Existing Pokedex knowledge and command-granted shiny Pokemon do not create capture events or historical counts",
+          "status": "passed"
+        },
+        {
+          "name": "Naturally spawned shiny Pokemon captured by native ball collision/animation produces verified evidence and category snapshot",
+          "status": "passed"
+        },
+        {
+          "name": "Replaying the already observed native event cannot double-count ball/Pokemon identity",
+          "status": "passed"
+        },
+        {
+          "name": "Real ball capture of an administratively created wild entity is audited as unknown and never becomes legitimate statistics",
+          "status": "passed"
+        },
+        {
+          "name": "Distinct same-species captures accumulate; rule reload affects future captures without rewriting historical classifications",
+          "status": "passed"
+        },
+        {
+          "name": "Own read-only statistics distinguish capture totals from species count, honor timezone and expose unknown origins separately",
+          "status": "passed"
+        },
+        {
+          "name": "Real wild battle and physical Master Ball preserve pre-hit provenance and count exactly once",
+          "status": "passed"
+        },
+        {
+          "name": "Native entity-load proof is already persisted for the untouched creature before restart, without manufacturing spawn cause",
+          "status": "passed"
+        }
+      ]
+    },
+    "-restart": {
+      "timestamp": "2026-11-08T01:23:00.462Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+      "results": [
+        {
+          "name": "Permanent totals, shiny snapshots, historical category and duplicate protection survive restart",
+          "status": "passed"
+        },
+        {
+          "name": "Persisted native proof restores the same physical entity after reload without guessing or replaying a consumed proof",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "final_classification": [
+    [
+      "NATIVE_PLAYER_SPAWN",
+      "LIVE_NATIVE",
+      3
+    ],
+    [
+      "NATIVE_PLAYER_SPAWN",
+      "PERSISTED_NATIVE",
+      1
+    ],
+    [
+      "UNKNOWN",
+      "UNVERIFIED",
+      1
+    ]
+  ],
+  "totals": {
+    "verified": 4,
+    "shiny": 4,
+    "unknown": 1
+  },
+  "battle_evidence": [
+    "BattleBuilder.pve returned SuccessfulBattleStart for naturally spawned shiny Pikachu",
+    "Probe battlethrow requires BattleRegistry active participant and retains same physical target",
+    "Physical Master Ball collision/animation triggers native events; no initial event fabrication or assigned SpawnCause",
+    "Ledger observes LIVE_NATIVE and duplicate replay leaves total3/rows4 before restart",
+    "Final reload capture remains PERSISTED_NATIVE; total4/rows5"
+  ],
+  "fishing_static_audit": {
+    "jar_sha256": "4bc3b09d25b93b74a5822dc35b06bd6f5fa8bae36ed43a8d2b3904156a61269c",
+    "method": "JDK21 javap -p -c on official Cobblemon1.8.3 binary",
+    "findings": [
+      "FishingSpawnerFactory.createSharedSpawner constructs BasicSpawner named fishing with configurable pool and fishingBuckets",
+      "Default fishing pool resolves WORLD_SPAWN_POOL",
+      "FishingSpawnCause.affectSpawn delegates base cause then adds fished aspect",
+      "Exact PlayerSpawner policy excludes this class; no whitelist changes based on static inspection"
+    ],
+    "status": "STATIC_ONLY_NOT_FUNCTIONALLY_CERTIFIED"
+  },
+  "limits": [
+    "Only single native PvE tested; double battles/extensions not certified",
+    "Fishing remains UNKNOWN until native rod/hook provenance validation",
+    "Shiny collection bridge, history/review/records/load/retention remain pending",
+    "Recovery suite not repeated; previous alpha.2 schema7 report retained",
+    "No production capture policy or schema change in this block"
+  ]
+}
