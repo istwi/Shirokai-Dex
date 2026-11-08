@@ -1,12 +1,14 @@
 # Próximos passos
 
-**Estado atual:** alpha.11, recuperação segura e testes automatizados; base enviada `73e5d78`, branch `handoff/crates-checkpoint`, main preservada `c89cc1b`. Autorização contínua de commits/push na branch. [Guia](RECOVERY.md), [evidência](validation/phase3-recovery.json). Referência da entrega: `feat: add safe supervised reward recovery and reusable server suites`. Sem release/publicação de ambiente.
+**Estado atual:** captura/estatísticas iniciais 0.4.0-alpha.1 sobre `26c4472`, branch `handoff/crates-checkpoint`, autorização contínua. Main preservada `c89cc1b`. [Guia](CAPTURES.md), [evidência](validation/phase4-captures.json). Referência: `feat: track verified native captures and permanent statistics`. Sem release/merge/ambiente.
 
 ## Última tarefa realizada
 
-Recuperação administrativa apenas de operações sem etapas, com prévia/confirmacão, motivo e auditoria. Plano/ID preservados, permissões atuais de operador/destinatário, desconexão/reload e concorrência seguros no escopo demonstrado. 290 JUnit e 18 checks de servidor (9 recuperação + 9 regressão COMMAND, com reinícios). INTENT/prefixo confirmado não são reenviados. Schema continua 5.
+Captura nativa comprovada no escopo PlayerSpawner/pool mundial, correlação pré-hit/pós-captura e identidade Pokébola/Pokémon/jogador. Schema6, dedup persistente, snapshots de categorias/regras e agregados permanentes; resumo próprio `/dex profile captures` e consultas por espécie/categoria. Períodos respeitam statistics_timezone (UTC padrão). 304 JUnit e 18 checks nativos/reinício, incluindo regressão de recuperação no schema6.
 
-Executor `scripts/integration_server.py` e fixture/runner/seeder de recuperação reutilizam os assets de um servidor empacotado, criam mundos novos e fazem boot/teste/reinício/cleanup. Não dependem de processos vivos. COMMAND alpha.10 já foi enviado em `73e5d78`; não refazer. Checkpoint alpha.9/SAVED_ITEM permanece validado; CRATE_KEY dedicado continua sem contrato público suficiente no Crates0.2.1.
+Caso positivo usou Pokébola/motor reais em criaturas realmente geradas pelo pool; probe não atribui causa nem emite a primeira captura artificialmente. Caso administrativo sem SpawnCause ficou UNKNOWN, e replay não duplicou. Proveniência é perdida no reload da entidade: criatura natural preservada após reinício ficou UNKNOWN, conforme limite explícito. Shiny% antiga segue N/D; estatística shiny nova é separada. Testes encerram/salvam servidores, conferem SQLite e removem segredo RCON automaticamente.
+
+COMMAND enviado em `73e5d78`, recuperação/executor em `26c4472`. Não refazer blocos já validados. CRATE_KEY dedicado continua sem contrato público suficiente no Crates0.2.1.
 
 ## Pendência de distribuição
 
@@ -16,14 +18,16 @@ O upload do JAR/sources/SHA256SUMS recebeu HTTP 401 Bad credentials em uploads.g
 
 ## Próxima tarefa exata
 
-1. Conferir Git/status/remotos, preservar mudanças e usar autorização contínua somente na branch de desenvolvimento. Main/release/ambiente continuam sob autorização separada. Trabalhar em blocos maiores e reduzir documentação repetida.
-2. Próximo bloco funcional: **captura legítima e estatísticas permanentes**, seções 10–12 do prompt. Auditar origem, deduplicação por IDs confiáveis e datas/timezone configurável antes de pontuação. Não inferir captura de obtenção, shiny visto, troca, ovo ou prêmio.
-3. APIs candidatas reais: `PokemonCapturedEvent.getPokemon/getPlayer/getPokeBallEntity`; `EmptyPokeBallEntity.getCapturingPokemon`; `PokemonEntity.getSpawnCause`; `PokemonSpawnAction` atribui a causa ao criar entidade. Confirmar ordenação/validade no evento e persistência através de unload/reinício. Origem ausente/desconhecida não vira captura legítima por suposição. Validar captura nativa positiva, não só emissão artificial de evento/probe.
-4. Usar executor `scripts/integration_server.py` para repetir suítes. Base precisa de server.jar/profile/dependências originais; caminhos locais são caches, não fonte de continuidade. Em outra máquina seguir INSTALLATION/TESTING. Preservar TLS/checksums/proxy.
-5. Recuperação parcial com INTENT/prefixo e recibos automáticos continuam abertos; manter bloqueio/revisão. COMMAND isolado e recuperação sem etapas já estão implementados: não refazer. Recibos/integrações opcionais/acabamento visual podem ficar para depois dos essenciais.
-6. Atualizar checklist/status/next, evidência objetiva e testes relevantes, commitar/push na branch e confirmar SHA remoto. Não publicar releases/main/ambiente automaticamente.
+1. Protocolo Git/AGENTS, preservar trabalho e confirmar envio. Autorização contínua somente na branch; main/release/ambiente separados. Blocos maiores, testes relevantes e documentação objetiva.
+2. Prioridade funcional: **proveniência persistente e demais fluxos nativos de captura**, antes de rankings/competições. Auditar eventos de spawn/ownership e persistir somente prova observada suficiente; perda de SpawnCause em unload/reinício não pode ser tratada como origem válida por suposição. Definir como impedir reutilização de prova após captura/transferência/recompensa. Não fabricar histórico anterior à instalação.
+3. Auditar captura em batalha/pesca/extensões: pre-hit pode não cobrir todos os caminhos. Manter UNKNOWN separado e validar cada origem pelo motor real, sem usar evento artificial como primeira prova positiva.
+4. Após ampliar evidência, ligar ledger de capturas shiny à coleção Shiny com denominador/forma atuais, preservando diferença entre visto/obtido/capturado. Stats shiny já existe; não reimplementar ledger/agregados. Recordes/histórico/admin/rate review/retention seguem parciais. Retenção precisa preservar períodos antes de apagar detalhes.
+5. Reutilizar `scripts/integration_server.py --suite captures|recovery|commands`, base com assets oficiais. Captures requer build/remapCaptureProbeJar, instala probe/fixture só em /tmp. Schema6: testes de recuperação/seeder já adaptados. Não instalar probes em servidores de usuários.
+6. Atualizar checklist/status/next/evidência, commitar/push na branch e confirmar SHA. Não publicar releases, main ou ambiente automaticamente.
 
 ## Arquivos importantes
+
+- Capturas: pacote captures (Record/Tracker/Access/Ledger), V006, Database, timezone em Settings/ConfigManager, eventos e comandos em ShirokaiDex. CaptureTest, captureProbe separado/remapeado, fixture/runner captures e executor.
 
 - Alpha.11: RewardJournal.resumable/authorizeResume, Database.authorizeRewardResume, RewardDelivery.resume, previewRewardResume/deliverReward no core, MainMenu.confirmRecovery, RewardRecoveryTest; fixture/runner/seeder recovery e `scripts/integration_server.py`.
 

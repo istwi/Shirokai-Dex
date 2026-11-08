@@ -35,3 +35,9 @@ saved_items contém modelo/protótipo SNBT, quantidade e SHA-256; saved_item_aud
 ## Etapas CURRENCY
 
 Sem alteração de schema: reward_operations.plan_json inclui opcionalmente currencies, enquanto reward_steps continua genérico. Ordem fixa: itens, Pokémon e moedas; intenção precede depósito, e ack exige sucesso da transação/save/leitura nativa. JSONs históricos sem currencies não mudam. Não existe ID idempotente externo fornecido pelo chamador; PROCESSING/efeitos incertos continuam em revisão, sem retry automático.
+
+## Migração 6 — capturas observadas e agregados permanentes
+
+`capture_events` tem chave única derivada de Pokébola+Pokémon, snapshots/UTC/local/origem e fingerprint de categorias; `capture_totals` e `capture_counts` preservam contadores permanentes independentes dos detalhes. Inserção e incrementos só ocorrem uma vez na mesma transação; UNKNOWN não incrementa os legítimos. `capture_counts` separa SPECIES/CATEGORY. Índice por jogador/origem/data suporta períodos. Não existe poda automática; retenção futura deve preservar contadores de calendário antes de remover detalhes.
+
+Migração5→6 preserva os planos de recompensa e inicia sem capturas reconstruídas, testado com banco antigo. JARs que só suportam schema5 não devem abrir um banco já migrado. [Guia](CAPTURES.md), [evidência](validation/phase4-captures.json).

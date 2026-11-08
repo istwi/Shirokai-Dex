@@ -42,3 +42,7 @@ Alpha.5: seletores dinâmicos de tipo/label e navegação de todas as formas da 
 ## Correção alpha.5: escolher o arquivo instalável
 
 Instale somente `shirokai-dex-0.3.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar` em `mods`, substituindo os arquivos antigos do Shirokai Dex. Não altere os demais mods. `-sources.jar` é material para desenvolvedores, não um mod. Na alpha.4 ele continha descritor Fabric sem a classe compilada, causando ClassNotFoundException quando instalado; o problema foi reproduzido em servidor real. Alpha.5 remove esse descritor das fontes e o artefato de instalação do Actions contém apenas o binário e SHA256SUMS.
+
+## Banco schema6 na 0.4.0-alpha.1
+
+A versão atual acrescenta [capturas/estatísticas iniciais](CAPTURES.md) e migra bancos schema5 para6 preservando recompensas. Mantenha backup antes de atualizar um servidor real e não abra o banco migrado com JAR antigo que só suporta schema5. Os testes de migração preservaram planos anteriores; isso não certifica qualquer modpack. Probe/datapack de captura são fixtures e nunca devem acompanhar instalação do usuário.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0-alpha.1 — captura/estatísticas iniciais
+
+- Correlação nativa pré-hit/captura com origem PlayerSpawner/pool mundial; sem prova fica UNKNOWN. Eventos não são reconstruídos da Pokédex ou de concessões por comando.
+- Schema6, dedup transacional por Pokébola/Pokémon, snapshots/versionamento de classificação e contadores permanentes/espécies/categorias; CLI próprio e períodos com fuso configurável.
+- 304 JUnit e 18 checks de captura/recuperação/reinícios. Captura positiva foi nativa, replay não duplicou, criatura administrativa não pontuou e causa perdida após reinício não foi presumida legítima.
+- Fase 4 parcial: proveniência persistente, outros fluxos, histórico/revisão/recordes/Shiny% ainda pendentes. Sem release/main/ambiente publicados.
+
 ## 0.3.0-alpha.11 — recuperação segura e executor de testes
 
 - Retomada administrativa com plano/ID preservados, motivo, prévia/segunda confirmação e auditoria. Só aceita operações sem qualquer etapa; INTENT/prefixo/fechadas/alteradas continuam bloqueados. Permissões atuais de operador/destinatário e contexto revalidados.

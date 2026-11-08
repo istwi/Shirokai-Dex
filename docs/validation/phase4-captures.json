@@ -1,0 +1,299 @@
+{
+  "scope": "Initial verified native captures and permanent own statistics; not universal capture provenance",
+  "timestamp_utc": "2026-11-08T00:42:23.513465+00:00",
+  "version": "0.4.0-alpha.1+mc1.21.1-cobblemon1.8.3",
+  "base_commit": "26c447294a341ec72e3af20cfd186b480df03ff0",
+  "delivery_commit_subject": "feat: track verified native captures and permanent statistics",
+  "branch": "handoff/crates-checkpoint",
+  "publication": "Continuous development-branch commit/push authorized; no main merge, release or environment publication",
+  "build": {
+    "command": "JAVA_HOME=<JDK21> python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build serverDistribution remapCaptureProbeJar",
+    "result": "BUILD SUCCESSFUL",
+    "junit": {
+      "tests": 304,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "new_junit_cases": 14,
+    "jar": "shirokai-dex-0.4.0-alpha.1+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "66cd5128e06bd96e2e8d002a6d6daac13f680db418eabe6c781604c31827c4b4",
+    "both_runtime_jars_match": true,
+    "verifyModJar": "passed",
+    "probe_in_distribution": false,
+    "test_probe_sha256": "5d2230a8c1dcad6dffd9080aa63f985100cbe573580282ac796bf678f6ccee64"
+  },
+  "runtime": {
+    "minecraft": "1.21.1",
+    "fabric_loader": "0.17.2",
+    "cobblemon": "1.8.3+1.21.1",
+    "java": "21.0.13",
+    "installation": "Packaged intermediary mod in isolated loopback dedicated server; no Loom or project classes on classpath",
+    "automation": "scripts/integration_server.py",
+    "capture_starts": 2,
+    "recovery_starts": 3,
+    "probe_scope": "Console + reserved DexCapture + native-capture-validation only"
+  },
+  "protocol_checks": 18,
+  "protocol": {
+    "captures": {
+      "timestamp": "2026-11-08T00:34:57.882Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+      "results": [
+        {
+          "name": "Existing Pokedex knowledge and command-granted shiny Pokemon do not create capture events or historical counts",
+          "status": "passed"
+        },
+        {
+          "name": "Naturally spawned shiny Pokemon captured by native ball collision/animation produces verified evidence and category snapshot",
+          "status": "passed"
+        },
+        {
+          "name": "Replaying the already observed native event cannot double-count ball/Pokemon identity",
+          "status": "passed"
+        },
+        {
+          "name": "Real ball capture of an administratively created wild entity is audited as unknown and never becomes legitimate statistics",
+          "status": "passed"
+        },
+        {
+          "name": "Distinct same-species captures accumulate; rule reload affects future captures without rewriting historical classifications",
+          "status": "passed"
+        },
+        {
+          "name": "Own read-only statistics distinguish capture totals from species count, honor timezone and expose unknown origins separately",
+          "status": "passed"
+        },
+        {
+          "name": "Another genuine native spawn is preserved for the restart provenance test without manufacturing its spawn cause",
+          "status": "passed"
+        }
+      ]
+    },
+    "captures-restart": {
+      "timestamp": "2026-11-08T00:35:34.550Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+      "results": [
+        {
+          "name": "Permanent totals, shiny snapshots, historical category and duplicate protection survive restart",
+          "status": "passed"
+        },
+        {
+          "name": "Reloaded entity without retained spawn cause is explicitly unverified, never guessed legitimate",
+          "status": "passed"
+        }
+      ]
+    },
+    "recovery": {
+      "timestamp": "2026-11-08T00:37:47.788Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 / LuckPerms5.4.140",
+      "results": [
+        {
+          "name": "Only authorized operators open a frozen-payload preview; recipient and reason are disclosed without item delivery",
+          "status": "passed"
+        },
+        {
+          "name": "Stale confirmation rechecks operator permission and recipient collection permission before every effect",
+          "status": "passed"
+        },
+        {
+          "name": "Recipient disconnect invalidates an old recovery confirmation without altering its reservation",
+          "status": "passed"
+        },
+        {
+          "name": "Pending recovery preserves the original plan/components/operation ID, delivers only to recipient once, and records operator/reason",
+          "status": "passed"
+        },
+        {
+          "name": "Empty review can resume; any intent, acknowledged prefix or changed frozen payload refuses replay",
+          "status": "passed"
+        },
+        {
+          "name": "Reload cannot substitute new reward data into an old confirmed recovery plan",
+          "status": "passed"
+        },
+        {
+          "name": "Recovery preview cannot leak reward icons or create replacement operations",
+          "status": "passed"
+        }
+      ]
+    },
+    "recovery-restart": {
+      "timestamp": "2026-11-08T00:38:21.951Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 / LuckPerms5.4.140",
+      "results": [
+        {
+          "name": "Native target inventory and original completed operation IDs survive restart without redelivery",
+          "status": "passed"
+        },
+        {
+          "name": "Closed, uncertain, partial and changed operations remain blocked across restart; untouched reservation stays pending",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "lifecycle": {
+    "captures": [
+      {
+        "log": "console-1.log",
+        "markers": [
+          "[00:34:14] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+          "[00:34:23] [Server thread/INFO]: Done (8.290s)! For help, type \"help\"",
+          "[00:34:59] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+        ]
+      },
+      {
+        "log": "console-2.log",
+        "markers": [
+          "[00:35:20] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+          "[00:35:23] [Server thread/INFO]: Done (2.560s)! For help, type \"help\"",
+          "[00:35:34] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+        ]
+      }
+    ],
+    "recovery": [
+      {
+        "log": "console-1.log",
+        "markers": [
+          "[00:36:56] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+          "[00:37:00] [Server thread/INFO]: Done (8.644s)! For help, type \"help\"",
+          "[00:37:01] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+        ]
+      },
+      {
+        "log": "console-2.log",
+        "markers": [
+          "[00:37:25] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+          "[00:37:26] [Server thread/INFO]: Done (2.838s)! For help, type \"help\"",
+          "[00:37:48] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+        ]
+      },
+      {
+        "log": "console-3.log",
+        "markers": [
+          "[00:38:12] [shirokaidex-config/INFO]: Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified",
+          "[00:38:13] [Server thread/INFO]: Done (2.569s)! For help, type \"help\"",
+          "[00:38:22] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+        ]
+      }
+    ]
+  },
+  "fixture_sha256": {
+    "tests/fixtures/captures/config.json": "07b302721718ae1c259a845f63d19f55aff04863aebf47cf1aa93af89dcc857c",
+    "tests/fixtures/captures/datapacks/dex-captures/pack.mcmeta": "27d32fde8613bae75f39a453fb06e8e70ce087b7bdb58676be75f7d117b4f80d",
+    "tests/fixtures/captures/datapacks/dex-captures/data/dex_test/spawn_pool_world/statistics.json": "5111bebb6a0692304b93ef622b98c85b9731747beae333c0e157d4f8a7a0cbb5"
+  },
+  "final_capture_totals": [
+    {
+      "total": 2,
+      "shiny": 2,
+      "legendary": 0,
+      "mythical": 0
+    }
+  ],
+  "final_capture_counts": [
+    {
+      "kind": "CATEGORY",
+      "entry_key": "electric_catches",
+      "total": 1
+    },
+    {
+      "kind": "SPECIES",
+      "entry_key": "cobblemon:pikachu",
+      "total": 2
+    }
+  ],
+  "capture_snapshots": [
+    {
+      "species": "cobblemon:pikachu",
+      "form": "Normal",
+      "shiny": 1,
+      "origin": "NATIVE_PLAYER_SPAWN",
+      "labels_json": "[\"gen1\",\"kantonian_form\"]",
+      "types_json": "[\"electric\"]",
+      "categories_json": "[\"electric_catches\"]",
+      "category_rules": "5646611a331eaabefd4e9db02a413a42cfbe671c370388bc5db6a7e7760a9e8b",
+      "dimension": "minecraft:overworld"
+    },
+    {
+      "species": "cobblemon:pikachu",
+      "form": "Normal",
+      "shiny": 0,
+      "origin": "UNKNOWN",
+      "labels_json": "[\"gen1\",\"kantonian_form\"]",
+      "types_json": "[\"electric\"]",
+      "categories_json": "[\"electric_catches\"]",
+      "category_rules": "5646611a331eaabefd4e9db02a413a42cfbe671c370388bc5db6a7e7760a9e8b",
+      "dimension": "minecraft:overworld"
+    },
+    {
+      "species": "cobblemon:pikachu",
+      "form": "Normal",
+      "shiny": 1,
+      "origin": "NATIVE_PLAYER_SPAWN",
+      "labels_json": "[\"gen1\",\"kantonian_form\"]",
+      "types_json": "[\"electric\"]",
+      "categories_json": "[]",
+      "category_rules": "7cdaeee8154959bab99d6fb36bb19c9f8d0ef222762524adb33d7a195120b556",
+      "dimension": "minecraft:overworld"
+    },
+    {
+      "species": "cobblemon:pikachu",
+      "form": "Normal",
+      "shiny": 1,
+      "origin": "UNKNOWN",
+      "labels_json": "[\"gen1\",\"kantonian_form\"]",
+      "types_json": "[\"electric\"]",
+      "categories_json": "[]",
+      "category_rules": "7cdaeee8154959bab99d6fb36bb19c9f8d0ef222762524adb33d7a195120b556",
+      "dimension": "minecraft:overworld"
+    }
+  ],
+  "category_rules_all_preserved": true,
+  "cleanup": {
+    "captures": {
+      "server_stopped": true,
+      "world_save_confirmed": true,
+      "sqlite_integrity": "ok",
+      "schema": 6,
+      "rcon_disabled": true,
+      "temporary_secret_removed": true
+    },
+    "recovery": {
+      "server_stopped": true,
+      "world_save_confirmed": true,
+      "sqlite_integrity": "ok",
+      "schema": 6,
+      "rcon_disabled": true,
+      "temporary_secret_removed": true
+    }
+  },
+  "verified_contract": [
+    "Pre-hit wild state and exact PlayerSpawner/current world pool, then matching ball/Pokemon/player at native completion; main thread only",
+    "First positive captures came from real naturally spawned Pokemon and native projectile collision/animation; no fabricated first capture event or spawn cause",
+    "Repeat emission of an already observed native payload does not increment or rewrite event snapshot",
+    "Command-granted shiny does not create observations; administratively created entity captured by real engine remains UNKNOWN",
+    "Two distinct same-species captures count twice and yield one distinct species; shiny counts use observed Pokemon field",
+    "Classification changes affect only subsequent captures; current query can read a historical removed category",
+    "Loaded-after-restart natural entity lost SpawnCause and was captured as UNKNOWN, excluded even though shiny",
+    "Migration5 to6 preserves a previous reward plan and invents no old captures; schema6 recovery still enforces its safety guards",
+    "Permanent totals/species/category aggregates are transactionally independent of detailed event retention; no pruning feature exposed"
+  ],
+  "corrected_attempts": [
+    "Initial test projectile did not complete native capture; controlled test arena/collision geometry was corrected in probe, without fabricating capture evidence",
+    "Species stats CLI initially used Brigadier word and rejected namespace colon; changed to greedyString plus identifier validation and repeated native suite",
+    "DatabaseTest expected five migration rows; expectation updated for six, with explicit legacy upgrade test",
+    "Capture location uses ball dimension/position, not later player position; final runtime binary includes this correction"
+  ],
+  "limitations": [
+    "Only scope with correlated pre-hit evidence and current-world-pool PlayerSpawner proven; battle/fishing/custom-spawner paths not certified",
+    "SpawnCause provenance is not retained across entity reload; cannot safely classify those captures without additional observed persistent proof",
+    "Pre-hit buffer bounded at512 and ten minutes; absent/expired/mismatched evidence fails closed",
+    "No retroactive capture reconstruction, complete admin/history review, rate limits, personal records, rankings or competitions",
+    "Shiny capture total does not yet feed previous Shiny completion collection/percentage",
+    "No detailed-record pruning; calendar counts need preserved aggregates before implementing retention",
+    "DB/snapshot failures can leave gaps and are logged; no distributed transaction, power-loss or load/graphical-client guarantee",
+    "Full legacy Pokemon/currency/Crates protocol suites not repeated; all Java suites and native recovery regression repeated"
+  ]
+}

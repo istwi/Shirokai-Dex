@@ -12,7 +12,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## Ponto de retomada
 
-**Retomada:** alpha.11 recuperação segura de operações sem etapas, plano/ID preservados e executor reutilizável de servidor. 290 JUnit e 18 checks reais com reinícios; [evidência](validation/phase3-recovery.json). COMMAND alpha.10 enviado em `73e5d78`; próximos essenciais: captura legítima/estatísticas, depois competições/rankings. Autorização contínua na branch; main/release/ambiente separados.
+**Retomada:** captura/estatísticas iniciais 0.4.0-alpha.1, base `26c4472`: 304 JUnit e 18 checks nativos/reinícios. [Evidência](validation/phase4-captures.json). Captura natural validada no escopo PlayerSpawner/pool mundial; origem perdida após reload fica UNKNOWN. Fase 4 parcial: proveniência contínua/batalha/pesca/outros fluxos/recordes/histórico/revisão e Shiny% ainda pendentes. Commits/push contínuos na branch; main/release/ambiente separados.
 
 ## Preparação e continuidade
 
@@ -263,3 +263,13 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 - [ ] Retomada parcial de etapas com resultado externo incerto. INTENT e prefixos reconhecidos não são reenviados; sem recibos/prova suficiente continuam em revisão.
 
 | Recuperação e executor | RewardJournal/Database/Delivery/core/GUI/traduções, oito testes Java, fixture/runner/seeder e executor. 290 JUnit e 9+9 checks empacotados/reinícios. Sem migração nova nem alteração em outros mods | Commit `feat: add safe supervised reward recovery and reusable server suites`, base `73e5d78`; [evidência](validation/phase3-recovery.json) |
+
+### Captura e estatísticas iniciais — 0.4.0-alpha.1
+
+- [x] ~~Validar captura pelo motor nativo e correlacionar evidência prévia de origem no PlayerSpawner/pool mundial.~~ Pokébola física/animação, sem evento artificial de primeira captura; origem ausente fica UNKNOWN. [Guia](CAPTURES.md).
+- [x] ~~Deduplicar observações e manter totais/shiny/labels/espécies/categorias observadas de novas capturas verificadas.~~ Transação/schema6, snapshots históricos, migração5→6, replay e reinício; 304 JUnit e 18 checks nativos/regressão.
+- [x] ~~Consultar estatísticas próprias e períodos com timezone/semana ISO.~~ CLI, UTC padrão, timezone válido, DST/fronteiras/calendário e total distinto de espécies testados.
+- [ ] Cobertura completa de captura e proveniência persistente. SpawnCause perdido após reinício foi demonstrado; batalhas/pesca/outros spawners requerem teste próprio. Nenhuma captura antiga inferida.
+- [ ] Histórico/admin/revisão/limites/recordes/retention e ligação do ledger à coleção Shiny. Permanentes e categorias preservados; não concluir toda a Fase 4.
+
+| Capturas/estatísticas | CaptureRecord/Tracker/Access/Ledger, V006/Database, timezone/CLI/core/traduções; 14 JUnit novos, probe/fixture/runner e executor. 304 JUnit e 9+9 checks; origem perdida permanece desconhecida | Commit `feat: track verified native captures and permanent statistics`, base `26c4472`; [evidência](validation/phase4-captures.json) |

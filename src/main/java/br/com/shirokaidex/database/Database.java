@@ -40,13 +40,13 @@ public final class Database implements AutoCloseable {
     private void migrate() throws Exception {
         int version;
         try (Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery("PRAGMA user_version")) { version = rs.getInt(1); }
-        if (version > 5) throw new SQLException("Database version " + version + " is newer than supported version 5");
+        if (version > 6) throw new SQLException("Database version " + version + " is newer than supported version 6");
         if (version > 0) {
             try (Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery("SELECT count(*) FROM schema_migrations WHERE version BETWEEN 1 AND " + version)) {
                 if (!rs.next() || rs.getInt(1) != version) throw new SQLException("Missing migration history for version " + version);
             }
         }
-        for (int target = version + 1; target <= 5; target++) applyMigration(target);
+        for (int target = version + 1; target <= 6; target++) applyMigration(target);
     }
 
     private void applyMigration(int version) throws Exception {
@@ -56,6 +56,7 @@ public final class Database implements AutoCloseable {
             case 3 -> "/database/V003__reward_journal.sql";
             case 4 -> "/database/V004__reward_unlocks.sql";
             case 5 -> "/database/V005__saved_items.sql";
+            case 6 -> "/database/V006__captures.sql";
             default -> throw new SQLException("Unsupported migration " + version);
         };
         String sql;
@@ -194,6 +195,10 @@ public final class Database implements AutoCloseable {
             return java.util.Set.copyOf(ids);
         }));
     }
+
+    public CompletableFuture<Boolean> recordCapture(br.com.shirokaidex.captures.CaptureRecord record){return submit(()->transaction(()->br.com.shirokaidex.captures.CaptureLedger.record(connection,record)));}
+    public CompletableFuture<br.com.shirokaidex.captures.CaptureLedger.Summary> captureSummary(UUID player,Instant now,java.time.ZoneId zone){return submit(()->br.com.shirokaidex.captures.CaptureLedger.summary(connection,player,now,zone));}
+    public CompletableFuture<Long> captureCount(UUID player,String kind,String key){return submit(()->br.com.shirokaidex.captures.CaptureLedger.count(connection,player,kind,key));}
 
     public CompletableFuture<br.com.shirokaidex.rewards.RewardJournal.Operation> reserveReward(UUID player, br.com.shirokaidex.rewards.RewardPlan plan) {
         return reserveReward(player,plan,player.toString());

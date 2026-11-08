@@ -35,3 +35,7 @@ Desde a alpha.2: `/dex <id>` e `/dex <id> status` também atendem coleções JSO
 ## Retomada administrativa sem etapas
 
 `/dex admin reward resume <operação> <justificativa>` — permissão `shirokaidex.admin.rewards`; abre confirmação protegida para entregar ao destinatário online usando o plano original. Somente PENDING/NEEDS_REVIEW sem etapas; justificativa 8..2048 caracteres. [Escopo e bloqueios](RECOVERY.md).
+
+## Estatísticas próprias de captura
+
+`/dex profile captures`, `/dex profile captures species <namespace:espécie>` e `/dex profile captures category <id>` consultam somente o jogador atual. Capturas verificadas são distintas de registros da Pokédex e de origem desconhecida. Perfil gráfico ainda não implementado. [Guia](CAPTURES.md).

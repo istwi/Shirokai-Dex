@@ -5,7 +5,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '2.2.20'
 }
 
-version = '0.3.0-alpha.11+mc1.21.1-cobblemon1.8.3'
+version = '0.4.0-alpha.1+mc1.21.1-cobblemon1.8.3'
 group = 'br.com.shirokaidex'
 base { archivesName = 'shirokai-dex' }
 
@@ -167,5 +167,22 @@ tasks.register('remapPokemonProbeJar', net.fabricmc.loom.task.RemapJarTask) {
     dependsOn tasks.named('pokemonProbeJar')
     inputFile.set(tasks.named('pokemonProbeJar').flatMap { it.archiveFile })
     archiveClassifier = 'pokemon-probe'
+    destinationDirectory = layout.buildDirectory.dir('test-mods')
+}
+
+// Native physical Pokeball/capture fixture, strictly separate from distribution.
+sourceSets {
+    captureProbe { compileClasspath += sourceSets.main.compileClasspath; runtimeClasspath += sourceSets.main.runtimeClasspath }
+}
+tasks.register('captureProbeJar', Jar) {
+    dependsOn tasks.named('compileCaptureProbeJava'), tasks.named('processCaptureProbeResources')
+    from sourceSets.captureProbe.output
+    archiveClassifier = 'capture-probe-dev'
+    destinationDirectory = layout.buildDirectory.dir('test-mods')
+}
+tasks.register('remapCaptureProbeJar', net.fabricmc.loom.task.RemapJarTask) {
+    dependsOn tasks.named('captureProbeJar')
+    inputFile.set(tasks.named('captureProbeJar').flatMap { it.archiveFile })
+    archiveClassifier = 'capture-probe'
     destinationDirectory = layout.buildDirectory.dir('test-mods')
 }

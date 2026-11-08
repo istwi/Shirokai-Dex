@@ -37,6 +37,7 @@ public final class ShirokaiDex implements ModInitializer {
     private static final Logger LOG = LoggerFactory.getLogger("shirokaidex");
     private final ExecutorService configWorker = Executors.newSingleThreadExecutor(r -> new Thread(r, "shirokaidex-config"));
     private final CobblemonAccess cobblemon = new CobblemonAccess();
+    private final br.com.shirokaidex.captures.CaptureAccess captures=new br.com.shirokaidex.captures.CaptureAccess();
     private final Messages messages = new Messages();
     private final PlaceholderCache placeholderCache = new PlaceholderCache();
     private PlaceholderBridge placeholderBridge;
@@ -74,6 +75,9 @@ public final class ShirokaiDex implements ModInitializer {
                     .then(literal("admin").requires(source -> Permissions.mayReload(source.getPlayer()) || (Permissions.has(source.getPlayer(), "shirokaidex.admin.rewards") || Permissions.has(source.getPlayer(),"shirokaidex.admin.items")))
                             .then(literal("reload").requires(source -> Permissions.mayReload(source.getPlayer())).executes(context -> reload(context.getSource())))
                             .then(rewardAdminCommands()).then(savedItemCommands()));
+            root.then(literal("profile").then(literal("captures").executes(context->captureStats(context.getSource(),null,null))
+                    .then(literal("species").then(argument("id",StringArgumentType.greedyString()).executes(context->captureStats(context.getSource(),"SPECIES",StringArgumentType.getString(context,"id")))))
+                    .then(literal("category").then(argument("id",StringArgumentType.word()).executes(context->captureStats(context.getSource(),"CATEGORY",StringArgumentType.getString(context,"id")))))));
             root.then(literal("rewards").executes(context -> rewards(context.getSource(), null, 0))
                     .then(argument("reward", StringArgumentType.word()).executes(context -> rewards(context.getSource(), StringArgumentType.getString(context, "reward"), 0))));
             for (var collection : DexCollection.values()) {
@@ -104,12 +108,20 @@ public final class ShirokaiDex implements ModInitializer {
                             .then(argument("query", StringArgumentType.greedyString()).executes(context -> wiki(context.getSource(), StringArgumentType.getString(context, "collection"), Wiki.Request.initial(StringArgumentType.getString(context, "query")))))));
             dispatcher.register(root);
         });
+        CobblemonEvents.THROWN_POKEBALL_HIT.subscribe((Consumer<com.cobblemon.mod.common.api.events.pokeball.ThrownPokeballHitEvent>) event->{
+            if(ready&&!stopping&&activeServer!=null&&activeServer.isSameThread())captures.hit(event);
+        });
+        CobblemonEvents.POKEMON_CAPTURED.subscribe((Consumer<com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent>) event->{
+            if(!ready||stopping||activeServer==null||!activeServer.isSameThread())return;
+            try{var record=captures.captured(event,config.current().categories());database.recordCapture(record).exceptionally(failure->{LOG.error("Capture persistence failed for {}; statistics may be incomplete",record.player(),failure);return false;});}
+            catch(RuntimeException failure){LOG.error("Capture evidence unavailable; no legitimate capture inferred",failure);}
+        });
         CobblemonEvents.POKEDEX_DATA_CHANGED_POST.subscribe((Consumer<PokedexDataChangedEvent.Post>) event -> {
             MinecraftServer server = activeServer;
             if (server != null) server.execute(() -> { rewardObservedAt.remove(event.getPlayerUUID()); cobblemon.invalidate(event.getPlayerUUID()); if (placeholderBridge != null) placeholderCache.invalidate(event.getPlayerUUID()); });
         });
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            activeServer = server; stopping = false; cobblemon.clear();
+            activeServer = server; stopping = false; cobblemon.clear(); captures.clear();
             var registry = cobblemon.validationSnapshot();
             config.setItemResolver(id -> database.savedItem(id).join().orElse(null));
             config.setValidator(settings -> {
@@ -176,7 +188,7 @@ public final class ShirokaiDex implements ModInitializer {
                     .exceptionally(failure -> { LOG.error("Could not persist player login {}", uuid, failure); return null; });
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> { rewardViewRequests.remove(handler.player.getUUID()); rewardUnlockCache.remove(handler.player.getUUID()); rewardObservedAt.remove(handler.player.getUUID()); cobblemon.invalidate(handler.player.getUUID()); placeholderCache.remove(handler.player.getUUID()); });
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; java.util.List.copyOf(pokemonDeliveries).forEach(br.com.shirokaidex.rewards.PokemonRewardAdapter::close); pokemonDeliveries.clear(); payloadValidations.forEach(future -> future.completeExceptionally(new IllegalStateException("Server stopping"))); ready = false; activeServer = null; rewardViewRequests.clear(); rewardUnlockCache.clear(); rewardObservedAt.clear(); cobblemon.clear(); placeholderCache.clear(); spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = false;
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; captures.clear(); java.util.List.copyOf(pokemonDeliveries).forEach(br.com.shirokaidex.rewards.PokemonRewardAdapter::close); pokemonDeliveries.clear(); payloadValidations.forEach(future -> future.completeExceptionally(new IllegalStateException("Server stopping"))); ready = false; activeServer = null; rewardViewRequests.clear(); rewardUnlockCache.clear(); rewardObservedAt.clear(); cobblemon.clear(); placeholderCache.clear(); spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = false;
             if (placeholderBridge != null) {
                 try { placeholderBridge.close(); }
                 catch (RuntimeException | LinkageError failure) { LOG.error("Placeholder cleanup failed", failure); }
@@ -386,6 +398,21 @@ public final class ShirokaiDex implements ModInitializer {
                             .executes(context -> rewardAdmin(context.getSource(), StringArgumentType.getString(context, "operation"), action, StringArgumentType.getString(context, "evidence")))))));
         }
         return root;
+    }
+    private int captureStats(CommandSourceStack source,String kind,String raw){
+        var player=source.getPlayer();if(!ready||player==null)return 0;
+        if(kind==null){var zone=config.current().statisticsTimezone();database.captureSummary(player.getUUID(),java.time.Instant.now(),zone).whenComplete((value,failure)->source.getServer().execute(()->{
+            if(stopping||player.hasDisconnected())return;
+            if(failure!=null){source.sendFailure(messages.text(language(),"capture_stats_unavailable"));return;}
+            source.sendSuccess(()->messages.text(language(),"capture_stats_summary",value.total(),value.shiny(),value.legendary(),value.mythical(),value.distinctSpecies(),value.today(),value.week(),value.month(),zone.getId(),value.unverified()),false);
+        }));return 1;}
+        String key=kind.equals("SPECIES")?br.com.shirokaidex.spawning.SpawnCatalog.speciesId(raw):raw;
+        if(key==null||!key.matches(kind.equals("SPECIES")?"[a-z0-9_.-]+:[a-z0-9/._-]+":"[a-z][a-z0-9_]{0,47}")){source.sendFailure(messages.text(language(),"capture_stats_unavailable"));return 0;}
+        database.captureCount(player.getUUID(),kind,key).whenComplete((value,failure)->source.getServer().execute(()->{
+            if(stopping||player.hasDisconnected())return;
+            if(failure!=null)source.sendFailure(messages.text(language(),"capture_stats_unavailable"));
+            else source.sendSuccess(()->messages.text(language(),"capture_stats_count",key,value),false);
+        }));return 1;
     }
     private int previewRewardResume(CommandSourceStack source,String raw,String reason){
         var actor=source.getPlayer();if(!ready||actor==null||!Permissions.has(actor,"shirokaidex.admin.rewards"))return 0;

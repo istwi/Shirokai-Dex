@@ -299,3 +299,11 @@ Comandos externos, recibos automáticos, planos mistos, crash durante dispatch, 
 ## Executor reutilizável e recuperação — alpha.11
 
 [Comandos e requisitos](RECOVERY.md#automatização-dos-testes), [evidência](validation/phase3-recovery.json): 290 JUnit, nove checks recovery e nove regressões COMMAND. O executor cria mundo novo, preserva base, espera Done + Dex ready, para/salva antes de seeding/restart, testa e limpa RCON em finally. Concurrency de operadores é testada em Java; callback obsoleto por permissão/desconexão/reload e identidade/payload são testados nativamente. Não reexecuta INTENT nem presume durabilidade de prefixo.
+
+## Captura nativa — 0.4.0-alpha.1
+
+[Procedimento](CAPTURES.md#validação-e-repetição), [evidência](validation/phase4-captures.json): 304 JUnit, nove checks de captura/reinício e nove de recuperação/schema6. `remapCaptureProbeJar` gera teste separado; executor --suite captures prepara datapack que favorece spawn nativo de Pikachu shiny. A sonda seleciona a entidade realmente gerada, libera pequena área de colisão e lança Master Ball física; não atribui SpawnCause e não emite o primeiro evento positivo artificialmente. Replay usa evento nativo já observado para provar dedup.
+
+Concessão por comando não cria evento; entidade administrativa realmente capturada é UNKNOWN. Duas capturas naturais distintas da mesma espécie incrementam total e preservam classificação por versão; reload de categorias não reescreve anteriores. Park de outra criatura natural permite demonstrar perda da causa no reload e classificação conservadora. Não certifica todos os caminhos de batalha/pesca/spawners nem cliente visual/carga.
+
+Ensaios corrigidos: cenário inicial de projétil não concluiu captura, ajustado apenas no probe; stats species com namespace falhou por argumento word, corrigido no produto para string completa validada e repetido. Expectativa antiga de cinco migrações foi atualizada para seis; teste explícito de upgrade preserva plano legado. Dimensão registrada é a da Pokébola. Probes não integram distribuição.

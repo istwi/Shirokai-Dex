@@ -47,3 +47,7 @@ Cada recompensa aceita `currencies`: array de até oito entradas CURRENCY, com `
 ## COMMAND autorizado — alpha.10 local
 
 `command_policy` é opcional e desativado por padrão. Autorizações exatas por contexto/template e `rewards[].commands` seguem o [schema e limites próprios](COMMAND_REWARDS.md). Uma única ação isolada por marco, revisão administrativa obrigatória após tentativa de dispatch. Desativar a política preserva definições e bloqueia efeitos; reload inválido mantém toda a configuração anterior.
+
+## Fuso das estatísticas de captura
+
+`statistics_timezone`: string ZoneId Java, padrão `UTC`, por exemplo `America/Sao_Paulo`. Inválido rejeita configuração/reload. Muda o calendário das consultas, preservando instantes UTC e totais permanentes. [Capturas e limites](CAPTURES.md).

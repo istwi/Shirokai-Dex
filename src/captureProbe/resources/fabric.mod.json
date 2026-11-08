@@ -1,0 +1,1 @@
+{"schemaVersion":1,"id":"dex_capture_probe","version":"1.0.0","name":"Dex native capture test fixture","environment":"server","entrypoints":{"main":["br.com.shirokaidex.probe.CaptureProbe"]},"depends":{"fabricloader":">=0.17.2","fabric-api":"*","cobblemon":"1.8.3+1.21.1"}}

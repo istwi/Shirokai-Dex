@@ -191,5 +191,8 @@
   "command_context": "Contexto de execução: {0}",
   "command_review_warning": "A execução exigirá revisão administrativa; não comprova entrega persistida.",
   "reward_resume_notice": "Retomada supervisionada: permitida somente sem nenhuma etapa iniciada.",
-  "reward_resume_blocked": "Retomada bloqueada: confira etapas, plano, destinatário online e permissões."
+  "reward_resume_blocked": "Retomada bloqueada: confira etapas, plano, destinatário online e permissões.",
+  "capture_stats_summary": "Capturas verificadas: {0} | Shiny: {1} | Lendárias: {2} | Míticas: {3} | Espécies distintas: {4} | Hoje/semana/mês: {5}/{6}/{7} ({8}) | Origem não comprovada: {9}",
+  "capture_stats_count": "Capturas verificadas de {0}: {1}",
+  "capture_stats_unavailable": "Estatísticas de captura indisponíveis."
 }

@@ -191,5 +191,8 @@
   "command_context": "Execution context: {0}",
   "command_review_warning": "Execution requires operator review; it does not prove durable delivery.",
   "reward_resume_notice": "Supervised resume: allowed only when no step has started.",
-  "reward_resume_blocked": "Resume blocked: check steps, preserved plan, online recipient and permissions."
+  "reward_resume_blocked": "Resume blocked: check steps, preserved plan, online recipient and permissions.",
+  "capture_stats_summary": "Verified captures: {0} | Shiny: {1} | Legendary: {2} | Mythical: {3} | Distinct species: {4} | Today/week/month: {5}/{6}/{7} ({8}) | Unverified origin: {9}",
+  "capture_stats_count": "Verified captures for {0}: {1}",
+  "capture_stats_unavailable": "Capture statistics unavailable."
 }

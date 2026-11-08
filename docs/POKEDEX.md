@@ -39,3 +39,7 @@ O total acompanha o registro real após startup. Alterações de datapack de esp
 ## Limites desta etapa
 
 [Coleções por JSON](COLLECTIONS.md) e filtros iniciais foram adicionados na alpha.2. Critérios avançados/categorias históricas, dados de spawn e demais evoluções da wiki, integração TAB e recompensas continuam pendentes. Os [placeholders básicos da Text Placeholder API](PLACEHOLDERS.md) estão disponíveis na alpha.4. Pesquisa/paginação por espécie já estão disponíveis na alpha.3. Nacional/Lendária são as coleções iniciais de progresso, não a Fase 2 completa. O cálculo puro e o adaptador Cobblemon estão separados para permitir essa evolução.
+
+## Estatísticas de captura verificadas separadas
+
+A versão 0.4.0-alpha.1 acrescenta [ledger/contadores próprios de capturas](CAPTURES.md), incluindo shiny comprovado no escopo auditado. A coleção Shiny/percentual descrita acima ainda não foi ligada a esse ledger e permanece N/D. Não confundir contador de novas capturas shiny com o denominador/percentual de conclusão.

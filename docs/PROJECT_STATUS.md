@@ -2,7 +2,15 @@
 
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, main validada preservada e retomada em `handoff/crates-checkpoint`; apenas um Codex por vez.
 
-## Entrega atual — recuperação segura e executor de testes (alpha.11)
+## Entrega atual — captura/estatísticas iniciais (0.4.0-alpha.1)
+
+Base enviada `26c4472`, branch `handoff/crates-checkpoint`, autorização contínua de commits/push; main preservada `c89cc1b`. Eventos nativos pré-acerto/captura cruzados com evidência de origem PlayerSpawner/pool mundial. Ledger deduplicado por Pokébola+Pokémon, classificação/shiny/regras congeladas, totais permanentes e contagens por espécie/categoria. Estatísticas próprias por CLI e períodos com fuso configurável, sem reconstrução histórica. [Guia e limites](CAPTURES.md).
+
+304 JUnit (14 novos), nove checks nativos de captura e nove de regressão de recuperação/schema6, com reinícios; [evidência](validation/phase4-captures.json). Capturas positivas vieram de colisão/animação nativa de Pokébola com criaturas geradas pelo spawner real; replay não duplicou, obtenção por comando não contou e entidade administrativa capturada ficou UNKNOWN. Migração5→6 preservou plano anterior. Probe é separado e não compõe o JAR distribuído.
+
+Limite real: SpawnCause não permaneceu na entidade após reinício; ela foi capturada como UNKNOWN, sem aumentar o total legítimo. Continuidade de proveniência, batalhas/pesca/outros spawners, limites/revisão/histórico detalhado/recordes e integração do ledger à coleção Shiny continuam pendentes. Fase 4 não concluída nem captura universal declarada. Sem release/main/ambiente publicados. Entrega identificada por `feat: track verified native captures and permanent statistics`.
+
+## Entrega anterior — recuperação segura e executor de testes (alpha.11)
 
 Base COMMAND enviada `73e5d78`; trabalho na branch `handoff/crates-checkpoint`, com autorização contínua de commit/push, main preservada em `c89cc1b`. Retomada administrativa com prévia/confirmação e justificativa, exclusivamente para PENDING/NEEDS_REVIEW sem nenhuma etapa iniciada. ID/plano/componentes originais preservados; permissões do operador e destinatário e identidade do plano revalidadas. INTENT/prefixo entregue continuam bloqueados para revisão, sem retry. [Guia](RECOVERY.md).
 
@@ -192,7 +200,7 @@ O primeiro runner sem espaçamento teve timeout em uma resposta repetida; consul
 
 ## Fase atual
 
-**Fase 3 — recompensas e persistência**, com recursos avançados da Fase 2 ainda abertos. Menus configuráveis, ITEM/CUSTOM_ITEM/SAVED_ITEM/POKEMON e CURRENCY estão implementados nos escopos dos relatórios. Checkpoint opcional Crates0.2.1 e chave física via SAVED_ITEM validados na branch alpha.9; CRATE_KEY dedicado/COMMAND ainda pendentes. Nacional/Lendária exibem quantidade/total e %, Shiny permanece N/D sem evidência confiável de captura. Não é mod completo nem release estável.
+**Fase 4 — captura legítima e estatísticas**, com Fases2/3 avançadas ainda parciais. Ledger e contadores novos validados no PlayerSpawner/pool mundial com fluxo nativo; origem ausente continua UNKNOWN. Continuidade de proveniência, outros fluxos, limites/histórico/recordes e Shiny% pendentes. Fases5–8 ainda não implementadas; não é mod completo nem release estável.
 
 ## Concluído
 
@@ -273,7 +281,7 @@ Servidores locais eram offline e limitados a loopback; não validam autenticaç�
 
 ## Última alteração relevante e sincronização
 
-Main remota `c89cc1b`, último funcional validado `191a65e`. Branch de retomada `handoff/crates-checkpoint`, base `6b97093`, com resultados novos locais de validação. Envio deste bloco validado autorizado somente nesta branch; sem nova release/ambiente. Conferir status/diff e remotos na próxima sessão, preservando o trabalho.
+Branch `handoff/crates-checkpoint`, base enviada `26c4472` (recuperação); entrega atual por assunto `feat: track verified native captures and permanent statistics`. Autorização contínua para commit/push nesta branch; conferir SHA com Git. Main permanece `c89cc1b`; nenhuma release/ambiente publicada nesta entrega. Histórico abaixo preserva versões anteriores.
 
 ## Publicação alpha confirmada
 
