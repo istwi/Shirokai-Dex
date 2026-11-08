@@ -1,5 +1,14 @@
 # Capturas e estatísticas — 0.4.0-alpha.1
 
+## Desenvolvimento 0.4.0-alpha.2 — proveniência persistente
+
+A origem nativa observada agora persiste no schema7. ENTITY_LOAD do Fabric e pré-hit só registram prova quando o Pokémon é selvagem e tem PlayerSpawner/pool mundial auditados. A prova vincula UUID lógico do Pokémon e UUID da entidade física; não é reconstruída de criaturas antigas. Depois do reload, causa ausente só pode usar essa prova com correlação pré-hit/Pokébola/alvo/jogador válida. Toda observação concluída consome a prova correspondente, inclusive UNKNOWN; carga e pré-hit não reabrem prova consumida. Replay não altera classificação anterior.
+
+313 JUnit (nove novos) aprovados; captura real da mesma entidade após reinício ficou PERSISTED_NATIVE, com SpawnCause ausente, sem atribuição artificial de origem. Entidade administrativa continua UNKNOWN. Migração6→7 preserva eventos LEGACY e totais; não reclassifica UNKNOWN antigo. [Evidência](validation/phase4-provenance.json). Desenvolvimento separado da release alpha.1, que permanece imutável.
+
+Limites: batalhas/pesca/outros spawners ainda não certificados; sem prova observada permanece UNKNOWN. Provas não têm limpeza automática e crescem com spawns; carga/retention/crash durante gravação não certificados. Banco pode falhar e deixar lacunas. Fase4, histórico/revisão/recordes e ligação à coleção Shiny continuam parciais.
+
+
 Primeiro bloco da Fase 4. Registra eventos novos do servidor, sem reconstruir capturas a partir da Pokédex, inventário ou Pokémon antigos. Captura é uma ação; dez capturas da mesma espécie contam dez, com uma espécie distinta. Não há pontuação de competição implementada neste bloco.
 
 ## Origem comprovada e desconhecida
@@ -8,7 +17,7 @@ A integração cruza THROWN_POKEBALL_HIT com POKEMON_CAPTURED do Cobblemon1.8.3.
 
 No escopo testado, duas capturas foram concluídas por colisão/animação nativa de Master Ball com Pikachu shiny gerados pelo spawner real, usando um datapack de condições controladas. Não foi emitido evento artificial para criar a primeira captura positiva. O probe separado só reemite um evento real já observado para testar duplicação. Ele também cria um Pokémon administrativo sem SpawnCause e captura com o motor nativo: a observação fica UNKNOWN e não aumenta estatísticas legítimas.
 
-**Limite comprovado:** um Pokémon naturalmente gerado, preservado e recarregado após reinício perdeu SpawnCause. A captura posterior foi UNKNOWN e ficou fora dos totais legítimos. Portanto, esta versão não cobre universalmente criaturas anteriores ao mod, recarregadas, outros spawners, pesca, batalhas ou extensões. A continuidade de proveniência e esses outros fluxos precisam de auditoria/testes próprios. Comandos de concessão/recompensas/trocas/ovos não são fontes de captura; somente obter/ver um shiny nunca incrementa estes contadores.
+**Limite comprovado na release alpha.1 (corrigido no escopo alpha.2 acima):** um Pokémon naturalmente gerado, preservado e recarregado após reinício perdeu SpawnCause. A captura posterior foi UNKNOWN e ficou fora dos totais legítimos. Portanto, esta versão não cobre universalmente criaturas anteriores ao mod, recarregadas, outros spawners, pesca, batalhas ou extensões. A continuidade de proveniência e esses outros fluxos precisam de auditoria/testes próprios. Comandos de concessão/recompensas/trocas/ovos não são fontes de captura; somente obter/ver um shiny nunca incrementa estes contadores.
 
 ## Dados e deduplicação
 

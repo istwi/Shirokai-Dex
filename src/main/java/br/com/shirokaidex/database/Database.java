@@ -40,13 +40,13 @@ public final class Database implements AutoCloseable {
     private void migrate() throws Exception {
         int version;
         try (Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery("PRAGMA user_version")) { version = rs.getInt(1); }
-        if (version > 6) throw new SQLException("Database version " + version + " is newer than supported version 6");
+        if (version > 7) throw new SQLException("Database version " + version + " is newer than supported version 7");
         if (version > 0) {
             try (Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery("SELECT count(*) FROM schema_migrations WHERE version BETWEEN 1 AND " + version)) {
                 if (!rs.next() || rs.getInt(1) != version) throw new SQLException("Missing migration history for version " + version);
             }
         }
-        for (int target = version + 1; target <= 6; target++) applyMigration(target);
+        for (int target = version + 1; target <= 7; target++) applyMigration(target);
     }
 
     private void applyMigration(int version) throws Exception {
@@ -57,6 +57,7 @@ public final class Database implements AutoCloseable {
             case 4 -> "/database/V004__reward_unlocks.sql";
             case 5 -> "/database/V005__saved_items.sql";
             case 6 -> "/database/V006__captures.sql";
+            case 7 -> "/database/V007__native_spawn_proofs.sql";
             default -> throw new SQLException("Unsupported migration " + version);
         };
         String sql;
@@ -196,6 +197,8 @@ public final class Database implements AutoCloseable {
         }));
     }
 
+    public CompletableFuture<Boolean> recordNativeSpawnProof(br.com.shirokaidex.captures.NativeSpawnProof proof){return submit(()->transaction(()->br.com.shirokaidex.captures.NativeProvenance.observe(connection,proof)));}
+    public CompletableFuture<Boolean> recordObservedCapture(br.com.shirokaidex.captures.CaptureObservation observation){return submit(()->transaction(()->br.com.shirokaidex.captures.NativeProvenance.capture(connection,observation)));}
     public CompletableFuture<Boolean> recordCapture(br.com.shirokaidex.captures.CaptureRecord record){return submit(()->transaction(()->br.com.shirokaidex.captures.CaptureLedger.record(connection,record)));}
     public CompletableFuture<br.com.shirokaidex.captures.CaptureLedger.Summary> captureSummary(UUID player,Instant now,java.time.ZoneId zone){return submit(()->br.com.shirokaidex.captures.CaptureLedger.summary(connection,player,now,zone));}
     public CompletableFuture<Long> captureCount(UUID player,String kind,String key){return submit(()->br.com.shirokaidex.captures.CaptureLedger.count(connection,player,kind,key));}

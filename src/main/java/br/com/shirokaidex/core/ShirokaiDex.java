@@ -108,12 +108,20 @@ public final class ShirokaiDex implements ModInitializer {
                             .then(argument("query", StringArgumentType.greedyString()).executes(context -> wiki(context.getSource(), StringArgumentType.getString(context, "collection"), Wiki.Request.initial(StringArgumentType.getString(context, "query")))))));
             dispatcher.register(root);
         });
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents.ENTITY_LOAD.register((entity,world)->{
+            if(!ready||stopping||!world.getServer().isSameThread()||!(entity instanceof com.cobblemon.mod.common.entity.pokemon.PokemonEntity pokemon))return;
+            try{var proof=captures.observe(pokemon,br.com.shirokaidex.captures.NativeSpawnProof.Source.ENTITY_LOAD);if(proof!=null)database.recordNativeSpawnProof(proof).exceptionally(failure->{LOG.error("Native spawn proof persistence failed",failure);return false;});}
+            catch(RuntimeException failure){LOG.error("Native spawn evidence unavailable",failure);}
+        });
         CobblemonEvents.THROWN_POKEBALL_HIT.subscribe((Consumer<com.cobblemon.mod.common.api.events.pokeball.ThrownPokeballHitEvent>) event->{
-            if(ready&&!stopping&&activeServer!=null&&activeServer.isSameThread())captures.hit(event);
+            if(ready&&!stopping&&activeServer!=null&&activeServer.isSameThread()){
+                try{var proof=captures.hit(event);if(proof!=null)database.recordNativeSpawnProof(proof).exceptionally(failure->{LOG.error("Native spawn proof persistence failed",failure);return false;});}
+                catch(RuntimeException failure){LOG.error("Native pre-capture evidence unavailable",failure);}
+            }
         });
         CobblemonEvents.POKEMON_CAPTURED.subscribe((Consumer<com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent>) event->{
             if(!ready||stopping||activeServer==null||!activeServer.isSameThread())return;
-            try{var record=captures.captured(event,config.current().categories());database.recordCapture(record).exceptionally(failure->{LOG.error("Capture persistence failed for {}; statistics may be incomplete",record.player(),failure);return false;});}
+            try{var observation=captures.captured(event,config.current().categories());database.recordObservedCapture(observation).exceptionally(failure->{LOG.error("Capture persistence failed for {}; statistics may be incomplete",observation.capture().player(),failure);return false;});}
             catch(RuntimeException failure){LOG.error("Capture evidence unavailable; no legitimate capture inferred",failure);}
         });
         CobblemonEvents.POKEDEX_DATA_CHANGED_POST.subscribe((Consumer<PokedexDataChangedEvent.Post>) event -> {

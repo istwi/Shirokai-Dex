@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0-alpha.2 — desenvolvimento, sem nova release
+
+- Prova nativa observada persistente, vinculada ao Pokémon/entidade e consumida uma vez. Reload não inventa origem; correlação pré-hit continua obrigatória.
+- Schema7 mantém histórico/totais, sem upgrade retroativo de UNKNOWN. Nove testes Java novos; 313 JUnit aprovados. Captura física após reinício validada; detalhes em docs/validation/phase4-provenance.json.
+
+
 ## Publicação v0.4.0-alpha.1
 
 - Pré-release no commit78dfe72 publicada pelo workflow42432155833 após 304 JUnit, upload/download e checksum. Quatro anexos conferidos independentemente; JAR coincide com o binário nativo testado. Main/releases anteriores/ambiente preservados. [Evidência](docs/validation/release-captures-alpha1.json).

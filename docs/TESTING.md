@@ -307,3 +307,7 @@ Comandos externos, recibos automáticos, planos mistos, crash durante dispatch, 
 Concessão por comando não cria evento; entidade administrativa realmente capturada é UNKNOWN. Duas capturas naturais distintas da mesma espécie incrementam total e preservam classificação por versão; reload de categorias não reescreve anteriores. Park de outra criatura natural permite demonstrar perda da causa no reload e classificação conservadora. Não certifica todos os caminhos de batalha/pesca/spawners nem cliente visual/carga.
 
 Ensaios corrigidos: cenário inicial de projétil não concluiu captura, ajustado apenas no probe; stats species com namespace falhou por argumento word, corrigido no produto para string completa validada e repetido. Expectativa antiga de cinco migrações foi atualizada para seis; teste explícito de upgrade preserva plano legado. Dimensão registrada é a da Pokébola. Probes não integram distribuição.
+
+## Proveniência — desenvolvimento 0.4.0-alpha.2
+
+313 JUnit aprovados, incluindo nove testes de prova/consumo/migração6→7. Repetir build/serverDistribution/remapCaptureProbeJar e integration_server.py --suite captures; o executor escolhe o probe correspondente à versão exata. Suíte captura/reinício: três capturas legítimas (duas LIVE_NATIVE, uma PERSISTED_NATIVE após reload), uma UNKNOWN administrativa, replay sem duplicação e snapshots preservados. Regressão recovery usa schema7. Evidência e hashes: [phase4-provenance.json](validation/phase4-provenance.json). Release alpha.1 mantém seu relatório histórico separado.

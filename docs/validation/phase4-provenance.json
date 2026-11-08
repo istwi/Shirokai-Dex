@@ -1,0 +1,176 @@
+{
+  "scope": "Observed PlayerSpawner provenance across reload; not universal capture certification",
+  "timestamp_utc": "2026-11-08T01:17:24.116890+00:00",
+  "version": "0.4.0-alpha.2+mc1.21.1-cobblemon1.8.3",
+  "base_commit": "a0823580dfa64d9675cfd85a28f8dab9fccb6612",
+  "delivery_commit_subject": "feat: preserve observed native spawn provenance across reloads",
+  "branch": "handoff/crates-checkpoint",
+  "publication": "Development branch only; alpha.1 release immutable, no alpha.2 release/main/environment publication",
+  "build": {
+    "result": "BUILD SUCCESSFUL",
+    "junit": {
+      "tests": 313,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "new_junit_cases": 9,
+    "jar": "shirokai-dex-0.4.0-alpha.2+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "3cf24d4296a36d526bbb758fdca90700354cad62ed1ac79e1c3ad67210b8ec19",
+    "verifyModJar": "passed; production excludes probes"
+  },
+  "runtime": {
+    "captures": {
+      "suite": "captures",
+      "starts": 2,
+      "jar": "shirokai-dex-0.4.0-alpha.2+mc1.21.1-cobblemon1.8.3.jar",
+      "sha256": "3cf24d4296a36d526bbb758fdca90700354cad62ed1ac79e1c3ad67210b8ec19",
+      "result": "passed",
+      "schema": 7,
+      "integrity": "ok",
+      "normal_save_all_boots": true,
+      "rcon_disabled_secret_removed": true
+    },
+    "recovery": {
+      "suite": "recovery",
+      "starts": 3,
+      "jar": "shirokai-dex-0.4.0-alpha.2+mc1.21.1-cobblemon1.8.3.jar",
+      "sha256": "3cf24d4296a36d526bbb758fdca90700354cad62ed1ac79e1c3ad67210b8ec19",
+      "result": "passed",
+      "schema": 7,
+      "integrity": "ok",
+      "normal_save_all_boots": true,
+      "rcon_disabled_secret_removed": true
+    }
+  },
+  "protocol_checks": 18,
+  "protocol": {
+    "captures": {
+      "timestamp": "2026-11-08T01:12:12.182Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+      "results": [
+        {
+          "name": "Existing Pokedex knowledge and command-granted shiny Pokemon do not create capture events or historical counts",
+          "status": "passed"
+        },
+        {
+          "name": "Naturally spawned shiny Pokemon captured by native ball collision/animation produces verified evidence and category snapshot",
+          "status": "passed"
+        },
+        {
+          "name": "Replaying the already observed native event cannot double-count ball/Pokemon identity",
+          "status": "passed"
+        },
+        {
+          "name": "Real ball capture of an administratively created wild entity is audited as unknown and never becomes legitimate statistics",
+          "status": "passed"
+        },
+        {
+          "name": "Distinct same-species captures accumulate; rule reload affects future captures without rewriting historical classifications",
+          "status": "passed"
+        },
+        {
+          "name": "Own read-only statistics distinguish capture totals from species count, honor timezone and expose unknown origins separately",
+          "status": "passed"
+        },
+        {
+          "name": "Native entity-load proof is already persisted for the untouched creature before restart, without manufacturing spawn cause",
+          "status": "passed"
+        }
+      ]
+    },
+    "captures-restart": {
+      "timestamp": "2026-11-08T01:12:47.431Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+      "results": [
+        {
+          "name": "Permanent totals, shiny snapshots, historical category and duplicate protection survive restart",
+          "status": "passed"
+        },
+        {
+          "name": "Persisted native proof restores the same physical entity after reload without guessing or replaying a consumed proof",
+          "status": "passed"
+        }
+      ]
+    },
+    "recovery": {
+      "timestamp": "2026-11-08T01:16:40.404Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 / LuckPerms5.4.140",
+      "results": [
+        {
+          "name": "Only authorized operators open a frozen-payload preview; recipient and reason are disclosed without item delivery",
+          "status": "passed"
+        },
+        {
+          "name": "Stale confirmation rechecks operator permission and recipient collection permission before every effect",
+          "status": "passed"
+        },
+        {
+          "name": "Recipient disconnect invalidates an old recovery confirmation without altering its reservation",
+          "status": "passed"
+        },
+        {
+          "name": "Pending recovery preserves the original plan/components/operation ID, delivers only to recipient once, and records operator/reason",
+          "status": "passed"
+        },
+        {
+          "name": "Empty review can resume; any intent, acknowledged prefix or changed frozen payload refuses replay",
+          "status": "passed"
+        },
+        {
+          "name": "Reload cannot substitute new reward data into an old confirmed recovery plan",
+          "status": "passed"
+        },
+        {
+          "name": "Recovery preview cannot leak reward icons or create replacement operations",
+          "status": "passed"
+        }
+      ]
+    },
+    "recovery-restart": {
+      "timestamp": "2026-11-08T01:17:13.014Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 / LuckPerms5.4.140",
+      "results": [
+        {
+          "name": "Native target inventory and original completed operation IDs survive restart without redelivery",
+          "status": "passed"
+        },
+        {
+          "name": "Closed, uncertain, partial and changed operations remain blocked across restart; untouched reservation stays pending",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "database_capture_evidence": {
+    "classifications": [
+      [
+        "NATIVE_PLAYER_SPAWN",
+        "LIVE_NATIVE",
+        2
+      ],
+      [
+        "NATIVE_PLAYER_SPAWN",
+        "PERSISTED_NATIVE",
+        1
+      ],
+      [
+        "UNKNOWN",
+        "UNVERIFIED",
+        1
+      ]
+    ],
+    "consumed_proofs": 3,
+    "reload_proof_source": "ENTITY_LOAD"
+  },
+  "limits": [
+    "Only observed exact native PlayerSpawner/world pool proofs",
+    "No retrospective classification of legacy UNKNOWN; schema6->7 preserves LEGACY totals",
+    "Pre-hit/ball/target/player correlation required after reload",
+    "Proof binds logical Pokemon and physical entity identities; every completion retires matching proof",
+    "Consumed proof cannot reopen; replay never rewrites original event",
+    "Battle/fishing/other spawners not certified",
+    "No automatic pruning; proof growth and load/crash consistency not certified",
+    "Shiny collection percentage integration, history/review/records remain pending"
+  ]
+}

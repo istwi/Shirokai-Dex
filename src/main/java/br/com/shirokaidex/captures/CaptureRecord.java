@@ -16,6 +16,7 @@ public record CaptureRecord(UUID ball,UUID pokemon,UUID player,String species,St
         if(labels.size()>128||types.size()>32||categories.size()>64)throw new IllegalArgumentException("Capture classification too large");
         for(var set:List.of(labels,types,categories))if(set.stream().anyMatch(v->v==null||v.isBlank()||v.length()>128||v.codePoints().anyMatch(Character::isISOControl)))throw new IllegalArgumentException("Invalid capture classification");
     }
+    public CaptureRecord withOrigin(Origin value){return new CaptureRecord(ball,pokemon,player,species,form,shiny,labels,types,categories,categoryRules,capturedAt,dimension,x,y,z,value);}
     public String eventKey(){return ball+":"+pokemon;}
     public boolean verified(){return origin==Origin.NATIVE_PLAYER_SPAWN;}
 }

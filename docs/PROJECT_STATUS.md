@@ -1,14 +1,23 @@
 # Estado do projeto
 
+## Desenvolvimento 0.4.0-alpha.2 — proveniência persistente
+
+A origem nativa observada agora persiste no schema7. ENTITY_LOAD do Fabric e pré-hit só registram prova quando o Pokémon é selvagem e tem PlayerSpawner/pool mundial auditados. A prova vincula UUID lógico do Pokémon e UUID da entidade física; não é reconstruída de criaturas antigas. Depois do reload, causa ausente só pode usar essa prova com correlação pré-hit/Pokébola/alvo/jogador válida. Toda observação concluída consome a prova correspondente, inclusive UNKNOWN; carga e pré-hit não reabrem prova consumida. Replay não altera classificação anterior.
+
+313 JUnit (nove novos) aprovados; captura real da mesma entidade após reinício ficou PERSISTED_NATIVE, com SpawnCause ausente, sem atribuição artificial de origem. Entidade administrativa continua UNKNOWN. Migração6→7 preserva eventos LEGACY e totais; não reclassifica UNKNOWN antigo. [Evidência](validation/phase4-provenance.json). Desenvolvimento separado da release alpha.1, que permanece imutável.
+
+Limites: batalhas/pesca/outros spawners ainda não certificados; sem prova observada permanece UNKNOWN. Provas não têm limpeza automática e crescem com spawns; carga/retention/crash durante gravação não certificados. Banco pode falhar e deixar lacunas. Fase4, histórico/revisão/recordes e ligação à coleção Shiny continuam parciais.
+
+
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, main validada preservada e retomada em `handoff/crates-checkpoint`; apenas um Codex por vez.
 
 ## Pré-release v0.4.0-alpha.1 publicada e conferida
 
 [Release experimental](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.4.0-alpha.1), não draft, tag fixada em `78dfe72f8cef55f20c3645dc132ea6c3d97ad6f0`. Workflow [42432155833](https://github.com/istwi/Shirokai-Dex/actions/runs/42432155833) aprovado: 304 JUnit e publicação só após download/checksums. Quatro anexos baixados também neste ambiente e conferidos por digest GitHub/manifesto: JAR, BUILD_PROVENANCE, relatório nativo e SHA256SUMS. Binário CI/publicado coincide com o JAR testado nativamente. [Evidência](validation/release-captures-alpha1.json).
 
-Primeira tentativa foi rejeitada por YAML antes dos jobs; condição corrigida, sem draft naquela tentativa. Releases antigas e main permanecem intactas; sem publicação de ambiente. Continuar proveniência persistente na branch, sem modificar esta tag/anexos nem publicar outra release automaticamente.
+Primeira tentativa foi rejeitada por YAML antes dos jobs; condição corrigida, sem draft naquela tentativa. Releases antigas e main permanecem intactas; sem publicação de ambiente. Proveniência persistente implementada na alpha.2 da branch, sem modificar esta tag/anexos nem publicar outra release automaticamente.
 
-## Entrega atual — captura/estatísticas iniciais (0.4.0-alpha.1)
+## Entrega anterior — captura/estatísticas iniciais (0.4.0-alpha.1)
 
 Base enviada `26c4472`, branch `handoff/crates-checkpoint`, autorização contínua de commits/push; main preservada `c89cc1b`. Eventos nativos pré-acerto/captura cruzados com evidência de origem PlayerSpawner/pool mundial. Ledger deduplicado por Pokébola+Pokémon, classificação/shiny/regras congeladas, totais permanentes e contagens por espécie/categoria. Estatísticas próprias por CLI e períodos com fuso configurável, sem reconstrução histórica. [Guia e limites](CAPTURES.md).
 

@@ -12,7 +12,7 @@ public final class CaptureLedger {
     public record Summary(long total,long shiny,long legendary,long mythical,long distinctSpecies,long today,long week,long month,long unverified,ZoneId timezone) { }
     public static boolean record(Connection c,CaptureRecord r)throws SQLException{
         var json=new Gson();
-        try(var q=c.prepareStatement("INSERT INTO capture_events VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(event_key) DO NOTHING")){
+        try(var q=c.prepareStatement("INSERT INTO capture_events(event_key,ball_uuid,pokemon_uuid,player_uuid,species,form,shiny,labels_json,types_json,categories_json,category_rules,captured_at,dimension,x,y,z,origin) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(event_key) DO NOTHING")){
             int i=1;q.setString(i++,r.eventKey());q.setString(i++,r.ball().toString());q.setString(i++,r.pokemon().toString());q.setString(i++,r.player().toString());q.setString(i++,r.species());q.setString(i++,r.form());q.setBoolean(i++,r.shiny());q.setString(i++,json.toJson(new TreeSet<>(r.labels())));q.setString(i++,json.toJson(new TreeSet<>(r.types())));q.setString(i++,json.toJson(new TreeSet<>(r.categories())));q.setString(i++,r.categoryRules());q.setLong(i++,r.capturedAt().toEpochMilli());q.setString(i++,r.dimension());q.setDouble(i++,r.x());q.setDouble(i++,r.y());q.setDouble(i++,r.z());q.setString(i,r.origin().name());
             if(q.executeUpdate()==0)return false;
         }

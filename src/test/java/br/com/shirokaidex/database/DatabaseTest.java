@@ -28,7 +28,7 @@ class DatabaseTest {
                 assertEquals("2026-01-01T00:00:00Z", rs.getString("first_join_at"));
                 assertEquals("2026-01-02T00:00:00Z", rs.getString("last_seen_at")); assertFalse(rs.next());
             }
-            try (ResultSet rs = s.executeQuery("SELECT count(*) FROM schema_migrations")) { assertEquals(6, rs.getInt(1)); }
+            try (ResultSet rs = s.executeQuery("SELECT count(*) FROM schema_migrations")) { assertEquals(7, rs.getInt(1)); }
         }
     }
     @Test void futureSchemaIsRefusedWithoutDowngrade() throws Exception {

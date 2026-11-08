@@ -1,12 +1,16 @@
 # Próximos passos
 
-**Estado atual:** captura/estatísticas iniciais 0.4.0-alpha.1 sobre `26c4472`, branch `handoff/crates-checkpoint`, autorização contínua. Main preservada `c89cc1b`. [Guia](CAPTURES.md), [evidência](validation/phase4-captures.json). Referência: `feat: track verified native captures and permanent statistics`. Sem release/merge/ambiente.
+**Estado atual de desenvolvimento:** alpha.2, proveniência persistente validada; release pública alpha.1 preservada. Próximo: batalha/pesca e ligação Shiny. Histórico: captura/estatísticas iniciais 0.4.0-alpha.1 sobre `26c4472`, branch `handoff/crates-checkpoint`, autorização contínua. Main preservada `c89cc1b`. [Guia](CAPTURES.md), [evidência](validation/phase4-captures.json). Referência: `feat: track verified native captures and permanent statistics`. Sem release/merge/ambiente.
 
 ## Publicação concluída
 
-[v0.4.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.4.0-alpha.1) publicada e verificada, tag/source `78dfe72`. Workflow [42432155833](https://github.com/istwi/Shirokai-Dex/actions/runs/42432155833) passou e quatro anexos foram baixados/conferidos também neste ambiente. JAR coincide com o binário nativo validado; 304 JUnit/18 checks documentados. [Evidência](validation/release-captures-alpha1.json). Não alterar essa release/workflow de source fixo para distribuir desenvolvimento posterior. Próximo bloco continua proveniência persistente; main/ambiente não publicados.
+[v0.4.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.4.0-alpha.1) publicada e verificada, tag/source `78dfe72`. Workflow [42432155833](https://github.com/istwi/Shirokai-Dex/actions/runs/42432155833) passou e quatro anexos foram baixados/conferidos também neste ambiente. JAR coincide com o binário nativo validado; 304 JUnit/18 checks documentados. [Evidência](validation/release-captures-alpha1.json). Não alterar essa release/workflow de source fixo para distribuir desenvolvimento posterior. Proveniência persistente já avançou na alpha.2; próximo bloco audita demais fluxos nativos; main/ambiente não publicados.
 
 ## Última tarefa realizada
+
+Alpha.2: proveniência persistente, nove JUnit novos (313 totais), captura real após reinício e regressão de recuperação no schema7. Entrega `feat: preserve observed native spawn provenance across reloads`, base a082358. [Evidência](validation/phase4-provenance.json). Sem nova release.
+
+### Histórico alpha.1
 
 Captura nativa comprovada no escopo PlayerSpawner/pool mundial, correlação pré-hit/pós-captura e identidade Pokébola/Pokémon/jogador. Schema6, dedup persistente, snapshots de categorias/regras e agregados permanentes; resumo próprio `/dex profile captures` e consultas por espécie/categoria. Períodos respeitam statistics_timezone (UTC padrão). 304 JUnit e 18 checks nativos/reinício, incluindo regressão de recuperação no schema6.
 
@@ -21,10 +25,10 @@ O bloqueio antigo de uploads da alpha.4 permaneceu limitado àquela tentativa. A
 ## Próxima tarefa exata
 
 1. Protocolo Git/AGENTS, preservar trabalho e confirmar envio. Autorização contínua somente na branch; main/release/ambiente separados. Blocos maiores, testes relevantes e documentação objetiva.
-2. Prioridade funcional: **proveniência persistente e demais fluxos nativos de captura**, antes de rankings/competições. Auditar eventos de spawn/ownership e persistir somente prova observada suficiente; perda de SpawnCause em unload/reinício não pode ser tratada como origem válida por suposição. Definir como impedir reutilização de prova após captura/transferência/recompensa. Não fabricar histórico anterior à instalação.
+2. Proveniência persistente concluída no escopo PlayerSpawner/reload na alpha.2: não reimplementar. Consultar [evidência](validation/phase4-provenance.json), NativeProvenance/CaptureObservation/V007 e nove testes novos. Provas consumidas não reabrem; eventos anteriores não são reclassificados.
 3. Auditar captura em batalha/pesca/extensões: pre-hit pode não cobrir todos os caminhos. Manter UNKNOWN separado e validar cada origem pelo motor real, sem usar evento artificial como primeira prova positiva.
 4. Após ampliar evidência, ligar ledger de capturas shiny à coleção Shiny com denominador/forma atuais, preservando diferença entre visto/obtido/capturado. Stats shiny já existe; não reimplementar ledger/agregados. Recordes/histórico/admin/rate review/retention seguem parciais. Retenção precisa preservar períodos antes de apagar detalhes.
-5. Reutilizar `scripts/integration_server.py --suite captures|recovery|commands`, base com assets oficiais. Captures requer build/remapCaptureProbeJar, instala probe/fixture só em /tmp. Schema6: testes de recuperação/seeder já adaptados. Não instalar probes em servidores de usuários.
+5. Reutilizar `scripts/integration_server.py --suite captures|recovery|commands`, base com assets oficiais. Captures requer build/remapCaptureProbeJar, instala probe/fixture só em /tmp. Schema7: testes de recuperação/seeder já adaptados. Não instalar probes em servidores de usuários.
 6. Atualizar checklist/status/next/evidência, commitar/push na branch e confirmar SHA. Não publicar releases, main ou ambiente automaticamente.
 
 ## Arquivos importantes

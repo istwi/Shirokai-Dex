@@ -30,8 +30,8 @@ secret=root/'.rcon-test-secret';secret.write_text(secrets.token_hex(24));secret.
 # The responsible user accepted the EULA for disposable loopback tests in this session.
 (root/'eula.txt').write_text('eula=true\n')
 if args.suite=='captures':
-    probes=list((REPO/'build/test-mods').glob('*-capture-probe.jar'));assert len(probes)==1
-    shutil.copy2(probes[0],root/'mods'/probes[0].name)
+    probe=REPO/'build/test-mods'/(binaries[0].stem+'-capture-probe.jar');assert probe.is_file()
+    shutil.copy2(probe,root/'mods'/probe.name)
     shutil.copytree(REPO/'tests/fixtures/captures/datapacks',root/world/'datapacks')
 
 java=Path(os.environ['JAVA_HOME'])/'bin/java';command=[str(java),'-Xms512M','-Xmx2300M','-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts']

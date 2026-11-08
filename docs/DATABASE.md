@@ -41,3 +41,7 @@ Sem alteração de schema: reward_operations.plan_json inclui opcionalmente curr
 `capture_events` tem chave única derivada de Pokébola+Pokémon, snapshots/UTC/local/origem e fingerprint de categorias; `capture_totals` e `capture_counts` preservam contadores permanentes independentes dos detalhes. Inserção e incrementos só ocorrem uma vez na mesma transação; UNKNOWN não incrementa os legítimos. `capture_counts` separa SPECIES/CATEGORY. Índice por jogador/origem/data suporta períodos. Não existe poda automática; retenção futura deve preservar contadores de calendário antes de remover detalhes.
 
 Migração5→6 preserva os planos de recompensa e inicia sem capturas reconstruídas, testado com banco antigo. JARs que só suportam schema5 não devem abrir um banco já migrado. [Guia](CAPTURES.md), [evidência](validation/phase4-captures.json).
+
+## Migração 7 — proveniência nativa observada
+
+V007 adiciona entity_uuid e verification (LEGACY/LIVE_NATIVE/PERSISTED_NATIVE/UNVERIFIED) a capture_events e native_spawn_proofs com chave Pokémon+entidade, dimensão, instante, fonte e consumed_event único. Prova consumida nunca é reaberta por nova carga. Consumo, evento e agregados compartilham transação; erro reverte tudo. Eventos anteriores ficam LEGACY com classificação/totais intactos, sem backfill. Não há downgrade nem limpeza automática de provas/detalhes. Backup antes de migrar; alpha.1/schema6 não abre schema7.

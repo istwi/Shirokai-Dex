@@ -269,7 +269,7 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 - [x] ~~Validar captura pelo motor nativo e correlacionar evidência prévia de origem no PlayerSpawner/pool mundial.~~ Pokébola física/animação, sem evento artificial de primeira captura; origem ausente fica UNKNOWN. [Guia](CAPTURES.md).
 - [x] ~~Deduplicar observações e manter totais/shiny/labels/espécies/categorias observadas de novas capturas verificadas.~~ Transação/schema6, snapshots históricos, migração5→6, replay e reinício; 304 JUnit e 18 checks nativos/regressão.
 - [x] ~~Consultar estatísticas próprias e períodos com timezone/semana ISO.~~ CLI, UTC padrão, timezone válido, DST/fronteiras/calendário e total distinto de espécies testados.
-- [ ] Cobertura completa de captura e proveniência persistente. SpawnCause perdido após reinício foi demonstrado; batalhas/pesca/outros spawners requerem teste próprio. Nenhuma captura antiga inferida.
+- [ ] Cobertura completa de captura. Proveniência persistente no escopo PlayerSpawner/reload validada na alpha.2; batalhas/pesca/outros spawners requerem teste próprio. Nenhuma captura antiga inferida.
 - [ ] Histórico/admin/revisão/limites/recordes/retention e ligação do ledger à coleção Shiny. Permanentes e categorias preservados; não concluir toda a Fase 4.
 
 | Capturas/estatísticas | CaptureRecord/Tracker/Access/Ledger, V006/Database, timezone/CLI/core/traduções; 14 JUnit novos, probe/fixture/runner e executor. 304 JUnit e 9+9 checks; origem perdida permanece desconhecida | Commit `feat: track verified native captures and permanent statistics`, base `26c4472`; [evidência](validation/phase4-captures.json) |
@@ -283,3 +283,11 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 Correção de preparação: condição do workflow convertida em escalar YAML após run42431952113 rejeitado antes de jobs; source/tag permanecem os mesmos e nenhum draft foi criado.
 
 | Release0.4 publicada | Tag78dfe72, workflow42432155833 aprovado, quatro anexos baixados/conferidos, hash do JAR igual ao teste nativo; sem main/ambiente | Commit `docs: record verified captures alpha release`; [evidência](validation/release-captures-alpha1.json) |
+
+### Proveniência persistente — 0.4.0-alpha.2
+
+- [x] ~~Persistir prova nativa realmente observada e reconhecer a mesma entidade após reinício com correlação pré-hit válida.~~ Captura física real sem SpawnCause após reload, schema7; [evidência](validation/phase4-provenance.json).
+- [x] ~~Consumir prova uma vez e impedir reabertura/reclassificação retroativa.~~ Nove JUnit novos para identidades, ausência de prova/pré-hit, consumo, replay e migração6→7; 313 JUnit totais.
+- [ ] Certificar batalha/pesca/outros spawners, carga e retenção. Fase4 continua aberta.
+
+| Proveniência alpha.2 | NativeSpawnProof/Observation/Provenance, CaptureAccess/Tracker/Ledger, core/Database/V007; nove JUnit novos, runner/probe por versão e seeder schema7. Captura/reinício nativos; sem nova release/main/ambiente | Commit `feat: preserve observed native spawn provenance across reloads`; base `a082358`; [evidência](validation/phase4-provenance.json) |
