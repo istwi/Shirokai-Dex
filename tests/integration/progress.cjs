@@ -95,7 +95,7 @@ async function main() {
     pass('Legendary species with no alternate forms counts via standard-form labels and official ownership');
     await give('dex_test:ordinary shiny=true');
     const shiny = await command('/dex shiny status', text => text.startsWith('Shiny:'));
-    assert(shiny.includes('N/D') && !/\d+[,\.]\d+%/.test(shiny));
+    assert.match(shiny,/^Shiny: 0\//);assert(!shiny.includes('N/D'));
     pass('Shiny acquisition is not misrepresented as verified shiny capture percentage');
   }
   for (const collection of ['national', 'legendary', 'shiny']) {

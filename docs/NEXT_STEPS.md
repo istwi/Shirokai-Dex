@@ -1,12 +1,16 @@
 # Próximos passos
 
-**Estado atual de desenvolvimento:** alpha.4, pesca nativa validada; release pública alpha.1 preservada. Próximo: ligação Shiny. Histórico: captura/estatísticas iniciais 0.4.0-alpha.1 sobre `26c4472`, branch `handoff/crates-checkpoint`, autorização contínua. Main preservada `c89cc1b`. [Guia](CAPTURES.md), [evidência](validation/phase4-captures.json). Referência: `feat: track verified native captures and permanent statistics`. Sem release/merge/ambiente.
+**Estado atual de desenvolvimento:** alpha.5, coleção Shiny ligada à captura verificada; release pública alpha.1 preservada. Próximo: histórico, recordes/rankings e retenção. Histórico: captura/estatísticas iniciais 0.4.0-alpha.1 sobre `26c4472`, branch `handoff/crates-checkpoint`, autorização contínua. Main preservada `c89cc1b`. [Guia](CAPTURES.md), [evidência](validation/phase4-captures.json). Referência: `feat: track verified native captures and permanent statistics`. Sem release/merge/ambiente.
 
 ## Publicação concluída
 
 [v0.4.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.4.0-alpha.1) publicada e verificada, tag/source `78dfe72`. Workflow [42432155833](https://github.com/istwi/Shirokai-Dex/actions/runs/42432155833) passou e quatro anexos foram baixados/conferidos também neste ambiente. JAR coincide com o binário nativo validado; 304 JUnit/18 checks documentados. [Evidência](validation/release-captures-alpha1.json). Não alterar essa release/workflow de source fixo para distribuir desenvolvimento posterior. Proveniência persistente já avançou na alpha.2; próximo bloco audita demais fluxos nativos; main/ambiente não publicados.
 
 ## Última tarefa realizada
+
+Alpha.5: coleção Shiny verificada, schema9 e cache/projeção permanente; 326 JUnit, suítes nativas no [relatório](validation/phase4-shiny.json). Entrega `feat: derive shiny collection progress from verified captures`, base b359a12. Próxima tarefa é histórico/rankings/recordes/retenção. Release somente após toda a Fase4, conforme esclarecimento do responsável.
+
+### Histórico alpha.4
 
 Alpha.4: pesca nativa, fonte persistente e schema8; 317 JUnit, suite fishing e regressões registradas no [relatório](validation/phase4-fishing.json). Entrega `feat: track verified native fishing capture provenance`, base d967c98. CaptureAccess/NativeSpawnProof/NativeProvenance/V008/Database, quatro testes novos, probe/fixture/runner fishing e seeder/executor. Sem nova release. Próxima instância começa a ponte de capturas shiny, preservando prova/denominador e permissões.
 
@@ -35,9 +39,9 @@ O bloqueio antigo de uploads da alpha.4 permaneceu limitado àquela tentativa. A
 1. Protocolo Git/AGENTS, preservar trabalho e confirmar envio. Autorização contínua somente na branch; main/release/ambiente separados. Blocos maiores, testes relevantes e documentação objetiva.
 2. Proveniência persistente concluída no escopo PlayerSpawner/reload na alpha.2: não reimplementar. Consultar [evidência](validation/phase4-provenance.json), NativeProvenance/CaptureObservation/V007 e nove testes novos. Provas consumidas não reabrem; eventos anteriores não são reclassificados.
 3. Captura PvE/PlayerSpawner e pesca nativa validadas no escopo dos relatórios alpha.3/alpha.4. Não reimplementar. Pesca usa singleton/causa/vara/jogador observados, native_source e schema8; [guia](FISHING.md). Outros pools/iscas/varas, batalhas duplas e extensões continuam pendentes. UNKNOWN nunca vira origem legítima por suposição.
-4. Próxima tarefa funcional: ligar ledger de capturas shiny à coleção Shiny com denominador/forma atuais, preservando diferença entre visto/obtido/capturado. Stats shiny já existe; não reimplementar ledger/agregados. Recordes/histórico/admin/rate review/retention seguem parciais. Retenção precisa preservar períodos antes de apagar detalhes.
-5. Reutilizar `scripts/integration_server.py --suite captures|fishing|recovery|commands`, base com assets oficiais. Captures requer build/remapCaptureProbeJar, instala probe/fixture só em /tmp. Schema8: testes de recuperação/seeder já adaptados. Não instalar probes em servidores de usuários.
-6. Atualizar checklist/status/next/evidência, commitar/push na branch e confirmar SHA. Usuário autorizou release ao encerrar a Fase4 validada; preservar esse pedido para o encerramento, sem antecipar a conclusão. Main e ambiente não autorizados.
+4. Próxima tarefa funcional: histórico paginado próprio/administrativo com permissões, rankings permanentes e recordes; depois retenção que preserve agregados/períodos/provas consumidas. A ponte Shiny já foi implementada: não reimplementar. Consultar [guia](SHINY_CAPTURES.md), CapturedShinyForm/ProgressCalculator, projeção V009/CaptureLedger/Database e cache assíncrono em CobblemonAccess/core. Capturas repetidas são ações múltiplas, mas uma espécie na coleção. Nunca inferir prova de visto/obtido.
+5. Reutilizar `scripts/integration_server.py --suite captures|fishing|recovery|commands`, base com assets oficiais. Captures requer build/remapCaptureProbeJar, instala probe/fixture só em /tmp. Schema9: testes de recuperação/seeder já adaptados. Não instalar probes em servidores de usuários.
+6. Atualizar checklist/status/next/evidência, commitar/push na branch e confirmar SHA. Usuário esclareceu: publicar release somente após toda a Fase4 (histórico/retenção/recordes/rankings incluídos). Main e ambiente não autorizados.
 
 ## Arquivos importantes
 

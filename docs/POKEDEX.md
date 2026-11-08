@@ -10,7 +10,7 @@ A alpha.3 acrescenta a [wiki de espécies](WIKI.md), com pesquisa, filtros, orde
 - `/dex national` e `/dex legendary`: página da coleção com quantidade registrada/total, vistas e porcentagem. A seta retorna ao seletor do Dex.
 - `/dex national status` e `/dex legendary status`: resumo no chat, por exemplo `Nacional: 5/10 — 50,00%.`
 - `/dex status`: resumo oficial anterior, agora também com percentual Nacional.
-- `/dex shiny` e `/dex shiny status`: página/estado explícito de indisponibilidade das capturas shiny verificadas, com motivo.
+- `/dex shiny` e `/dex shiny status`: quantidade/percentual de espécies shiny capturadas com prova; N/D enquanto fonte confiável não carregou (alpha.5).
 
 O botão de retorno desta página volta ao **seletor interno**. Integração com `/menu` externo e personalização completa de botões JSON continuam para a fase correspondente.
 
@@ -43,3 +43,7 @@ O total acompanha o registro real após startup. Alterações de datapack de esp
 ## Estatísticas de captura verificadas separadas
 
 A versão 0.4.0-alpha.1 acrescenta [ledger/contadores próprios de capturas](CAPTURES.md), incluindo shiny comprovado no escopo auditado. A coleção Shiny/percentual descrita acima ainda não foi ligada a esse ledger e permanece N/D. Não confundir contador de novas capturas shiny com o denominador/percentual de conclusão.
+
+## Atualização alpha.5
+
+A ligação antes pendente foi implementada: [Shiny por capturas verificadas](SHINY_CAPTURES.md). Os limites N/D descritos para versões anteriores são históricos; visto/obtido continuam insuficientes para comprovar captura.

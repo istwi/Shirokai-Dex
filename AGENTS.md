@@ -64,6 +64,6 @@ O responsável aceitou o fluxo de aceleração (“faz tudo isso então”): com
 
 O responsável pediu uma release no GitHub, atualização dos documentos e continuação do projeto. Autoriza publicar a pré-release experimental v0.4.0-alpha.1 no commit funcional validado 78dfe72, com JAR/checksums/proveniência/evidência e workflow de publicação na branch. Não autoriza merge na main nem publicação de ambiente. Depois, desenvolvimento segue com a autorização contínua da branch.
 
-## Autorização — encerramento da Fase 4
+## Autorização — release após toda a Fase 4
 
-O responsável pediu continuar e, ao final desta fase, atualizar o GitHub e enviar uma release. Autoriza commit/push dos blocos validados na branch e pré-release ao concluir o escopo comprovado da Fase 4, com JAR/checksums/evidência e pendências explícitas. Não antecipar a conclusão da fase apenas por compilar nem publicar uma release de fase concluída enquanto histórico/retenção/recordes/rankings e validações aplicáveis estiverem pendentes. Main e configuração de ambiente permanecem sem autorização de publicação.
+O responsável esclareceu: release somente após concluir toda a Fase4, incluindo histórico, retenção, recordes e rankings. Commit/push dos blocos validados na branch continuam autorizados; não publicar release do bloco intermediário de pesca/Shiny. Ao fechar a fase validada, publicar pré-release com JAR/checksums/evidências e limites explícitos. Main e configuração de ambiente permanecem sem autorização de publicação.

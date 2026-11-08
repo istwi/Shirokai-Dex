@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0-alpha.5 — desenvolvimento
+
+- Coleção SHINY_CAPTURED alimentada somente por capturas shiny verificadas, uma espécie por registro atual/forma elegível; visto/obtido não contam.
+- Schema9/projeção permanente, backfill apenas de eventos já comprovados, cache assíncrono e atualização após commit. Nove JUnit novos; [evidência](docs/validation/phase4-shiny.json).
+
+
 ## 0.4.0-alpha.4 — desenvolvimento
 
 - Origem de pesca observada pelo motor nativo, com identidade do spawner, causa/jogador/vara verificados; prova consumida uma vez e fonte FISHING preservada no reload.

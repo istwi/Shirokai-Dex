@@ -56,3 +56,7 @@ Artefato oficial: [release 2.4.2+1.21](https://github.com/Patbox/TextPlaceholder
 O preparo consome apenas a fila de jogadores solicitados/invalidados, até quatro por fim de tick; não faz varredura global de jogadores. Uma leitura após cinco segundos agenda atualização e pode retornar o snapshot anterior da mesma revisão até o preparo. Mudança de configuração nunca reutiliza dados da revisão antiga. Falhas de preparo mantêm `N/D` e aguardam cinco segundos antes de nova tentativa causada por leitura.
 
 [Reprodução e testes](TESTING.md), [evidência](validation/phase2-placeholders.json). Esta entrega não certifica carga, TAB, cliente visual ou o JAR instalado fora do Loom. A fixture de probe é exclusiva do servidor de desenvolvimento e não deve ser instalada em produção.
+
+## Capturas shiny — desenvolvimento alpha.5
+
+Coleções SHINY_CAPTURED passam a ter percent/registered/remaining disponíveis quando o snapshot verificado carregou. Zero confirmado difere de N/D. Publicação da projeção invalida o cache existente; mesmas regras de permissão e sintaxe. Parser opcional não foi repetido integralmente neste bloco; [semântica](SHINY_CAPTURES.md).

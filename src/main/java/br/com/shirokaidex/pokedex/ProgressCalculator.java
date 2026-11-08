@@ -36,7 +36,13 @@ public final class ProgressCalculator {
         var values = calculate(entries, CollectionDefinition.defaults());
         return Map.of(DexCollection.NATIONAL, values.get("national"), DexCollection.LEGENDARY, values.get("legendary"), DexCollection.SHINY, values.get("shiny"));
     }
-    public static Map<String, CollectionProgress> calculate(Collection<Species> entries, List<CollectionDefinition> definitions) {
+    public static Map<DexCollection, CollectionProgress> calculate(Collection<Species> entries,Set<CapturedShinyForm> captures) {
+        var values=calculate(entries,CollectionDefinition.defaults(),captures);
+        return Map.of(DexCollection.NATIONAL,values.get("national"),DexCollection.LEGENDARY,values.get("legendary"),DexCollection.SHINY,values.get("shiny"));
+    }
+    public static Map<String, CollectionProgress> calculate(Collection<Species> entries, List<CollectionDefinition> definitions) {return calculate(entries,definitions,null);}
+    /** Null means the capture provider is unavailable; an empty set means known zero verified captures. */
+    public static Map<String, CollectionProgress> calculate(Collection<Species> entries,List<CollectionDefinition> definitions,Set<CapturedShinyForm> captures) {
         Map<String, Species> unique = new HashMap<>();
         for (Species species : entries) unique.merge(species.id(), species, (left, right) -> {
             List<Form> combined = new ArrayList<>(left.forms()); combined.addAll(right.forms());
@@ -61,11 +67,11 @@ public final class ProgressCalculator {
                     case OWNED -> hasOwned;
                     case SEEN -> hasSeen;
                     case SHINY_SEEN -> hasShinySeen;
-                    case SHINY_CAPTURED -> false; // No verified capture-history provider yet.
+                    case SHINY_CAPTURED -> captures!=null&&eligible.stream().anyMatch(form->captures.contains(new CapturedShinyForm(species.id(),form.name())));
                 };
                 if (registeredSpecies) registered++;
             }
-            DexProgress progress = definition.mode() == CollectionDefinition.Mode.SHINY_CAPTURED
+            DexProgress progress = definition.mode() == CollectionDefinition.Mode.SHINY_CAPTURED && captures==null
                     ? DexProgress.unavailable(total) : DexProgress.known(total, registered);
             if (result.put(definition.id(), new CollectionProgress(progress, seen)) != null) throw new IllegalArgumentException("Duplicate collection id: " + definition.id());
         }

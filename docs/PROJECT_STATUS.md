@@ -1,5 +1,12 @@
 # Estado do projeto
 
+## Desenvolvimento alpha.5 — coleção Shiny verificada
+
+SHINY_CAPTURED agora usa projeção persistente por jogador/espécie/forma derivada exclusivamente de capturas verificadas shiny. Schema9 preenche essa projeção apenas dos eventos legítimos já registrados, sem inventar histórico da Pokédex. Capturas repetidas aumentam estatísticas de ações, mas a coleção conta uma espécie; formas/filtros/denominador usam o registro atual. Carregamento assíncrono e atualização após commit; sem fonte disponível fica N/D. [Guia](SHINY_CAPTURES.md), [evidência](validation/phase4-shiny.json).
+
+326 JUnit (nove novos); capturas/pesca/reinícios e regressão de recuperação no relatório. Menu/status/placeholders/recompensas consomem o mesmo cálculo existente, com permissões preservadas; não são sistemas novos de recompensa. Próximo: histórico paginado, rankings permanentes, recordes e retenção segura. A Fase4 continua parcial; release somente após toda a Fase4, conforme esclarecimento do responsável.
+
+
 ## Desenvolvimento 0.4.0-alpha.4 — pesca nativa
 
 Pesca reconhecida por FishingSpawnCause exata, singleton FishingSpawner do BestSpawner com pool mundial, jogador de origem presente no servidor e item Pokerod real. Fonte FISHING persiste na prova e no evento; nome do spawner/aspecto fished isolados não autorizam contagem. Schema8 preserva origens/totais/provas consumidas anteriores. [Guia](FISHING.md), [evidência](validation/phase4-fishing.json).

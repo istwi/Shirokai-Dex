@@ -26,8 +26,12 @@ public final class CobblemonAccess {
         var national = collections(player).get(DexCollection.NATIONAL);
         return new Progress(national.progress().total(), national.seen(), national.progress().registered().orElseThrow());
     }
+    private final Map<UUID,Set<br.com.shirokaidex.pokedex.CapturedShinyForm>> capturedShiny=new HashMap<>();
+    public boolean hasCapturedShiny(UUID player){return capturedShiny.containsKey(player);}
+    public void publishCapturedShiny(UUID player,Set<br.com.shirokaidex.pokedex.CapturedShinyForm> forms){capturedShiny.put(player,Set.copyOf(forms));invalidate(player);}
+    public void forget(UUID player){capturedShiny.remove(player);invalidate(player);}
     public void invalidate(UUID player) { cache.remove(player); }
-    public void clear() { cache.clear(); }
+    public void clear() { cache.clear();capturedShiny.clear(); }
     public CollectionValidator validationSnapshot() {
         return new CollectionValidator(snapshot(PokemonSpecies.INSTANCE.getSpecies(), null),
                 BuiltInRegistries.ITEM.keySet().stream().map(Object::toString).collect(Collectors.toUnmodifiableSet()));
@@ -36,7 +40,7 @@ public final class CobblemonAccess {
     public Map<String, ProgressCalculator.CollectionProgress> collections(ServerPlayer player, List<CollectionDefinition> definitions) {
         var previous = cached(player);
         if (previous.definitions().equals(definitions)) return previous.configured();
-        var values = ProgressCalculator.calculate(previous.entries(), definitions);
+        var values = ProgressCalculator.calculate(previous.entries(), definitions,capturedShiny.get(player.getUUID()));
         cache.put(player.getUUID(), new Cached(previous.created(), previous.entries(), previous.defaults(), List.copyOf(definitions), values, previous.wiki()));
         return values;
     }
@@ -49,7 +53,7 @@ public final class CobblemonAccess {
         var dex = Cobblemon.INSTANCE.getPlayerDataManager().getPokedexData(player);
         var entries = snapshot(PokemonSpecies.INSTANCE.getImplemented(), dex);
         var wiki = entries.stream().map(entry -> new Wiki.Entry(PokemonSpecies.INSTANCE.getByIdentifier(ResourceLocation.parse(entry.id())).getName(), entry)).toList();
-        var value = new Cached(now, entries, ProgressCalculator.calculate(entries), List.of(), Map.of(), wiki);
+        var value = new Cached(now, entries, ProgressCalculator.calculate(entries,capturedShiny.get(player.getUUID())), List.of(), Map.of(), wiki);
         cache.put(player.getUUID(), value); return value;
     }
     private static List<ProgressCalculator.Species> snapshot(Collection<Species> speciesEntries, PokedexManager dex) {

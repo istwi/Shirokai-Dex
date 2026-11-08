@@ -64,7 +64,7 @@ IDs de comandos reservados (`status`, `admin`, `rewards`, `top`, `history`, `pro
 | `SHINY_SEEN` | Estados shiny vistos nos registros oficiais das formas elegíveis |
 | `SHINY_CAPTURED` | Mantém N/D até existir fonte verificável de capturas shiny; não inventa histórico |
 
-O modo é mostrado na lore e no status. `SHINY_SEEN` é uma escolha explícita; não muda silenciosamente o padrão da coleção Shiny, que continua SHINY_CAPTURED e N/D. Formas registradas como unidade de contagem ainda não estão implementadas: nesta etapa cada espécie conta uma vez.
+O modo é mostrado na lore e no status. `SHINY_SEEN` é uma escolha explícita; não muda silenciosamente o padrão da coleção Shiny, que continua SHINY_CAPTURED e agora usa o ledger verificado na alpha.5; N/D somente sem snapshot confirmado. Formas registradas como unidade de contagem ainda não estão implementadas: nesta etapa cada espécie conta uma vez.
 
 ## Critérios
 

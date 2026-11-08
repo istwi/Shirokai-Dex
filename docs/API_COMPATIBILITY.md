@@ -302,3 +302,7 @@ Pesca: FishingSpawnerFactory.createSharedSpawner cria BasicSpawner com nome fish
 ## Pesca — alpha.4
 
 FishingSpawnCause exata + BestSpawner.INSTANCE.getFishingSpawner por identidade + WORLD_SPAWN_POOL, SpawnCause.getEntity ServerPlayer no servidor e getRodStack PokerodItem observados. Teste usa PokerodItem.use e bobber.getPlannedSpawnAction apenas para saber quando recolher normalmente; não usa setter nem ação fabricada. NativeSpawnProof.Kind conserva FISHING/WORLD_PLAYER no SQLite. [Guia/teste](FISHING.md). Demais varas/iscas/pools não certificados.
+
+## Coleção Shiny — alpha.5
+
+Sem nova API externa: projeção SQLite de capturas verificadas e IDs/formas imutáveis, registries atuais via CobblemonAccess na thread do servidor. Cache inicial por round robin de um jogador por tick; publicação após commit/consulta e proteção contra sessão desconectada. Filtros/cálculo/ACL e consumidores existentes preservados. [Guia](SHINY_CAPTURES.md).

@@ -12,7 +12,7 @@ except (ConnectionRefusedError,TimeoutError):pass
 fixture=json.loads((repo/'tests/fixtures/recovery/config.json').read_text());assert json.loads((root/'config/shirokaidex/config.json').read_text())==fixture
 player=str(uuid.UUID(bytes=hashlib.md5(b'OfflinePlayer:DexRecovery').digest(),version=3));now=datetime.datetime.now(datetime.timezone.utc).isoformat()
 with sqlite3.connect('file:'+str(root/'config/shirokaidex/data/shirokaidex.sqlite')+'?mode=rw',uri=True) as db:
- assert db.execute('pragma user_version').fetchone()[0]==8
+ assert db.execute('pragma user_version').fetchone()[0]==9
  assert db.execute('select count(*) from reward_operations where player_uuid=?',(player,)).fetchone()[0]==0
  for reward in fixture['rewards']:
   items=[dict(type='CUSTOM_ITEM' if 'payload_snbt' in item else 'ITEM',id=item['id'],count=item['count'],**({'payload_snbt':item['payload_snbt']} if 'payload_snbt' in item else {})) for item in reward['items']]

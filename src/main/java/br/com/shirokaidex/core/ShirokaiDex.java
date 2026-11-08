@@ -121,7 +121,7 @@ public final class ShirokaiDex implements ModInitializer {
         });
         CobblemonEvents.POKEMON_CAPTURED.subscribe((Consumer<com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent>) event->{
             if(!ready||stopping||activeServer==null||!activeServer.isSameThread())return;
-            try{var observation=captures.captured(event,config.current().categories());database.recordObservedCapture(observation).exceptionally(failure->{LOG.error("Capture persistence failed for {}; statistics may be incomplete",observation.capture().player(),failure);return false;});}
+            try{var observation=captures.captured(event,config.current().categories());var capturePlayer=event.getPlayer();var captureServer=capturePlayer.server;database.recordObservedCapture(observation).whenComplete((inserted,failure)->{if(failure!=null)LOG.error("Capture persistence failed for {}; statistics may be incomplete",observation.capture().player(),failure);else if(Boolean.TRUE.equals(inserted))captureServer.execute(()->{if(ready&&!stopping&&activeServer==captureServer&&captureServer.getPlayerList().getPlayer(observation.capture().player())==capturePlayer)refreshCapturedShiny(capturePlayer,true);});});}
             catch(RuntimeException failure){LOG.error("Capture evidence unavailable; no legitimate capture inferred",failure);}
         });
         CobblemonEvents.POKEDEX_DATA_CHANGED_POST.subscribe((Consumer<PokedexDataChangedEvent.Post>) event -> {
@@ -171,7 +171,7 @@ public final class ShirokaiDex implements ModInitializer {
                 try { spawnCatalog = SpawnAccess.capture(server); }
                 catch (RuntimeException failure) { spawnCatalog = SpawnCatalog.unavailable(); LOG.error("World spawn information unavailable", failure); }
             }
-            if (ready) observeRewards(server);
+            if (ready) {var online=server.getPlayerList().getPlayers();if(!online.isEmpty())refreshCapturedShiny(online.get(Math.floorMod(shinyCursor++,online.size())),false);observeRewards(server);}
             if (!ready || placeholderBridge == null) return;
             // Only requested/invalidated players, at most four per tick. No global player scan.
             for (int i = 0; i < 4; i++) {
@@ -195,8 +195,8 @@ public final class ShirokaiDex implements ModInitializer {
             if (initialization != null) initialization.thenCompose(unused -> database.recordLogin(uuid, name, time))
                     .exceptionally(failure -> { LOG.error("Could not persist player login {}", uuid, failure); return null; });
         });
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> { rewardViewRequests.remove(handler.player.getUUID()); rewardUnlockCache.remove(handler.player.getUUID()); rewardObservedAt.remove(handler.player.getUUID()); cobblemon.invalidate(handler.player.getUUID()); placeholderCache.remove(handler.player.getUUID()); });
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; captures.clear(); java.util.List.copyOf(pokemonDeliveries).forEach(br.com.shirokaidex.rewards.PokemonRewardAdapter::close); pokemonDeliveries.clear(); payloadValidations.forEach(future -> future.completeExceptionally(new IllegalStateException("Server stopping"))); ready = false; activeServer = null; rewardViewRequests.clear(); rewardUnlockCache.clear(); rewardObservedAt.clear(); cobblemon.clear(); placeholderCache.clear(); spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = false;
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> { rewardViewRequests.remove(handler.player.getUUID()); rewardUnlockCache.remove(handler.player.getUUID()); rewardObservedAt.remove(handler.player.getUUID()); cobblemon.forget(handler.player.getUUID());shinyRequestedAt.remove(handler.player.getUUID()); placeholderCache.remove(handler.player.getUUID()); });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; captures.clear(); java.util.List.copyOf(pokemonDeliveries).forEach(br.com.shirokaidex.rewards.PokemonRewardAdapter::close); pokemonDeliveries.clear(); payloadValidations.forEach(future -> future.completeExceptionally(new IllegalStateException("Server stopping"))); ready = false; activeServer = null; rewardViewRequests.clear(); rewardUnlockCache.clear(); rewardObservedAt.clear();shinyRequestedAt.clear(); cobblemon.clear(); placeholderCache.clear(); spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = false;
             if (placeholderBridge != null) {
                 try { placeholderBridge.close(); }
                 catch (RuntimeException | LinkageError failure) { LOG.error("Placeholder cleanup failed", failure); }
@@ -509,6 +509,17 @@ public final class ShirokaiDex implements ModInitializer {
                 &&java.util.Objects.equals(rewardViewRequests.get(player.getUUID()),ticket)&&player.containerMenu==previous;
     }
 
+    private int shinyCursor;
+    private final java.util.Map<java.util.UUID,Long> shinyRequestedAt=new java.util.HashMap<>();
+    private void refreshCapturedShiny(ServerPlayer player,boolean force){
+        var server=player.server;var uuid=player.getUUID();long now=System.nanoTime();
+        if(!force&&(cobblemon.hasCapturedShiny(uuid)||now-shinyRequestedAt.getOrDefault(uuid,Long.MIN_VALUE/2)<java.util.concurrent.TimeUnit.SECONDS.toNanos(5)))return;
+        shinyRequestedAt.put(uuid,now);database.capturedShinyForms(uuid).whenComplete((forms,failure)->server.execute(()->{
+            if(stopping||activeServer!=server||server.getPlayerList().getPlayer(uuid)!=player)return;
+            if(failure!=null){LOG.error("Verified shiny capture snapshot unavailable for {}",uuid,failure);return;}
+            cobblemon.publishCapturedShiny(uuid,forms);rewardObservedAt.remove(uuid);if(placeholderBridge!=null)placeholderCache.invalidate(uuid);
+        }));
+    }
     private void observeRewards(MinecraftServer server) {
         var players = server.getPlayerList().getPlayers();
         if (players.isEmpty() || config.current().rewards().isEmpty()) return;

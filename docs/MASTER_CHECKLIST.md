@@ -49,7 +49,7 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 ## FASE 2 — Pokédex
 
 - [ ] Pokédex Nacional. Parcial: leitura oficial, quantidade/total e % em menu/chat; JSON e wiki inicial validados; recursos avançados ainda pendentes.
-- [ ] Shiny. Página explícita N/D; capturas shiny não são inferidas de dados vistos/obtidos.
+- [ ] Shiny. Progresso verificado por espécie/forma ligado ao ledger na alpha.5; sem snapshot confirmado fica N/D. Visto/obtido não contam. Demais recursos avançados continuam parciais.
 - [ ] Lendária. Parcial: labels de formas reais, quantidade/total e %; filtros JSON iniciais validados; recursos avançados pendentes.
 - [ ] Categorias. Regras nomeadas/condições all/any/none e filtros reais implementados; versão persistida implementada localmente; histórico de eventos e recálculo auditado pendentes.
 - [ ] Progresso oficial. Leitura, percentuais, wiki e placeholders básicos verificados; captura shiny e demais requisitos completos permanecem parciais.
@@ -95,9 +95,9 @@ Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A espec
 
 ## FASE 4 — Capturas e estatísticas
 
-- [ ] Eventos de captura validados.
-- [ ] Deduplicação.
-- [ ] Estatísticas permanentes.
+- [x] ~~Eventos nativos de captura validados no Cobblemon1.8.3.~~ Escopos PlayerSpawner, PvE simples e pesca auditada; demais origens ficam UNKNOWN, sem inferência. Relatórios alpha.1–5.
+- [x] ~~Deduplicação persistente de observações nativas.~~ Chave Pokébola/Pokémon e consumo único de prova; replay/reinício não reclassificam nem duplicam.
+- [x] ~~Totais permanentes de ações, shiny/labels/espécie/categoria e períodos atuais.~~ Transações e snapshots/UTC/fuso/semana ISO testados; recordes e retenção permanecem itens próprios abertos.
 - [ ] Categorias. Regras nomeadas/condições all/any/none e filtros reais implementados; versão persistida implementada localmente; histórico de eventos e recálculo auditado pendentes.
 - [ ] Histórico.
 - [ ] Retenção.
@@ -307,3 +307,11 @@ Correção de preparação: condição do workflow convertida em escalar YAML ap
 - [ ] Certificar outras varas/iscas/pools/modpacks, carga/retenção e demais Fase4; Shiny continua pendente.
 
 | Pesca alpha.4 | CaptureAccess/NativeSpawnProof/NativeProvenance/Database/V008, quatro testes Java, CaptureProbe e fixture/runner fishing, executor/seeder e documentação; build e testes no relatório | Commit `feat: track verified native fishing capture provenance`; base `d967c98`; [evidência](validation/phase4-fishing.json) |
+
+### Coleção Shiny — alpha.5
+
+- [x] ~~Ligar SHINY_CAPTURED a capturas legítimas persistidas, com espécie/forma/denominador atuais.~~ Cache assíncrono, projeção permanente/schema9, repetição não aumenta espécies; [guia](SHINY_CAPTURES.md).
+- [x] ~~Distinguir fonte indisponível de zero conhecido e preservar prova no reinício/migração e fora do histórico detalhado.~~ Nove JUnit novos/326 totais e servidor conforme [evidência](validation/phase4-shiny.json).
+- [ ] Histórico/recordes/rankings/retenção e demais requisitos da Fase4; não marcar fase concluída.
+
+| Shiny alpha.5 | CapturedShinyForm/ProgressCalculator, CaptureLedger/Database/V009, CobblemonAccess/core; nove testes novos, runners e documentos afetados. Fonte oficial não alterada | Commit `feat: derive shiny collection progress from verified captures`; base `b359a12`; [evidência](validation/phase4-shiny.json) |

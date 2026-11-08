@@ -1,0 +1,263 @@
+{
+  "scope": "Verified shiny capture collection bridge with native capture/fishing/recovery regressions; Phase4 remains partial",
+  "version": "0.4.0-alpha.5+mc1.21.1-cobblemon1.8.3",
+  "timestamp_utc": "2026-11-08T02:09:11.426273+00:00",
+  "branch": "handoff/crates-checkpoint",
+  "base_commit": "b359a12",
+  "delivery_commit_subject": "feat: derive shiny collection progress from verified captures",
+  "publication": "Development branch only; release authorized after entire Phase4, not this intermediate block",
+  "build": {
+    "result": "BUILD SUCCESSFUL",
+    "junit": {
+      "tests": 326,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "new_junit_cases": 9,
+    "jar": "shirokai-dex-0.4.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "d7ab02c6cee7552af1d6dd4d6f5230e8e4d40d65ae57be55238faf5c8b25eafd",
+    "all_runtime_jars_match": true,
+    "verifyModJar": "passed; probes excluded",
+    "probe_sha256": "b61a44be66f7c7e5928cd296942d158bc84be9e5beddd2cb48ded268f8558628"
+  },
+  "runtime": {
+    "minecraft": "1.21.1",
+    "cobblemon": "1.8.3",
+    "fabric_loader": "0.17.2",
+    "java": "21.0.13",
+    "suites": {
+      "captures": {
+        "suite": "captures",
+        "starts": 2,
+        "jar": "shirokai-dex-0.4.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar",
+        "sha256": "d7ab02c6cee7552af1d6dd4d6f5230e8e4d40d65ae57be55238faf5c8b25eafd",
+        "result": "passed",
+        "all_boots_normally_saved": true,
+        "rcon_disabled_secret_removed": true
+      },
+      "fishing": {
+        "suite": "fishing",
+        "starts": 2,
+        "jar": "shirokai-dex-0.4.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar",
+        "sha256": "d7ab02c6cee7552af1d6dd4d6f5230e8e4d40d65ae57be55238faf5c8b25eafd",
+        "result": "passed",
+        "all_boots_normally_saved": true,
+        "rcon_disabled_secret_removed": true
+      },
+      "recovery": {
+        "suite": "recovery",
+        "starts": 3,
+        "jar": "shirokai-dex-0.4.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar",
+        "sha256": "d7ab02c6cee7552af1d6dd4d6f5230e8e4d40d65ae57be55238faf5c8b25eafd",
+        "result": "passed",
+        "all_boots_normally_saved": true,
+        "rcon_disabled_secret_removed": true
+      }
+    }
+  },
+  "protocol_checks": 28,
+  "protocol": {
+    "captures": {
+      "timestamp": "2026-11-08T02:02:56.188Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+      "results": [
+        {
+          "name": "Existing Pokedex knowledge and command-granted shiny Pokemon do not create capture events or historical counts",
+          "status": "passed"
+        },
+        {
+          "name": "Naturally spawned shiny Pokemon captured by native ball collision/animation produces verified evidence and category snapshot",
+          "status": "passed"
+        },
+        {
+          "name": "Replaying the already observed native event cannot double-count ball/Pokemon identity",
+          "status": "passed"
+        },
+        {
+          "name": "Real ball capture of an administratively created wild entity is audited as unknown and never becomes legitimate statistics",
+          "status": "passed"
+        },
+        {
+          "name": "Distinct same-species captures accumulate; rule reload affects future captures without rewriting historical classifications",
+          "status": "passed"
+        },
+        {
+          "name": "Verified shiny collection counts one species across repeated real captures and excludes command acquisition",
+          "status": "passed"
+        },
+        {
+          "name": "Own read-only statistics distinguish capture totals from species count, honor timezone and expose unknown origins separately",
+          "status": "passed"
+        },
+        {
+          "name": "Real wild battle and physical Master Ball preserve pre-hit provenance and count exactly once",
+          "status": "passed"
+        },
+        {
+          "name": "Native entity-load proof is already persisted for the untouched creature before restart, without manufacturing spawn cause",
+          "status": "passed"
+        }
+      ]
+    },
+    "captures-restart": {
+      "timestamp": "2026-11-08T02:03:34.782Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+      "results": [
+        {
+          "name": "Verified shiny collection reloads with one captured species despite repeated native captures",
+          "status": "passed"
+        },
+        {
+          "name": "Permanent totals, shiny snapshots, historical category and duplicate protection survive restart",
+          "status": "passed"
+        },
+        {
+          "name": "Persisted native proof restores the same physical entity after reload without guessing or replaying a consumed proof",
+          "status": "passed"
+        }
+      ]
+    },
+    "fishing": {
+      "timestamp": "2026-11-08T02:06:00.930Z",
+      "target": "Packaged native rod/bobber/reel/capture",
+      "results": [
+        {
+          "name": "Native rod cast, bobber ticks and native reel produce a wild fishing entity without assigning SpawnCause",
+          "status": "passed"
+        },
+        {
+          "name": "Physical ball captures native fished Pokemon with observed fishing source",
+          "status": "passed"
+        },
+        {
+          "name": "Native fishing updates verified shiny collection to one species independently of official seen/owned",
+          "status": "passed"
+        },
+        {
+          "name": "Fishing event replay cannot duplicate permanent statistics",
+          "status": "passed"
+        },
+        {
+          "name": "Untouched fished entity proof exists before restart with immutable FISHING source",
+          "status": "passed"
+        }
+      ]
+    },
+    "fishing-restart": {
+      "timestamp": "2026-11-08T02:06:36.383Z",
+      "target": "Packaged native rod/bobber/reel/capture",
+      "results": [
+        {
+          "name": "Fishing source and permanent shiny totals survive restart",
+          "status": "passed"
+        },
+        {
+          "name": "Same fished entity reloads without cause and consumes persisted fishing proof once",
+          "status": "passed"
+        }
+      ]
+    },
+    "recovery": {
+      "timestamp": "2026-11-08T02:08:03.221Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 / LuckPerms5.4.140",
+      "results": [
+        {
+          "name": "Only authorized operators open a frozen-payload preview; recipient and reason are disclosed without item delivery",
+          "status": "passed"
+        },
+        {
+          "name": "Stale confirmation rechecks operator permission and recipient collection permission before every effect",
+          "status": "passed"
+        },
+        {
+          "name": "Recipient disconnect invalidates an old recovery confirmation without altering its reservation",
+          "status": "passed"
+        },
+        {
+          "name": "Pending recovery preserves the original plan/components/operation ID, delivers only to recipient once, and records operator/reason",
+          "status": "passed"
+        },
+        {
+          "name": "Empty review can resume; any intent, acknowledged prefix or changed frozen payload refuses replay",
+          "status": "passed"
+        },
+        {
+          "name": "Reload cannot substitute new reward data into an old confirmed recovery plan",
+          "status": "passed"
+        },
+        {
+          "name": "Recovery preview cannot leak reward icons or create replacement operations",
+          "status": "passed"
+        }
+      ]
+    },
+    "recovery-restart": {
+      "timestamp": "2026-11-08T02:08:37.635Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 / LuckPerms5.4.140",
+      "results": [
+        {
+          "name": "Native target inventory and original completed operation IDs survive restart without redelivery",
+          "status": "passed"
+        },
+        {
+          "name": "Closed, uncertain, partial and changed operations remain blocked across restart; untouched reservation stays pending",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "database": {
+    "captures": {
+      "schema": 9,
+      "integrity": "ok",
+      "shiny_forms": [
+        [
+          "cobblemon:pikachu",
+          "normal"
+        ]
+      ],
+      "capture_totals": [
+        [
+          4,
+          4
+        ]
+      ]
+    },
+    "fishing": {
+      "schema": 9,
+      "integrity": "ok",
+      "shiny_forms": [
+        [
+          "cobblemon:magikarp",
+          "normal"
+        ]
+      ],
+      "capture_totals": [
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "recovery": {
+      "schema": 9,
+      "integrity": "ok"
+    }
+  },
+  "semantics": [
+    "Only committed verified shiny captures populate permanent species/form projection",
+    "One species registered in collection despite repeated actions; totals still count all actions",
+    "Current implemented species/forms and filters determine eligibility/denominator",
+    "Missing provider snapshot unavailable; loaded empty projection known zero",
+    "Official seen/owned knowledge never becomes capture proof",
+    "Migration8->9 backfills only existing verified shiny events; projection survives independent detail removal",
+    "Async database read and server-thread publication, current-session guard and capture-commit refresh"
+  ],
+  "limits": [
+    "Phase4 history/retention/records/rankings still pending",
+    "Optional placeholder parser and graphical client not repeated in this block; consumers reuse existing calculation",
+    "Prior rod/pool/modpack/load/disk-failure certification limits remain",
+    "No pre-install history invented; no official Pokedex mutation"
+  ]
+}

@@ -59,3 +59,7 @@ Usar TLS/truststore/proxy herdados conforme TESTING. O executor instala probe re
 ## Pesca — desenvolvimento alpha.4
 
 Pesca nativa comprovada entra nos totais com native_source=FISHING; identidade/causa/vara/jogador auditados, prova imutável e consumida uma vez. Schema8 mantém histórico e fontes antigas separadas. [Guia e limitações](FISHING.md), [evidência](validation/phase4-fishing.json). Não certifica outros pools/modpacks.
+
+## Ponte Shiny — desenvolvimento alpha.5
+
+SHINY_CAPTURED ligado ao ledger comprovado por projeção permanente; uma espécie por forma atual elegível, sem converter visto/obtido em captura. [Guia](SHINY_CAPTURES.md). Contadores de ações permanecem distintos.

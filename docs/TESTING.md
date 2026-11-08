@@ -319,3 +319,7 @@ Mesmo executor --suite captures, build/serverDistribution/remapCaptureProbeJar. 
 ## Pesca nativa — alpha.4
 
 Executor --suite fishing instala fixture/probe próprios e repete após reinício. Vara POKE_ROD, bobber real em água, ticks até mordida, recolhimento pela API do item, captura física e replay/reload. Primeira fixture gerou peixe nativo, mas bola iniciou sobreposta à caixa maior do Magikarp e não produziu pré-hit; posição corrigida antes da validação final. 317 JUnit/quatro novos, testes/regressões/hashes no [relatório](validation/phase4-fishing.json). [Repetição e limites](FISHING.md).
+
+## Coleção Shiny — alpha.5
+
+326 JUnit (nove novos): cálculo atual por espécie/forma, ausência de fonte/zero, visto/obtido separados, migração8→9, isolamento e projeção permanente. Captures/fishing agora verificam status Shiny após aquisição administrativa/captura nativa/repetição/reinício. Runner antigo progress adaptado/sintaxe conferida; suíte antiga inteira não repetida. [Relatório](validation/phase4-shiny.json).

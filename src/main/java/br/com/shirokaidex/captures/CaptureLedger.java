@@ -20,10 +20,14 @@ public final class CaptureLedger {
         try(var q=c.prepareStatement("INSERT INTO capture_totals VALUES(?,1,?,?,?) ON CONFLICT(player_uuid) DO UPDATE SET total=total+1,shiny=shiny+excluded.shiny,legendary=legendary+excluded.legendary,mythical=mythical+excluded.mythical")){
             q.setString(1,r.player().toString());q.setInt(2,r.shiny()?1:0);q.setInt(3,r.labels().contains("legendary")?1:0);q.setInt(4,r.labels().contains("mythical")?1:0);q.executeUpdate();
         }
+        if(r.shiny())try(var q=c.prepareStatement("INSERT INTO captured_shiny_forms VALUES(?,?,?,?) ON CONFLICT(player_uuid,species,form) DO NOTHING")){q.setString(1,r.player().toString());q.setString(2,r.species());q.setString(3,r.form().toLowerCase(Locale.ROOT));q.setLong(4,r.capturedAt().toEpochMilli());q.executeUpdate();}
         increment(c,r.player(),"SPECIES",r.species());for(String category:r.categories())increment(c,r.player(),"CATEGORY",category);return true;
     }
     private static void increment(Connection c,UUID player,String kind,String key)throws SQLException{
         try(var q=c.prepareStatement("INSERT INTO capture_counts VALUES(?,?,?,1) ON CONFLICT(player_uuid,kind,entry_key) DO UPDATE SET total=total+1")){q.setString(1,player.toString());q.setString(2,kind);q.setString(3,key);q.executeUpdate();}
+    }
+    public static Set<br.com.shirokaidex.pokedex.CapturedShinyForm> shinyForms(Connection c,UUID player)throws SQLException{
+        var forms=new HashSet<br.com.shirokaidex.pokedex.CapturedShinyForm>();try(var q=c.prepareStatement("SELECT species,form FROM captured_shiny_forms WHERE player_uuid=?")){q.setString(1,player.toString());try(var rows=q.executeQuery()){while(rows.next())forms.add(new br.com.shirokaidex.pokedex.CapturedShinyForm(rows.getString(1),rows.getString(2)));}}return Set.copyOf(forms);
     }
     public static long count(Connection c,UUID player,String kind,String key)throws SQLException{
         if(!Set.of("SPECIES","CATEGORY").contains(kind))throw new IllegalArgumentException("Unknown capture counter");

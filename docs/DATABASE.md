@@ -49,3 +49,7 @@ V007 adiciona entity_uuid e verification (LEGACY/LIVE_NATIVE/PERSISTED_NATIVE/UN
 ## Migração8 — fonte nativa
 
 V008 adiciona native_source em native_spawn_proofs (WORLD_PLAYER/FISHING; default WORLD_PLAYER) e capture_events (LEGACY/WORLD_PLAYER/FISHING/UNVERIFIED; default LEGACY). Não reclassifica origem nem recomputa agregados. INSERT de prova explicita colunas; conflito mantém fonte/consumo originais. Metadado do evento copia a prova só quando verificada, na mesma transação. Teste7→8 preserva prova consumida/evento/totais. Sem downgrade; [semântica](FISHING.md).
+
+## Migração9 — espécies/formas shiny comprovadas
+
+Tabela captured_shiny_forms(player_uuid,species,form,first_captured_at), chave única por jogador/espécie/forma. Backfill somente de capture_events legítimos/shiny já gravados; fonte oficial nunca usada. Atualização transacional junto do ledger e leitura no worker; projeção não depende da retenção dos detalhes. Teste8→9 exclui UNKNOWN e capturas não shiny. Sem downgrade.
