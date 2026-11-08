@@ -315,3 +315,7 @@ Ensaios corrigidos: cenário inicial de projétil não concluiu captura, ajustad
 ## Batalha PvE — alpha.3
 
 Mesmo executor --suite captures, build/serverDistribution/remapCaptureProbeJar. Dez checks nativos: oito antes e dois depois do reinício. Fixture continua com Pikachu shiny natural; probe inicia PvE real, exige batalha ativa e lança bola na mesma entidade. Final: quatro capturas legítimas (três LIVE_NATIVE/uma PERSISTED_NATIVE) e uma UNKNOWN administrativa. Replay de batalha e reload não duplicam. 313 JUnit, sem novos testes de produção porque a política/ledger não mudaram. Recuperação não repetida nesta alpha.3; relatório alpha.2 separado. [Evidência](validation/phase4-battle.json).
+
+## Pesca nativa — alpha.4
+
+Executor --suite fishing instala fixture/probe próprios e repete após reinício. Vara POKE_ROD, bobber real em água, ticks até mordida, recolhimento pela API do item, captura física e replay/reload. Primeira fixture gerou peixe nativo, mas bola iniciou sobreposta à caixa maior do Magikarp e não produziu pré-hit; posição corrigida antes da validação final. 317 JUnit/quatro novos, testes/regressões/hashes no [relatório](validation/phase4-fishing.json). [Repetição e limites](FISHING.md).

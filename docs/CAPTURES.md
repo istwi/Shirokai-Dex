@@ -55,3 +55,7 @@ JAVA_HOME=/caminho/jdk21 python3 scripts/integration_server.py --base /tmp/servi
 ```
 
 Usar TLS/truststore/proxy herdados conforme TESTING. O executor instala probe remapeado somente no mundo descartável `native-capture-validation`, com comandos restritos ao console e perfil DexCapture, e datapack de teste. O probe seleciona entidades realmente geradas pelo pool, prepara uma pequena área livre para colisão e lança projéteis nativos; não atribui SpawnCause. RCON/segredo são removidos após testes. Nunca incluir probe ou datapack de fixture na distribuição do usuário. Nenhuma nova release, merge na main ou configuração de ambiente publicada.
+
+## Pesca — desenvolvimento alpha.4
+
+Pesca nativa comprovada entra nos totais com native_source=FISHING; identidade/causa/vara/jogador auditados, prova imutável e consumida uma vez. Schema8 mantém histórico e fontes antigas separadas. [Guia e limitações](FISHING.md), [evidência](validation/phase4-fishing.json). Não certifica outros pools/modpacks.

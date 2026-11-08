@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0-alpha.4 — desenvolvimento
+
+- Origem de pesca observada pelo motor nativo, com identidade do spawner, causa/jogador/vara verificados; prova consumida uma vez e fonte FISHING preservada no reload.
+- Schema8 adiciona native_source sem reclassificar histórico; quatro JUnit novos (317 totais), suíte de vara/anzol/recolhimento/captura e regressões. [Evidência](docs/validation/phase4-fishing.json).
+
+
 ## 0.4.0-alpha.3 — desenvolvimento
 
 - Validação de captura PvE real com Pokébola física, origem observada e replay/reinício, reutilizando o ledger existente; sem mudança de schema/política de origem.

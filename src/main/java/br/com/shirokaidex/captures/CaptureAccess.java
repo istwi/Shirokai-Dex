@@ -13,12 +13,20 @@ import java.util.*;
 /** Snapshots native capture evidence only; does not create Pokemon, assign ownership or alter the official Pokedex. */
 public final class CaptureAccess {
     private final CaptureTracker tracker=new CaptureTracker();
-    private boolean nativeWild(com.cobblemon.mod.common.entity.pokemon.PokemonEntity entity){
-        var cause=entity.getSpawnCause();return entity.getPokemon().isWild()&&cause!=null&&cause.getSpawner().getClass()==PlayerSpawner.class&&((PlayerSpawner)cause.getSpawner()).getSpawnPool()==CobblemonSpawnPools.INSTANCE.getWORLD_SPAWN_POOL();
+    private NativeSpawnProof.Kind nativeKind(com.cobblemon.mod.common.entity.pokemon.PokemonEntity entity){
+        var cause=entity.getSpawnCause();if(!entity.getPokemon().isWild()||cause==null)return null;
+        if(cause.getSpawner().getClass()==PlayerSpawner.class&&((PlayerSpawner)cause.getSpawner()).getSpawnPool()==CobblemonSpawnPools.INSTANCE.getWORLD_SPAWN_POOL())return NativeSpawnProof.Kind.WORLD_PLAYER;
+        if(cause.getClass()==com.cobblemon.mod.common.api.spawning.fishing.FishingSpawnCause.class
+                &&cause.getSpawner()==com.cobblemon.mod.common.api.spawning.BestSpawner.INSTANCE.getFishingSpawner()
+                &&cause.getSpawner().getSpawnPool()==CobblemonSpawnPools.INSTANCE.getWORLD_SPAWN_POOL()
+                &&cause.getEntity() instanceof ServerPlayer fisher&&fisher.server==entity.level().getServer()
+                &&((com.cobblemon.mod.common.api.spawning.fishing.FishingSpawnCause)cause).getRodStack().getItem() instanceof com.cobblemon.mod.common.item.interactive.PokerodItem)return NativeSpawnProof.Kind.FISHING;
+        return null;
     }
+    private boolean nativeWild(com.cobblemon.mod.common.entity.pokemon.PokemonEntity entity){return nativeKind(entity)!=null;}
     public NativeSpawnProof observe(com.cobblemon.mod.common.entity.pokemon.PokemonEntity entity,NativeSpawnProof.Source via){
         if(!entity.level().getServer().isSameThread())throw new IllegalStateException("Spawn proof must run on server thread");
-        return nativeWild(entity)?new NativeSpawnProof(entity.getPokemon().getUuid(),entity.getUUID(),entity.level().dimension().location().toString(),Instant.now(),via):null;
+        var kind=nativeKind(entity);return kind!=null?new NativeSpawnProof(entity.getPokemon().getUuid(),entity.getUUID(),entity.level().dimension().location().toString(),Instant.now(),via,kind):null;
     }
     public NativeSpawnProof hit(ThrownPokeballHitEvent event){
         var ball=event.getPokeBall();if(!(ball.getOwner() instanceof ServerPlayer player)||!player.server.isSameThread())return null;

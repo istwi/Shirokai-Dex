@@ -40,13 +40,13 @@ public final class Database implements AutoCloseable {
     private void migrate() throws Exception {
         int version;
         try (Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery("PRAGMA user_version")) { version = rs.getInt(1); }
-        if (version > 7) throw new SQLException("Database version " + version + " is newer than supported version 7");
+        if (version > 8) throw new SQLException("Database version " + version + " is newer than supported version 8");
         if (version > 0) {
             try (Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery("SELECT count(*) FROM schema_migrations WHERE version BETWEEN 1 AND " + version)) {
                 if (!rs.next() || rs.getInt(1) != version) throw new SQLException("Missing migration history for version " + version);
             }
         }
-        for (int target = version + 1; target <= 7; target++) applyMigration(target);
+        for (int target = version + 1; target <= 8; target++) applyMigration(target);
     }
 
     private void applyMigration(int version) throws Exception {
@@ -58,6 +58,7 @@ public final class Database implements AutoCloseable {
             case 5 -> "/database/V005__saved_items.sql";
             case 6 -> "/database/V006__captures.sql";
             case 7 -> "/database/V007__native_spawn_proofs.sql";
+            case 8 -> "/database/V008__native_source.sql";
             default -> throw new SQLException("Unsupported migration " + version);
         };
         String sql;

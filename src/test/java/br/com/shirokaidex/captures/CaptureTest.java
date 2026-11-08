@@ -79,7 +79,7 @@ class CaptureTest {
             q.execute("PRAGMA user_version=5");try(var insert=c.prepareStatement("INSERT INTO reward_operations VALUES(?,?,?,?,'PENDING','2026-01-01T00:00:00Z','2026-01-01T00:00:00Z')")){insert.setString(1,operation.toString());insert.setString(2,player.toString());insert.setString(3,"legacy");insert.setString(4,plan);insert.executeUpdate();}
         }
         try(var db=new Database(file)){await(db.initialize());assertEquals(plan,await(db.rewardOperation(operation)).orElseThrow().plan());assertEquals(0,await(db.captureSummary(player,NOW,ZoneId.of("UTC"))).total());}
-        try(var c=DriverManager.getConnection("jdbc:sqlite:"+file);var q=c.createStatement();var r=q.executeQuery("PRAGMA user_version")){r.next();assertEquals(7,r.getInt(1));}
+        try(var c=DriverManager.getConnection("jdbc:sqlite:"+file);var q=c.createStatement();var r=q.executeQuery("PRAGMA user_version")){r.next();assertEquals(8,r.getInt(1));}
     }
 
 }

@@ -299,3 +299,11 @@ Correção de preparação: condição do workflow convertida em escalar YAML ap
 - [ ] Validar pesca pelo motor real, batalhas duplas e extensões; Shiny/histórico/recordes e demais Fase4 continuam abertos.
 
 | Captura PvE alpha.3 | CaptureProbe/teste de captura ampliados, versão e documentação; 313 JUnit, dez checks nativos incluindo batalha/reinício. Sem mudança na política de origem/schema7 | Commit `test: validate native battle capture provenance`; base `3f4adaf`; [evidência](validation/phase4-battle.json) |
+
+### Pesca nativa — alpha.4
+
+- [x] ~~Validar origem e captura por pesca com vara/anzol/mordida/recolhimento nativos.~~ Fonte FISHING persistida, captura física, replay/reinício; [evidência](validation/phase4-fishing.json).
+- [x] ~~Preservar fonte original e provas consumidas na migração7→8.~~ Quatro JUnit novos; 317 totais aprovados.
+- [ ] Certificar outras varas/iscas/pools/modpacks, carga/retenção e demais Fase4; Shiny continua pendente.
+
+| Pesca alpha.4 | CaptureAccess/NativeSpawnProof/NativeProvenance/Database/V008, quatro testes Java, CaptureProbe e fixture/runner fishing, executor/seeder e documentação; build e testes no relatório | Commit `feat: track verified native fishing capture provenance`; base `d967c98`; [evidência](validation/phase4-fishing.json) |

@@ -1,5 +1,12 @@
 # Estado do projeto
 
+## Desenvolvimento 0.4.0-alpha.4 — pesca nativa
+
+Pesca reconhecida por FishingSpawnCause exata, singleton FishingSpawner do BestSpawner com pool mundial, jogador de origem presente no servidor e item Pokerod real. Fonte FISHING persiste na prova e no evento; nome do spawner/aspecto fished isolados não autorizam contagem. Schema8 preserva origens/totais/provas consumidas anteriores. [Guia](FISHING.md), [evidência](validation/phase4-fishing.json).
+
+317 JUnit (quatro novos). Vara/anzol/mordida/recolhimento e capturas físicas/replay/reinício testados; regressões de captura PvE e recuperação conforme relatório. Próximo: ligar ledger confiável à coleção Shiny, com espécie/forma/denominador atuais, sem inventar histórico. Competições, recordes/histórico/retenção e carga continuam pendentes. Sem nova release/main/ambiente.
+
+
 ## Desenvolvimento 0.4.0-alpha.3 — captura em batalha
 
 Validada batalha PvE nativa com Pokémon realmente gerado pelo PlayerSpawner: BattleBuilder.pve inicia a batalha, Pokébola física conclui a captura e o ledger existente registra LIVE_NATIVE uma vez. Replay não duplica; totais e classificação sobrevivem ao reinício. Sem mudança na política de origem nem no schema7. Probe separado, nunca instalado no JAR de produção. [Evidência](validation/phase4-battle.json).

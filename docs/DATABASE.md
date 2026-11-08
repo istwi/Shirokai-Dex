@@ -45,3 +45,7 @@ Migração5→6 preserva os planos de recompensa e inicia sem capturas reconstru
 ## Migração 7 — proveniência nativa observada
 
 V007 adiciona entity_uuid e verification (LEGACY/LIVE_NATIVE/PERSISTED_NATIVE/UNVERIFIED) a capture_events e native_spawn_proofs com chave Pokémon+entidade, dimensão, instante, fonte e consumed_event único. Prova consumida nunca é reaberta por nova carga. Consumo, evento e agregados compartilham transação; erro reverte tudo. Eventos anteriores ficam LEGACY com classificação/totais intactos, sem backfill. Não há downgrade nem limpeza automática de provas/detalhes. Backup antes de migrar; alpha.1/schema6 não abre schema7.
+
+## Migração8 — fonte nativa
+
+V008 adiciona native_source em native_spawn_proofs (WORLD_PLAYER/FISHING; default WORLD_PLAYER) e capture_events (LEGACY/WORLD_PLAYER/FISHING/UNVERIFIED; default LEGACY). Não reclassifica origem nem recomputa agregados. INSERT de prova explicita colunas; conflito mantém fonte/consumo originais. Metadado do evento copia a prova só quando verificada, na mesma transação. Teste7→8 preserva prova consumida/evento/totais. Sem downgrade; [semântica](FISHING.md).

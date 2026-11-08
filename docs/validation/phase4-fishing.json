@@ -1,0 +1,285 @@
+{
+  "scope": "Verified native fishing provenance; unchanged reward plans and official Pokedex",
+  "version": "0.4.0-alpha.4+mc1.21.1-cobblemon1.8.3",
+  "timestamp_utc": "2026-11-08T01:59:51.047588+00:00",
+  "branch": "handoff/crates-checkpoint",
+  "base_commit": "d967c980caab7ef273a4b60269c420ffda48fc95",
+  "delivery_commit_subject": "feat: track verified native fishing capture provenance",
+  "publication": "Development branch only; phase-end release authorized separately, not yet published",
+  "build": {
+    "result": "BUILD SUCCESSFUL",
+    "junit": {
+      "tests": 317,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "new_junit_cases": 4,
+    "jar": "shirokai-dex-0.4.0-alpha.4+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "f75b6d8bb3c6032674f8ad64b6879c638d43df0442604043da7446f43d850892",
+    "all_runtime_jars_match": true,
+    "verifyModJar": "passed; probes excluded",
+    "probe_sha256": "b61a44be66f7c7e5928cd296942d158bc84be9e5beddd2cb48ded268f8558628"
+  },
+  "runtime": {
+    "minecraft": "1.21.1",
+    "cobblemon": "1.8.3",
+    "fabric_loader": "0.17.2",
+    "java": "21.0.13",
+    "suites": {
+      "fishing": {
+        "suite": "fishing",
+        "starts": 2,
+        "jar": "shirokai-dex-0.4.0-alpha.4+mc1.21.1-cobblemon1.8.3.jar",
+        "sha256": "f75b6d8bb3c6032674f8ad64b6879c638d43df0442604043da7446f43d850892",
+        "result": "passed",
+        "all_boots_normally_saved": true,
+        "rcon_disabled_secret_removed": true
+      },
+      "captures": {
+        "suite": "captures",
+        "starts": 2,
+        "jar": "shirokai-dex-0.4.0-alpha.4+mc1.21.1-cobblemon1.8.3.jar",
+        "sha256": "f75b6d8bb3c6032674f8ad64b6879c638d43df0442604043da7446f43d850892",
+        "result": "passed",
+        "all_boots_normally_saved": true,
+        "rcon_disabled_secret_removed": true
+      },
+      "recovery": {
+        "suite": "recovery",
+        "starts": 3,
+        "jar": "shirokai-dex-0.4.0-alpha.4+mc1.21.1-cobblemon1.8.3.jar",
+        "sha256": "f75b6d8bb3c6032674f8ad64b6879c638d43df0442604043da7446f43d850892",
+        "result": "passed",
+        "all_boots_normally_saved": true,
+        "rcon_disabled_secret_removed": true
+      }
+    }
+  },
+  "protocol_checks": 25,
+  "protocol": {
+    "fishing": {
+      "timestamp": "2026-11-08T01:49:03.632Z",
+      "target": "Packaged native rod/bobber/reel/capture",
+      "results": [
+        {
+          "name": "Native rod cast, bobber ticks and native reel produce a wild fishing entity without assigning SpawnCause",
+          "status": "passed"
+        },
+        {
+          "name": "Physical ball captures native fished Pokemon with observed fishing source",
+          "status": "passed"
+        },
+        {
+          "name": "Fishing event replay cannot duplicate permanent statistics",
+          "status": "passed"
+        },
+        {
+          "name": "Untouched fished entity proof exists before restart with immutable FISHING source",
+          "status": "passed"
+        }
+      ]
+    },
+    "fishing-restart": {
+      "timestamp": "2026-11-08T01:49:38.588Z",
+      "target": "Packaged native rod/bobber/reel/capture",
+      "results": [
+        {
+          "name": "Fishing source and permanent shiny totals survive restart",
+          "status": "passed"
+        },
+        {
+          "name": "Same fished entity reloads without cause and consumes persisted fishing proof once",
+          "status": "passed"
+        }
+      ]
+    },
+    "captures": {
+      "timestamp": "2026-11-08T01:59:02.089Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+      "results": [
+        {
+          "name": "Existing Pokedex knowledge and command-granted shiny Pokemon do not create capture events or historical counts",
+          "status": "passed"
+        },
+        {
+          "name": "Naturally spawned shiny Pokemon captured by native ball collision/animation produces verified evidence and category snapshot",
+          "status": "passed"
+        },
+        {
+          "name": "Replaying the already observed native event cannot double-count ball/Pokemon identity",
+          "status": "passed"
+        },
+        {
+          "name": "Real ball capture of an administratively created wild entity is audited as unknown and never becomes legitimate statistics",
+          "status": "passed"
+        },
+        {
+          "name": "Distinct same-species captures accumulate; rule reload affects future captures without rewriting historical classifications",
+          "status": "passed"
+        },
+        {
+          "name": "Own read-only statistics distinguish capture totals from species count, honor timezone and expose unknown origins separately",
+          "status": "passed"
+        },
+        {
+          "name": "Real wild battle and physical Master Ball preserve pre-hit provenance and count exactly once",
+          "status": "passed"
+        },
+        {
+          "name": "Native entity-load proof is already persisted for the untouched creature before restart, without manufacturing spawn cause",
+          "status": "passed"
+        }
+      ]
+    },
+    "captures-restart": {
+      "timestamp": "2026-11-08T01:59:38.385Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+      "results": [
+        {
+          "name": "Permanent totals, shiny snapshots, historical category and duplicate protection survive restart",
+          "status": "passed"
+        },
+        {
+          "name": "Persisted native proof restores the same physical entity after reload without guessing or replaying a consumed proof",
+          "status": "passed"
+        }
+      ]
+    },
+    "recovery": {
+      "timestamp": "2026-11-08T01:57:00.818Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 / LuckPerms5.4.140",
+      "results": [
+        {
+          "name": "Only authorized operators open a frozen-payload preview; recipient and reason are disclosed without item delivery",
+          "status": "passed"
+        },
+        {
+          "name": "Stale confirmation rechecks operator permission and recipient collection permission before every effect",
+          "status": "passed"
+        },
+        {
+          "name": "Recipient disconnect invalidates an old recovery confirmation without altering its reservation",
+          "status": "passed"
+        },
+        {
+          "name": "Pending recovery preserves the original plan/components/operation ID, delivers only to recipient once, and records operator/reason",
+          "status": "passed"
+        },
+        {
+          "name": "Empty review can resume; any intent, acknowledged prefix or changed frozen payload refuses replay",
+          "status": "passed"
+        },
+        {
+          "name": "Reload cannot substitute new reward data into an old confirmed recovery plan",
+          "status": "passed"
+        },
+        {
+          "name": "Recovery preview cannot leak reward icons or create replacement operations",
+          "status": "passed"
+        }
+      ]
+    },
+    "recovery-restart": {
+      "timestamp": "2026-11-08T01:57:35.397Z",
+      "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 / LuckPerms5.4.140",
+      "results": [
+        {
+          "name": "Native target inventory and original completed operation IDs survive restart without redelivery",
+          "status": "passed"
+        },
+        {
+          "name": "Closed, uncertain, partial and changed operations remain blocked across restart; untouched reservation stays pending",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "database": {
+    "fishing": {
+      "schema": 8,
+      "integrity": "ok",
+      "classifications": [
+        [
+          "FISHING",
+          "LIVE_NATIVE",
+          1
+        ],
+        [
+          "FISHING",
+          "PERSISTED_NATIVE",
+          1
+        ]
+      ],
+      "totals": [
+        [
+          2,
+          2
+        ]
+      ],
+      "consumed_proofs": [
+        [
+          "FISHING",
+          "ENTITY_LOAD",
+          2
+        ]
+      ]
+    },
+    "captures": {
+      "schema": 8,
+      "integrity": "ok",
+      "classifications": [
+        [
+          "UNVERIFIED",
+          "UNVERIFIED",
+          1
+        ],
+        [
+          "WORLD_PLAYER",
+          "LIVE_NATIVE",
+          3
+        ],
+        [
+          "WORLD_PLAYER",
+          "PERSISTED_NATIVE",
+          1
+        ]
+      ],
+      "totals": [
+        [
+          4,
+          4
+        ]
+      ],
+      "consumed_proofs": [
+        [
+          "WORLD_PLAYER",
+          "ENTITY_LOAD",
+          4
+        ]
+      ]
+    },
+    "recovery": {
+      "schema": 8,
+      "integrity": "ok"
+    }
+  },
+  "acceptance": [
+    "Exact FishingSpawnCause + singleton fishingSpawner + current WORLD_SPAWN_POOL",
+    "ServerPlayer source on same server and PokerodItem stack",
+    "POKE_ROD.use -> native bobber tick/bite -> normal item reel; no assigned cause or action",
+    "FISHING proofs observed at ENTITY_LOAD, consumed once; source immutable",
+    "Physical ball/capture correlation, replay and persisted same-entity provenance after restart"
+  ],
+  "migration": "V008 defaults old proof to WORLD_PLAYER and old events to LEGACY; preserves consumed proof/totals, never upgrades UNKNOWN",
+  "development_failures": [
+    "Initial rod succeeded but projectile started inside enlarged Magikarp collision box; no pre-hit; fixture corrected and final suite passed",
+    "Environment interruption during capture restart; normal first shutdown saved, incomplete suite not counted; rerun whole capture suite on new root after recovery"
+  ],
+  "limits": [
+    "POKE_ROD/Magikarp tested; other rods/baits/pools/modpacks not certified",
+    "Absent source player/expired cause can remain UNKNOWN",
+    "Historical origin NATIVE_PLAYER_SPAWN retained; native_source distinguishes fishing",
+    "Shiny bridge/history/records/rankings/retention/load remain pending"
+  ]
+}
