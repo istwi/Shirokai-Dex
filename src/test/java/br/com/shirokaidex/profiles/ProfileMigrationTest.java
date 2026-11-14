@@ -24,7 +24,7 @@ class ProfileMigrationTest {
         try(var c=DriverManager.getConnection("jdbc:sqlite:"+file);var q=c.createStatement()){
             q.executeUpdate("DELETE FROM capture_events WHERE form='alola'");
             for(String table:List.of("player_medal_favorites","player_achievements","achievement_audit","achievement_definitions","profile_collection_points","player_stat_privacy","player_preferences","captured_forms"))q.execute("DROP TABLE "+table);
-            q.execute("DELETE FROM schema_migrations WHERE version=14");q.execute("PRAGMA user_version=13");
+            q.execute("DROP TABLE defeat_receipts");q.execute("DROP TABLE defeat_totals");q.execute("DELETE FROM schema_migrations WHERE version=16");q.execute("DROP TABLE notification_outbox");q.execute("DROP TABLE notification_progress");q.execute("DELETE FROM schema_migrations WHERE version=15");q.execute("DELETE FROM schema_migrations WHERE version=14");q.execute("PRAGMA user_version=13");
         }
         for(int i=0;i<2;i++)try(var db=new Database(file)){await(db.initialize());assertFalse(await(db.recordCapture(alola)));assertEquals(2,await(db.captureSummary(player,normal.capturedAt(),ZoneId.of("UTC"))).total());}
         try(var c=DriverManager.getConnection("jdbc:sqlite:"+file);var q=c.createStatement();var rows=q.executeQuery("SELECT form,shiny FROM captured_forms ORDER BY form")){var forms=new LinkedHashMap<String,Integer>();while(rows.next())forms.put(rows.getString(1),rows.getInt(2));assertEquals(Map.of("normal",0,"alola",1),forms);}

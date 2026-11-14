@@ -15,11 +15,26 @@ public record MenuNavigation(Map<Screen,Layout> layouts) {
         WIKI_SPAWNS(36,Map.of("previous",18,"next",26,"back",23,"close",22,"scope",27)),
         REWARDS(27,Map.of("previous",18,"next",26,"home",23,"close",22)),
         REWARD(27,Map.of("back",18,"status",19,"previous",20,"close",22,"claim",24,"next",26)),
-        CONFIRMATION(27,Map.of("back",18,"close",22));
+        CONFIRMATION(27,Map.of("back",18,"close",22)),
+        PROFILE(54,Map.of("species",28,"categories",30,"records",32,"medals",34,"back",49)),
+        PROFILE_DETAILS(27,Map.of("previous",18,"next",26,"back",22)),
+        SETTINGS(27,Map.ofEntries(Map.entry("total_captures",9),Map.entry("shiny_captures",10),Map.entry("legendary_captures",11),Map.entry("species_captures",12),Map.entry("category_captures",13),Map.entry("personal_records",14),Map.entry("rankings",16),Map.entry("notifications",17),Map.entry("back",22))),
+        ACHIEVEMENTS(27,Map.of("previous",18,"next",26,"back",22)),
+        FAVORITES(27,Map.of("first",11,"second",13,"third",15,"remove",18,"back",22)),
+        RANKINGS(27,Map.of("previous",18,"next",26,"back",22,"competitions",24)),
+        RANKING(27,Map.of("previous",18,"next",26,"back",22)),
+        COMPETITIONS(27,Map.of("previous",18,"next",26,"back",22,"prizes",24)),
+        COMPETITION(36,Map.of("join",20,"cancel",24,"previous",27,"next",35,"prizes",29,"back",31)),
+        COMPETITION_CONFIRMATION(27,Map.of("confirm",13,"back",15)),
+        PRIZES(27,Map.of("previous",18,"next",26,"back",22));
         public final int size;
         public final Map<String,Integer> defaults;
         Screen(int size,Map<String,Integer> defaults){this.size=size;this.defaults=Map.copyOf(defaults);}
         public String id(){return name().toLowerCase(Locale.ROOT);}
+        public boolean navigationSlot(int slot){
+            int floor=this==PROFILE?45:this==COMPETITION?27:18;
+            return slot>=floor||defaults.containsValue(slot);
+        }
     }
     public record Layout(Screen screen,boolean footer,Map<String,Integer> slots,int rows,String title,Optional<HomeLayout.Palette> palette,Map<String,MenuAppearance.Button> buttons){
         public Layout(Screen screen,boolean footer,Map<String,Integer> slots){this(screen,footer,slots,screen.size/9,"",Optional.empty(),Map.of());}
@@ -30,7 +45,7 @@ public record MenuNavigation(Map<Screen,Layout> layouts) {
             if(!screen.defaults.keySet().containsAll(buttons.keySet()))throw new IllegalArgumentException("unknown button appearance");
             if(!slots.keySet().equals(screen.defaults.keySet()))throw new IllegalArgumentException("unknown/missing navigation action");
             if(new HashSet<>(slots.values()).size()!=slots.size())throw new IllegalArgumentException("navigation slot conflict");
-            if(slots.values().stream().anyMatch(slot->slot<18||slot>=rows*9))throw new IllegalArgumentException("navigation must stay outside content and inside menu");
+            if(slots.values().stream().anyMatch(slot->slot<0||slot>=rows*9||!screen.navigationSlot(slot)))throw new IllegalArgumentException("navigation must stay outside content and inside menu");
         }
         /** Source->destination permutation, including absent controls, supports swaps without overwriting. */
         public Map<Integer,Integer> moves(){

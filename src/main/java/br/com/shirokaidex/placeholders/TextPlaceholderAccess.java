@@ -13,7 +13,7 @@ public final class TextPlaceholderAccess implements PlaceholderBridge {
             id -> Placeholders.getPlaceholders().get(id), Placeholders::register, Placeholders::remove);
     private TextPlaceholderAccess() { }
     private void register(Resolver resolver, Logger logger) {
-        for (String metric : PlaceholderValues.METRICS) {
+        for (String metric : java.util.stream.Stream.concat(PlaceholderValues.METRICS.stream(),PublicMetricValues.METRICS.stream()).toList()) {
             var id = ResourceLocation.fromNamespaceAndPath("shirokaidex", metric);
             PlaceholderHandler handler = (context, argument) -> {
                 if (context == null || context.server() == null || !context.server().isSameThread() || !context.hasPlayer())
@@ -36,7 +36,7 @@ public final class TextPlaceholderAccess implements PlaceholderBridge {
     }
     @Override public String preview(ServerPlayer player, String metric, String collection) {
         if(metric.equals("legacy")){var id=ResourceLocation.fromNamespaceAndPath("dexrewards","player_dex_percent");return registrations.owns(id)?Placeholders.parseText(Component.literal("%dexrewards:player_dex_percent%"),PlaceholderContext.of(player)).getString():PlaceholderValues.UNKNOWN;}
-        if (!PlaceholderValues.METRICS.contains(metric)) return PlaceholderValues.UNKNOWN;
+        if (!PlaceholderValues.METRICS.contains(metric)&&!PublicMetricValues.METRICS.contains(metric)) return PlaceholderValues.UNKNOWN;
         var id = ResourceLocation.fromNamespaceAndPath("shirokaidex", metric);
         if (!registrations.owns(id)) return PlaceholderValues.UNKNOWN;
         return Placeholders.parseText(Component.literal("%shirokaidex:" + metric + " " + collection + "%"), PlaceholderContext.of(player)).getString();

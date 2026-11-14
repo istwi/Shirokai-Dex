@@ -75,3 +75,7 @@ Continuar todas as fases em sequência, sem encerrar a cada bloco ou pedir "cont
 ## Autorização pontual — snapshot 0.6.0-dev.1
 
 Em 2026-11-14, o responsável pediu enviar o trabalho ao GitHub com JAR atual e atualizar a lista. Autoriza commit/push na branch de desenvolvimento e pré-release experimental deste snapshot, com limitações explícitas. Não autoriza merge na main nem publicação de ambiente.
+
+## Autorização pontual — JAR dev.2
+
+O responsável pediu “manda o jar pro git”. Autoriza commit/push do bloco local e pré-release experimental0.6.0-dev.2 na branch handoff/crates-checkpoint com JAR, configuração e evidências. Não autoriza merge na main nem publicação de ambiente.

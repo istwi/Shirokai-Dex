@@ -1,0 +1,122 @@
+{
+  "suite": {
+    "suite": "profiles",
+    "starts": 3,
+    "jar": "shirokai-dex-0.6.0-dev.2+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "81b6494556d66902d953cd4285448420b62887c78caa41edb9f7305d60d056f1",
+    "result": "passed"
+  },
+  "passing": {
+    "timestamp": "2026-11-14T10:54:30.422Z",
+    "results": [
+      {
+        "name": "Locked secret medal shows only safe hint; reliable stored capture counters unlock visual badges independently of Pokedex progress",
+        "status": "passed"
+      },
+      {
+        "name": "Public profile applies default species privacy and private-medal visibility to a second player",
+        "status": "passed"
+      },
+      {
+        "name": "Privacy GUI immediately closes already-open public views; subsequent public values are masked while owner retains access",
+        "status": "passed"
+      },
+      {
+        "name": "Explicit per-statistic override exposes only authorized aggregate species counts through a paginated profile page",
+        "status": "passed"
+      },
+      {
+        "name": "Real command acquisition satisfies Pokedex/AND/OR/dependency medals without inventing captures or material rewards, and notification opt-out is respected",
+        "status": "passed"
+      },
+      {
+        "name": "Unlocked medals allow exactly three persistent favorite slots; GUI icons never become inventory rewards",
+        "status": "passed"
+      },
+      {
+        "name": "Ranking head opens a permission/privacy-aware trainer profile with public favorites",
+        "status": "passed"
+      },
+      {
+        "name": "Global ranking exclusion still applies independently of individual statistics visibility",
+        "status": "passed"
+      },
+      {
+        "name": "Real optional Placeholder API expands public stats/rank/medals/wins/rewards and legacy alias; warm values disappear after privacy changes without leaking own-view data",
+        "status": "passed"
+      },
+      {
+        "name": "Durable notifications reach real chat/actionbar/title/sound channels; final competition broadcast is deduplicated for an enrolled player and respects another player opt-out",
+        "status": "passed"
+      },
+      {
+        "name": "JSON layouts move real notifications/profile/favorite controls safely, custom placeholder expands, and invalid overlap reload preserves last good settings",
+        "status": "passed"
+      },
+      {
+        "name": "Offline profile retains last-observed official progress and earned favorites with explicit observation time, without loading or altering offline Pokedex data",
+        "status": "passed"
+      }
+    ]
+  },
+  "restart": {
+    "timestamp": "2026-11-14T10:55:47.138Z",
+    "results": [
+      {
+        "name": "Restart preserves five medals, three favorites, privacy/preferences and official Pokedex snapshot without duplicate unlock audit or material grants",
+        "status": "passed"
+      }
+    ]
+  },
+  "first_failure": {
+    "timestamp": "2026-11-14T10:38:19.932Z",
+    "results": [
+      {
+        "name": "Locked secret medal shows only safe hint; reliable stored capture counters unlock visual badges independently of Pokedex progress",
+        "status": "passed"
+      },
+      {
+        "name": "Public profile applies default species privacy and private-medal visibility to a second player",
+        "status": "passed"
+      },
+      {
+        "name": "Privacy GUI immediately closes already-open public views; subsequent public values are masked while owner retains access",
+        "status": "passed"
+      },
+      {
+        "name": "Explicit per-statistic override exposes only authorized aggregate species counts through a paginated profile page",
+        "status": "passed"
+      },
+      {
+        "name": "Real command acquisition satisfies Pokedex/AND/OR/dependency medals without inventing captures or material rewards, and notification opt-out is respected",
+        "status": "passed"
+      },
+      {
+        "name": "Unlocked medals allow exactly three persistent favorite slots; GUI icons never become inventory rewards",
+        "status": "passed"
+      },
+      {
+        "name": "Ranking head opens a permission/privacy-aware trainer profile with public favorites",
+        "status": "passed"
+      },
+      {
+        "name": "Global ranking exclusion still applies independently of individual statistics visibility",
+        "status": "passed"
+      },
+      {
+        "name": "profile and medal integration",
+        "status": "failed",
+        "error": "Profile/medal condition timeout"
+      }
+    ]
+  },
+  "diagnosis": "Favorite slot index1\u20133 corrected to0\u20132 with regression; later decorative filler and async cold-cache assertions corrected without exposing hidden data",
+  "cleanup": {
+    "secret_removed": true
+  },
+  "limits": [
+    "protocol only; graphical model rendering not certified",
+    "TAB/SkiesGUIs versions remain unaudited",
+    "Individual language still pending"
+  ]
+}

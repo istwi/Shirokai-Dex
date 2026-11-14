@@ -29,7 +29,7 @@ class RewardsConfigTest {
         "\"minimum_registered\":1,\"minimum_percent\":50"
     }) void ambiguousThresholdsAreRejected(String threshold){assertThrows(java.io.IOException.class,()->ConfigManager.parse(config(reward(threshold))));}
     @Test void referencesAndItemsAreValidatedAndFailedReloadPreservesBackup()throws Exception{
-        var validator=new CollectionValidator(List.of(),Set.of("minecraft:book","minecraft:amethyst_shard","minecraft:nether_star","minecraft:diamond"));
+        var validator=new CollectionValidator(List.of(),Set.of("minecraft:book","minecraft:amethyst_shard","minecraft:nether_star","minecraft:diamond","minecraft:paper"));
         var manager=new ConfigManager(directory);manager.setValidator(validator::validate);manager.initialize();var before=manager.current();
         String backup=Files.readString(directory.resolve("config.last-good.json"));
         String valid=config(reward("\"minimum_registered\":1"));validator.validate(ConfigManager.parse(valid));

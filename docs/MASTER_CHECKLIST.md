@@ -1,5 +1,9 @@
 # Prompt mestre — checklist de execução
 
+## Envio dev.2 autorizado
+
+Responsável solicitou enviar o JAR ao GitHub. Snapshot em preparação na branch handoff/crates-checkpoint:402 JUnit/10 checks nativos e JAR SHA256 0dc0401af48479de0fdd118ddd9c5b9fda5bc985996717cc18c52c557a4003d8. Workflow recompila/testa e exige coincidência com o binário nativo antes de anexar/publicar; configuração focused-server.json incluída. Sem merge de main ou publicação de ambiente. Referência: commit `release: distribute v0.6.0-dev.2 snapshot`.
+
 ## Publicação dev.1 confirmada
 
 [Pré-release com JAR](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.6.0-dev.1) publicada pelo [Actions aprovado](https://github.com/istwi/Shirokai-Dex/actions/runs/43585022162), fonte 9714b99. Quatro anexos baixados e manifesto SHA256 conferido localmente. Binário publicado idêntico ao JAR validado nativamente. [Evidência](validation/release-development-0.6.0-dev.1.json). Código/perfis/validação complementar enviados na branch handoff/crates-checkpoint; main e ambiente preservados. Pendências funcionais continuam abertas.
@@ -381,3 +385,26 @@ Correção de preparação: condição do workflow convertida em escalar YAML ap
 | Snapshot fases4–6 e JAR experimental | validation/development-0.6.0-dev.1.json; relatórios phase4/phase5; testes e limitações no CHANGELOG | Commit de publicação `feat: publish 0.6.0-dev.1 development snapshot`, branch handoff/crates-checkpoint |
 
 | Distribuição automatizada dev.1 | build.yml: build limpo, anexo CI, download e SHA256 antes da pré-release; contorna falha HTTP401 do upload local sem expor credenciais | Commit `release: distribute v0.6.0-dev.1 snapshot`; funcional e93699b |
+
+### Pedido vigente — menus reduzidos
+
+- [ ] Hub de três acessos, quatro ícones de Dex, seis marcos e resgate direto, rankings em lore e eventoTOTAL: implementados localmente, testes nativos pendentes.
+- [ ] Modelos oficiais na wiki, status de captura e filtro por clique esquerdo/direito: compilados; protocolo/renderização a conferir.
+- [ ] Derrotas nativas PvE/schema16 com dedup/reinício: unitário aprovado; batalha real pendente.
+- [x] ~~Validar placeholders públicos/alias legado/layouts e canais de notificação reais do bloco anterior.~~398 JUnit e13 checks nativos; [evidência](validation/phase7-public-placeholders.json). Isso não conclui a Fase7 inteira nem as alterações mais recentes.
+
+| Entrega | Arquivos e validação | Referência |
+|---|---|---|
+| Menus reduzidos solicitados | FocusedMenu, HomeLayout/codec, preset/examples, core/MainMenu/Wiki, DefeatAccess/Ledger/V016 e suíte focused;402 JUnit/build antes do último ajuste, servidor pendente | Local sobre a55155b, sem envio/publicação |
+
+### Menus reduzidos — validação concluída no escopo solicitado
+
+- [x] ~~Hub Dex/Rankings/Eventos; quatro ícones de Dex com Forms futura sem ação; seis marcos editáveis e exemplo de prêmio com resgate único.~~402 JUnit e suíte nativa de navegação/resgate.
+- [x] ~~Separar Nacional e Special por labels legendary/mythical/ultra_beast e usar Shiny de capturas verificadas.~~Teste de regras e aquisição/captura no servidor.
+- [x] ~~Top10 na lore, eventosTOTAL com período/score/inscrição, wiki com modelos oficiais e filtro esquerdo/direito.~~Componentes reais e interação no protocolo; sem certificação visual gráfica.
+- [x] ~~Contabilizar derrotas naturais PvE sem duplicação e persistir ranking/reinício.~~Batalha nativa com golpe real, controle negativo administrativo, SQLite íntegro; [evidência](validation/focused-menus.json).
+- [ ] Revisão visual no cliente Cobblemon e configuração dos prêmios reais pelo responsável. Forms e demais painéis ficam desativados por escolha expressa. Não conclui as fases integrais anteriores.
+
+| Entrega | Evidência | Referência |
+|---|---|---|
+| Menus reduzidos e derrotas nativas | focused-menus.json;402 JUnit,9+1 checks nativos; JAR idêntico ao testado; preset/examples e FOCUSED_MENUS.md | Local sobre a55155b, sem novo commit/push/release/ambiente |

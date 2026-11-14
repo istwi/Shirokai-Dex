@@ -39,7 +39,8 @@ public final class CobblemonAccess {
     }
     public CollectionValidator validationSnapshot() {
         return new CollectionValidator(snapshot(PokemonSpecies.INSTANCE.getSpecies(), null),
-                BuiltInRegistries.ITEM.keySet().stream().map(Object::toString).collect(Collectors.toUnmodifiableSet()));
+                BuiltInRegistries.ITEM.keySet().stream().map(Object::toString).collect(Collectors.toUnmodifiableSet()),
+                BuiltInRegistries.SOUND_EVENT.keySet().stream().map(Object::toString).collect(Collectors.toUnmodifiableSet()));
     }
     public Map<DexCollection, ProgressCalculator.CollectionProgress> collections(ServerPlayer player) { return cached(player).defaults(); }
     public Map<String, ProgressCalculator.CollectionProgress> collections(ServerPlayer player, List<CollectionDefinition> definitions) {

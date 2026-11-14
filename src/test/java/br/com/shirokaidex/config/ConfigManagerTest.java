@@ -34,10 +34,10 @@ class ConfigManagerTest {
         assertFalse(Files.exists(directory.resolve("config.last-good.json")));
     }
     @Test void oversizedConfigurationRetainsLastValid() throws Exception {
-        var manager = new ConfigManager(directory); manager.initialize();
+        var manager = new ConfigManager(directory); manager.initialize();var before=manager.current();
         Files.writeString(directory.resolve("config.json"), " ".repeat(65537));
         assertThrows(IOException.class, manager::reload);
-        assertEquals(Settings.defaults(), manager.current());
+        assertSame(before, manager.current());
     }
     @ParameterizedTest @ValueSource(strings = {
         "{}", "null", "[]", "{broken", "{\"schema_version\":1,}",

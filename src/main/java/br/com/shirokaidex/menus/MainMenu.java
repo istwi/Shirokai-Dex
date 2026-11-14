@@ -23,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 /** Vanilla inventory protocol. Only explicitly registered left-click actions are executed. */
 public final class MainMenu extends ChestMenu {
+    public record ClickAction(Runnable left,Runnable right) implements Runnable {public void run(){left.run();}}
     private final UUID owner;
     private final Map<Integer, Runnable> actions;
     private MainMenu(int id, ServerPlayer player, SimpleContainer container, Map<Integer, Runnable> actions) {
@@ -65,6 +66,9 @@ public final class MainMenu extends ChestMenu {
     }
     public static void openWiki(ServerPlayer player, Settings settings, Messages messages, CollectionDefinition definition,
                                 Wiki.Request request, Wiki.Page page, SpawnCatalog spawns, Consumer<Wiki.Request> navigate, Runnable back, Runnable searchHelp) {
+        openWiki(player,settings,messages,definition,request,page,spawns,navigate,back,searchHelp,null);
+    }
+    public static void openWiki(ServerPlayer player,Settings settings,Messages messages,CollectionDefinition definition,Wiki.Request request,Wiki.Page page,SpawnCatalog spawns,Consumer<Wiki.Request> navigate,Runnable back,Runnable searchHelp,Set<String> captured){
         var contents = new SimpleContainer(36);
         Map<Integer, Runnable> actions = new HashMap<>();
         String language = settings.language();
@@ -109,7 +113,7 @@ public final class MainMenu extends ChestMenu {
             title = messages.text(language, "wiki_forms_title", row.name(), forms.number() + 1, forms.pages(), forms.total()).getString();
         } else if (page.detail().isPresent()) {
             var row = page.detail().get();
-            contents.setItem(13, wikiItem(row, language, messages, true, spawns.available()));
+            contents.setItem(13, wikiItem(row, language, messages, true, spawns,captured==null?null:captured.contains(row.id()),definition.mode()==CollectionDefinition.Mode.SHINY_CAPTURED));
             navigation(contents, actions, 15, messages.text(language, "wiki_forms_open", row.forms().size()), () -> navigate.accept(request.forms(0)));
             navigation(contents, actions, 16, messages.text(language, "spawn_open"), () -> navigate.accept(request.spawns(0)));
             navigation(contents, actions, 18, messages.text(language, "wiki_back"), () -> navigate.accept(request.page(page.number())));
@@ -117,7 +121,7 @@ public final class MainMenu extends ChestMenu {
         } else {
             for (int i = 0; i < page.rows().size(); i++) {
                 var row = page.rows().get(i);
-                contents.setItem(i, wikiItem(row, language, messages, false, spawns.available()));
+                contents.setItem(i, wikiItem(row, language, messages, false, spawns,captured==null?null:captured.contains(row.id()),definition.mode()==CollectionDefinition.Mode.SHINY_CAPTURED));
                 actions.put(i, () -> navigate.accept(request.detail(row.id())));
             }
             if (page.rows().isEmpty()) {
@@ -127,6 +131,9 @@ public final class MainMenu extends ChestMenu {
             if (page.number() > 0) navigation(contents, actions, 18, messages.text(language, "page_previous"), () -> navigate.accept(request.page(page.number() - 1)));
             if (page.number() + 1 < page.pages()) navigation(contents, actions, 26, messages.text(language, "page_next"), () -> navigate.accept(request.page(page.number() + 1)));
             navigation(contents, actions, 19, messages.text(language, "wiki_filter", messages.text(language, "wiki.filter." + request.filter()).getString()), () -> navigate.accept(request.filtered(request.filter().next())));
+            var filterIcon=contents.getItem(19);var filterLore=new ArrayList<>(filterIcon.getOrDefault(DataComponents.LORE,ItemLore.EMPTY).lines());
+            filterLore.add(messages.text(language,"wiki_filter_selected",messages.text(language,"wiki.filter."+request.filter()).getString()));filterLore.add(messages.text(language,"wiki_filter_clicks"));filterIcon.set(DataComponents.LORE,new ItemLore(filterLore));
+            actions.put(19,new ClickAction(()->navigate.accept(request.filtered(request.filter().next())),()->navigate.accept(request.filtered(request.filter().previous()))));
             navigation(contents, actions, 20, messages.text(language, "wiki_order", messages.text(language, "wiki.order." + request.order()).getString()), () -> navigate.accept(request.ordered(request.order().next())));
             navigation(contents, actions, 21, messages.text(language, "wiki_search", request.query()), searchHelp);
             navigation(contents, actions, 24, messages.text(language, "wiki_clear"), () -> navigate.accept(Wiki.Request.initial("")));
@@ -212,6 +219,9 @@ public final class MainMenu extends ChestMenu {
     }
 
     private static int rewardColor(br.com.shirokaidex.menus.layout.RewardView view){return switch(view.status()){case AVAILABLE,COMPLETED->MenuStyle.SUCCESS;case RESERVED,PROCESSING->MenuStyle.NAVIGATION;case NEEDS_REVIEW,PLAN_CHANGED,UNAVAILABLE->MenuStyle.DANGER;case LOCKED,CANCELLED->0x999999;};}
+    public static void styledShow(ServerPlayer player,Settings settings,Messages messages,Screen screen,String title,SimpleContainer contents,Map<Integer,Runnable> actions){
+        styledShow(player,settings,messages,screen,title,contents,actions,Set.of());
+    }
     private static void styledShow(ServerPlayer player,Settings settings,Messages messages,Screen screen,String title,SimpleContainer contents,Map<Integer,Runnable> actions,Set<Integer> preserved){
         var layout=settings.menus().layout(screen);var palette=layout.palette().orElse(settings.home().palette());
         for(int slot=0;slot<contents.getContainerSize();slot++){
@@ -241,26 +251,32 @@ public final class MainMenu extends ChestMenu {
         lore.add(messages.text(language,"pokemon_moves",pokemon.moves().isEmpty()?defaults:String.join(", ",pokemon.moves())));lore.add(messages.text(language,"pokemon_ivs",pokemon.ivs().isEmpty()?defaults:pokemon.ivs()));lore.add(messages.text(language,"pokemon_evs",pokemon.evs().isEmpty()?defaults:pokemon.evs()));
         item.set(DataComponents.LORE,new ItemLore(lore));return item;
     }
-    private static ItemStack wikiItem(Wiki.Row row, String language, Messages messages, boolean detail, boolean spawnAvailable) {
-        var item = new ItemStack(Items.BOOK);
+    private static ItemStack wikiItem(Wiki.Row row, String language, Messages messages, boolean detail, SpawnCatalog spawns,Boolean captured,boolean shiny) {
+        var species=com.cobblemon.mod.common.api.pokemon.PokemonSpecies.getByIdentifier(ResourceLocation.parse(row.id()));
+        var item=species==null?new ItemStack(Items.PAPER):com.cobblemon.mod.common.item.PokemonItem.from(species,shiny?new String[]{"shiny"}:new String[0]);
         item.set(DataComponents.CUSTOM_NAME, Component.literal(row.name()));
         List<Component> lore = new ArrayList<>();
         lore.add(Component.literal(row.id()));
         lore.add(messages.text(language, "wiki_seen", yesNo(row.seen(), language, messages)));
         lore.add(messages.text(language, "wiki_owned", yesNo(row.owned(), language, messages)));
         lore.add(messages.text(language, "wiki_shiny_seen", yesNo(row.shinySeen(), language, messages)));
-        lore.add(messages.text(language, "collection_unavailable"));
+        lore.add(messages.text(language,"wiki_captured",captured==null?"N/D":yesNo(captured,language,messages)));
+        var spawnLines=spawns.cards(row.id()).stream().filter(card->card.kind()==SpawnCatalog.Kind.ALLOW).flatMap(card->card.values().stream()).distinct().limit(6).toList();
+        if(!spawnLines.isEmpty()){lore.add(messages.text(language,"wiki_spawn_partial"));for(var value:spawnLines)lore.add(Component.literal(value.field()+": "+value.value()));}
+        else lore.add(messages.text(language,"wiki_spawn_unknown"));
         if (detail) {
             Set<String> types = new TreeSet<>(); row.forms().forEach(form -> types.addAll(form.types()));
             lore.add(messages.text(language, "wiki_types", String.join(", ", types)));
             lore.add(messages.text(language, "wiki_forms_count", row.forms().size()));
-            lore.add(messages.text(language, spawnAvailable ? "spawn_hint" : "wiki_spawn_unknown"));
+            lore.add(messages.text(language, spawns.available() ? "spawn_hint" : "wiki_spawn_unknown"));
         } else lore.add(messages.text(language, "wiki_details"));
         item.set(DataComponents.LORE, new ItemLore(lore));
         return item;
     }
     private static ItemStack formItem(String species, ProgressCalculator.Form form, String language, Messages messages) {
-        var item = new ItemStack(Items.PAPER);
+        var definition=com.cobblemon.mod.common.api.pokemon.PokemonSpecies.getByIdentifier(ResourceLocation.parse(species));
+        var formData=definition==null?null:definition.getForms().stream().filter(f->f.getName().equalsIgnoreCase(form.name())).findFirst().orElse(null);
+        var item=definition==null?new ItemStack(Items.PAPER):com.cobblemon.mod.common.item.PokemonItem.from(definition,formData==null?new String[0]:formData.getAspects().toArray(String[]::new));
         item.set(DataComponents.CUSTOM_NAME, Component.literal(form.name()));
         item.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(species),
                 messages.text(language, "wiki_types", String.join(", ", new TreeSet<>(form.types()))),
@@ -324,7 +340,8 @@ public final class MainMenu extends ChestMenu {
     }
     @Override public void clicked(int slot, int button, ClickType type, Player player) {
         if (!stillValid(player) || player.containerMenu != this) return;
-        Runnable action = type == ClickType.PICKUP && button == 0 ? actions.get(slot) : null;
+        Runnable action=null;
+        if(type==ClickType.PICKUP){var registered=actions.get(slot);if(button==0)action=registered;else if(button==1&&registered instanceof ClickAction dual)action=dual.right();}
         try { if (action != null) action.run(); }
         finally { if (player.containerMenu == this) broadcastFullState(); }
     }

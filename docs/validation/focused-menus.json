@@ -1,0 +1,159 @@
+{
+  "date": "2026-11-14",
+  "version": "0.6.0-dev.2",
+  "scope": "Requested focused public menus; local only, no release or push",
+  "build": "build serverDistribution remapCaptureProbeJar: BUILD SUCCESSFUL",
+  "junit": {
+    "tests": 402,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "packaged_server": {
+    "suite": "focused",
+    "starts": 2,
+    "jar": "shirokai-dex-0.6.0-dev.2+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "0dc0401af48479de0fdd118ddd9c5b9fda5bc985996717cc18c52c557a4003d8",
+    "result": "passed"
+  },
+  "current_jar_matches_native_tested": true,
+  "passing": {
+    "timestamp": "2026-11-14T17:03:29.944Z",
+    "results": [
+      {
+        "name": "Focused hub exposes only Dex/rankings/events; four Dex icons and six percentage milestones keep Forms/unconfigured rewards inert",
+        "status": "passed"
+      },
+      {
+        "name": "National excludes special species, wiki sends official 3D model item components and left/right clicks update filter lore and results",
+        "status": "passed"
+      },
+      {
+        "name": "Special Dex contains special species only; native command acquisition does not invent legitimate captures",
+        "status": "passed"
+      },
+      {
+        "name": "Open event card enrolls the player before showing timing, participation and event ranking",
+        "status": "passed"
+      },
+      {
+        "name": "Native verified capture scores enrolled event and unlocks percent reward; clicking grants the example exactly once",
+        "status": "passed"
+      },
+      {
+        "name": "Captured state, verified shiny percentage and Top 10 lore use actual persisted snapshots while Forms remains inactive",
+        "status": "passed"
+      },
+      {
+        "name": "Real native PvE move faints a naturally spawned wild Pok\u00e9mon and credits one defeat without incrementing captures",
+        "status": "passed"
+      },
+      {
+        "name": "Administrative wild Pok\u00e9mon without native spawn proof cannot farm verified defeats",
+        "status": "passed"
+      },
+      {
+        "name": "Defeat leaderboard displays the persisted Top 10 and wiki model items never enter player inventory",
+        "status": "passed"
+      }
+    ]
+  },
+  "restart": {
+    "timestamp": "2026-11-14T17:04:17.402Z",
+    "results": [
+      {
+        "name": "Restart preserves focused navigation, one verified defeat/capture and exactly one percent reward claim",
+        "status": "passed"
+      }
+    ]
+  },
+  "database": {
+    "integrity": "ok",
+    "schema": 16,
+    "captures": 1,
+    "defeats": 1,
+    "defeat_receipts": 1,
+    "completed_rewards": 1
+  },
+  "cleanup": {
+    "normal_world_saves": true,
+    "secret_removed": true,
+    "rcon_disabled": true
+  },
+  "earlier_failures": {
+    "model_protocol": {
+      "timestamp": "2026-11-14T16:43:07.774Z",
+      "results": [
+        {
+          "name": "Focused hub exposes only Dex/rankings/events; four Dex icons and six percentage milestones keep Forms/unconfigured rewards inert",
+          "status": "passed"
+        },
+        {
+          "name": "focused integration",
+          "status": "failed",
+          "error": "The expression evaluated to a falsy value:\n\n  assert(initialNames.some(x=>x.includes('cobblemon:pikachu')))\n"
+        }
+      ]
+    },
+    "battle_probe": {
+      "timestamp": "2026-11-14T16:49:17.576Z",
+      "results": [
+        {
+          "name": "Focused hub exposes only Dex/rankings/events; four Dex icons and six percentage milestones keep Forms/unconfigured rewards inert",
+          "status": "passed"
+        },
+        {
+          "name": "National excludes special species, wiki sends official 3D model item components and left/right clicks update filter lore and results",
+          "status": "passed"
+        },
+        {
+          "name": "Special Dex contains special species only; native command acquisition does not invent legitimate captures",
+          "status": "passed"
+        },
+        {
+          "name": "Open event card enrolls the player before showing timing, participation and event ranking",
+          "status": "passed"
+        },
+        {
+          "name": "Native verified capture scores enrolled event and unlocks percent reward; clicking grants the example exactly once",
+          "status": "passed"
+        },
+        {
+          "name": "Captured state, verified shiny percentage and Top 10 lore use actual persisted snapshots while Forms remains inactive",
+          "status": "passed"
+        },
+        {
+          "name": "focused integration",
+          "status": "failed",
+          "error": "Focused condition timeout"
+        }
+      ]
+    },
+    "battle_transition": {
+      "timestamp": "2026-11-14T17:00:03.211Z",
+      "results": [
+        {
+          "name": "Real native PvE move faints a naturally spawned wild Pok\u00e9mon and credits one defeat without incrementing captures",
+          "status": "passed"
+        },
+        {
+          "name": "focused integration",
+          "status": "failed",
+          "error": "The input did not match the regular expression /SuccessfulBattleStart/. Input:\n\n'Native battle start: ErroredBattleStart'\n"
+        }
+      ]
+    }
+  },
+  "diagnoses": [
+    "Protocol client initially lacked official Cobblemon PokemonItem component codec; added audited fromCodec/NBT schema using real registry ID; production models remained official API items.",
+    "Probe move lacked active enemy target PNX and was rejected by Cobblemon; fixed test fixture to use public ActiveBattlePokemon.getPNX.",
+    "Probe tried second battle before previous victory animation completed; waits for BattleRegistry removal now. No production counting broadened."
+  ],
+  "limits": [
+    "Protocol/component and actual battle validation; graphical Cobblemon client rendering not manually inspected",
+    "No production modpack, load capacity or all external integrations certification",
+    "Existing configuration is preserved; apply focused example to activate on an existing server",
+    "Only example reward is 1 paper at 10 percent National; remaining rewards are intentionally unconfigured",
+    "Forms is intentionally future/inert; no PvP/NPC/unknown-source defeat credit or invented old history"
+  ]
+}

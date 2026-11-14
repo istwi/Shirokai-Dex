@@ -22,7 +22,7 @@ public final class PrizesMenu {
         if(page>0)button(contents,actions,18,messages.text(settings.language(),"page_previous"),()->change.accept(page-1));
         if(awards.size()==10)button(contents,actions,26,messages.text(settings.language(),"page_next"),()->change.accept(page+1));
         button(contents,actions,22,messages.text(settings.language(),"home.return_home"),back);
-        MainMenu.show(player,HomeMenu.gradient(messages.text(settings.language(),"competition_prizes").getString(),settings.home().palette()),contents,actions);
+        MainMenu.styledShow(player,settings,messages,br.com.shirokaidex.menus.layout.MenuNavigation.Screen.PRIZES,messages.text(settings.language(),"competition_prizes").getString(),contents,actions);
     }
     private static void button(SimpleContainer c,Map<Integer,Runnable> actions,int slot,Component label,Runnable action){var item=new ItemStack(Items.ARROW);MenuStyle.card(item,label,List.of(),MenuStyle.NAVIGATION);c.setItem(slot,item);actions.put(slot,action);}
 }

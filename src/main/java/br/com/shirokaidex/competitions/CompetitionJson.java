@@ -17,7 +17,7 @@ public final class CompetitionJson {
     public static CompetitionDefinition read(JsonObject o){
         keys(o,Set.of("id","name","cadence","timezone","start","end","metric","key","category_update_mode","visibility","permission","result_review","antiexploit","prizes"));
         var review=o.has("result_review")?o.getAsJsonObject("result_review"):new JsonObject();keys(review,Set.of("enabled","duration_hours","auto_finalize","hold_affected_rewards","announce_only_final_results"));
-        // Unsafe bypass of pending reviews is not supported. Announcements are disabled until the notification layer.
+        // Unsafe bypass of pending reviews is not supported. Only final results may be announced as official.
         if(!bool(review,"hold_affected_rewards",true))throw new IllegalArgumentException("Affected pending results must remain held");
         if(!bool(review,"announce_only_final_results",true))throw new IllegalArgumentException("Only final result announcements are supported");
         var anti=o.has("antiexploit")?o.getAsJsonObject("antiexploit"):new JsonObject();keys(anti,Set.of("mode","hourly_threshold"));

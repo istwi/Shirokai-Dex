@@ -1,5 +1,11 @@
 # Comandos disponíveis — alpha experimental
 
+## Modo público reduzido
+
+Com home.focused=true, `/dex` abre somente Dex, Rankings de captura e Eventos. `/dex national`, `/dex special` e `/dex shiny` abrem Wiki e marcos da coleção; `/dex top` e `/dex rankings` abrem o seletor reduzido; `/dex competitions` abre os eventosTOTAL. Profile/settings/achievements/history/prizes/records ficam bloqueados publicamente enquanto esse modo estiver ativo. Comandos administrativos mantêm suas permissões. Interfaces completas e dados permanecem preservados para home.focused=false.
+
+Filtro da wiki: clique esquerdo avança; direito volta. Os demais botões não recebem ações arbitrárias por clique direito, arraste ou tecla numérica. Eventos abertos inscrevem ao entrar; prêmio percentual elegível resgata ao clicar com revalidação pelo journal.
+
 | Comando | Comportamento |
 |---|---|
 | `/dex` | Abre seletor de coleções somente de leitura |

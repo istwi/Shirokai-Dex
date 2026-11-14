@@ -1,5 +1,13 @@
 # Validação da fundação
 
+## Menus reduzidos e derrotas
+
+Build local: `JAVA_HOME=/workspace/.tools/jdk-21.0.13+9 python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build serverDistribution remapCaptureProbeJar` —402 JUnit aprovados.
+
+Servidor empacotado: `scripts/integration_server.py --base /tmp/shirokai-packaged-base-v2 --suite focused --root /tmp/RAIZ_NOVA`. Usa fixture de catálogo pequeno, modelo oficial, capture-probe remapeado separado e jogador reservado DexCapture. Testa controles, componentes de modelos, filtros, categorias, origem legítima da captura, recompensa única, eventoTOTAL, combate nativo com golpe real e controle negativo de Pokémon administrativo. Não instalar probes em produção.
+
+`--resume-focused` existe apenas para diagnosticar mundos descartáveis /tmp/shirokai-focused-native*, com propriedades loopback/offline e lock do mundo conferidos; não é recurso de produção. Logs de tentativas anteriores não são sobrescritos. Suite normal fresh + restart é a evidência final; diagnósticos intermediários ficam separados.
+
 ## Testes automatizados Java
 
 ```sh

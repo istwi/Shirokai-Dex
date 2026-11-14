@@ -19,6 +19,6 @@ public final class SettingsMenu {
         }
         ProfileMenu.card(c,16,hidden?Items.GRAY_DYE:Items.LIME_DYE,messages.text(settings.language(),"settings_rankings"),List.of(messages.text(settings.language(),"ranking_privacy",hidden)));actions.put(16,()->visibility.accept(!hidden));
         ProfileMenu.card(c,17,notifications?Items.LIME_DYE:Items.GRAY_DYE,messages.text(settings.language(),"settings_notifications"),List.of(messages.text(settings.language(),"settings_enabled",notifications)));actions.put(17,()->notify.accept(!notifications));
-        ProfileMenu.button(c,actions,22,Items.ARROW,messages.text(settings.language(),"home.return_home"),back);MainMenu.show(player,HomeMenu.gradient(messages.text(settings.language(),"home.settings").getString(),settings.home().palette()),c,actions);
+        ProfileMenu.button(c,actions,22,Items.ARROW,messages.text(settings.language(),"home.return_home"),back);MainMenu.styledShow(player,settings,messages,br.com.shirokaidex.menus.layout.MenuNavigation.Screen.SETTINGS,messages.text(settings.language(),"home.settings").getString(),c,actions);
     }
 }

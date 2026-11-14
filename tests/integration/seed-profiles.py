@@ -8,7 +8,7 @@ try:
 except (ConnectionRefusedError,TimeoutError):pass
 marker=root/'.profiles-fixture.json';assert not marker.exists();player=str(uuid.UUID(bytes=hashlib.md5(b'OfflinePlayer:DexMedal').digest(),version=3));now=int(time.time()*1000);at=datetime.datetime.now(datetime.timezone.utc).isoformat()
 with sqlite3.connect(root/'config/shirokaidex/data/shirokaidex.sqlite') as c:
- assert c.execute('pragma user_version').fetchone()[0]==14;assert c.execute('select count(*) from capture_totals').fetchone()[0]==0
+ assert c.execute('pragma user_version').fetchone()[0]>=14;assert c.execute('select count(*) from capture_totals').fetchone()[0]==0
  c.execute('insert into players values(?,?,?,?)',(player,'DexMedal',at,at))
  for i,(species,shiny,legendary,category) in enumerate([('cobblemon:pikachu',1,0,'past_electric'),('cobblemon:mewtwo',0,1,'past_legendary')]):
   ball=str(uuid.uuid4());pokemon=str(uuid.uuid4());key=ball+':'+pokemon;captured=now-1000*(2-i)

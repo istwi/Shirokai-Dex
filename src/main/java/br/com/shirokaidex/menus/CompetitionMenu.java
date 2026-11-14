@@ -27,7 +27,7 @@ public final class CompetitionMenu {
         if(next)put(contents,actions,26,Items.ARROW,messages.text(settings.language(),"page_next"),List.of(),()->change.accept(page+1));
         put(contents,actions,22,Items.ARROW,messages.text(settings.language(),"home.return_home"),List.of(),home);
         put(contents,actions,24,Items.CHEST,messages.text(settings.language(),"competition_prizes"),List.of(),prizes);
-        MainMenu.show(player,HomeMenu.gradient(messages.text(settings.language(),history?"competition_history":"competition_title").getString(),settings.home().palette()),contents,actions);
+        MainMenu.styledShow(player,settings,messages,br.com.shirokaidex.menus.layout.MenuNavigation.Screen.COMPETITIONS,messages.text(settings.language(),history?"competition_history":"competition_title").getString(),contents,actions);
     }
     public static void edition(ServerPlayer player,Settings settings,Messages messages,Database.CompetitionView view,int page,IntConsumer change,Runnable join,Runnable cancel,Runnable back,Runnable prizes){
         var e=view.edition();var contents=new SimpleContainer(36);var actions=new HashMap<Integer,Runnable>();int slot=0;
@@ -45,13 +45,13 @@ public final class CompetitionMenu {
         if(e.definition().visibility()==CompetitionDefinition.Visibility.PUBLIC&&view.standings().size()==10)put(contents,actions,35,Items.ARROW,messages.text(settings.language(),"page_next"),List.of(),()->change.accept(page+1));
         put(contents,actions,29,Items.CHEST,messages.text(settings.language(),"competition_prizes"),List.of(),prizes);
         put(contents,actions,31,Items.ARROW,messages.text(settings.language(),"home.return_home"),List.of(),back);
-        MainMenu.show(player,HomeMenu.gradient(e.definition().name()+" ["+(page+1)+"]",settings.home().palette()),contents,actions);
+        MainMenu.styledShow(player,settings,messages,br.com.shirokaidex.menus.layout.MenuNavigation.Screen.COMPETITION,e.definition().name()+" ["+(page+1)+"]",contents,actions);
     }
     public static void confirm(ServerPlayer player,Settings settings,Messages messages,String description,Runnable confirm,Runnable back){
         var contents=new SimpleContainer(27);var actions=new HashMap<Integer,Runnable>();
         put(contents,actions,13,Items.RED_DYE,messages.text(settings.language(),"competition_confirm"),List.of(Component.literal(description)),confirm);
         put(contents,actions,15,Items.ARROW,messages.text(settings.language(),"home.return_home"),List.of(),back);
-        MainMenu.show(player,HomeMenu.gradient(messages.text(settings.language(),"competition_confirm").getString(),settings.home().palette()),contents,actions);
+        MainMenu.styledShow(player,settings,messages,br.com.shirokaidex.menus.layout.MenuNavigation.Screen.COMPETITION_CONFIRMATION,messages.text(settings.language(),"competition_confirm").getString(),contents,actions);
     }
     private static void put(SimpleContainer contents,Map<Integer,Runnable> actions,int slot,Item icon,Component name,List<Component> lore,Runnable action){var stack=new ItemStack(icon);MenuStyle.card(stack,name,lore,MenuStyle.NAVIGATION);contents.setItem(slot,stack);actions.put(slot,action);}
 }

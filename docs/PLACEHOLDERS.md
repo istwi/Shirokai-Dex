@@ -1,5 +1,32 @@
 # Placeholders básicos — alpha.4
 
+## Desenvolvimento dev.2 — expansão pública em validação
+
+Novas chaves pela sintaxe real da API, com argumento separado por espaço:
+
+```text
+%shirokaidex:stats total_captures%
+%shirokaidex:stats shiny_captures%
+%shirokaidex:stats legendary_captures%
+%shirokaidex:stats today%
+%shirokaidex:stats week%
+%shirokaidex:stats month%
+%shirokaidex:rank captures%
+%shirokaidex:medals count%
+%shirokaidex:medals 1%
+%shirokaidex:victories%
+%shirokaidex:claimed_rewards%
+%dexrewards:player_dex_percent%
+```
+
+Medals 1/2/3 usa os três favoritos públicos; vazio significa slot sem medalha pública. Count contabiliza somente medalhas públicas ativas e autorizadas pelos requisitos de privacidade. Estatística oculta ou posição indisponível retorna N/D. Valores conhecidos sem atividade retornam zero. A máscara pública se aplica mesmo quando o jogador do contexto consulta o próprio placeholder, pois o consumidor pode transmitir o resultado a terceiros.
+
+`/dex placeholder <métrica> [argumento]` consulta essas expansões pelo parser real. O alias legado só é registrado se não houver outro provedor; equivale ao percentual de national e recusa argumentos.
+
+Cache adicional limitado a 4096 valores/solicitações, 64 solicitações pendentes por jogador e quatro consultas simultâneas. Leituras não executam SQLite; o worker prepara apenas as métricas solicitadas. TTL de cinco segundos permite atualização eventual de contagens. Mudanças de configuração/privacidade nunca reutilizam um valor antigo; logout e parada impedem callbacks tardios de repovoar o cache. Permissões de ranking são rechecadas a cada expansão. Integração positiva real em teste; não declarar TAB validado.
+
+As seções históricas abaixo descrevem a entrega inicial. Customização por JSON e recompensas disponíveis ainda pendentes.
+
 A integração opcional usa **Text Placeholder API 2.4.2+1.21**, de Patbox. Instale essa API separadamente no servidor; ela não é incluída no JAR do Dex. Sem a API, coleções, wiki, SQLite e demais funções existentes continuam disponíveis. Não é necessário configurar credenciais.
 
 ## Sintaxe e valores

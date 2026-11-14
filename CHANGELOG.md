@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0-dev.2 — alterações locais, não publicadas
+
+- Preset público com Dex/Rankings/Eventos e os demais painéis desativados por flag reversível; não sobrescreve configuração existente.
+- Nacional sem lendários/míticos/Ultra Beasts, Special com esses grupos, Shiny por captura verificada; Forms futura e inerte.
+- Wiki com modelos oficiais, captura registrada, resumos de spawn e filtro por clique esquerdo/direito; seis marcos configuráveis, exemplo1 papel e resgate direto pelo journal.
+- Top10 em lore e entrada em eventoTOTAL com inscrição revalidada; derrotas nativas PvE persistentes/schema16, sem crédito para entidades administrativas.
+- Notificações/schema15, placeholders públicos/custom e layouts avançados do bloco anterior permanecem preservados, com escopo descrito nos relatórios.
+-402 JUnit/build e dez checks nativos aprovados, incluindo reinício. Visual gráfico e capacidade/carga não certificados.
+
 ## 0.6.0-dev.1 — snapshot experimental
 
 - Histórico administrativo e filtros, recibos permanentes, retenção limitada, recordes e rankings de capturas.

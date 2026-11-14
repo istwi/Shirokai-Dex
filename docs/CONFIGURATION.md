@@ -56,3 +56,14 @@ Cada recompensa aceita `currencies`: array de até oito entradas CURRENCY, com `
 ## Fuso das estatísticas de captura
 
 `statistics_timezone`: string ZoneId Java, padrão `UTC`, por exemplo `America/Sao_Paulo`. Inválido rejeita configuração/reload. Muda o calendário das consultas, preservando instantes UTC e totais permanentes. [Capturas e limites](CAPTURES.md).
+
+
+## Novas telas — desenvolvimento dev.2
+
+O objeto `menus` também aceita profile, profile_details, settings, achievements, favorites, rankings, ranking, competitions, competition, competition_confirmation e prizes. Reutiliza rows/title/palette/buttons/slots/footer das telas anteriores; ações continuam definidas pelo servidor.
+
+```json
+{"menus":{"settings":{"rows":4,"slots":{"notifications":35}},"profile":{"slots":{"back":53}},"favorites":{"slots":{"first":13,"second":11}}}}
+```
+
+Movimentos não podem sobrepor dados dinâmicos: perfil usa rodapé45–53 ou os slots de ação originais; competição usa27 em diante ou join/cancel originais. Controles mantêm o estado e a ação original. Personalizar aparência não concede permissão ou prêmios. Tamanhos, nomes de ação, conflitos e ícones inválidos rejeitam a configuração completa, preservando a última configuração boa. Validação nativa das novas apresentações ainda pendente.

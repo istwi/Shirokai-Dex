@@ -10,7 +10,7 @@ import java.util.concurrent.*;
 
 /** The connection and all SQL are confined to one worker. No Minecraft objects cross this boundary. */
 public final class Database implements AutoCloseable {
-    public static final int SCHEMA_VERSION=14;
+    public static final int SCHEMA_VERSION=16;
     private final Path file;
     private final ExecutorService worker = Executors.newSingleThreadExecutor(r -> new Thread(r, "shirokaidex-sqlite"));
     private Connection connection;
@@ -73,6 +73,8 @@ public final class Database implements AutoCloseable {
             case 12 -> "/database/V012__competitions.sql";
             case 13 -> "/database/V013__competition_awards.sql";
             case 14 -> "/database/V014__profiles_achievements.sql";
+            case 15 -> "/database/V015__notifications.sql";
+            case 16 -> "/database/V016__defeats.sql";
             default -> throw new SQLException("Unsupported migration " + version);
         };
         String sql;
@@ -202,7 +204,7 @@ public final class Database implements AutoCloseable {
             for (var unlock : immutable) {
                 try (PreparedStatement s = connection.prepareStatement("INSERT INTO reward_unlocks VALUES(?,?,?,?,?,?) ON CONFLICT(player_uuid,reward_id) DO NOTHING")) {
                     s.setString(1,player.toString()); s.setString(2,unlock.plan().id()); s.setString(3,unlock.plan().json());
-                    s.setInt(4,unlock.registered()); s.setInt(5,unlock.total()); s.setString(6,Instant.now().toString()); s.executeUpdate();
+                    s.setInt(4,unlock.registered()); s.setInt(5,unlock.total()); s.setString(6,Instant.now().toString()); if(s.executeUpdate()==1)br.com.shirokaidex.notifications.NotificationOutbox.enqueue(connection,"reward-unlocked:"+player+":"+unlock.plan().id(),player.toString(),br.com.shirokaidex.notifications.NotificationPolicy.Event.REWARD_UNLOCKED,unlock.plan().id(),Instant.now());
                 }
             }
             java.util.Set<String> ids = new java.util.HashSet<>();
@@ -237,6 +239,16 @@ public final class Database implements AutoCloseable {
     public long privacyRevision(){return privacyRevision;}
     public CompletableFuture<java.util.Map<br.com.shirokaidex.profiles.StatisticsPrivacy.Key,Boolean>> statisticsPrivacy(UUID player){return submit(()->br.com.shirokaidex.profiles.StatisticsPrivacy.preferences(connection,player));}
     public CompletableFuture<Void> statisticsPrivacy(UUID player,br.com.shirokaidex.profiles.StatisticsPrivacy.Key key,boolean visible){return submit(()->{br.com.shirokaidex.profiles.StatisticsPrivacy.set(connection,player,key,visible);rankingCache.clear();privacyRevision++;return null;});}
+    public record RewardAvailabilityView(long count,long privacyRevision) { }
+    public CompletableFuture<RewardAvailabilityView> publicRewardAvailability(UUID player,java.util.List<br.com.shirokaidex.rewards.RewardPlan> authorized,Instant now){
+        var plans=java.util.List.copyOf(authorized);return submit(()->transaction(()->new RewardAvailabilityView(br.com.shirokaidex.placeholders.RewardAvailability.count(connection,player,plans,now),privacyRevision)));
+    }
+    public CompletableFuture<java.util.List<br.com.shirokaidex.notifications.NotificationOutbox.Notice>> claimNotifications(String target,Instant now){return submit(()->transaction(()->br.com.shirokaidex.notifications.NotificationOutbox.claim(connection,target,now)));}
+    public CompletableFuture<java.util.Set<UUID>> notificationAudience(java.util.List<UUID> players){var ids=java.util.List.copyOf(players);return submit(()->{var allowed=new java.util.HashSet<UUID>();for(var player:ids)if(br.com.shirokaidex.profiles.ProfileStore.preferences(connection,player).notifications())allowed.add(player);return java.util.Set.copyOf(allowed);});}
+    public CompletableFuture<Boolean> recordDefeat(br.com.shirokaidex.defeats.DefeatRecord record){return submit(()->transaction(()->br.com.shirokaidex.defeats.DefeatLedger.record(connection,record)));}
+    public record DefeatRanking(java.util.List<br.com.shirokaidex.defeats.DefeatLedger.Entry> entries,long privacyRevision) { }
+    public CompletableFuture<DefeatRanking> defeatRanking(){return submit(()->new DefeatRanking(br.com.shirokaidex.defeats.DefeatLedger.top(connection),privacyRevision));}
+    public CompletableFuture<java.util.Set<String>> capturedSpecies(UUID player,boolean shiny){return submit(()->{var species=new java.util.HashSet<String>();try(var q=connection.prepareStatement("SELECT DISTINCT species FROM captured_forms WHERE player_uuid=?"+(shiny?" AND shiny=1":""))){q.setString(1,player.toString());try(var rows=q.executeQuery()){while(rows.next())species.add(rows.getString(1));}}return java.util.Set.copyOf(species);});}
     public record ProfileView(java.util.Optional<br.com.shirokaidex.profiles.ProfileStore.Data> data,long privacyRevision) { }
     public CompletableFuture<ProfileView> profile(String input,UUID viewer,br.com.shirokaidex.config.Settings settings,java.util.Map<String,String> versions,java.util.Set<String> visibleCollections,java.util.List<br.com.shirokaidex.rankings.CaptureRanking> visibleRankings,Instant now){return submit(()->transaction(()->new ProfileView(br.com.shirokaidex.profiles.ProfileStore.view(connection,input,viewer,settings.statisticsPrivacy(),versions,visibleCollections,settings.collections().stream().collect(java.util.stream.Collectors.toUnmodifiableMap(br.com.shirokaidex.pokedex.CollectionDefinition::id,br.com.shirokaidex.pokedex.CollectionDefinition::mode)),settings.achievements(),visibleRankings,now,settings.statisticsTimezone()),privacyRevision)));}
     public CompletableFuture<java.util.List<String>> observeProfile(UUID player,java.util.List<br.com.shirokaidex.profiles.ProfileProgress.Proof> progress,br.com.shirokaidex.config.Settings settings,Instant now){return submit(()->{
@@ -244,7 +256,10 @@ public final class Database implements AutoCloseable {
         var result=transaction(()->{
             if(preserve)br.com.shirokaidex.achievements.AchievementStore.preserve(connection,settings.achievements(),now);
             if(br.com.shirokaidex.profiles.ProfileProgress.observe(connection,player,progress))rankingCache.clear();
-            return br.com.shirokaidex.achievements.AchievementStore.evaluate(connection,player,settings.achievements(),progress,now);
+            br.com.shirokaidex.notifications.NotificationOutbox.progress(connection,player,progress,now);
+            var unlocked=br.com.shirokaidex.achievements.AchievementStore.evaluate(connection,player,settings.achievements(),progress,now);
+            for(String id:unlocked)for(var definition:settings.achievements())if(definition.id().equals(id)&&definition.notifyPlayer())br.com.shirokaidex.notifications.NotificationOutbox.enqueue(connection,"achievement:"+player+":"+id,player.toString(),br.com.shirokaidex.notifications.NotificationPolicy.Event.ACHIEVEMENT,definition.name(),now);
+            return unlocked;
         });
         if(preserve)preservedAchievements=java.util.List.copyOf(settings.achievements());return result;
     });}
@@ -263,6 +278,7 @@ public final class Database implements AutoCloseable {
     public CompletableFuture<br.com.shirokaidex.competitions.CompetitionStore.HistoryPage> competitionHistory(br.com.shirokaidex.competitions.CompetitionStore.HistoryFilter filter,int page){return submit(()->br.com.shirokaidex.competitions.CompetitionStore.history(connection,filter,page));}
     public CompletableFuture<java.util.List<String>> competitionAdminRows(String edition,String mode,String event,int page){return submit(()->br.com.shirokaidex.competitions.CompetitionStore.adminRows(connection,edition,mode,event,page));}
     public CompletableFuture<Void> synchronizeCompetitions(br.com.shirokaidex.config.Settings settings,Instant now){return submit(()->transaction(()->{br.com.shirokaidex.competitions.CompetitionStore.synchronize(connection,settings.competitions(),settings.categories(),settings.rewards(),now);return null;}));}
+    public CompletableFuture<java.util.Optional<br.com.shirokaidex.competitions.CompetitionStore.Edition>> competitionEdition(String id){return submit(()->br.com.shirokaidex.competitions.CompetitionStore.edition(connection,id));}
     public CompletableFuture<java.util.List<br.com.shirokaidex.competitions.CompetitionStore.Edition>> competitionEditions(boolean history){return submit(()->br.com.shirokaidex.competitions.CompetitionStore.editions(connection,history));}
     public CompletableFuture<Boolean> enrollCompetition(String edition,UUID player,Instant now){return submit(()->transaction(()->br.com.shirokaidex.competitions.CompetitionStore.enroll(connection,edition,player,now)));}
     public CompletableFuture<Boolean> cancelCompetition(String edition,UUID player,boolean confirmed,Instant now){return submit(()->transaction(()->br.com.shirokaidex.competitions.CompetitionStore.cancel(connection,edition,player,confirmed,now)));}
@@ -326,7 +342,11 @@ public final class Database implements AutoCloseable {
     public CompletableFuture<Boolean> beginReward(UUID id) { return submit(() -> transaction(() -> br.com.shirokaidex.rewards.RewardJournal.begin(connection,id))); }
     public CompletableFuture<Boolean> rewardIntent(UUID id, int step) { return submit(() -> transaction(() -> br.com.shirokaidex.rewards.RewardJournal.intent(connection,id,step))); }
     public CompletableFuture<Boolean> rewardDelivered(UUID id, int step, String evidence) { return submit(() -> transaction(() -> br.com.shirokaidex.rewards.RewardJournal.delivered(connection,id,step,evidence))); }
-    public CompletableFuture<Boolean> completeReward(UUID id) { return submit(() -> transaction(() -> br.com.shirokaidex.rewards.RewardJournal.complete(connection,id))); }
+    public CompletableFuture<Boolean> completeReward(UUID id) { return submit(() -> transaction(() -> {
+        boolean changed=br.com.shirokaidex.rewards.RewardJournal.complete(connection,id);
+        if(changed){var operation=br.com.shirokaidex.rewards.RewardJournal.find(connection,id).orElseThrow();var payload=com.google.gson.JsonParser.parseString(operation.plan()).getAsJsonObject();if(!payload.has("source")||!"ADMIN_ITEM".equals(payload.get("source").getAsString()))br.com.shirokaidex.notifications.NotificationOutbox.enqueue(connection,"reward-claimed:"+id,operation.player().toString(),br.com.shirokaidex.notifications.NotificationPolicy.Event.REWARD_CLAIMED,operation.reward(),Instant.now());}
+        return changed;
+    })); }
     public CompletableFuture<Boolean> reviewReward(UUID id, String reason) { return submit(() -> transaction(() -> br.com.shirokaidex.rewards.RewardJournal.review(connection,id,reason))); }
     public CompletableFuture<Boolean> cancelReward(UUID id, String actor, String reason) { return submit(() -> transaction(() -> br.com.shirokaidex.rewards.RewardJournal.cancel(connection,id,actor,reason))); }
     public CompletableFuture<Boolean> resolveReward(UUID id, String actor, String evidence) { return submit(() -> transaction(() -> br.com.shirokaidex.rewards.RewardJournal.resolveCompleted(connection,id,actor,evidence))); }

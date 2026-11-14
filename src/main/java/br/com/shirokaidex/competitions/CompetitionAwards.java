@@ -29,7 +29,7 @@ public final class CompetitionAwards {
             try{plan=RewardSnapshot.awardPlan(RewardSnapshot.decode(templates.get(assignment.band().reward()).getAsString()),id);}catch(RuntimeException invalid){throw new SQLException("Frozen competition award unavailable",invalid);}
             var expires=policy.expiryDays()==0?null:now.plus(Duration.ofDays(policy.expiryDays()));
             try(var q=c.prepareStatement("INSERT INTO competition_awards VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT DO NOTHING")){
-                q.setString(1,id);q.setString(2,edition.id());q.setString(3,assignment.player().toString());q.setInt(4,assignment.sourcePosition());q.setInt(5,assignment.band().maximumPosition());q.setString(6,assignment.band().reward());q.setString(7,RewardSnapshot.encode(plan));q.setLong(8,now.toEpochMilli());if(expires==null)q.setNull(9,Types.BIGINT);else q.setLong(9,expires.toEpochMilli());q.executeUpdate();
+                q.setString(1,id);q.setString(2,edition.id());q.setString(3,assignment.player().toString());q.setInt(4,assignment.sourcePosition());q.setInt(5,assignment.band().maximumPosition());q.setString(6,assignment.band().reward());q.setString(7,RewardSnapshot.encode(plan));q.setLong(8,now.toEpochMilli());if(expires==null)q.setNull(9,Types.BIGINT);else q.setLong(9,expires.toEpochMilli());if(q.executeUpdate()==1)br.com.shirokaidex.notifications.NotificationOutbox.enqueue(c,"prize:"+id,assignment.player().toString(),br.com.shirokaidex.notifications.NotificationPolicy.Event.PRIZE_AVAILABLE,edition.definition().name(),now);
             }
         }
     }

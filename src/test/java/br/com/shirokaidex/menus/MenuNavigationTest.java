@@ -34,6 +34,19 @@ class MenuNavigationTest {
         "{\"wiki\":{\"slots\":{\"unknown\":30}}}","{\"wiki\":{\"slots\":{\"close\":35.0}}}",
         "{\"wiki\":{\"slots\":{\"close\":\"35\"}}}","{\"wiki\":{\"slots\":{\"close\":35,\"close\":34}}}"
     }) void unsafeLayoutsRejectWholeConfiguration(String menus){assertThrows(java.io.IOException.class,()->ConfigManager.parse(config(menus)));}
+    @Test void newScreensAllowActionSwapsAndFooterMovesButProtectDynamicProfileAndCompetitionData()throws Exception {
+        var settings=ConfigManager.parse(config("""
+          {"profile":{"slots":{"back":53},"buttons":{"back":{"name":"{name} • {player}"}}},
+           "settings":{"rows":4,"slots":{"notifications":35}},
+           "favorites":{"slots":{"first":13,"second":11}},
+           "competition":{"slots":{"join":28,"prizes":33}},
+           "competition_confirmation":{"slots":{"confirm":18,"back":26}}}
+          """));
+        assertEquals(53,settings.menus().layout(MenuNavigation.Screen.PROFILE).slots().get("back"));
+        assertEquals(35,settings.menus().layout(MenuNavigation.Screen.SETTINGS).slots().get("notifications"));
+        assertEquals(13,settings.menus().layout(MenuNavigation.Screen.FAVORITES).moves().get(11));
+        for(String invalid:List.of("{\"profile\":{\"slots\":{\"back\":37}}}","{\"competition\":{\"slots\":{\"join\":22}}}","{\"favorites\":{\"slots\":{\"first\":4}}}","{\"settings\":{\"slots\":{\"notifications\":9}}}"))assertThrows(java.io.IOException.class,()->ConfigManager.parse(config(invalid)));
+    }
     @Test void invalidReloadPreservesLastGoodNavigationAndRecoveryBackup()throws Exception {
         var manager=new ConfigManager(directory);manager.initialize();
         Files.writeString(directory.resolve("config.json"),config("{\"wiki\":{\"slots\":{\"close\":35}}}"));manager.reload();

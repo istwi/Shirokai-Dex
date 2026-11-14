@@ -20,7 +20,7 @@ public final class RankingsMenu {
         if(slice.number()+1<slice.pages())put(contents,actions,26,Items.ARROW,messages.text(settings.language(),"page_next"),List.of(),()->change.accept(slice.number()+1));
         put(contents,actions,22,Items.ARROW,messages.text(settings.language(),"home.return_home"),List.of(),home);
         put(contents,actions,24,Items.GOLDEN_SWORD,messages.text(settings.language(),"competition_title"),List.of(),competitions);
-        MainMenu.show(player,HomeMenu.gradient(messages.text(settings.language(),"ranking_title").getString(),settings.home().palette()),contents,actions);
+        MainMenu.styledShow(player,settings,messages,br.com.shirokaidex.menus.layout.MenuNavigation.Screen.RANKINGS,messages.text(settings.language(),"ranking_title").getString(),contents,actions);
     }
     public static void ranking(ServerPlayer player,Settings settings,Messages messages,CaptureRanking definition,CaptureRankings.Page page,int number,IntConsumer change,Runnable back,Consumer<UUID> profile) {
         var contents=new SimpleContainer(27);var actions=new HashMap<Integer,Runnable>();
@@ -35,7 +35,7 @@ public final class RankingsMenu {
         if(number>0)put(contents,actions,18,Items.ARROW,messages.text(settings.language(),"page_previous"),List.of(),()->change.accept(number-1));
         if(page.hasMore())put(contents,actions,26,Items.ARROW,messages.text(settings.language(),"page_next"),List.of(),()->change.accept(number+1));
         put(contents,actions,22,Items.ARROW,messages.text(settings.language(),"home.return_home"),List.of(),back);
-        MainMenu.show(player,HomeMenu.gradient(definition.name()+" ["+(number+1)+"]",settings.home().palette()),contents,actions);
+        MainMenu.styledShow(player,settings,messages,br.com.shirokaidex.menus.layout.MenuNavigation.Screen.RANKING,definition.name()+" ["+(number+1)+"]",contents,actions);
     }
     private static void put(SimpleContainer contents,Map<Integer,Runnable> actions,int slot,Item item,Component name,List<Component> lore,Runnable action){var stack=new ItemStack(item);MenuStyle.card(stack,name,lore,MenuStyle.NAVIGATION);contents.setItem(slot,stack);actions.put(slot,action);}
 }

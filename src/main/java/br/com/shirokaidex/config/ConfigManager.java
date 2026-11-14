@@ -35,7 +35,7 @@ public final class ConfigManager {
         Files.createDirectories(directory);
         Path config = directory.resolve("config.json");
         if (Files.notExists(config)) {
-            writeAtomic(config, "{\n  \"schema_version\": 1,\n  \"language\": \"pt_br\",\n  \"menu_title\": \"✦ Shirokai Dex\"\n}\n");
+            try(var input=ConfigManager.class.getResourceAsStream("/config/focused.json")){if(input==null)throw new IOException("Missing default preset");writeAtomic(config,new String(input.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));}
         }
         try { reload(); }
         catch (IOException failure) {
@@ -96,6 +96,8 @@ public final class ConfigManager {
             String language = null, title = null;
             List<CollectionDefinition> collections = CollectionDefinition.defaults();
             List<br.com.shirokaidex.rewards.RewardPlan> rewards = List.of();
+            var notifications=br.com.shirokaidex.notifications.NotificationPolicy.defaults();
+            var customPlaceholders=java.util.List.<br.com.shirokaidex.placeholders.CustomPlaceholder>of();
             var achievements=java.util.List.<br.com.shirokaidex.achievements.AchievementDefinition>of();
             var statisticsPrivacy=br.com.shirokaidex.profiles.StatisticsPrivacy.defaultsPolicy();
             var competitions=java.util.List.<br.com.shirokaidex.competitions.CompetitionDefinition>of();
@@ -120,6 +122,8 @@ public final class ConfigManager {
                     case "language" -> language = string(reader, key);
                     case "menu_title" -> title = string(reader, key);
                     case "statistics_timezone"->{try{statisticsTimezone=java.time.ZoneId.of(string(reader,key));}catch(java.time.DateTimeException invalid){throw new IOException("Invalid statistics timezone",invalid);}}
+                    case "notifications"->notifications=NotificationsCodec.read(reader);
+                    case "custom_placeholders"->customPlaceholders=CustomPlaceholdersCodec.read(reader);
                     case "achievements"->achievements=AchievementsCodec.read(reader);
                     case "statistics_privacy"->statisticsPrivacy=StatisticsPrivacyCodec.read(reader);
                     case "competitions"->competitions=CompetitionsCodec.read(reader);
@@ -139,7 +143,7 @@ public final class ConfigManager {
             if (version == null || language == null || title == null) throw new IOException("config.json: schema_version, language and menu_title are required");
             if (!Set.of("pt_br", "en_us").contains(language)) throw new IOException("config.json: unsupported language");
             if (title.isBlank() || title.length() > 128 || title.codePoints().anyMatch(Character::isISOControl)) throw new IOException("config.json: invalid menu_title");
-            return new Settings(version, language, title, collections, categories, rewards,home,menus,commandPolicy,statisticsTimezone,captureHistory,rankings==null?br.com.shirokaidex.rankings.CaptureRanking.defaultsFor(collections):rankings,competitions,achievements,statisticsPrivacy);
+            return new Settings(version, language, title, collections, categories, rewards,home,menus,commandPolicy,statisticsTimezone,captureHistory,rankings==null?br.com.shirokaidex.rankings.CaptureRanking.defaultsFor(collections):rankings,competitions,achievements,statisticsPrivacy,customPlaceholders,notifications);
         } catch (RuntimeException failure) {
             throw new IOException("config.json: invalid field or JSON structure", failure);
         }

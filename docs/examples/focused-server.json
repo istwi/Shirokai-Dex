@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "language": "pt_br",
+  "menu_title": "Shirokai Dex",
+  "home": {
+    "focused": true,
+    "milestones": [
+      10,
+      25,
+      50,
+      75,
+      90,
+      100
+    ]
+  },
+  "categories": [
+    {
+      "id": "special_species",
+      "criteria": {
+        "labels": [
+          "legendary",
+          "mythical",
+          "ultra_beast"
+        ]
+      }
+    },
+    {
+      "id": "ordinary_species",
+      "none_of": [
+        "special_species"
+      ]
+    }
+  ],
+  "collections": [
+    {
+      "id": "national",
+      "name": "Nacional Dex",
+      "category": "ordinary_species",
+      "progress_mode": "OWNED"
+    },
+    {
+      "id": "special",
+      "name": "Special Dex",
+      "icon": "minecraft:nether_star",
+      "category": "special_species",
+      "progress_mode": "OWNED"
+    },
+    {
+      "id": "shiny",
+      "name": "Shiny Dex",
+      "progress_mode": "SHINY_CAPTURED"
+    }
+  ],
+  "rankings": [
+    {
+      "id": "dex_national",
+      "name": "Nacional Dex",
+      "metric": "COLLECTION",
+      "key": "national"
+    },
+    {
+      "id": "dex_special",
+      "name": "Special Dex",
+      "metric": "COLLECTION",
+      "key": "special"
+    },
+    {
+      "id": "dex_shiny",
+      "name": "Shiny Dex",
+      "metric": "COLLECTION",
+      "key": "shiny"
+    },
+    {
+      "id": "captures",
+      "name": "Capturas gerais",
+      "metric": "TOTAL"
+    },
+    {
+      "id": "shiny_captures",
+      "name": "Capturas shiny",
+      "metric": "SHINY"
+    },
+    {
+      "id": "legendary_captures",
+      "name": "Capturas lendárias",
+      "metric": "LEGENDARY"
+    }
+  ],
+  "rewards": [
+    {
+      "id": "national_10_example",
+      "collection": "national",
+      "minimum_percent": 10,
+      "items": [
+        {
+          "id": "minecraft:paper",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

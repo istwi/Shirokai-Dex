@@ -1,5 +1,11 @@
 # SQLite — migração 1
 
+## Schema15 e16 — desenvolvimento local
+
+V015 adiciona notification_outbox e notification_progress: identidades persistentes de avisos e baseline de progresso. Claim-before-send evita repetição, podendo perder um aviso se houver crash entre claim e envio; não há promessa de entrega exatamente uma vez em chat/sons. Materiais continuam no journal de recompensas, independente dos avisos.
+
+V016 adiciona defeat_receipts (battle_uuid,pokemon_uuid,player_uuid,species,defeated_at) e defeat_totals (player_uuid,total,reached_at), com índice do ranking. Recibo e agregado na mesma transação. Conflito battle+pokemon não permite trocar o jogador creditado. Backfill de derrotas antigas não existe; migrações preservam dados anteriores. Versão de banco superior à suportada continua bloqueada.
+
 ## Schema10 — recibos permanentes e histórico descartável
 
 V010__capture_receipts.sql copia chave/player/instante/verificação dos eventos presentes para capture_receipts e cria índices de recibos e paginação do histórico. Recibos, prova consumida, detalhes opcionais, totais e Shiny participam da mesma transação de captura. Não há FK que apague recibos quando detalhes expiram. Backup obrigatório antes de migração; binários schema9 não suportam o banco novo. [Retenção](RETENTION.md).

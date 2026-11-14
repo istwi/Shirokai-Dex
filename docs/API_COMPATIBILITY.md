@@ -1,5 +1,13 @@
 # Auditoria de compatibilidade — Fase 0
 
+## Menus reduzidos e derrotas — validação local
+
+Cobblemon1.8.3: `PokemonItem.from(Species,String...)`, `PokemonSpecies.getByIdentifier` e aspectos oficiais de FormData usados para ícones; componentes POKEMON_ITEM preservados. Codec de rede PokemonItemComponent.PACKET_CODEC conferido por javap: PacketCodecs.fromCodec(CODEC). O cliente de protocolo de teste foi ampliado apenas para esse componente usando o ID real do registro; não substitui teste visual no cliente Cobblemon.
+
+BATTLE_STARTED_POST/BATTLE_FAINTED/BATTLE_ENDED, PokemonBattle.getPlayers/getActors/getBattleId e BattlePokemon.getActor/getUuid/getHealth auditados por javap. Origem nativa reutiliza CaptureAccess.observe; o evento de faint real foi observado na thread do servidor após HP0. Probe separado usou MoveActionResponse com PNX do adversário ativo, sem fabricar evento/faint. Primeiro ataque do probe foi rejeitado por falta de alvo; corrigido. Outro teste antecipava a segunda batalha antes do encerramento da animação; passou a esperar remoção da batalha do registro. A implementação de produção da contagem não foi ampliada para aceitar fontes incertas.
+
+402 JUnit/build aprovados. Dez checks nativos do fluxo reduzido passaram, incluindo persistência após reinício; evidência em validation/focused-menus.json. Native client gráfico/carga e modpacks externos continuam sem certificação. Sem nova publicação.
+
 ## Snapshot 0.6.0-dev.1
 
 Schema14/perfis/conquistas integrados às APIs existentes; comparação racional usa org.sqlite.Collation.create/xCompare em sqlite-jdbc3.47.1.0, sem índice persistente dependente da collation. Build e 382 JUnit aprovados. API opcional de placeholders permanece isolada; alias dexrewards:player_dex_percent e máscara pública acrescentados, integração positiva ainda pendente. Não certificar TAB/SkiesGUIs ou CRATE_KEY sem versão/contrato e teste real. Ver [perfis](PROFILES.md) e relatório development-0.6.0-dev.1.json.

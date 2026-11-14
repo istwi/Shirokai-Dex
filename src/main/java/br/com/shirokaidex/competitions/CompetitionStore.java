@@ -21,7 +21,7 @@ public final class CompetitionStore {
     public static void synchronize(Connection c,List<CompetitionDefinition> definitions,CategoryCatalog categories,List<br.com.shirokaidex.rewards.RewardPlan> rewards,Instant now)throws SQLException {
         for(var edition:editions(c,false)){
             if(edition.state()==State.ACTIVE&&!now.isBefore(edition.end())){
-                try(var q=c.prepareStatement("UPDATE competition_editions SET state='REVIEW' WHERE edition_id=? AND state='ACTIVE'")){q.setString(1,edition.id());q.executeUpdate();}
+                try(var q=c.prepareStatement("UPDATE competition_editions SET state='REVIEW' WHERE edition_id=? AND state='ACTIVE'")){q.setString(1,edition.id());if(q.executeUpdate()==1)br.com.shirokaidex.notifications.NotificationOutbox.competition(c,edition.id(),edition.definition().name(),br.com.shirokaidex.notifications.NotificationPolicy.Event.COMPETITION_ENDED,edition.definition().visibility()==CompetitionDefinition.Visibility.PUBLIC,now);}
                 results(c,edition.id());audit(c,edition.id(),null,null,"SYSTEM","CLOSED","Calendar deadline",now);
             }
         }
@@ -86,7 +86,7 @@ public final class CompetitionStore {
         var found=edition(c,id);if(found.isEmpty()||!active(found.get(),now))return false;
         try(var q=c.prepareStatement("INSERT INTO competition_entries(edition_id,player_uuid,joined_at) VALUES(?,?,?) ON CONFLICT DO NOTHING")){
             q.setString(1,id);q.setString(2,player.toString());q.setLong(3,now.toEpochMilli());boolean inserted=q.executeUpdate()==1;
-            if(inserted)audit(c,id,player,null,player.toString(),"JOINED","Player enrollment",now);return inserted;
+            if(inserted){audit(c,id,player,null,player.toString(),"JOINED","Player enrollment",now);br.com.shirokaidex.notifications.NotificationOutbox.enqueue(c,"competition-joined:"+id+":"+player,player.toString(),br.com.shirokaidex.notifications.NotificationPolicy.Event.COMPETITION_JOINED,found.get().definition().name(),now);}return inserted;
         }
     }
     public static boolean cancel(Connection c,String id,UUID player,boolean confirmed,Instant now)throws SQLException {
@@ -155,6 +155,7 @@ public final class CompetitionStore {
         results(c,id);
         CompetitionAwards.assign(c,found.get(),now);
         try(var q=c.prepareStatement("UPDATE competition_editions SET state='FINAL',finalized_at=? WHERE edition_id=? AND state='REVIEW'")){q.setLong(1,now.toEpochMilli());q.setString(2,id);if(q.executeUpdate()!=1)return false;}
+        br.com.shirokaidex.notifications.NotificationOutbox.competition(c,id,found.get().definition().name(),br.com.shirokaidex.notifications.NotificationPolicy.Event.RESULTS,found.get().definition().visibility()==CompetitionDefinition.Visibility.PUBLIC,now);
         audit(c,id,null,null,actor,"FINALIZED",reason,now);return true;
     }
     private static void results(Connection c,String id)throws SQLException {

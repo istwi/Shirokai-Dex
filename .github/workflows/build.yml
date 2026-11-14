@@ -49,7 +49,7 @@ jobs:
     if: >-
       github.event_name == 'push' &&
       github.ref == 'refs/heads/handoff/crates-checkpoint' &&
-      github.event.head_commit.message == 'release: distribute v0.6.0-dev.1 snapshot'
+      github.event.head_commit.message == 'release: distribute v0.6.0-dev.2 snapshot'
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -67,18 +67,27 @@ jobs:
         run: |
           cd release-assets
           sha256sum --check SHA256SUMS
-          cp ../docs/validation/development-0.6.0-dev.1.json validation.json
+          cp ../docs/validation/focused-menus.json validation.json
+          cp ../docs/examples/focused-server.json focused-server.json
           python3 - <<'PY'
-          import json, os
+          import json, os, hashlib
           from pathlib import Path
-          Path('BUILD_PROVENANCE.json').write_text(json.dumps({'source_commit': os.environ['GITHUB_SHA'], 'build_run': os.environ['GITHUB_RUN_ID'], 'version': '0.6.0-dev.1', 'validation': 'CI clean build/test/serverDistribution; native evidence scoped separately in repository'}, indent=2)+'\n')
+          jar=next(Path('.').glob('*.jar'))
+          expected=json.loads(Path('validation.json').read_text())['packaged_server']['sha256']
+          assert hashlib.sha256(jar.read_bytes()).hexdigest()==expected, 'CI binary differs from native-tested binary; refusing publication'
+          Path('BUILD_PROVENANCE.json').write_text(json.dumps({'source_commit': os.environ['GITHUB_SHA'], 'build_run': os.environ['GITHUB_RUN_ID'], 'version': '0.6.0-dev.2', 'validation': 'CI clean build/test/serverDistribution; native evidence scoped separately in repository'}, indent=2)+'\n')
           PY
-          sha256sum *.jar validation.json BUILD_PROVENANCE.json > SHA256SUMS
-          gh release view v0.6.0-dev.1 --json isDraft --jq '.isDraft' | grep -qx true
-          gh release upload v0.6.0-dev.1 ./*
+          sha256sum *.jar *.json > SHA256SUMS
+          if gh release view v0.6.0-dev.2 >/dev/null 2>&1; then
+            echo 'Release already exists; refusing to replace it.'
+            exit 1
+          fi
+          gh release create v0.6.0-dev.2 --target "$GITHUB_SHA" --draft --prerelease --title 'Shirokai Dex 0.6.0-dev.2 — menus reduzidos' --notes-file ../docs/releases/v0.6.0-dev.2.md
+          gh release view v0.6.0-dev.2 --json isDraft --jq '.isDraft' | grep -qx true
+          gh release upload v0.6.0-dev.2 ./*
           mkdir ../verified-release
-          gh release download v0.6.0-dev.1 --dir ../verified-release
+          gh release download v0.6.0-dev.2 --dir ../verified-release
           cd ../verified-release
           sha256sum --check SHA256SUMS
           diff BUILD_PROVENANCE.json ../release-assets/BUILD_PROVENANCE.json
-          gh release edit v0.6.0-dev.1 --draft=false --prerelease --notes-file ../docs/releases/v0.6.0-dev.1.md
+          gh release edit v0.6.0-dev.2 --draft=false --prerelease --notes-file ../docs/releases/v0.6.0-dev.2.md

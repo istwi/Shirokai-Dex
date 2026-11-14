@@ -16,13 +16,58 @@ function data(window){return JSON.stringify(window.slots.slice(0,window.inventor
 function itemData(item){return JSON.stringify(item?.components||[]);}
 async function response(bot,text,matches){return new Promise((resolve,reject)=>{const timeout=setTimeout(()=>{bot.removeListener('messagestr',listener);reject(new Error('Missing response: '+text));},15000);function listener(value){if(matches(value)){clearTimeout(timeout);bot.removeListener('messagestr',listener);resolve(value);}}bot.on('messagestr',listener);send(bot,text).catch(reject);});}
 async function favorite(name,slot){let menu=await open(actor,'/dex achievements');const index=menu.slots.slice(0,menu.inventoryStart).findIndex(item=>itemData(item).includes(name));assert(index>=0,name);menu=await click(actor,index);assert(itemData(menu.slots[4]).includes(name));await click(actor,11+slot*2);}
+async function metric(name,arg=''){const prefix=`Placeholder ${name} ${arg}: `;return (await response(actor,`/dex placeholder ${name}${arg?' '+arg:''}`,text=>text.startsWith(prefix))).slice(prefix.length);}
+async function publicMetrics(){
+ await close(actor);await until(async()=>await metric('stats','total_captures')==='2');
+ await until(async()=>await metric('stats','shiny_captures')==='1');
+ await until(async()=>await metric('rank','captures')==='1');
+ await until(async()=>await metric('claimed_rewards')==='0');
+ await until(async()=>await metric('available_rewards')==='0');
+ await until(async()=>await metric('victories')==='0');
+ await until(async()=>await metric('medals','count')==='4');
+ await until(async()=>await metric('medals','1')==='Capturas verificadas');
+ await response(actor,'/dex settings privacy total_captures false',text=>text.includes('Preferência salva'));
+ assert.equal(await metric('stats','total_captures'),'N/D');assert.equal(await metric('stats','week'),'N/D');assert.equal(await metric('rank','captures'),'N/D');
+ await until(async()=>await metric('medals','count')==='2');await until(async()=>await metric('medals','1')==='');
+ await response(actor,'/dex settings privacy total_captures true',text=>text.includes('Preferência salva'));await until(async()=>await metric('stats','total_captures')==='2');
+ const prefix='Placeholder legacy national: ';let legacy;await until(async()=>{legacy=(await response(actor,'/dex national placeholder legacy',text=>text.startsWith(prefix))).slice(prefix.length);return legacy!=='N/D';});
+ const ordinary=(await response(actor,'/dex national placeholder percent',text=>text.startsWith('Placeholder percent national: '))).slice('Placeholder percent national: '.length);assert.equal(legacy,ordinary);
+ pass('Real optional Placeholder API expands public stats/rank/medals/wins/rewards and legacy alias; warm values disappear after privacy changes without leaking own-view data');
+ const configPath=path.join(root,'config/shirokaidex/config.json'),original=fs.readFileSync(configPath,'utf8');
+ const modified=JSON.parse(original);modified.menus={settings:{rows:4,title:'Preferências de {player}',slots:{notifications:35}},profile:{slots:{back:53}},favorites:{slots:{first:13,second:11}}};
+ modified.notifications={achievement:{channels:['CHAT','ACTIONBAR','TITLE','SOUND']},results:{global:true,channels:['CHAT']}};
+ modified.custom_placeholders=[{id:'capture_label',metric:'stats',argument:'total_captures',template:'Capturas: {value}'}];
+ await rcon.command(`lp user ${actor.player.uuid} permission set shirokaidex.admin.reload true`);await delay(1200);
+ try{
+  fs.writeFileSync(configPath,JSON.stringify(modified));await response(actor,'/dex admin reload',text=>text.includes('recarregada.'));
+  await until(async()=>await metric('custom','capture_label')==='Capturas: 2');
+  let menu=await open(actor,'/dex settings');assert.equal(menu.inventoryStart,36);assert(menu.slots[35]);assert.equal(menu.slots[17],null);await click(actor,35);assert.equal(actor.currentWindow.slots[35].name,'lime_dye');await click(actor,35);assert.equal(actor.currentWindow.slots[35].name,'gray_dye');
+  menu=await open(actor,'/dex profile');assert(menu.slots[53]);assert.equal(menu.slots[49]?.name,'purple_stained_glass_pane');await click(actor,53);
+  menu=await open(actor,'/dex achievements');const index=menu.slots.slice(0,menu.inventoryStart).findIndex(item=>itemData(item).includes('Capturas verificadas'));menu=await click(actor,index);assert(itemData(menu.slots[13]).includes('1'));await click(actor,13);assert.equal(query("select slot from player_medal_favorites where player_uuid=? and achievement_id='captures'",[fixture.player])[0][0],0);
+
+  await close(reader);const packets={title:0,actionbar:0,sound:0},readerMessages=[];
+  reader._client.on('set_title_text',()=>packets.title++);reader._client.on('system_chat',packet=>{if(packet.isActionBar)packets.actionbar++;});reader._client.on('sound_effect',()=>packets.sound++);reader.on('messagestr',text=>readerMessages.push(text));
+  await rcon.command('givepokemonother DexVisitor eevee level=5');await until(()=>packets.title>=2&&packets.actionbar>=2&&packets.sound>=2,30000);
+  assert(readerMessages.some(text=>text.startsWith('Medalha conquistada:')));assert.equal(query('select count(*) from reward_operations')[0][0],0);
+  const now=Date.now();modified.competitions=[{id:'native_notices',name:'Avisos nativos',cadence:'CUSTOM',start:new Date(now-1000).toISOString(),end:new Date(now+18000).toISOString(),metric:'TOTAL',result_review:{enabled:false}}];
+  fs.writeFileSync(configPath,JSON.stringify(modified));await response(actor,'/dex admin reload',text=>text.includes('recarregada.'));
+  await until(()=>query("select count(*) from competition_editions where competition_id='native_notices' and state='ACTIVE'")[0][0]===1);menu=await open(reader,'/dex competitions');menu=await click(reader,0);menu=await click(reader,20);
+  await until(()=>query("select count(*) from competition_editions where competition_id='native_notices' and state='FINAL'")[0][0]===1,30000);await until(()=>readerMessages.some(text=>text==='Resultados oficiais disponíveis: Avisos nativos'));await delay(2500);
+  assert.equal(readerMessages.filter(text=>text==='Resultados oficiais disponíveis: Avisos nativos').length,1);assert(!messages.some(text=>text==='Resultados oficiais disponíveis: Avisos nativos'));
+  pass('Durable notifications reach real chat/actionbar/title/sound channels; final competition broadcast is deduplicated for an enrolled player and respects another player opt-out');
+  modified.menus.profile.slots.back=37;fs.writeFileSync(configPath,JSON.stringify(modified));await response(actor,'/dex admin reload',text=>text.includes('última configuração válida foi mantida'));
+  menu=await open(actor,'/dex settings');assert.equal(menu.inventoryStart,36);
+  pass('JSON layouts move real notifications/profile/favorite controls safely, custom placeholder expands, and invalid overlap reload preserves last good settings');
+ }finally{fs.writeFileSync(configPath,original);await response(actor,'/dex admin reload',text=>text.includes('recarregada.'));}
+
+}
 async function main(){
  rcon=await new Rcon().connect(25573,fs.readFileSync(process.env.MC_TEST_RCON_PASSWORD_FILE,'utf8').trim());actor=await login('DexMedal');reader=await login('DexVisitor');assert.equal(actor.player.uuid,fixture.player);actor.on('messagestr',text=>messages.push(text));
  await until(()=>query('select count(*) from profile_collection_points where player_uuid=?',[fixture.player])[0][0]>=3);
  if(RESTART){assert.equal(query('select count(*) from player_achievements where player_uuid=? and active=1',[fixture.player])[0][0],5);assert.equal(query('select count(*) from player_medal_favorites where player_uuid=?',[fixture.player])[0][0],3);assert.equal(query('select notifications from player_preferences where player_uuid=?',[fixture.player])[0][0],0);assert.equal(query("select visible from player_stat_privacy where player_uuid=? and statistic='species_captures'",[fixture.player])[0][0],1);let menu=await open(reader,'/dex profile DexMedal');assert(data(menu).includes('Segredo revelado'));assert(!data(menu).includes('Medalha privada'));assert(menu.slots[28]);assert.equal(query("select count(*) from achievement_audit where player_uuid=? and action='UNLOCKED'",[fixture.player])[0][0],5);assert.equal(query('select count(*) from reward_operations')[0][0],0);pass('Restart preserves five medals, three favorites, privacy/preferences and official Pokedex snapshot without duplicate unlock audit or material grants');return;}
  await until(()=>query('select count(*) from player_achievements where player_uuid=? and active=1',[fixture.player])[0][0]===2);
  let menu=await open(actor,'/dex achievements');assert(data(menu).includes('Conquista secreta'));assert(!data(menu).includes('Segredo revelado'));pass('Locked secret medal shows only safe hint; reliable stored capture counters unlock visual badges independently of Pokedex progress');
- menu=await open(reader,'/dex profile DexMedal');assert(!menu.slots[28]);assert(!data(menu).includes('Medalha privada'));assert(!itemData(menu.slots[10]).includes('Oculto'));pass('Public profile applies default species privacy and private-medal visibility to a second player');
+ menu=await open(reader,'/dex profile DexMedal');assert.notEqual(menu.slots[28]?.name,'spyglass');const hiddenMenu=reader.currentWindow;await reader.clickWindow(28,0,0);await delay(250);assert.strictEqual(reader.currentWindow,hiddenMenu);assert(!data(menu).includes('Medalha privada'));assert(!itemData(menu.slots[10]).includes('Oculto'));pass('Public profile applies default species privacy and private-medal visibility to a second player');
  await open(actor,'/dex settings');assert.equal(actor.currentWindow.slots[9]?.name,'lime_dye');await click(actor,9);await until(()=>!reader.currentWindow);assert.equal(query("select visible from player_stat_privacy where player_uuid=? and statistic='total_captures'",[fixture.player])[0][0],0);
  menu=await open(reader,'/dex profile DexMedal');assert(itemData(menu.slots[10]).includes('Oculto'));menu=await open(actor,'/dex profile');assert(!itemData(menu.slots[10]).includes('Oculto'));pass('Privacy GUI immediately closes already-open public views; subsequent public values are masked while owner retains access');
  await response(actor,'/dex settings privacy species_captures true',text=>text.includes('Preferência salva'));menu=await open(reader,'/dex profile DexMedal');assert(menu.slots[28]);menu=await click(reader,28);assert(data(menu).includes('cobblemon:pikachu: 1'));pass('Explicit per-statistic override exposes only authorized aggregate species counts through a paginated profile page');
@@ -31,6 +76,7 @@ async function main(){
  menu=await open(actor,'/dex achievements');assert(data(menu).includes('Segredo revelado'));await favorite('Capturas verificadas',0);await favorite('Segredo revelado',1);await favorite('Explorador',2);assert.equal(query('select count(*) from player_medal_favorites where player_uuid=?',[fixture.player])[0][0],3);assert.equal(actor.inventory.items().filter(item=>['nether_star','gold_nugget'].includes(item.name)).length,0);pass('Unlocked medals allow exactly three persistent favorite slots; GUI icons never become inventory rewards');
  menu=await open(reader,'/dex top captures');assert(data(menu).includes('DexMedal'));const head=menu.slots.slice(0,menu.inventoryStart).findIndex(item=>itemData(item).includes('DexMedal'));menu=await click(reader,head);assert(itemData(menu.slots[4]).includes('DexMedal'));assert(data(menu).includes('Segredo revelado'));assert(!data(menu).includes('Medalha privada'));pass('Ranking head opens a permission/privacy-aware trainer profile with public favorites');
  await response(actor,'/dex settings rankings hidden',text=>text.includes('Ocultar dos rankings: true'));menu=await open(reader,'/dex top captures');assert(!data(menu).includes('DexMedal'));await response(actor,'/dex settings rankings visible',text=>text.includes('Ocultar dos rankings: false'));menu=await open(reader,'/dex top captures');assert(data(menu).includes('DexMedal'));pass('Global ranking exclusion still applies independently of individual statistics visibility');
+ if(process.env.MC_PROFILE_PLACEHOLDERS==='1')await publicMetrics();
  await until(()=>query("select registered from profile_collection_points where player_uuid=? and collection_id='national'",[fixture.player])[0][0]===1);actorEnded=true;actor.quit();await delay(1200);menu=await open(reader,'/dex profile DexMedal');assert(data(menu).includes('Segredo revelado'));assert(itemData(menu.slots[22]).includes('national: 1/'));assert(itemData(menu.slots[22]).includes('Observado em:'));assert.equal(query('select count(*) from reward_operations')[0][0],0);pass('Offline profile retains last-observed official progress and earned favorites with explicit observation time, without loading or altering offline Pokedex data');
 }
 (async()=>{try{await main();}catch(failure){process.exitCode=1;console.error(failure);results.push({name:'profile and medal integration',status:'failed',error:failure.message});}finally{for(const bot of bots)bot.quit();if(rcon)rcon.close();fs.writeFileSync(path.join(__dirname,'../../build/integration-profiles'+(RESTART?'-restart':'')+'.json'),JSON.stringify({timestamp:new Date().toISOString(),results},null,2)+'\n');}})();

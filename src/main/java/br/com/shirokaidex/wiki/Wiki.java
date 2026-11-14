@@ -8,6 +8,7 @@ import java.util.*;
 public final class Wiki {
     public enum Filter { ALL, SEEN, OWNED, UNSEEN, SHINY_SEEN;
         public Filter next() { return values()[(ordinal() + 1) % values().length]; }
+        public Filter previous(){return values()[Math.floorMod(ordinal()-1,values().length)];}
     }
     public enum Order { NAME, ID;
         public Order next() { return this == NAME ? ID : NAME; }

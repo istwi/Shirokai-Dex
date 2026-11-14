@@ -1,5 +1,27 @@
 # Próximos passos
 
+## Envio dev.2 autorizado
+
+Responsável solicitou enviar o JAR ao GitHub. Snapshot em preparação na branch handoff/crates-checkpoint:402 JUnit/10 checks nativos e JAR SHA256 0dc0401af48479de0fdd118ddd9c5b9fda5bc985996717cc18c52c557a4003d8. Workflow recompila/testa e exige coincidência com o binário nativo antes de anexar/publicar; configuração focused-server.json incluída. Sem merge de main ou publicação de ambiente. Referência: commit `release: distribute v0.6.0-dev.2 snapshot`.
+
+## Menus reduzidos — validados localmente
+
+Pedido implementado: hub Dex/Rankings/Eventos, coleções Nacional/Special/Shiny + Forms futura, seis marcos configuráveis com exemplo de1 papel, resgate único, Top10 na lore, eventoTOTAL com inscrição, modelos oficiais e filtro esquerdo/direito, contagem verificada de derrotas selvagens/schema16.402 JUnit e dez checks nativos (nove + reinício) aprovados. Uma captura e uma derrota legítimas persistiram, Pokémon administrativo não pontuou, um único prêmio foi entregue. SQLite íntegro, dois encerramentos normais e segredo de teste removido. [Evidência](validation/focused-menus.json), [configuração e limites](FOCUSED_MENUS.md).
+
+O JAR local coincide por SHA256 com o testado nativamente. Nada deste bloco foi enviado ou publicado; a release dev.1 permanece intacta. Configuração existente não é sobrescrita: o preset revisável está em docs/examples/focused-server.json. Não voltar ao desenvolvimento das demais fases por conta própria: o responsável pediu deixá-las desativadas neste modo. Próximo trabalho, quando solicitado: ajustar prêmios reais e revisar a aparência no cliente Cobblemon. Não declarar capacidade/carga ou renderização visual manual a partir deste teste.
+
+## Direção vigente — menus públicos reduzidos (2026-11-14)
+
+O responsável pediu implementar agora: hub com Dex/Rankings de captura/Eventos; Nacional sem legendary/mythical/ultra_beast, Special somente esses grupos, Shiny por capturas verificadas e Forms apenas ícone futuro. Cada Dex junta Wiki com seis marcos percentuais configuráveis e resgate ao clicar. Percentuais iniciais10/25/50/75/90/100; exemplo1 papel aos10% Nacional. Rankings Top10 na lore (três Dex + Forms bloqueado; capturas geral/shiny/lendários; derrotados). Eventos apenasTOTAL, entrada inscreve, tela mostra tempo/score/Top10; fechado sem ação. Wiki usa PokemonItem oficial e filtro esquerdo/direito. Rolagem exige cliente adicional e foi substituída por cliques a pedido do responsável. Implementação local em compilação/teste nativo, ainda não certificar concluído.
+
+Schema16 adiciona recibos e totais de derrotas nativas PvE. Não conta PvP/NPC/multijogador/origem não comprovada nem inventa histórico. Retransmissão battle+pokemon deduplicada. Novo preset config/focused.json aplicado somente em instalações sem config; configurações existentes preservadas e exemplo em docs/examples/focused-server.json. Modos clássicos permanecem disponíveis por home.focused=false; com focused=true os painéis profile/settings/achievements/prizes/history ficam bloqueados.
+
+Bloco anterior avançado: schema15/notificações e placeholders/layouts passaram398 JUnit e13 checks nativos com API real/sons/title/actionbar/reinício; evidência phase7-public-placeholders.json. Nova base de menus chegou a402 JUnit/build aprovados antes do último ajuste de captura shiny e horários. Próximo exato: concluir build /tmp/shirokai-focused-final-build.log e executar suite focused em raiz /tmp nova; primeiro preparo falhou antes de iniciar por ausência de remapCaptureProbeJar, corrigido e segredo limpo. Servidor não iniciado naquela tentativa. Depois corrigir os testes reais e registrar evidência. Nada publicado após dev.1.
+
+## Continuação dev.2 — em desenvolvimento
+
+Novos placeholders públicos (stats/rank/medals/victories/claimed_rewards) com cache limitado e privacidade por revisão; cinco testes adicionais passaram no primeiro build (387 totais). Prévia pelo parser e alias legado em teste nativo com API2.4.2+1.21. Novas telas conectadas ao layout JSON existente, com slots protegidos e regressão adicional em compilação. Nada deste bloco foi publicado; release dev.1 permanece imutável. Próximo: concluir essas suítes, documentar evidências e seguir para notificações/idioma/recálculo e testes finais.
+
 ## Publicação dev.1 confirmada
 
 [Pré-release com JAR](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.6.0-dev.1) publicada pelo [Actions aprovado](https://github.com/istwi/Shirokai-Dex/actions/runs/43585022162), fonte 9714b99. Quatro anexos baixados e manifesto SHA256 conferido localmente. Binário publicado idêntico ao JAR validado nativamente. [Evidência](validation/release-development-0.6.0-dev.1.json). Código/perfis/validação complementar enviados na branch handoff/crates-checkpoint; main e ambiente preservados. Pendências funcionais continuam abertas.
