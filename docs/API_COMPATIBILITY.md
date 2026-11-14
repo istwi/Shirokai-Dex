@@ -1,5 +1,24 @@
 # Auditoria de compatibilidade — Fase 0
 
+## Snapshot 0.6.0-dev.1
+
+Schema14/perfis/conquistas integrados às APIs existentes; comparação racional usa org.sqlite.Collation.create/xCompare em sqlite-jdbc3.47.1.0, sem índice persistente dependente da collation. Build e 382 JUnit aprovados. API opcional de placeholders permanece isolada; alias dexrewards:player_dex_percent e máscara pública acrescentados, integração positiva ainda pendente. Não certificar TAB/SkiesGUIs ou CRATE_KEY sem versão/contrato e teste real. Ver [perfis](PROFILES.md) e relatório development-0.6.0-dev.1.json.
+
+## Rankings e recordes — schema11 local
+
+APIs de menus e SQLite já auditadas, sem nova dependência externa. 344 JUnit e 7 checks nativos em Loom, inclusive migração10→11/menus/privacidade/ACL/recordes. Datas históricas incompletas ficam N/D; ver [contrato](RANKINGS.md) e [evidência](validation/phase4-rankings.json).
+
+
+## Recibos/retenção — schema10 local (2026-11-14)
+
+Sem novas APIs externas. JDBC/SQLite e lifecycle/tick Fabric existentes: agenda no máximo um lote a cada 60s e executa somente no worker. Migração transacional, recibo e counters na mesma transação. Nove testes novos, 337 totais aprovados; scheduler/migração/limpeza/reinício nativos aprovados em Loom. [Evidência](validation/phase4-retention.json). Não certifica nova instalação fora do Loom nem captura real neste bloco. Competições/revisões futuras precisam integrar proteção de retenção antes de ativação. [Contrato](RETENTION.md).
+
+
+## Histórico administrativo — 2026-11-14 (local)
+
+Consulta JDBC paginada usa schema9 existente, sem nova API externa. Comando reutiliza Brigadier e ACL LuckPerms já utilizados. Leitura no worker SQLite; callback na thread do servidor revalida permissão/sessão. VERIFIED no escopo: 328 JUnit, seis checks de comando/ACL em servidor Loom/Fabric/Cobblemon com LuckPerms5.4.140. Histórico populado/reinício cobertos por JUnit; comando em JAR fora do Loom/cliente visual/carga pendentes. [Evidência](validation/phase4-history.json).
+
+
 Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificação de funcionamento em servidor. O repositório estava vazio, sem HEAD, fontes, build ou testes. Java local confirmado: OpenJDK 21.0.13.
 
 ## Atualização — checkpoint Crates alpha.9 (branch local)

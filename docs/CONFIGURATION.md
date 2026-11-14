@@ -1,5 +1,10 @@
 # Configuração da fundação
 
+## Histórico e retenção
+
+O objeto opcional capture_history aceita enabled, retention_days e cleanup.enabled/batch_size. Defaults: true/90/true/1000. Histórico desativado preserva eventos UNKNOWN para auditoria e todas as estatísticas/recibos. [Contrato, exemplo e limites](RETENTION.md).
+
+
 O servidor cria `config/shirokaidex/config.json`:
 
 ```json

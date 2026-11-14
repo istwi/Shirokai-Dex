@@ -67,3 +67,11 @@ O responsável pediu uma release no GitHub, atualização dos documentos e conti
 ## Autorização — release após toda a Fase 4
 
 O responsável esclareceu: release somente após concluir toda a Fase4, incluindo histórico, retenção, recordes e rankings. Commit/push dos blocos validados na branch continuam autorizados; não publicar release do bloco intermediário de pesca/Shiny. Ao fechar a fase validada, publicar pré-release com JAR/checksums/evidências e limites explícitos. Main e configuração de ambiente permanecem sem autorização de publicação.
+
+## Direção atual do responsável — 2026-11-14
+
+Continuar todas as fases em sequência, sem encerrar a cada bloco ou pedir "continua"; manter testes normais e fluxo otimizado, até o responsável pedir pausa. Trabalhar em blocos coerentes e validados. Não publicar ambiente/releases nem enviar alterações nesta retomada, conforme pedido vigente.
+
+## Autorização pontual — snapshot 0.6.0-dev.1
+
+Em 2026-11-14, o responsável pediu enviar o trabalho ao GitHub com JAR atual e atualizar a lista. Autoriza commit/push na branch de desenvolvimento e pré-release experimental deste snapshot, com limitações explícitas. Não autoriza merge na main nem publicação de ambiente.

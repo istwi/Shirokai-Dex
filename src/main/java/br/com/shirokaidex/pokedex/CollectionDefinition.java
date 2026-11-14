@@ -24,7 +24,7 @@ public record CollectionDefinition(String id, String name, String description, S
         return criteria.acceptsForm(form) && (category == null || Objects.requireNonNull(category.catalog(), "unbound category").matches(category.id(), species, form));
     }
     public enum Mode { OWNED, SEEN, SHINY_SEEN, SHINY_CAPTURED }
-    private static final Set<String> RESERVED = Set.of("admin", "status", "help", "rewards", "top", "achievements", "profile", "settings", "history", "language");
+    private static final Set<String> RESERVED = Set.of("admin", "status", "help", "rewards", "top", "achievements", "profile", "settings", "history", "language", "records", "prizes", "competitions", "rankings");
     public record Criteria(Set<String> includeSpecies, Set<String> excludeSpecies, Set<String> labels,
                            Set<String> types, Set<String> forms) {
         public Criteria {

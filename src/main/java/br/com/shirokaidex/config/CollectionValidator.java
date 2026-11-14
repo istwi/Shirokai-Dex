@@ -21,6 +21,7 @@ public final class CollectionValidator {
     }
     public void validate(Settings settings) throws IOException {
         validate(settings.categories());
+        for(var achievement:settings.achievements()){if(!items.contains(achievement.icon())||achievement.icon().equals("minecraft:air"))throw new IOException("Unknown achievement icon");validateRequirement(achievement.requirement());}
         for(var layout:settings.menus().layouts().values())for(var button:layout.buttons().values())
             if(!button.icon().isEmpty()&&!items.contains(button.icon()))throw new IOException("config.json menus."+layout.screen().id()+": unknown menu icon "+button.icon());
         for (var reward : settings.rewards()) {
@@ -37,6 +38,12 @@ public final class CollectionValidator {
             check(definition, "types", definition.criteria().types(), types);
             check(definition, "forms", definition.criteria().forms(), forms);
         }
+    }
+    private void validateRequirement(br.com.shirokaidex.achievements.Requirement requirement)throws IOException {
+        if(requirement instanceof br.com.shirokaidex.achievements.Requirement.Form form){check("achievement.form.","species",Set.of(form.species()),species);check("achievement.form.","form",Set.of(form.form()),forms);}
+        else if(requirement instanceof br.com.shirokaidex.achievements.Requirement.Count count&&count.metric()==br.com.shirokaidex.rankings.CaptureRanking.Metric.SPECIES)check("achievement.capture.","species",Set.of(count.key()),species);
+        else if(requirement instanceof br.com.shirokaidex.achievements.Requirement.All all)for(var child:all.conditions())validateRequirement(child);
+        else if(requirement instanceof br.com.shirokaidex.achievements.Requirement.Any any)for(var child:any.conditions())validateRequirement(child);
     }
     public void validate(CategoryCatalog catalog) throws IOException {
         for (var definition : catalog.definitions().values()) {

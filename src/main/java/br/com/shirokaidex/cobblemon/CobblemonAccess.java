@@ -20,6 +20,8 @@ public final class CobblemonAccess {
     private record Cached(long created, List<ProgressCalculator.Species> entries,
                           Map<DexCollection, ProgressCalculator.CollectionProgress> defaults,
                           List<CollectionDefinition> definitions, Map<String, ProgressCalculator.CollectionProgress> configured, List<Wiki.Entry> wiki) { }
+    private List<CollectionDefinition> versionDefinitions=List.of();
+    private Map<String,String> versions=Map.of();
     private final Map<UUID, Cached> cache = new HashMap<>();
     public record Progress(int total, int seen, int owned) { }
     public Progress progress(ServerPlayer player) {
@@ -31,7 +33,10 @@ public final class CobblemonAccess {
     public void publishCapturedShiny(UUID player,Set<br.com.shirokaidex.pokedex.CapturedShinyForm> forms){capturedShiny.put(player,Set.copyOf(forms));invalidate(player);}
     public void forget(UUID player){capturedShiny.remove(player);invalidate(player);}
     public void invalidate(UUID player) { cache.remove(player); }
-    public void clear() { cache.clear();capturedShiny.clear(); }
+    public void clear() { cache.clear();capturedShiny.clear();versionDefinitions=List.of();versions=Map.of(); }
+    public Map<String,String> collectionVersions(List<CollectionDefinition> definitions){
+        if(!versionDefinitions.equals(definitions)||versions.isEmpty()){versions=br.com.shirokaidex.profiles.CollectionVersions.of(snapshot(PokemonSpecies.INSTANCE.getImplemented(),null),definitions);versionDefinitions=List.copyOf(definitions);}return versions;
+    }
     public CollectionValidator validationSnapshot() {
         return new CollectionValidator(snapshot(PokemonSpecies.INSTANCE.getSpecies(), null),
                 BuiltInRegistries.ITEM.keySet().stream().map(Object::toString).collect(Collectors.toUnmodifiableSet()));

@@ -323,3 +323,13 @@ Executor --suite fishing instala fixture/probe próprios e repete após reiníci
 ## Coleção Shiny — alpha.5
 
 326 JUnit (nove novos): cálculo atual por espécie/forma, ausência de fonte/zero, visto/obtido separados, migração8→9, isolamento e projeção permanente. Captures/fishing agora verificam status Shiny após aquisição administrativa/captura nativa/repetição/reinício. Runner antigo progress adaptado/sintaxe conferida; suíte antiga inteira não repetida. [Relatório](validation/phase4-shiny.json).
+
+## Histórico administrativo — retomada 2026-11-14
+
+Build local com JDK21 completo: `JAVA_HOME=/workspace/.tools/jdk-21.0.13+9 python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build serverDistribution`. Não presumir o caminho em outra máquina. Dois casos novos em CaptureHistoryTest cobrem 21 registros empatados/páginas/isolamento, origem desconhecida, limites, imutabilidade, contadores intactos e reinício.
+
+`node tests/integration/capture-history.cjs`, com MC_TEST_RUN e MC_TEST_RCON_PASSWORD_FILE como nos demais runners, exige mundo descartável capture-history-validation e LuckPerms5.4.140, servidor loopback/RCON nas portas usuais. O runner verifica ACL negativa/positiva/revogação, UUID inválido, página limite e ausência de bypass por console. Não executar em mundo de usuários. Cenário nativo usa histórico vazio; conteúdo/persistência são exercitados pelos testes SQLite, sem fabricar capturas legítimas no servidor.
+
+## Recibos e retenção — schema10 local
+
+`CaptureReceiptsTest` e `CaptureRetentionTest` acrescentam nove casos de migração, rollback, replay após remoção/reinício, períodos/fusos, lotes/cutoff, auditoria preservada e configuração estrita. Build/serverDistribution com 337 JUnit aprovado; nenhum caso ignorado. Cenário nativo e instruções de seed/verify documentados em [RETENTION.md](RETENTION.md). Fixtures sintéticas não comprovam captura no jogo.

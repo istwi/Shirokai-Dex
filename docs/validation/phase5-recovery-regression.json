@@ -1,0 +1,64 @@
+{
+  "timestamp": "2026-11-14T09:15:14.010937+00:00",
+  "scope": "Existing supervised collection-reward recovery regression after shared prize delivery extraction",
+  "schema": 13,
+  "build": "Same packaged JAR as phase5 prizes",
+  "native": {
+    "suite": "recovery",
+    "starts": 3,
+    "jar": "shirokai-dex-0.4.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "2f0d4651f51abb9559cce8af980ab7884467673063aff68759dfb0d5d8865aa3",
+    "result": "passed"
+  },
+  "normal": {
+    "timestamp": "2026-11-14T09:13:23.062Z",
+    "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 / LuckPerms5.4.140",
+    "results": [
+      {
+        "name": "Only authorized operators open a frozen-payload preview; recipient and reason are disclosed without item delivery",
+        "status": "passed"
+      },
+      {
+        "name": "Stale confirmation rechecks operator permission and recipient collection permission before every effect",
+        "status": "passed"
+      },
+      {
+        "name": "Recipient disconnect invalidates an old recovery confirmation without altering its reservation",
+        "status": "passed"
+      },
+      {
+        "name": "Pending recovery preserves the original plan/components/operation ID, delivers only to recipient once, and records operator/reason",
+        "status": "passed"
+      },
+      {
+        "name": "Empty review can resume; any intent, acknowledged prefix or changed frozen payload refuses replay",
+        "status": "passed"
+      },
+      {
+        "name": "Reload cannot substitute new reward data into an old confirmed recovery plan",
+        "status": "passed"
+      },
+      {
+        "name": "Recovery preview cannot leak reward icons or create replacement operations",
+        "status": "passed"
+      }
+    ]
+  },
+  "restart": {
+    "timestamp": "2026-11-14T09:14:16.920Z",
+    "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 / LuckPerms5.4.140",
+    "results": [
+      {
+        "name": "Native target inventory and original completed operation IDs survive restart without redelivery",
+        "status": "passed"
+      },
+      {
+        "name": "Closed, uncertain, partial and changed operations remain blocked across restart; untouched reservation stays pending",
+        "status": "passed"
+      }
+    ]
+  },
+  "limits": [
+    "Uses existing explicit synthetic journal fixture and real native inventory/save/restart; not coverage of every external adapter."
+  ]
+}

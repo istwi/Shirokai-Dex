@@ -1,5 +1,40 @@
 # Próximos passos
 
+## Passagem 0.6.0-dev.1 — estado vigente
+
+Última tarefa: preparar snapshot publicável na branch handoff/crates-checkpoint por solicitação explícita do responsável. Build e 382 JUnit aprovados; schema14/perfis/conquistas estão ativos (as notas históricas de preparação abaixo estão superadas).
+
+Próxima tarefa exata: concluir scripts/integration_server.py --base /tmp/shirokai-packaged-base-v2 --suite profiles --root /tmp/shirokai-profiles-native-v2; investigar qualquer falha sem enfraquecer expectativas. A primeira execução falhou em clique de janela obsoleta; correção de token da tela e estabilização do cliente aplicadas. Registrar resultado antes de considerar Fase6 validada nativamente.
+
+Depois: placeholders avançados com cache limitado e privacidade, integração real da API opcional/alias legado, menus JSON para novas telas, notificações, preferências de idioma, recálculo administrativo de categorias com prévia/motivo/auditoria, carga e validação final. CRATE_KEY dedicado e versões externas não auditadas permanecem sem suporte comprovado. Não certificar cliente gráfico ou modpack de produção a partir de bots.
+
+Arquivos centrais: core/ShirokaiDex.java, database/Database.java, profiles/, achievements/, menus/, placeholders/, V014, Profile*Test/AchievementTest e tests/integration/profiles.cjs. Preservar migrações e fixtures legadas; nenhuma alteração na Pokédex oficial. Publicação desta versão não autoriza alterar main/configuração do ambiente.
+
+## Trabalho ativo — continuidade sem parar
+
+363 JUnit e blocos nativos 15+6+9 aprovados; ver relatórios phase5*. Complemento de histórico/auditoria tem duas novas classes de cenário em CompetitionTest ainda aguardando próxima execução integral após última edição. Perfil/privacidade/Fase6 em preparação: StatisticsPrivacy/ProfileProgress/CapturedForms/V014 existem no fonte, mas schema14 e lifecycle ainda não ativados. Próximo: requisito/conquistas persistentes, snapshots oficiais de perfil e privacidade aplicada a ranking/perfil/placeholders. API org.sqlite.Collation.create/ xCompare conferida por javap no sqlite-jdbc3.47.1.0 para comparação racional exata (sem índice persistente com collation customizada). Preservar todos os arquivos locais; não publicar e não encerrar a cada fase.
+
+
+## Trabalho ativo — competições
+
+Correção de SNAPSHOT shiny em CompetitionStore.matches, teste shinyCaptureCanEvaluateFrozenCategory..., build em /tmp/shirokai-competition-shiny-fix.log. Próxima ação: após build, repetir scripts/integration_server.py --base /tmp/shirokai-packaged-base-v2 --suite captures --competitions --root /tmp/shirokai-competition-native-v2. Primeira tentativa falhou na classificação shiny; mundo descartável encerrado e senha removida. Fonte completa/evidência de falha em build/integration-captures.json (preservar em relatório final). Depois ativar/testar prêmios e resgate: PrizePolicy/RewardSnapshot/CompetitionAwards/V013 existem no fonte, mas schema13/modelo de política ainda não integrados. Store já implementa adjust/revert; falta exposição admin. Retenção protege edições pendentes/auditorias.
+
+
+## Continuação contínua solicitada — 2026-11-14
+
+O responsável pediu executar todas as fases sem encerrar a cada bloco, com testes normais e sequência otimizada. Sem publicação. Recordes/rankings de capturas validados com 344 JUnit/7 checks nativos. Em desenvolvimento: calendário/inscrição/cancelamento/pontuação/revisão de competições, CompetitionDefinition e V012 ainda não integrados ao runtime. Preservar schema11 e registros permanentes; integrar holds de histórico antes de ativar pontos competitivos.
+
+
+## Continuação local — recibos e retenção (2026-11-14)
+
+Base remota continua 88f923e; histórico e novo bloco permanecem locais. Schema10 com capture_receipts, migração/backfill sem inventar eventos, histórico verificado opcional e cleanup limitado. Build/JAR e 337 JUnit aprovados; migração/limpeza/reinício nativos aprovados ([evidência](validation/phase4-retention.json)). Próximo: recordes e rankings permanentes com data de atingimento/UUID para desempate, sem inventar data histórica indisponível. Antes de competições/revisão de capturas, adicionar proteção contra limpeza dos detalhes necessários; ver RETENTION.md. Não publicar nada nesta retomada.
+
+
+## Retomada local — 2026-11-14
+
+Base real 88f923e, branch handoff/crates-checkpoint. Novo histórico administrativo `/dex admin captures <player_uuid> [page]`, permissão shirokaidex.admin.captures; guia CAPTURE_HISTORY.md. Build/JAR e 328 JUnit aprovados; seis checks do comando/ACL em servidor Loom passaram ([evidência](validation/phase4-history.json)); fora do Loom pendente. Próximo bloco: implementar projeções permanentes de períodos/recordes/rankings e deduplicação independente ANTES de retenção: summary hoje consulta capture_events e event_key é sua barreira contra replay. Não apagar eventos sem preservar ambos. Alterações desta retomada locais.
+
+
 **Estado atual de desenvolvimento:** alpha.5, coleção Shiny ligada à captura verificada; release pública alpha.1 preservada. Próximo: histórico, recordes/rankings e retenção. Histórico: captura/estatísticas iniciais 0.4.0-alpha.1 sobre `26c4472`, branch `handoff/crates-checkpoint`, autorização contínua. Main preservada `c89cc1b`. [Guia](CAPTURES.md), [evidência](validation/phase4-captures.json). Referência: `feat: track verified native captures and permanent statistics`. Sem release/merge/ambiente.
 
 ## Publicação concluída

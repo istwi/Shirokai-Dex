@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.6.0-dev.1 — snapshot experimental
+
+- Histórico administrativo e filtros, recibos permanentes, retenção limitada, recordes e rankings de capturas.
+- Competições com inscrição/cancelamento, critérios arquivados, revisão/auditoria e prêmios TOP1/3/10 pelo journal existente.
+- Perfis persistentes, privacidade por estatística, rankings de conclusão, conquistas declarativas e favoritos; schema14.
+- Build e 382 JUnit aprovados. Fases4/5 com evidências nativas; perfis em repetição de teste nativo. Menus avançados, placeholders/notificações e validação final continuam pendentes.
+- Snapshot para teste; faça backup do mundo/configuração/banco antes de instalar. Não representa conclusão do projeto.
+
+## Em desenvolvimento — recordes e rankings
+
+- Rankings permanentes de capturas por JSON, páginas, desempate persistente, cache limitado e ocultação por UUID.
+- Recordes de dia/semana/mês por fuso, independentes dos detalhes removíveis.
+- 344 JUnit e 7 checks nativos aprovados; continuação em competições, sem publicação.
+
+
+## Em desenvolvimento — recibos e retenção
+
+- Schema10 preserva identidade de eventos e períodos após expiração dos detalhes; replay não duplica nem promove origem UNKNOWN.
+- Política capture_history, detalhe verificado opcional e limpeza automática em lotes; auditoria UNKNOWN e dados permanentes preservados.
+- Nove testes novos de migração/rollback/replay/períodos/lotes/configuração,337 JUnit aprovados. Migração/limpeza/reinício em servidor Loom aprovados; sem nova publicação.
+
+
+## Em desenvolvimento — histórico administrativo
+
+- Consulta paginada e somente administrativa de capturas por UUID, incluindo origem não comprovada, com ACL revalidada e leitura assíncrona.
+- Testes de paginação determinística, isolamento, imutabilidade e reinício. Bloco local validado: 328 JUnit e seis checks de comando/ACL em servidor Loom; mod completo, retenção/recordes/rankings continuam pendentes.
+
+
 ## 0.4.0-alpha.5 — desenvolvimento
 
 - Coleção SHINY_CAPTURED alimentada somente por capturas shiny verificadas, uma espécie por registro atual/forma elegível; visto/obtido não contam.

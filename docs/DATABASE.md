@@ -1,5 +1,10 @@
 # SQLite — migração 1
 
+## Schema10 — recibos permanentes e histórico descartável
+
+V010__capture_receipts.sql copia chave/player/instante/verificação dos eventos presentes para capture_receipts e cria índices de recibos e paginação do histórico. Recibos, prova consumida, detalhes opcionais, totais e Shiny participam da mesma transação de captura. Não há FK que apague recibos quando detalhes expiram. Backup obrigatório antes de migração; binários schema9 não suportam o banco novo. [Retenção](RETENTION.md).
+
+
 Caminho atual: `config/shirokaidex/data/shirokaidex.sqlite`, relativo ao servidor. O diretório de configuração deve permanecer persistente. Não coloque este arquivo no Git.
 
 Uma conexão é confinada a um executor próprio. Acesso SQL usa statements parametrizados; nenhum objeto Minecraft é enviado ao worker. WAL, foreign keys, busy timeout de 5 segundos e synchronous FULL são habilitados.

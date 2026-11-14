@@ -6,7 +6,8 @@ from urllib.parse import urlsplit
 REPO=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--base',type=Path,required=True,help='Prepared disposable server containing official server.jar, classpath.txt and dependency mods')
-parser.add_argument('--suite',choices=['commands','recovery','captures','fishing'],required=True)
+parser.add_argument('--suite',choices=['commands','recovery','captures','fishing','prizes','profiles'],required=True)
+parser.add_argument('--competitions',action='store_true',help='Exercise capture competitions during the native captures suite')
 parser.add_argument('--root',type=Path,help='New /tmp directory; never overwrite an existing world')
 args=parser.parse_args();base=args.base.resolve();root=args.root.resolve() if args.root else Path(tempfile.mkdtemp(prefix='shirokai-'+args.suite+'-'))
 assert str(root).startswith('/tmp/') and str(base).startswith('/tmp/')
@@ -22,9 +23,13 @@ for jar in (base/'mods').glob('*.jar'):
   if meta['id']=='shirokaidex' or 'probe' in meta['id']:continue
  shutil.copy2(jar,root/'mods'/jar.name)
 binaries=list((REPO/'build/server-mod').glob('*.jar'));assert len(binaries)==1
-shutil.copy2(binaries[0],root/'mods'/binaries[0].name)
+installed_binary=root/'mods'/binaries[0].name
+shutil.copy2(binaries[0],installed_binary)
 config=root/'config/shirokaidex';config.mkdir(parents=True);shutil.copy2(REPO/'tests/fixtures'/args.suite/'config.json',config/'config.json')
-world={'commands':'command-reward-validation','recovery':'reward-recovery-validation','captures':'native-capture-validation','fishing':'native-capture-validation'}[args.suite]
+if args.competitions:
+ assert args.suite=='captures','Competition native scenario requires captures suite'
+ configfile=config/'config.json';values=json.loads(configfile.read_text());values['competitions']=[dict(id=identifier,name=identifier,cadence='WEEKLY',timezone='America/Sao_Paulo',metric=metric,key=key,category_update_mode=mode) for identifier,metric,key,mode in [('native_total','TOTAL','','SNAPSHOT'),('native_snapshot','CATEGORY','electric_catches','SNAPSHOT'),('native_live','CATEGORY','electric_catches','LIVE')]];configfile.write_text(json.dumps(values)+'\n')
+world={'commands':'command-reward-validation','recovery':'reward-recovery-validation','captures':'native-capture-validation','fishing':'native-capture-validation','prizes':'prize-award-validation','profiles':'profile-medal-validation'}[args.suite]
 secret=root/'.rcon-test-secret';secret.write_text(secrets.token_hex(24));secret.chmod(0o600)
 (root/'server.properties').write_text('server-ip=127.0.0.1\nserver-port=25571\nlevel-name='+world+'\nonline-mode=false\nenforce-secure-profile=false\nview-distance=2\nsimulation-distance=3\nmax-players=4\nspawn-protection=0\nenable-rcon=true\nrcon.port=25573\nrcon.password='+secret.read_text()+'\n')
 # The responsible user accepted the EULA for disposable loopback tests in this session.
@@ -66,14 +71,15 @@ def start():
  raise RuntimeError('Server readiness timed out: '+str(path))
 def run(restart=False):
  env=os.environ.copy();env.update(MC_TEST_RUN=str(root),MC_TEST_PORT='25571',MC_TEST_RCON_PORT='25573',MC_TEST_RCON_PASSWORD_FILE=str(secret))
- if restart:env[{'commands':'MC_COMMAND_MODE','recovery':'MC_RECOVERY_MODE','captures':'MC_CAPTURE_MODE','fishing':'MC_CAPTURE_MODE'}[args.suite]]='after-restart'
+ if args.competitions:env['MC_CAPTURE_COMPETITIONS']='1'
+ if restart:env[{'commands':'MC_COMMAND_MODE','recovery':'MC_RECOVERY_MODE','captures':'MC_CAPTURE_MODE','fishing':'MC_CAPTURE_MODE','prizes':'MC_PRIZE_MODE','profiles':'MC_PROFILE_MODE'}[args.suite]]='after-restart'
  subprocess.run(['npm','--prefix',str(REPO/'tests/integration'),'run','test:'+args.suite],env=env,check=True,cwd=REPO)
 try:
  print('SERVER_ROOT',root,flush=True)
- if args.suite=='recovery':
-  start();stop();subprocess.run(['python3',str(REPO/'tests/integration/seed-recovery.py'),str(root)],check=True)
+ if args.suite in ('recovery','prizes','profiles'):
+  start();stop();subprocess.run(['python3',str(REPO/'tests/integration'/('seed-'+args.suite+'.py')),str(root)],check=True)
  start();run();stop();start();run(True);stop()
- (root/'suite-result.json').write_text(json.dumps(dict(suite=args.suite,starts=len(starts),jar=binaries[0].name,sha256=hashlib.sha256(binaries[0].read_bytes()).hexdigest(),result='passed'),indent=2)+'\n')
+ (root/'suite-result.json').write_text(json.dumps(dict(suite=args.suite,starts=len(starts),jar=binaries[0].name,sha256=hashlib.sha256(installed_binary.read_bytes()).hexdigest(),result='passed'),indent=2)+'\n')
  print('SUITE PASSED',args.suite,flush=True)
 finally:
  try:stop()

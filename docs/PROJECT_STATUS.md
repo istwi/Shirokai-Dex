@@ -1,5 +1,38 @@
 # Estado do projeto
 
+## Snapshot 0.6.0-dev.1 — 2026-11-14 (estado vigente)
+
+Esta seção substitui os estados históricos abaixo. Fases 4/5 avançadas; Fase 6 implementada e em validação, sem declarar o mod concluído. Schema14 ativo: perfis online/offline, privacidade por estatística, rankings de conclusão com razão exata, conquistas declarativas, auditoria e três favoritos persistentes. Preferências de notificações e invalidação de telas públicas integradas. Alias legado de placeholder e proteção de privacidade adicionados; integração opcional positiva ainda pendente.
+
+Build/serverDistribution e 382 JUnit aprovados, sem falhas/erros/skips. Evidências anteriores de histórico/retenção/rankings e competições/prêmios continuam em validation/phase4-* e phase5-*. Primeira suíte nativa de perfis falhou na interação com janela antiga; correção aplicada e repetição em andamento. Não confundir implementação/testes unitários com certificação nativa ou visual.
+
+O responsável autorizou agora commit/push na branch handoff/crates-checkpoint e distribuição do JAR atual como pré-release de desenvolvimento. Main e ambiente publicado preservados. Progresso estimado de 75%, sem medição formal; funcionalidades restantes em NEXT_STEPS.md.
+
+## Estado contínuo — Fase5 validada em blocos (2026-11-14)
+
+Fundação competitiva com 356 JUnit/15 checks nativos; prêmios schema13 com 363 JUnit/6 checks nativos e 9 de regressão da recuperação. [Fundação](validation/phase5-foundation.json), [prêmios](validation/phase5-prizes.json), [regressão](validation/phase5-recovery-regression.json). Capturas reais pontuaram TOTAL/SNAPSHOT/LIVE com dedup e cancelamento pós-reinício; fixtures sintéticas separadas validaram finalização/premiação/expiração/resgate material. Histórico por categoria/período e ferramentas points/audit/inspect acrescentados em validação. Fase6 iniciada: privacidade detalhada, projeções de perfil, formas capturadas e schema14 em preparação, ainda não ativado. Nenhum commit/push/publicação.
+
+
+## Continuação — competições em desenvolvimento (2026-11-14)
+
+Schema12 e store de calendários/inscrição/cancelamento/pontos/revisão/resultados/ajustes integrados a captura nativa e menus. 355 JUnit aprovados antes da regressão adicional de shiny; primeira execução empacotada detectou Form inválido ao classificar shiny em SNAPSHOT, revertendo a transação de captura. Corrigido para avaliar apenas campos de classificação e acrescentado teste; build/repetição nativa em andamento. Dados sintéticos de prêmios/V013 ainda não ativados. Continuar sem encerrar; nenhum push/publicação. Ver COMPETITIONS.md.
+
+
+## Continuação — recordes/rankings (2026-11-14)
+
+Schema11, rankings de capturas configuráveis/paginados, cache limitado, visibilidade por UUID e recordes por período/fuso. 344 JUnit e 7 checks de servidor aprovados; [evidência](validation/phase4-rankings.json), [contrato/limites](RANKINGS.md). Competições em desenvolvimento; nenhum commit/push/publicação. Rankings de conclusão da Pokédex e privacidade completa ainda pendentes.
+
+
+## Retomada local — recibos e retenção (2026-11-14)
+
+Implementados schema10, recibos permanentes, deduplicação independente do histórico e contagens por período via recibos; limpeza automática limitada em worker e política capture_history estrita. UNKNOWN continua na auditoria. Nove testes novos; build/JAR e 337 JUnit aprovados sem falhas/erros/skips. Migração9→10/limpeza automática e reinício em servidor Loom aprovados; três detalhes expirados removidos, cinco recibos e quatro capturas preservados. [Evidência](validation/phase4-retention.json). Dois stops normais, SQLite íntegro e segredo RCON removido. [Contrato e limites](RETENTION.md). Recordes/rankings e Fase4 completa continuam pendentes. Sem commit/push/release/ambiente nesta retomada.
+
+
+## Retomada local — 2026-11-14
+
+Conferidas main c89cc1b e branch mais recente handoff/crates-checkpoint 88f923e no GitHub. A main tinha passagem antiga: checkpoint, COMMAND, recuperação, capturas/pesca e Shiny já avançaram na branch. Continuação local: histórico administrativo paginado, CaptureHistory/Database, comando protegido e mensagens pt_br/en_us; dois testes novos de persistência/paginação/isolamento. Build/serverDistribution e 328 JUnit aprovados (zero falhas/erros/skips); seis checks nativos em servidor Loom com LuckPerms real aprovados. Evidência: [phase4-history.json](validation/phase4-history.json). Servidor encerrado normalmente, SQLite íntegro e segredo RCON removido; novo comando fora do Loom/cliente visual/carga não certificados. Retenção, recordes/rankings e Fase4 continuam pendentes. Nenhum ambiente/release publicado nesta retomada.
+
+
 ## Desenvolvimento alpha.5 — coleção Shiny verificada
 
 SHINY_CAPTURED agora usa projeção persistente por jogador/espécie/forma derivada exclusivamente de capturas verificadas shiny. Schema9 preenche essa projeção apenas dos eventos legítimos já registrados, sem inventar histórico da Pokédex. Capturas repetidas aumentam estatísticas de ações, mas a coleção conta uma espécie; formas/filtros/denominador usam o registro atual. Carregamento assíncrono e atualização após commit; sem fonte disponível fica N/D. [Guia](SHINY_CAPTURES.md), [evidência](validation/phase4-shiny.json).

@@ -1,0 +1,136 @@
+{
+  "timestamp": "2026-11-14T09:03:24.843243+00:00",
+  "base_commit": "88f923e2c70e1b80a8044fb97626a0991623abf8",
+  "changes": "local, uncommitted",
+  "scope": "Competition foundation schema12; later schema13 prizes are separate work",
+  "build": "build serverDistribution remapCaptureProbeJar passed",
+  "junit": {
+    "tests": 356,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "native": {
+    "suite": "captures",
+    "starts": 2,
+    "jar": "shirokai-dex-0.4.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "53c93d3cecee0ba2996f53bfe794e1f4e52745ac50865d20ade156b36b7eae1b",
+    "result": "passed"
+  },
+  "normal": {
+    "timestamp": "2026-11-14T08:58:34.239Z",
+    "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+    "results": [
+      {
+        "name": "Enrollment through real menus persists each edition before later native captures",
+        "status": "passed"
+      },
+      {
+        "name": "Existing Pokedex knowledge and command-granted shiny Pokemon do not create capture events or historical counts",
+        "status": "passed"
+      },
+      {
+        "name": "Naturally spawned shiny Pokemon captured by native ball collision/animation produces verified evidence and category snapshot",
+        "status": "passed"
+      },
+      {
+        "name": "Replaying the already observed native event cannot double-count ball/Pokemon identity",
+        "status": "passed"
+      },
+      {
+        "name": "Real ball capture of an administratively created wild entity is audited as unknown and never becomes legitimate statistics",
+        "status": "passed"
+      },
+      {
+        "name": "Distinct same-species captures accumulate; rule reload affects future captures without rewriting historical classifications",
+        "status": "passed"
+      },
+      {
+        "name": "Verified shiny collection counts one species across repeated real captures and excludes command acquisition",
+        "status": "passed"
+      },
+      {
+        "name": "Own read-only statistics distinguish capture totals from species count, honor timezone and expose unknown origins separately",
+        "status": "passed"
+      },
+      {
+        "name": "Real wild battle and physical Master Ball preserve pre-hit provenance and count exactly once",
+        "status": "passed"
+      },
+      {
+        "name": "Real native captures score once in TOTAL and frozen SNAPSHOT, while LIVE changes apply only to later captures without rewriting history",
+        "status": "passed"
+      },
+      {
+        "name": "Native entity-load proof is already persisted for the untouched creature before restart, without manufacturing spawn cause",
+        "status": "passed"
+      }
+    ]
+  },
+  "restart": {
+    "timestamp": "2026-11-14T08:59:36.832Z",
+    "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+    "results": [
+      {
+        "name": "Verified shiny collection reloads with one captured species despite repeated native captures",
+        "status": "passed"
+      },
+      {
+        "name": "Permanent totals, shiny snapshots, historical category and duplicate protection survive restart",
+        "status": "passed"
+      },
+      {
+        "name": "Persisted native proof restores the same physical entity after reload without guessing or replaying a consumed proof",
+        "status": "passed"
+      },
+      {
+        "name": "Restart preserves enrollment/scores; withdrawal requires confirmation and prevents re-enrollment without erasing permanent captures",
+        "status": "passed"
+      }
+    ]
+  },
+  "observed_entries": [
+    [
+      "native_live",
+      1,
+      1
+    ],
+    [
+      "native_snapshot",
+      4,
+      1
+    ],
+    [
+      "native_total",
+      4,
+      1
+    ]
+  ],
+  "sqlite_integrity": "ok",
+  "first_failed_attempt": {
+    "timestamp": "2026-11-14T08:53:17.219Z",
+    "target": "Packaged Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 native spawn/ball/capture flow",
+    "results": [
+      {
+        "name": "Enrollment through real menus persists each edition before later native captures",
+        "status": "passed"
+      },
+      {
+        "name": "Existing Pokedex knowledge and command-granted shiny Pokemon do not create capture events or historical counts",
+        "status": "passed"
+      },
+      {
+        "name": "native capture integration",
+        "status": "failed",
+        "error": "Capture condition timed out"
+      }
+    ]
+  },
+  "diagnosis": "Archived category evaluation incorrectly constructed shinySeen=true with seen=false. SQL transaction rolled back; fixed by constructing a classification-only Form with all knowledge flags false. Added shiny/SNAPSHOT regression before successful fresh-world repeat.",
+  "limitations": [
+    "Native test uses real natural shiny/battle/Pokeball captures and real player menus; test-only probe remains separate from distributed JAR.",
+    "Native calendar expiry, held review and adjustments covered by SQLite/JUnit, not this live capture scenario.",
+    "Prizes, full notifications/privacy/profile settings and historical filters remain subsequent work.",
+    "No graphical-client or load test."
+  ]
+}

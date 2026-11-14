@@ -1,0 +1,12 @@
+{
+  "schema_version":1,
+  "language":"pt_br",
+  "menu_title":"Profiles validation",
+  "achievements":[
+    {"id":"captures","name":"Capturas verificadas","requirement":{"type":"CAPTURES","metric":"TOTAL","minimum":2}},
+    {"id":"first","name":"Primeiro registro","requirement":{"type":"POKEDEX","collection":"national","minimum_registered":1}},
+    {"id":"secret","name":"Segredo revelado","secret":true,"hint":"Registre uma espécie na Pokédex.","requirement":{"type":"POKEDEX","collection":"national","minimum_registered":1}},
+    {"id":"combined","name":"Explorador","requirement":{"all":[{"type":"ACHIEVEMENT","id":"first"},{"any":[{"type":"CAPTURES","metric":"TOTAL","minimum":2},{"type":"POKEDEX","collection":"national","minimum_registered":2}]}]}},
+    {"id":"private","name":"Medalha privada","visibility":"PRIVATE","notify":false,"requirement":{"type":"CAPTURES","metric":"TOTAL","minimum":2}}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "version": "0.6.0-dev.1",
+  "date": "2026-11-14",
+  "junit": {
+    "tests": 382,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "build": "build serverDistribution: BUILD SUCCESSFUL",
+  "jar": "shirokai-dex-0.6.0-dev.1+mc1.21.1-cobblemon1.8.3.jar",
+  "sha256": "8f960d5a8d1bdb58e586e951c6d2082ff91ac7a5cdfe5b94d33b1a0e19d8c296",
+  "profiles_native": "retry pending; first attempt failed on stale settings window; no success claimed",
+  "scope": "Development snapshot, not a completed mod or stable release",
+  "pending": [
+    "advanced placeholders and optional integrations",
+    "configurable menus",
+    "notifications",
+    "category recalculation audit",
+    "performance and final client validation"
+  ]
+}

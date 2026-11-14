@@ -22,6 +22,12 @@ public final class TextPlaceholderAccess implements PlaceholderBridge {
             };
             if (!registrations.install(id, handler)) logger.warn("Placeholder {} already registered; preserving its provider", id);
         }
+        var legacy=ResourceLocation.fromNamespaceAndPath("dexrewards","player_dex_percent");
+        PlaceholderHandler alias=(context,argument)->{
+            if(context==null||context.server()==null||!context.server().isSameThread()||!context.hasPlayer()||argument!=null&&!argument.isBlank())return PlaceholderResult.value(Component.literal(PlaceholderValues.UNKNOWN));
+            return PlaceholderResult.value(Component.literal(resolver.resolve(context.player(),"percent","national")));
+        };
+        if(!registrations.install(legacy,alias))logger.warn("Legacy placeholder {} already registered; preserving its provider",legacy);
     }
     public static PlaceholderBridge install(Resolver resolver, Logger logger) {
         var bridge = new TextPlaceholderAccess();
@@ -29,6 +35,7 @@ public final class TextPlaceholderAccess implements PlaceholderBridge {
         catch (RuntimeException | LinkageError failure) { bridge.close(); throw failure; }
     }
     @Override public String preview(ServerPlayer player, String metric, String collection) {
+        if(metric.equals("legacy")){var id=ResourceLocation.fromNamespaceAndPath("dexrewards","player_dex_percent");return registrations.owns(id)?Placeholders.parseText(Component.literal("%dexrewards:player_dex_percent%"),PlaceholderContext.of(player)).getString():PlaceholderValues.UNKNOWN;}
         if (!PlaceholderValues.METRICS.contains(metric)) return PlaceholderValues.UNKNOWN;
         var id = ResourceLocation.fromNamespaceAndPath("shirokaidex", metric);
         if (!registrations.owns(id)) return PlaceholderValues.UNKNOWN;

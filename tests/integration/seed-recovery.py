@@ -12,7 +12,9 @@ except (ConnectionRefusedError,TimeoutError):pass
 fixture=json.loads((repo/'tests/fixtures/recovery/config.json').read_text());assert json.loads((root/'config/shirokaidex/config.json').read_text())==fixture
 player=str(uuid.UUID(bytes=hashlib.md5(b'OfflinePlayer:DexRecovery').digest(),version=3));now=datetime.datetime.now(datetime.timezone.utc).isoformat()
 with sqlite3.connect('file:'+str(root/'config/shirokaidex/data/shirokaidex.sqlite')+'?mode=rw',uri=True) as db:
- assert db.execute('pragma user_version').fetchone()[0]==9
+ # Later migrations add independent modules; verify the reward table shape used by this fixture.
+ assert db.execute('pragma user_version').fetchone()[0]>=9
+ assert tuple(row[1] for row in db.execute('pragma table_info(reward_operations)'))==('operation_id','player_uuid','reward_id','plan_json','state','created_at','updated_at')
  assert db.execute('select count(*) from reward_operations where player_uuid=?',(player,)).fetchone()[0]==0
  for reward in fixture['rewards']:
   items=[dict(type='CUSTOM_ITEM' if 'payload_snbt' in item else 'ITEM',id=item['id'],count=item['count'],**({'payload_snbt':item['payload_snbt']} if 'payload_snbt' in item else {})) for item in reward['items']]

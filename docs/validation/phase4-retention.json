@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-11-14T08:23:38.333629+00:00",
+  "branch": "handoff/crates-checkpoint",
+  "base_commit": "88f923e2c70e1b80a8044fb97626a0991623abf8",
+  "changes": "local, uncommitted; no publication",
+  "build": {
+    "command": "JAVA_HOME=/workspace/.tools/jdk-21.0.13+9 python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build serverDistribution",
+    "result": "passed",
+    "junit": {
+      "tests": 337,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "jar": "build/server-mod/shirokai-dex-0.4.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "9a21ecd9a97eb6bc7e8ea9540a7eaf6cb0d686ab9cddec81006b1d66444c2a10"
+  },
+  "native": {
+    "runtime": "Loom development server / MC1.21.1 / Fabric0.17.2 / Cobblemon1.8.3 / Java21",
+    "optional_mods": "No LuckPerms, Impactor or probes in this retention test",
+    "fixture": "tests/integration/retention.py; synthetic events, not gameplay capture proof",
+    "schema_before": 9,
+    "schema_after": 10,
+    "seed_events": 5,
+    "expired_verified_removed": 3,
+    "remaining_detail_rows": 2,
+    "remaining_unknown_audit": 1,
+    "permanent_receipts": 5,
+    "verified_total": 4,
+    "species_count": 4,
+    "checks": [
+      "Native startup migrates schema9 fixture to10",
+      "Tick lifecycle schedules automatic cleanup on SQLite worker",
+      "Expired verified details removed; recent and unknown preserved",
+      "Receipt and permanent totals unchanged",
+      "Restart preserves remaining details, receipts and totals; no additional removals",
+      "Both servers stop normally and save all dimensions; SQLite integrity ok"
+    ],
+    "result": "passed",
+    "starts": 2
+  },
+  "tests_added": {
+    "CaptureReceiptsTest": 5,
+    "CaptureRetentionTest": 4
+  },
+  "limitations": [
+    "No native gameplay capture run repeated for this block; SQLite/native-observation unit tests cover new receipt write path.",
+    "Native scheduler tested under Loom, not new packaged-server installation.",
+    "No load/capacity test; receipts and unknown-origin audits grow permanently.",
+    "Capture competition/review holds must be integrated before those future features depend on disposable details.",
+    "Record records/rankings and entire Phase4 are not complete."
+  ]
+}

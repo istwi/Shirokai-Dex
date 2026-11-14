@@ -145,6 +145,9 @@ public final class MainMenu extends ChestMenu {
     public static void openReward(ServerPlayer player, Settings settings, Messages messages,
                                   br.com.shirokaidex.rewards.RewardPlan plan, br.com.shirokaidex.menus.layout.RewardView view, int requestedPage,
                                   IntConsumer navigate, Runnable back, Runnable claim) {
+        openReward(player,settings,messages,plan,view,requestedPage,navigate,back,claim,null,null);
+    }
+    public static void openReward(ServerPlayer player,Settings settings,Messages messages,br.com.shirokaidex.rewards.RewardPlan plan,br.com.shirokaidex.menus.layout.RewardView view,int requestedPage,IntConsumer navigate,Runnable back,Runnable claim,String requirement,String displayName) {
         var contents = new SimpleContainer(27); Map<Integer,Runnable> actions = new HashMap<>();
         var entries=new java.util.ArrayList<Object>();entries.addAll(plan.items());entries.addAll(plan.pokemon());entries.addAll(plan.currencies());entries.addAll(plan.commands());
         var page = Wiki.paginate(entries, requestedPage, 18);
@@ -163,7 +166,7 @@ public final class MainMenu extends ChestMenu {
         }
         var status=new ItemStack(switch(view.status()){case AVAILABLE,RESERVED->Items.LIME_DYE;case COMPLETED->Items.EMERALD;case PROCESSING->Items.CLOCK;case NEEDS_REVIEW,PLAN_CHANGED,UNAVAILABLE->Items.BARRIER;case LOCKED,CANCELLED->Items.GRAY_DYE;});
         String threshold=plan.minimumPercent()==null?String.valueOf(plan.minimumRegistered()):plan.minimumPercent().toPlainString()+"%";
-        List<Component> statusLore=new ArrayList<>();statusLore.add(messages.text(settings.language(),"layout.reward_requirement",threshold));statusLore.add(messages.text(settings.language(),"layout.reward_hint."+view.status().name()));
+        List<Component> statusLore=new ArrayList<>();statusLore.add(requirement==null?messages.text(settings.language(),"layout.reward_requirement",threshold):Component.literal(requirement));statusLore.add(messages.text(settings.language(),"layout.reward_hint."+view.status().name()));
         if(!view.operation().isEmpty()){
             statusLore.add(messages.text(settings.language(),"layout.operation_short",view.operation().substring(0,8)));
             statusLore.add(messages.text(settings.language(),"layout.operation_hint"));actions.put(19,()->player.sendSystemMessage(messages.text(settings.language(),"saved_item_operation",view.operation())));
@@ -174,7 +177,7 @@ public final class MainMenu extends ChestMenu {
         if(page.number()>0) navigation(contents,actions,20,messages.text(settings.language(),"page_previous"),()->navigate.accept(page.number()-1));
         if(page.number()+1<page.pages()) navigation(contents,actions,26,messages.text(settings.language(),"page_next"),()->navigate.accept(page.number()+1));
         closeButton(contents,actions,player,settings.language(),messages);
-        styledShow(player,settings,messages,Screen.REWARD,messages.text(settings.language(),"reward_preview",plan.id(),page.number()+1,page.pages()).getString(),contents,actions,new HashSet<>(java.util.stream.IntStream.range(0,18).boxed().toList()));
+        styledShow(player,settings,messages,Screen.REWARD,messages.text(settings.language(),"reward_preview",displayName==null?plan.id():displayName,page.number()+1,page.pages()).getString(),contents,actions,new HashSet<>(java.util.stream.IntStream.range(0,18).boxed().toList()));
     }
 
     public static void confirmReward(ServerPlayer player, Settings settings, Messages messages,

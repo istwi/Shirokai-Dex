@@ -33,3 +33,5 @@ Prévia/resgate herdam a permissão atual da coleção. `shirokaidex.admin.rewar
 ## Itens salvos
 
 `shirokaidex.admin.items`: salvar/listar/excluir e confirmar concessões de itens salvos. Independente de reload e revisão de recompensas; permissão revalidada nos callbacks. Resgates comuns de SAVED_ITEM continuam herdando a permissão da coleção. [Guia](SAVED_ITEMS.md).
+
+`shirokaidex.admin.captures` — consultar histórico detalhado de capturas de qualquer UUID; somente jogador autorizado, sem fallback OP/console.

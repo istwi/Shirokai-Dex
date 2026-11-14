@@ -315,3 +315,59 @@ Correção de preparação: condição do workflow convertida em escalar YAML ap
 - [ ] Histórico/recordes/rankings/retenção e demais requisitos da Fase4; não marcar fase concluída.
 
 | Shiny alpha.5 | CapturedShinyForm/ProgressCalculator, CaptureLedger/Database/V009, CobblemonAccess/core; nove testes novos, runners e documentos afetados. Fonte oficial não alterada | Commit `feat: derive shiny collection progress from verified captures`; base `b359a12`; [evidência](validation/phase4-shiny.json) |
+
+### Retomada — histórico administrativo local (2026-11-14)
+
+- [ ] Histórico completo. Consulta administrativa paginada implementada localmente; 328 JUnit e seis checks de ACL/comando em servidor Loom aprovados; [evidência](validation/phase4-history.json). Retenção/filtros/auditoria avançada pendentes.
+
+| Entrega | Resultado e evidência | Referência |
+|---|---|---|
+| Histórico administrativo local | CaptureHistory/Database/core/idiomas, CaptureHistoryTest e CAPTURE_HISTORY.md; 328 JUnit/6 checks nativos aprovados; [evidência](validation/phase4-history.json) | Sem commit, base 88f923e |
+
+- [x] ~~Consultar histórico administrativo paginado por UUID com permissão dedicada e revalidação.~~ Dois testes SQLite novos e seis checks de comando/ACL em Loom, [evidência](validation/phase4-history.json). Não conclui histórico completo/retenção.
+
+### Recibos permanentes e retenção local (2026-11-14)
+
+- [x] ~~Deduplicar capturas após remoção do histórico detalhado e preservar contagens por período/fuso.~~ Schema10, migração e replay/rollback/reinício testados.
+- [x] ~~Reter detalhes de capturas com limpeza automática em lotes, preservando os dados permanentes e a auditoria atual.~~ Política/configuração, 337 JUnit e migração/limpeza/reinício nativos aprovados; [evidência](validation/phase4-retention.json). Preserva UNKNOWN/recibos/agregados; novas revisões/competições exigem integrar suas dependências antes de ativação.
+
+| Entrega | Resultado e evidência | Referência |
+|---|---|---|
+| Recibos permanentes e retenção | CaptureLedger/NativeProvenance/Database/V010, Settings/codec/core, 9 novos testes e runner retention.py;337 JUnit/build e migração/scheduler/reinício nativos aprovados; [evidência](validation/phase4-retention.json) | Local sem commit, base 88f923e |
+
+### Rankings e recordes locais
+
+- [x] ~~Rankings permanentes de capturas configuráveis/paginados e recordes por período/fuso.~~344 JUnit/7 checks nativos; [evidência](validation/phase4-rankings.json). Limites de datas históricas, perfis/privacidade completa e rankings de Pokédex em RANKINGS.md.
+
+| Entrega | Evidência | Referência |
+|---|---|---|
+| Recordes/rankings de capturas | V011, CaptureRankings/CaptureRecords, cache/codec/core/menu/testes e runner;344 JUnit/7 checks | Local, base88f923e |
+
+### Competições em desenvolvimento contínuo
+
+- [ ] Calendário, inscrição/cancelamento, pontuação e revisão. Schema12 e APIs/menus implementados,355 JUnit anteriores aprovados; teste nativo detectou regressão shiny/SNAPSHOT e está sendo repetido após correção. Não concluir por compilação.
+- [ ] Premiação: política/serialização/store/V013 em preparação; ainda não ativados no runtime.
+
+| Entrega | Evidência | Referência |
+|---|---|---|
+| Fundação competitiva em andamento | CompetitionDefinition/Json/Store, V012, codec/settings/Database/core/menu, testes/runner nativo e proteção de retenção; correção da falha shiny real em validação | Local, base88f923e |
+
+### Fundação competitiva e premiações — validadas localmente
+
+- [x] ~~Calendário/inscrição/cancelamento/pontos SNAPSHOT/LIVE com persistência e revisão.~~356 JUnit/15 checks nativos; erro shiny identificado, corrigido e repetido com sucesso. [Evidência](validation/phase5-foundation.json).
+- [x] ~~Pacotes exclusivos TOP1/3/10, redistribuição opcional, expiração, atribuição oficial e resgate pelo journal.~~363 JUnit/6 checks nativos e9 de regressão. [Prêmios](validation/phase5-prizes.json). Backend nativo de material testado foi ITEM; demais adaptadores mantêm escopos anteriores.
+- [ ] Histórico e ferramentas administrativas completos: filtros/paginação/consulta de pontos/auditoria implementados, testes complementares em andamento; anúncios/notificações e privacidade detalhada seguem em integração.
+
+| Entrega | Evidência | Referência |
+|---|---|---|
+| Fundação competitiva | phase5-foundation.json, incluindo erro inicial e correção shiny real | Local, base88f923e |
+| Premiações/reuso de entrega | V013/PrizePolicy/RewardSnapshot/Awards/menus/core,363 JUnit e6+9 checks nativos | Local, base88f923e |
+
+### Snapshot 0.6.0-dev.1 — entrega solicitada
+
+- [x] ~~Implementar perfis, privacidade detalhada, rankings de conclusão e conquistas persistentes.~~ Schema14, 382 JUnit/build aprovados; validação nativa completa ainda pendente, portanto Fase6 permanece aberta.
+- [ ] Concluir validação nativa de perfis/conquistas, API opcional, menus avançados, notificações, recálculo administrativo e testes finais de carga/cliente.
+
+| Entrega | Evidência | Referência |
+|---|---|---|
+| Snapshot fases4–6 e JAR experimental | validation/development-0.6.0-dev.1.json; relatórios phase4/phase5; testes e limitações no CHANGELOG | Commit de publicação `feat: publish 0.6.0-dev.1 development snapshot`, branch handoff/crates-checkpoint |

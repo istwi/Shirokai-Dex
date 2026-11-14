@@ -39,10 +39,22 @@ public final class ShirokaiDex implements ModInitializer {
     private final CobblemonAccess cobblemon = new CobblemonAccess();
     private final br.com.shirokaidex.captures.CaptureAccess captures=new br.com.shirokaidex.captures.CaptureAccess();
     private final Messages messages = new Messages();
+    private record PublicMask(Settings settings,Database.PublicPrivacy privacy) { }
+    private final java.util.Map<java.util.UUID,PublicMask> publicMasks=new java.util.HashMap<>();
+    private final java.util.LinkedHashSet<java.util.UUID> privacyQueue=new java.util.LinkedHashSet<>();
+    private final java.util.Set<java.util.UUID> privacyRefreshing=new java.util.HashSet<>();
     private final PlaceholderCache placeholderCache = new PlaceholderCache();
     private PlaceholderBridge placeholderBridge;
     private SpawnCatalog spawnCatalog = SpawnCatalog.unavailable();
     private boolean spawnRefreshPending;
+    private final java.util.Map<java.util.UUID,net.minecraft.world.inventory.AbstractContainerMenu> publicViews=new java.util.HashMap<>();
+    private int profileCursor;
+    private final java.util.Map<java.util.UUID,Long> profileObservedAt=new java.util.HashMap<>();
+    private final java.util.Set<java.util.UUID> profileObserving=new java.util.HashSet<>();
+    private long lastCompetitionSync;
+    private boolean competitionSyncPending;
+    private long lastHistoryCleanup;
+    private boolean historyCleanupPending;
     private ConfigManager config;
     private Database database;
     private br.com.shirokaidex.rewards.RewardDelivery rewardDelivery;
@@ -72,12 +84,35 @@ public final class ShirokaiDex implements ModInitializer {
             }
             var root = literal("dex").executes(context -> open(context.getSource(), true))
                     .then(literal("status").executes(context -> open(context.getSource(), false)))
-                    .then(literal("admin").requires(source -> Permissions.mayReload(source.getPlayer()) || (Permissions.has(source.getPlayer(), "shirokaidex.admin.rewards") || Permissions.has(source.getPlayer(),"shirokaidex.admin.items")))
+                    .then(literal("admin").requires(source -> Permissions.mayReload(source.getPlayer()) || Permissions.has(source.getPlayer(),"shirokaidex.admin.competitions") || Permissions.has(source.getPlayer(),"shirokaidex.admin.captures") || (Permissions.has(source.getPlayer(), "shirokaidex.admin.rewards") || Permissions.has(source.getPlayer(),"shirokaidex.admin.items")))
                             .then(literal("reload").requires(source -> Permissions.mayReload(source.getPlayer())).executes(context -> reload(context.getSource())))
-                            .then(rewardAdminCommands()).then(savedItemCommands()));
-            root.then(literal("profile").then(literal("captures").executes(context->captureStats(context.getSource(),null,null))
+                            .then(rewardAdminCommands()).then(savedItemCommands()).then(captureHistoryCommands()).then(competitionAdminCommands()));
+            root.then(literal("profile").executes(context->profile(context.getSource(),null,null,0)).then(argument("player",StringArgumentType.word()).executes(context->profile(context.getSource(),StringArgumentType.getString(context,"player"),null,0))).then(literal("captures").executes(context->captureStats(context.getSource(),null,null))
                     .then(literal("species").then(argument("id",StringArgumentType.greedyString()).executes(context->captureStats(context.getSource(),"SPECIES",StringArgumentType.getString(context,"id")))))
                     .then(literal("category").then(argument("id",StringArgumentType.word()).executes(context->captureStats(context.getSource(),"CATEGORY",StringArgumentType.getString(context,"id")))))));
+            root.then(literal("top").executes(context->rankings(context.getSource(),null,0))
+                    .then(literal("competitions").executes(context->competitions(context.getSource(),null,0,false)))
+                    .then(argument("ranking",StringArgumentType.word()).executes(context->rankings(context.getSource(),StringArgumentType.getString(context,"ranking"),0))
+                            .then(argument("page",com.mojang.brigadier.arguments.IntegerArgumentType.integer(1,100001)).executes(context->rankings(context.getSource(),StringArgumentType.getString(context,"ranking"),com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context,"page")-1)))));
+            root.then(literal("competitions").executes(context->competitions(context.getSource(),null,0,false))
+                    .then(argument("id",StringArgumentType.word()).executes(context->competitions(context.getSource(),StringArgumentType.getString(context,"id"),0,false))));
+            root.then(literal("history").executes(context->competitions(context.getSource(),null,0,true))
+                    .then(literal("category").then(argument("category",StringArgumentType.word()).executes(context->competitionHistory(context.getSource(),new br.com.shirokaidex.competitions.CompetitionStore.HistoryFilter("",StringArgumentType.getString(context,"category"),null,null),0))))
+                    .then(literal("period").then(argument("from",StringArgumentType.string()).then(argument("until",StringArgumentType.string()).executes(context->competitionHistoryPeriod(context.getSource(),StringArgumentType.getString(context,"from"),StringArgumentType.getString(context,"until"))))))
+                    .then(argument("competition",StringArgumentType.string()).executes(context->competitions(context.getSource(),StringArgumentType.getString(context,"competition"),0,true))));
+            root.then(literal("prizes").executes(context->prizes(context.getSource(),null,0))
+                    .then(argument("award",StringArgumentType.word()).executes(context->prizes(context.getSource(),StringArgumentType.getString(context,"award"),0))));
+            root.then(literal("rankings").executes(context->rankings(context.getSource(),null,0))
+                    .then(argument("ranking",StringArgumentType.word()).executes(context->rankings(context.getSource(),StringArgumentType.getString(context,"ranking"),0))));
+            root.then(literal("achievements").executes(context->achievements(context.getSource(),null,0))
+                    .then(argument("achievement",StringArgumentType.word()).executes(context->achievements(context.getSource(),StringArgumentType.getString(context,"achievement"),0))));
+            root.then(literal("records").executes(context->personalRecords(context.getSource())));
+            root.then(literal("settings").executes(context->settings(context.getSource()))
+                    .then(literal("privacy").then(argument("statistic",StringArgumentType.word()).then(argument("visible",com.mojang.brigadier.arguments.BoolArgumentType.bool()).executes(context->changePrivacy(context.getSource(),StringArgumentType.getString(context,"statistic"),com.mojang.brigadier.arguments.BoolArgumentType.getBool(context,"visible"))))))
+                    .then(literal("notifications").then(argument("enabled",com.mojang.brigadier.arguments.BoolArgumentType.bool()).executes(context->changeNotifications(context.getSource(),com.mojang.brigadier.arguments.BoolArgumentType.getBool(context,"enabled")))))
+                    .then(literal("rankings")
+                    .then(literal("hidden").executes(context->rankingPrivacy(context.getSource(),true)))
+                    .then(literal("visible").executes(context->rankingPrivacy(context.getSource(),false)))));
             root.then(literal("rewards").executes(context -> rewards(context.getSource(), null, 0))
                     .then(argument("reward", StringArgumentType.word()).executes(context -> rewards(context.getSource(), StringArgumentType.getString(context, "reward"), 0))));
             for (var collection : DexCollection.values()) {
@@ -121,15 +156,15 @@ public final class ShirokaiDex implements ModInitializer {
         });
         CobblemonEvents.POKEMON_CAPTURED.subscribe((Consumer<com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent>) event->{
             if(!ready||stopping||activeServer==null||!activeServer.isSameThread())return;
-            try{var observation=captures.captured(event,config.current().categories());var capturePlayer=event.getPlayer();var captureServer=capturePlayer.server;database.recordObservedCapture(observation).whenComplete((inserted,failure)->{if(failure!=null)LOG.error("Capture persistence failed for {}; statistics may be incomplete",observation.capture().player(),failure);else if(Boolean.TRUE.equals(inserted))captureServer.execute(()->{if(ready&&!stopping&&activeServer==captureServer&&captureServer.getPlayerList().getPlayer(observation.capture().player())==capturePlayer)refreshCapturedShiny(capturePlayer,true);});});}
+            try{var observation=captures.captured(event,config.current().categories());var capturePlayer=event.getPlayer();var captureServer=capturePlayer.server;database.recordObservedCapture(observation,config.current()).whenComplete((inserted,failure)->{if(failure!=null)LOG.error("Capture persistence failed for {}; statistics may be incomplete",observation.capture().player(),failure);else if(Boolean.TRUE.equals(inserted))captureServer.execute(()->{if(ready&&!stopping&&activeServer==captureServer&&captureServer.getPlayerList().getPlayer(observation.capture().player())==capturePlayer){profileObservedAt.remove(capturePlayer.getUUID());refreshCapturedShiny(capturePlayer,true);}});});}
             catch(RuntimeException failure){LOG.error("Capture evidence unavailable; no legitimate capture inferred",failure);}
         });
         CobblemonEvents.POKEDEX_DATA_CHANGED_POST.subscribe((Consumer<PokedexDataChangedEvent.Post>) event -> {
             MinecraftServer server = activeServer;
-            if (server != null) server.execute(() -> { rewardObservedAt.remove(event.getPlayerUUID()); cobblemon.invalidate(event.getPlayerUUID()); if (placeholderBridge != null) placeholderCache.invalidate(event.getPlayerUUID()); });
+            if (server != null) server.execute(() -> { rewardObservedAt.remove(event.getPlayerUUID()); profileObservedAt.remove(event.getPlayerUUID()); cobblemon.invalidate(event.getPlayerUUID()); if (placeholderBridge != null) placeholderCache.invalidate(event.getPlayerUUID()); });
         });
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            activeServer = server; stopping = false; cobblemon.clear(); captures.clear();
+            activeServer = server; stopping = false; profileObservedAt.clear();profileObserving.clear();publicViews.clear();publicMasks.clear();privacyQueue.clear();privacyRefreshing.clear();lastCompetitionSync=System.nanoTime()-java.util.concurrent.TimeUnit.SECONDS.toNanos(1);competitionSyncPending=false;lastHistoryCleanup=System.nanoTime()-java.util.concurrent.TimeUnit.SECONDS.toNanos(60); historyCleanupPending=false; cobblemon.clear(); captures.clear();
             var registry = cobblemon.validationSnapshot();
             config.setItemResolver(id -> database.savedItem(id).join().orElse(null));
             config.setValidator(settings -> {
@@ -147,7 +182,7 @@ public final class ShirokaiDex implements ModInitializer {
                 else if (!stopping) {
                     ready = true;
                     if (config.recoveredFromBackup()) LOG.warn("Invalid config.json: using validated config.last-good.json; original file preserved");
-                    LOG.info("Shirokai Dex ready: configuration validated, SQLite migration 5 applied/verified");
+                    LOG.info("Shirokai Dex ready: configuration validated, SQLite migrations applied/verified");
                 }
             });
         });
@@ -171,8 +206,21 @@ public final class ShirokaiDex implements ModInitializer {
                 try { spawnCatalog = SpawnAccess.capture(server); }
                 catch (RuntimeException failure) { spawnCatalog = SpawnCatalog.unavailable(); LOG.error("World spawn information unavailable", failure); }
             }
-            if (ready) {var online=server.getPlayerList().getPlayers();if(!online.isEmpty())refreshCapturedShiny(online.get(Math.floorMod(shinyCursor++,online.size())),false);observeRewards(server);}
+            if(ready&&!stopping&&!competitionSyncPending&&System.nanoTime()-lastCompetitionSync>=java.util.concurrent.TimeUnit.SECONDS.toNanos(1)){
+                lastCompetitionSync=System.nanoTime();competitionSyncPending=true;
+                database.synchronizeCompetitions(config.current(),Instant.now()).whenComplete((unused,failure)->server.execute(()->{if(activeServer!=server)return;competitionSyncPending=false;if(failure!=null)LOG.error("Competition calendar synchronization failed",failure);}));
+            }
+            if(ready&&!stopping&&!historyCleanupPending&&System.nanoTime()-lastHistoryCleanup>=java.util.concurrent.TimeUnit.SECONDS.toNanos(60)){
+                lastHistoryCleanup=System.nanoTime();historyCleanupPending=true;
+                database.cleanupCaptureHistory(config.current().captureHistory(),Instant.now()).whenComplete((removed,failure)->server.execute(()->{
+                    if(activeServer!=server)return;historyCleanupPending=false;
+                    if(failure!=null)LOG.error("Capture history cleanup failed; retained data will be retried later",failure);
+                    else if(removed>0)LOG.info("Removed {} expired verified capture history rows; permanent records preserved",removed);
+                }));
+            }
+            if (ready) {var online=server.getPlayerList().getPlayers();if(!online.isEmpty())refreshCapturedShiny(online.get(Math.floorMod(shinyCursor++,online.size())),false);observeRewards(server);observeProfiles(server);}
             if (!ready || placeholderBridge == null) return;
+            refreshPublicPrivacy(server);
             // Only requested/invalidated players, at most four per tick. No global player scan.
             for (int i = 0; i < 4; i++) {
                 var uuid = placeholderCache.poll(); if (uuid == null) break;
@@ -188,15 +236,15 @@ public final class ShirokaiDex implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             rewardObservedAt.remove(handler.player.getUUID());
             cobblemon.invalidate(handler.player.getUUID());
-            if (placeholderBridge != null) placeholderCache.invalidate(handler.player.getUUID());
+            if (placeholderBridge != null){placeholderCache.invalidate(handler.player.getUUID());privacyQueue.add(handler.player.getUUID());}
             var uuid = handler.player.getUUID();
             String name = handler.player.getGameProfile().getName();
             Instant time = Instant.now();
             if (initialization != null) initialization.thenCompose(unused -> database.recordLogin(uuid, name, time))
                     .exceptionally(failure -> { LOG.error("Could not persist player login {}", uuid, failure); return null; });
         });
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> { rewardViewRequests.remove(handler.player.getUUID()); rewardUnlockCache.remove(handler.player.getUUID()); rewardObservedAt.remove(handler.player.getUUID()); cobblemon.forget(handler.player.getUUID());shinyRequestedAt.remove(handler.player.getUUID()); placeholderCache.remove(handler.player.getUUID()); });
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; captures.clear(); java.util.List.copyOf(pokemonDeliveries).forEach(br.com.shirokaidex.rewards.PokemonRewardAdapter::close); pokemonDeliveries.clear(); payloadValidations.forEach(future -> future.completeExceptionally(new IllegalStateException("Server stopping"))); ready = false; activeServer = null; rewardViewRequests.clear(); rewardUnlockCache.clear(); rewardObservedAt.clear();shinyRequestedAt.clear(); cobblemon.clear(); placeholderCache.clear(); spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = false;
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> { rewardViewRequests.remove(handler.player.getUUID());publicViews.remove(handler.player.getUUID());publicMasks.remove(handler.player.getUUID());privacyQueue.remove(handler.player.getUUID());profileObservedAt.remove(handler.player.getUUID()); rewardUnlockCache.remove(handler.player.getUUID()); rewardObservedAt.remove(handler.player.getUUID()); cobblemon.forget(handler.player.getUUID());shinyRequestedAt.remove(handler.player.getUUID()); placeholderCache.remove(handler.player.getUUID()); });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; captures.clear(); java.util.List.copyOf(pokemonDeliveries).forEach(br.com.shirokaidex.rewards.PokemonRewardAdapter::close); pokemonDeliveries.clear(); payloadValidations.forEach(future -> future.completeExceptionally(new IllegalStateException("Server stopping"))); ready = false; activeServer = null; rewardViewRequests.clear(); rewardUnlockCache.clear(); rewardObservedAt.clear();profileObservedAt.clear();profileObserving.clear();publicViews.clear();publicMasks.clear();privacyQueue.clear();privacyRefreshing.clear();shinyRequestedAt.clear(); cobblemon.clear(); placeholderCache.clear(); spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = false;
             if (placeholderBridge != null) {
                 try { placeholderBridge.close(); }
                 catch (RuntimeException | LinkageError failure) { LOG.error("Placeholder cleanup failed", failure); }
@@ -246,6 +294,11 @@ public final class ShirokaiDex implements ModInitializer {
             if(!ready)return;player.closeContainer();source.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack(),"menu");
         });
         var progress=cobblemon.collections(player).get(DexCollection.NATIONAL).progress();
+        actions.put("profile",()->profile(source,null,null,0));
+        actions.put("settings",()->settings(source));
+        actions.put("achievements",()->achievements(source,null,0));
+        actions.put("competitions",()->competitions(source,null,0,false));
+        actions.put("history",()->competitions(source,null,0,true));
         br.com.shirokaidex.menus.HomeMenu.open(player,settings,messages,progress,visible(player,settings).size(),(int)settings.rewards().stream().filter(plan->canAccess(player,plan.collection())).count(),actions);return 1;
     }
     private int selector(CommandSourceStack source, int page) {
@@ -308,6 +361,17 @@ public final class ShirokaiDex implements ModInitializer {
         }
     }
 
+    private boolean publiclyVisible(ServerPlayer player,Settings settings,br.com.shirokaidex.profiles.StatisticsPrivacy.Key key){
+        if(!settings.statisticsPrivacy().enabled())return true;if(!settings.statisticsPrivacy().allowPlayerOverride())return settings.statisticsPrivacy().defaults().get(key);
+        var mask=publicMasks.get(player.getUUID());if(mask==null||mask.settings()!=settings||mask.privacy().privacyRevision()!=database.privacyRevision()){privacyQueue.add(player.getUUID());return false;}
+        return Boolean.TRUE.equals(mask.privacy().visible().get(key));
+    }
+    private void refreshPublicPrivacy(MinecraftServer server){
+        for(int i=0;i<4&&privacyRefreshing.size()<4;i++){
+            if(privacyQueue.isEmpty())return;var iterator=privacyQueue.iterator();var uuid=iterator.next();iterator.remove();if(privacyRefreshing.contains(uuid)){privacyQueue.add(uuid);continue;}var player=server.getPlayerList().getPlayer(uuid);if(player==null)continue;var settings=config.current();privacyRefreshing.add(uuid);
+            database.publicPrivacy(uuid,settings.statisticsPrivacy()).whenComplete((value,failure)->server.execute(()->{if(activeServer!=server)return;privacyRefreshing.remove(uuid);if(!ready||stopping||server.getPlayerList().getPlayer(uuid)!=player)return;if(failure!=null){LOG.error("Public placeholder privacy unavailable",failure);return;}if(config.current()!=settings||value.privacyRevision()!=database.privacyRevision()){privacyQueue.add(uuid);return;}publicMasks.put(uuid,new PublicMask(settings,value));}));
+        }
+    }
     private String placeholderValue(ServerPlayer player, String metric, String argument) {
         if (!ready || player == null || activeServer == null || !activeServer.isSameThread()
                 || activeServer.getPlayerList().getPlayer(player.getUUID()) != player) return PlaceholderValues.UNKNOWN;
@@ -316,6 +380,7 @@ public final class ShirokaiDex implements ModInitializer {
         if (id == null) return PlaceholderValues.UNKNOWN;
         var definition = settings.collections().stream().filter(value -> value.id().equals(id)).findFirst().orElse(null);
         if (definition == null || !Permissions.has(player, definition.permission())) return PlaceholderValues.UNKNOWN;
+        if(definition.mode()==CollectionDefinition.Mode.SHINY_CAPTURED&&!metric.equals("total")&&!publiclyVisible(player,settings,br.com.shirokaidex.profiles.StatisticsPrivacy.Key.SHINY_CAPTURES))return PlaceholderValues.UNKNOWN;
         var values = placeholderCache.read(player.getUUID(), settings, System.nanoTime());
         return PlaceholderValues.format(metric, values.get(id), settings.language());
     }
@@ -324,7 +389,7 @@ public final class ShirokaiDex implements ModInitializer {
         if (source.getPlayer() == null) { source.sendFailure(messages.text(language(), "players_only")); return 0; }
         if (!canAccess(source.getPlayer(), id)) { source.sendFailure(messages.text(language(), "collection_denied")); return 0; }
         if (placeholderBridge == null) { source.sendFailure(messages.text(language(), "placeholder_unavailable")); return 0; }
-        if (!PlaceholderValues.METRICS.contains(metric)) { source.sendFailure(messages.text(language(), "placeholder_metric_invalid")); return 0; }
+        if (!PlaceholderValues.METRICS.contains(metric)&&!metric.equals("legacy")) { source.sendFailure(messages.text(language(), "placeholder_metric_invalid")); return 0; }
         String value = placeholderBridge.preview(source.getPlayer(), metric, id);
         source.sendSuccess(() -> messages.text(language(), "placeholder_preview", metric, id, value), false);
         return 1;
@@ -407,6 +472,257 @@ public final class ShirokaiDex implements ModInitializer {
         }
         return root;
     }
+    private com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> captureHistoryCommands() {
+        return literal("captures").requires(source -> Permissions.has(source.getPlayer(), "shirokaidex.admin.captures"))
+                .then(argument("player_uuid", StringArgumentType.word())
+                        .executes(context -> captureHistory(context.getSource(), StringArgumentType.getString(context, "player_uuid"), 0))
+                        .then(argument("page", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 100001))
+                                .executes(context -> captureHistory(context.getSource(), StringArgumentType.getString(context, "player_uuid"), com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context, "page") - 1))));
+    }
+    private int captureHistory(CommandSourceStack source, String rawPlayer, int page) {
+        var actor = source.getPlayer();
+        if (!ready || stopping || !Permissions.has(actor, "shirokaidex.admin.captures")) return 0;
+        final java.util.UUID target;
+        try { target = java.util.UUID.fromString(rawPlayer); }
+        catch (IllegalArgumentException invalid) { source.sendFailure(messages.text(language(), "capture_history_invalid")); return 0; }
+        var server = source.getServer();
+        database.captureHistory(target, page).whenComplete((history, failure) -> server.execute(() -> {
+            if (!ready || stopping || activeServer != server || actor.hasDisconnected()
+                    || server.getPlayerList().getPlayer(actor.getUUID()) != actor
+                    || !Permissions.has(actor, "shirokaidex.admin.captures")) return;
+            if (failure != null) { source.sendFailure(messages.text(language(), "capture_stats_unavailable")); return; }
+            source.sendSuccess(() -> messages.text(language(), "capture_history_header", target, page + 1, history.hasMore()), false);
+            if (history.entries().isEmpty()) source.sendSuccess(() -> messages.text(language(), "capture_history_empty"), false);
+            for (var entry : history.entries()) source.sendSuccess(() -> messages.text(language(), "capture_history_entry",
+                    entry.capturedAt(), entry.species(), entry.form(), entry.shiny(), entry.origin(), entry.source(), entry.dimension(), entry.eventKey()), false);
+        }));
+        return 1;
+    }
+
+    private void markPublicView(ServerPlayer player,boolean publicView){if(publicView)publicViews.put(player.getUUID(),player.containerMenu);else publicViews.remove(player.getUUID());}
+    private void invalidatePublicViews(){privacyQueue.addAll(publicMasks.keySet());publicMasks.clear();var server=activeServer;if(server==null){publicViews.clear();return;}for(var entry:java.util.Map.copyOf(publicViews).entrySet()){var player=server.getPlayerList().getPlayer(entry.getKey());if(player!=null&&player.containerMenu==entry.getValue())player.closeContainer();}publicViews.clear();}
+    private long beginView(ServerPlayer player){long ticket=++rewardViewSequence;rewardViewRequests.put(player.getUUID(),ticket);return ticket;}
+    private java.util.List<br.com.shirokaidex.rankings.CaptureRanking> visibleRankings(ServerPlayer player,Settings settings){
+        return settings.rankings().stream().filter(definition->Permissions.has(player,definition.permission())).filter(definition->definition.metric()!=br.com.shirokaidex.rankings.CaptureRanking.Metric.COLLECTION||settings.collections().stream().anyMatch(c->c.id().equals(definition.key())&&Permissions.has(player,c.permission()))).toList();
+    }
+    private int profile(CommandSourceStack source,String requested,String section,int page){
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;var server=source.getServer();String target=requested==null?player.getUUID().toString():requested;var settings=config.current();var previous=player.containerMenu;long ticket=beginView(player);
+        var versions=cobblemon.collectionVersions(settings.collections());var collections=visible(player,settings).stream().map(CollectionDefinition::id).collect(java.util.stream.Collectors.toUnmodifiableSet());var rankings=visibleRankings(player,settings);
+        database.profile(target,player.getUUID(),settings,versions,collections,rankings,Instant.now()).whenComplete((result,failure)->server.execute(()->{
+            if(!validRewardView(source,player,ticket,previous))return;
+            if(settings!=config.current()||!collections.equals(visible(player,settings).stream().map(CollectionDefinition::id).collect(java.util.stream.Collectors.toUnmodifiableSet()))||!rankings.equals(visibleRankings(player,settings))||result!=null&&result.privacyRevision()!=database.privacyRevision()){profile(source,target,section,page);return;}
+            if(failure!=null||result.data().isEmpty()){source.sendFailure(messages.text(language(),"profile_missing"));return;}var data=result.data().get();String id=data.identity().player().toString();
+            if(section==null){br.com.shirokaidex.menus.ProfileMenu.open(player,settings,messages,data,()->profile(source,id,"species",0),()->profile(source,id,"categories",0),()->profile(source,id,"records",0),()->{if(player.getUUID().equals(data.identity().player()))achievements(source,null,0);else profile(source,id,"medals",0);},()->home(source));markPublicView(player,!player.getUUID().equals(data.identity().player()));return;}
+            if(section.equals("medals")){br.com.shirokaidex.menus.AchievementsMenu.open(player,settings,messages,data.medals(),page,false,ignored->{},next->profile(source,id,"medals",next),()->profile(source,id,null,0));markPublicView(player,!player.getUUID().equals(data.identity().player()));return;}
+            var required=section.equals("species")?br.com.shirokaidex.profiles.StatisticsPrivacy.Key.SPECIES_CAPTURES:section.equals("categories")?br.com.shirokaidex.profiles.StatisticsPrivacy.Key.CATEGORY_CAPTURES:br.com.shirokaidex.profiles.StatisticsPrivacy.Key.PERSONAL_RECORDS;
+            if(!data.visibleStatistics().contains(required)){source.sendFailure(messages.text(language(),"profile_private"));profile(source,id,null,0);return;}
+            java.util.List<net.minecraft.network.chat.Component> rows;
+            if(section.equals("records"))rows=data.records().stream().map(record->messages.text(settings.language(),"capture_record",record.period(),record.total(),record.bucket().isEmpty()?"N/D":record.bucket(),data.timezone().getId())).toList();
+            else {var counts=section.equals("species")?data.species():data.categories();rows=counts.entrySet().stream().sorted(java.util.Comparator.<java.util.Map.Entry<String,Long>>comparingLong(java.util.Map.Entry::getValue).reversed().thenComparing(java.util.Map.Entry::getKey)).map(entry->(net.minecraft.network.chat.Component)net.minecraft.network.chat.Component.literal(entry.getKey()+": "+entry.getValue())).toList();}
+            br.com.shirokaidex.menus.ProfileMenu.detail(player,settings,messages,messages.text(settings.language(),"privacy_stat."+required.id()).getString(),rows,page,next->profile(source,id,section,next),()->profile(source,id,null,0));markPublicView(player,!player.getUUID().equals(data.identity().player()));
+        }));return 1;
+    }
+    private int settings(CommandSourceStack source){
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;var server=source.getServer();var current=config.current();var previous=player.containerMenu;long ticket=beginView(player);
+        database.personalSettings(player.getUUID()).whenComplete((value,failure)->server.execute(()->{
+            if(!validRewardView(source,player,ticket,previous))return;if(current!=config.current()){settings(source);return;}if(failure!=null){source.sendFailure(messages.text(language(),"capture_stats_unavailable"));return;}
+            br.com.shirokaidex.menus.SettingsMenu.open(player,current,messages,value.privacy(),value.rankingHidden(),value.preferences().notifications(),(key,visible)->changePrivacy(source,key.id(),visible),hidden->{rankingPrivacy(source,hidden);settings(source);},enabled->changeNotifications(source,enabled),()->home(source));
+        }));return 1;
+    }
+    private int changePrivacy(CommandSourceStack source,String statistic,boolean visible){
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;var policy=config.current().statisticsPrivacy();if(!policy.enabled()||!policy.allowPlayerOverride()){source.sendFailure(messages.text(language(),"settings_fixed"));return 0;}
+        br.com.shirokaidex.profiles.StatisticsPrivacy.Key key;try{key=br.com.shirokaidex.profiles.StatisticsPrivacy.Key.parse(statistic);}catch(IllegalArgumentException invalid){source.sendFailure(messages.text(language(),"reward_admin_invalid"));return 0;}
+        var server=source.getServer();var previous=player.containerMenu;long ticket=beginView(player);database.statisticsPrivacy(player.getUUID(),key,visible).whenComplete((unused,failure)->server.execute(()->{if(ready&&!stopping&&activeServer==server&&failure==null)invalidatePublicViews();if(!validRewardView(source,player,ticket,previous))return;if(failure!=null)source.sendFailure(messages.text(language(),"capture_stats_unavailable"));else{source.sendSuccess(()->messages.text(language(),"settings_saved"),false);settings(source);}}));return 1;
+    }
+    private int changeNotifications(CommandSourceStack source,boolean enabled){
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;var server=source.getServer();var previous=player.containerMenu;long ticket=beginView(player);database.notificationPreference(player.getUUID(),enabled).whenComplete((unused,failure)->server.execute(()->{if(!validRewardView(source,player,ticket,previous))return;if(failure!=null)source.sendFailure(messages.text(language(),"capture_stats_unavailable"));else{source.sendSuccess(()->messages.text(language(),"settings_saved"),false);settings(source);}}));return 1;
+    }
+    private int achievements(CommandSourceStack source,String selected,int page){
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;var server=source.getServer();var current=config.current();var previous=player.containerMenu;long ticket=beginView(player);
+        database.medals(player.getUUID()).whenComplete((medals,failure)->server.execute(()->{
+            if(!validRewardView(source,player,ticket,previous))return;if(current!=config.current()){achievements(source,selected,page);return;}if(failure!=null){source.sendFailure(messages.text(language(),"capture_stats_unavailable"));return;}
+            var medal=selected==null?null:medals.stream().filter(m->m.definition().id().equals(selected)&&m.active()).findFirst().orElse(null);
+            if(medal==null){br.com.shirokaidex.menus.AchievementsMenu.open(player,current,messages,medals,page,true,id->achievements(source,id,0),next->achievements(source,null,next),()->home(source));return;}
+            br.com.shirokaidex.menus.AchievementsMenu.favorite(player,current,messages,medal,slot->{
+                database.favoriteMedal(player.getUUID(),medal.definition().id(),slot).whenComplete((changed,error)->server.execute(()->{if(!ready||stopping||activeServer!=server||server.getPlayerList().getPlayer(player.getUUID())!=player)return;if(error!=null||!Boolean.TRUE.equals(changed))source.sendFailure(messages.text(language(),"reward_not_eligible"));achievements(source,null,page);}));
+            },()->achievements(source,null,page));
+        }));return 1;
+    }
+    private void observeProfiles(MinecraftServer server){
+        var online=server.getPlayerList().getPlayers();if(online.isEmpty()||profileObserving.size()>=4)return;var player=online.get(Math.floorMod(profileCursor++,online.size()));var uuid=player.getUUID();long now=System.nanoTime();if(profileObserving.contains(uuid)||now-profileObservedAt.getOrDefault(uuid,Long.MIN_VALUE/2)<java.util.concurrent.TimeUnit.SECONDS.toNanos(5))return;
+        var settings=config.current();java.util.List<br.com.shirokaidex.profiles.ProfileProgress.Proof> proofs;
+        try{var values=cobblemon.collections(player,settings.collections());var versions=cobblemon.collectionVersions(settings.collections());var observed=Instant.now();proofs=values.entrySet().stream().map(entry->new br.com.shirokaidex.profiles.ProfileProgress.Proof(entry.getKey(),versions.get(entry.getKey()),entry.getValue().progress().registered().isPresent()?entry.getValue().progress().registered().getAsInt():null,entry.getValue().progress().total(),observed)).toList();}
+        catch(RuntimeException invalid){profileObservedAt.put(uuid,now);LOG.error("Profile snapshot unavailable",invalid);return;}
+        profileObservedAt.put(uuid,now);profileObserving.add(uuid);database.observeProfile(uuid,proofs,settings,Instant.now()).whenComplete((unlocked,failure)->server.execute(()->{
+            if(activeServer!=server)return;profileObserving.remove(uuid);if(!ready||stopping||server.getPlayerList().getPlayer(uuid)!=player)return;if(failure!=null){LOG.error("Profile/medal persistence failed; retry scheduled",failure);return;}
+            if(!unlocked.isEmpty())database.preferences(uuid).whenComplete((preferences,error)->server.execute(()->{if(error!=null||!ready||stopping||activeServer!=server||server.getPlayerList().getPlayer(uuid)!=player||!preferences.notifications())return;for(String id:unlocked)config.current().achievements().stream().filter(d->d.id().equals(id)).findFirst().ifPresent(definition->player.sendSystemMessage(messages.text(language(),"achievement_notification",definition.name())));}));
+        }));
+    }
+
+    private boolean validPrize(ServerPlayer player,br.com.shirokaidex.competitions.CompetitionAwards.Award award,br.com.shirokaidex.rewards.RewardPlan plan){
+        return ready&&!stopping&&!player.hasDisconnected()&&activeServer==player.server&&player.server.getPlayerList().getPlayer(player.getUUID())==player&&award.player().equals(player.getUUID())&&award.available(Instant.now())&&award.plan().definition().equals(plan.definition());
+    }
+    private int prizes(CommandSourceStack source,String id,int page){
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;var server=source.getServer();var previous=player.containerMenu;long ticket=beginView(player);
+        if(id==null){database.competitionAwardViews(player.getUUID(),page).whenComplete((awards,failure)->server.execute(()->{
+            if(!validRewardView(source,player,ticket,previous))return;
+            if(failure!=null){source.sendFailure(messages.text(language(),"reward_error"));return;}
+            br.com.shirokaidex.menus.PrizesMenu.open(player,config.current(),messages,awards,page,award->prizes(source,award,0),next->prizes(source,null,next),()->home(source));
+        }));return 1;}
+        database.competitionAward(id,player.getUUID()).whenComplete((found,failure)->server.execute(()->{
+            if(!validRewardView(source,player,ticket,previous))return;
+            if(failure!=null||found.isEmpty()){source.sendFailure(messages.text(language(),"reward_not_eligible"));return;}var award=found.get();
+            database.rewardForPlayer(player.getUUID(),id).whenComplete((operation,error)->server.execute(()->{
+                if(!validRewardView(source,player,ticket,previous))return;
+                var view=error==null?br.com.shirokaidex.menus.layout.RewardView.preview(award.available(Instant.now()),award.plan(),operation):br.com.shirokaidex.menus.layout.RewardView.unavailable();
+                MainMenu.openReward(player,config.current(),messages,award.plan(),view,page,next->prizes(source,id,next),()->prizes(source,null,0),()->{
+                    if(!validPrize(player,award,award.plan())){source.sendFailure(messages.text(language(),"reward_not_eligible"));return;}
+                    MainMenu.confirmReward(player,config.current(),messages,award.plan(),messages.text(language(),"competition_prize_band",award.band()).getString(),()->claimPrize(source,award),()->prizes(source,id,0));
+                },messages.text(language(),"competition_prize_requirement",award.expiresAt()==null?messages.text(language(),"competition_prize_permanent").getString():award.expiresAt()).getString(),messages.text(language(),"competition_prize_band",award.band()).getString());
+            }));
+        }));return 1;
+    }
+    private void claimPrize(CommandSourceStack source,br.com.shirokaidex.competitions.CompetitionAwards.Award award){
+        var player=source.getPlayer();if(player==null||!validPrize(player,award,award.plan()))return;player.closeContainer();
+        var plan=award.plan();if(!plan.pokemon().isEmpty()&&!br.com.shirokaidex.rewards.PokemonRewardAdapter.supported()){source.sendFailure(messages.text(language(),"pokemon_backend_unavailable"));return;}
+        database.rewardForPlayer(player.getUUID(),award.id()).whenComplete((operation,failure)->source.getServer().execute(()->{
+            if(failure!=null||!validPrize(player,award,plan)){source.sendFailure(messages.text(language(),"reward_not_eligible"));return;}
+            if(operation.isPresent()&&operation.get().state()!=br.com.shirokaidex.rewards.RewardJournal.State.PENDING){source.sendFailure(messages.text(language(),"reward_result.blocked"));return;}
+            try{
+                var prepared=operation.isPresent()?plan.reuse(operation.get().plan()):plan.withPokemon(plan.pokemon().stream().map(request->br.com.shirokaidex.rewards.PokemonPayload.freeze(source.getServer(),player,request)).toList()).withCommands(plan.commands().stream().map(request->request.freeze(player.getGameProfile().getName(),player.getUUID())).toList());
+                prepared.json();deliverPlan(source,player,prepared,null,"",current->validPrize(player,award,current));
+            }catch(RuntimeException invalid){LOG.error("Competition prize preparation failed",invalid);source.sendFailure(messages.text(language(),"reward_error"));}
+        }));
+    }
+
+    private int competitionHistoryPeriod(CommandSourceStack source,String from,String until){
+        try{return competitionHistory(source,new br.com.shirokaidex.competitions.CompetitionStore.HistoryFilter("","",Instant.parse(from),Instant.parse(until)),0);}
+        catch(RuntimeException invalid){source.sendFailure(messages.text(language(),"reward_admin_invalid"));return 0;}
+    }
+    private int competitionHistory(CommandSourceStack source,br.com.shirokaidex.competitions.CompetitionStore.HistoryFilter filter,int page){
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;var server=source.getServer();var previous=player.containerMenu;long ticket=beginView(player);
+        database.competitionHistory(filter,page).whenComplete((result,failure)->server.execute(()->{
+            if(!validRewardView(source,player,ticket,previous))return;
+            if(failure!=null){source.sendFailure(messages.text(language(),"capture_stats_unavailable"));return;}
+            var visible=result.editions().stream().filter(e->Permissions.has(player,e.definition().permission())).toList();
+            br.com.shirokaidex.menus.CompetitionMenu.history(player,config.current(),messages,visible,page,result.hasMore(),id->competition(source,id,0,true),next->competitionHistory(source,filter,next),()->home(source),()->prizes(source,null,0));
+        }));return 1;
+    }
+    private int competitions(CommandSourceStack source,String requested,int page,boolean history) {
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;var server=source.getServer();var previous=player.containerMenu;long ticket=beginView(player);
+        if(history){if(requested!=null&&requested.contains(":"))return competition(source,requested,page,true);return competitionHistory(source,new br.com.shirokaidex.competitions.CompetitionStore.HistoryFilter(requested,"",null,null),page);}
+        database.competitionEditions(false).whenComplete((editions,failure)->server.execute(()->{
+            if(!validRewardView(source,player,ticket,previous))return;
+            if(failure!=null){source.sendFailure(messages.text(language(),"capture_stats_unavailable"));return;}
+            var visible=editions.stream().filter(e->Permissions.has(player,e.definition().permission())).filter(e->!history||e.state()!=br.com.shirokaidex.competitions.CompetitionStore.State.ACTIVE).toList();
+            if(requested!=null&&requested.contains(":")){competition(source,requested,page,history);return;}
+            if(requested!=null)visible=visible.stream().filter(e->e.definition().id().equals(requested)).toList();
+            br.com.shirokaidex.menus.CompetitionMenu.selector(player,config.current(),messages,visible,page,history,id->competition(source,id,0,history),next->competitions(source,requested,next,history),()->open(source,true),()->prizes(source,null,0));
+        }));return 1;
+    }
+    private int competition(CommandSourceStack source,String id,int page,boolean history) {
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;var server=source.getServer();var previous=player.containerMenu;long ticket=beginView(player);
+        var requestedSettings=config.current();database.competitionView(id,player.getUUID(),page,requestedSettings.statisticsPrivacy()).whenComplete((found,failure)->server.execute(()->{
+            if(!validRewardView(source,player,ticket,previous))return;
+            if(failure!=null||found.isEmpty()){source.sendFailure(messages.text(language(),"capture_stats_unavailable"));return;}
+            var view=found.get();if(requestedSettings!=config.current()||view.privacyRevision()!=database.privacyRevision()){competition(source,id,page,history);return;}if(!Permissions.has(player,view.edition().definition().permission())){source.sendFailure(messages.text(language(),"collection_denied"));return;}
+            br.com.shirokaidex.menus.CompetitionMenu.edition(player,config.current(),messages,view,page,next->competition(source,id,next,history),()->competitionChange(source,id,false,false),()->competitionChange(source,id,true,false),()->competitions(source,null,0,history),()->prizes(source,null,0));markPublicView(player,true);
+        }));return 1;
+    }
+    private void competitionChange(CommandSourceStack source,String id,boolean cancel,boolean confirmed) {
+        var player=source.getPlayer();if(!ready||stopping||player==null)return;var server=source.getServer();
+        database.competitionView(id,player.getUUID(),0,config.current().statisticsPrivacy()).whenComplete((found,failure)->server.execute(()->{
+            if(!ready||stopping||activeServer!=server||server.getPlayerList().getPlayer(player.getUUID())!=player)return;
+            if(failure!=null||found.isEmpty()||!Permissions.has(player,found.get().edition().definition().permission())){source.sendFailure(messages.text(language(),"collection_denied"));return;}
+            if(cancel&&!confirmed){br.com.shirokaidex.menus.CompetitionMenu.confirm(player,config.current(),messages,messages.text(language(),"competition_cancel_warning").getString(),()->competitionChange(source,id,true,true),()->competition(source,id,0,false));return;}
+            var mutation=cancel?database.cancelCompetition(id,player.getUUID(),true,Instant.now()):database.enrollCompetition(id,player.getUUID(),Instant.now());
+            mutation.whenComplete((changed,error)->server.execute(()->{
+                if(!ready||stopping||activeServer!=server||server.getPlayerList().getPlayer(player.getUUID())!=player)return;
+                if(error!=null)source.sendFailure(messages.text(language(),"capture_stats_unavailable"));
+                else {source.sendSuccess(()->messages.text(language(),"competition_changed",Boolean.TRUE.equals(changed)),false);competition(source,id,0,false);}
+            }));
+        }));
+    }
+    private com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> competitionAdminCommands() {
+        return literal("competition").requires(source->Permissions.has(source.getPlayer(),"shirokaidex.admin.competitions"))
+                .then(competitionAuditCommands("points")).then(competitionAuditCommands("audit"))
+                .then(literal("inspect").then(argument("edition",StringArgumentType.string()).then(argument("event",StringArgumentType.string()).executes(context->competitionAudit(context.getSource(),StringArgumentType.getString(context,"edition"),"inspect",StringArgumentType.getString(context,"event"),0)))))
+                .then(literal("adjust").then(argument("edition",StringArgumentType.string()).then(argument("player_uuid",StringArgumentType.word()).then(argument("delta",com.mojang.brigadier.arguments.LongArgumentType.longArg(-1000000000L,1000000000L)).then(argument("reason",StringArgumentType.greedyString()).executes(context->adjustCompetition(context.getSource(),StringArgumentType.getString(context,"edition"),StringArgumentType.getString(context,"player_uuid"),com.mojang.brigadier.arguments.LongArgumentType.getLong(context,"delta"),null,StringArgumentType.getString(context,"reason"))))))))
+                .then(literal("revert").then(argument("adjustment",StringArgumentType.word()).then(argument("reason",StringArgumentType.greedyString()).executes(context->adjustCompetition(context.getSource(),null,null,0,StringArgumentType.getString(context,"adjustment"),StringArgumentType.getString(context,"reason"))))))
+                .then(literal("review").then(argument("edition",StringArgumentType.string()).then(argument("event",StringArgumentType.string()).then(argument("state",StringArgumentType.word()).then(argument("reason",StringArgumentType.greedyString()).executes(context->reviewCompetition(context.getSource(),StringArgumentType.getString(context,"edition"),StringArgumentType.getString(context,"event"),StringArgumentType.getString(context,"state"),StringArgumentType.getString(context,"reason"))))))))
+                .then(literal("finalize").then(argument("edition",StringArgumentType.string()).then(argument("reason",StringArgumentType.greedyString()).executes(context->reviewCompetition(context.getSource(),StringArgumentType.getString(context,"edition"),null,null,StringArgumentType.getString(context,"reason"))))));
+    }
+    private com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> competitionAuditCommands(String mode){
+        return literal(mode).then(argument("edition",StringArgumentType.string()).executes(context->competitionAudit(context.getSource(),StringArgumentType.getString(context,"edition"),mode,null,0))
+                .then(argument("page",com.mojang.brigadier.arguments.IntegerArgumentType.integer(1,100001)).executes(context->competitionAudit(context.getSource(),StringArgumentType.getString(context,"edition"),mode,null,com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context,"page")-1))));
+    }
+    private int competitionAudit(CommandSourceStack source,String edition,String mode,String event,int page){
+        var actor=source.getPlayer();if(!ready||stopping||actor==null||!Permissions.has(actor,"shirokaidex.admin.competitions"))return 0;var server=source.getServer();
+        database.competitionAdminRows(edition,mode,event,page).whenComplete((rows,failure)->server.execute(()->{
+            if(!ready||stopping||activeServer!=server||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.competitions"))return;
+            if(failure!=null)source.sendFailure(messages.text(language(),"capture_stats_unavailable"));
+            else{if(rows.isEmpty())source.sendSuccess(()->messages.text(language(),"capture_history_empty"),false);for(String row:rows)source.sendSuccess(()->net.minecraft.network.chat.Component.literal(row),false);}
+        }));return 1;
+    }
+    private int adjustCompetition(CommandSourceStack source,String edition,String playerId,long delta,String reversal,String reason){
+        var actor=source.getPlayer();if(!ready||stopping||actor==null||!Permissions.has(actor,"shirokaidex.admin.competitions"))return 0;
+        java.util.UUID target;
+        try{target=playerId==null?null:java.util.UUID.fromString(playerId);if(reversal!=null)java.util.UUID.fromString(reversal);if(reversal==null&&delta==0)throw new IllegalArgumentException();}
+        catch(IllegalArgumentException invalid){source.sendFailure(messages.text(language(),"reward_admin_invalid"));return 0;}
+        if(reason.strip().length()<8||reason.length()>2048||reason.codePoints().anyMatch(Character::isISOControl)){source.sendFailure(messages.text(language(),"reward_admin_invalid"));return 0;}
+        var server=source.getServer();
+        br.com.shirokaidex.menus.CompetitionMenu.confirm(actor,config.current(),messages,(reversal==null?edition+" | "+target+" | "+delta:reversal)+" | "+reason,()->{
+            if(!ready||stopping||activeServer!=server||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.competitions"))return;actor.closeContainer();
+            var action=reversal==null?database.adjustCompetition(edition,target,delta,actor.getUUID().toString(),reason,Instant.now()):database.revertCompetitionAdjustment(reversal,actor.getUUID().toString(),reason,Instant.now());
+            action.whenComplete((result,failure)->server.execute(()->{if(!ready||stopping||activeServer!=server||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.competitions"))return;if(failure!=null)source.sendFailure(messages.text(language(),"capture_stats_unavailable"));else source.sendSuccess(()->messages.text(language(),"competition_adjusted",result.orElse("BLOCKED")),false);}));
+        },actor::closeContainer);return 1;
+    }
+    private int reviewCompetition(CommandSourceStack source,String edition,String event,String state,String reason) {
+        var actor=source.getPlayer();if(!ready||stopping||actor==null||!Permissions.has(actor,"shirokaidex.admin.competitions"))return 0;
+        if(reason.strip().length()<8||reason.length()>2048||reason.codePoints().anyMatch(Character::isISOControl)||(event!=null&&!java.util.Set.of("COUNTED","HELD","REJECTED").contains(state))){source.sendFailure(messages.text(language(),"reward_admin_invalid"));return 0;}
+        var server=source.getServer();
+        br.com.shirokaidex.menus.CompetitionMenu.confirm(actor,config.current(),messages,edition+" | "+(event==null?"FINALIZE":state)+" | "+reason,()->{
+            if(!ready||stopping||activeServer!=server||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.competitions"))return;
+            actor.closeContainer();var action=event==null?database.finalizeCompetition(edition,actor.getUUID().toString(),reason,Instant.now()):database.reviewCompetitionPoint(edition,event,state,actor.getUUID().toString(),reason,Instant.now());
+            action.whenComplete((changed,failure)->server.execute(()->{if(!ready||stopping||activeServer!=server||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.competitions"))return;if(failure!=null)source.sendFailure(messages.text(language(),"capture_stats_unavailable"));else source.sendSuccess(()->messages.text(language(),"competition_changed",Boolean.TRUE.equals(changed)),false);}));
+        },actor::closeContainer);return 1;
+    }
+
+    private int rankings(CommandSourceStack source,String id,int page) {
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;
+        var settings=config.current();var previous=player.containerMenu;long ticket=beginView(player);
+        if(id==null){
+            var definitions=visibleRankings(player,settings);
+            br.com.shirokaidex.menus.RankingsMenu.selector(player,settings,messages,definitions,page,value->rankings(source,value,0),next->rankings(source,null,next),()->open(source,true),()->competitions(source,null,0,false));return 1;
+        }
+        var definition=settings.rankings().stream().filter(value->value.id().equals(id)).findFirst().orElse(null);
+        if(definition==null||!visibleRankings(player,settings).contains(definition)){source.sendFailure(messages.text(language(),"collection_denied"));return 0;}
+        var server=source.getServer();var collection=settings.collections().stream().filter(c->c.id().equals(definition.key())).findFirst().orElse(null);var sensitivity=collection!=null&&collection.mode()==CollectionDefinition.Mode.SHINY_CAPTURED?br.com.shirokaidex.profiles.StatisticsPrivacy.Key.SHINY_CAPTURES:null;String version=definition.metric()==br.com.shirokaidex.rankings.CaptureRanking.Metric.COLLECTION?cobblemon.collectionVersions(settings.collections()).get(definition.key()):null;database.captureRankingView(definition,page,settings.statisticsPrivacy(),version,sensitivity).whenComplete((result,failure)->server.execute(()->{
+            if(!validRewardView(source,player,ticket,previous))return;
+            if(result!=null&&(result.privacyRevision()!=database.privacyRevision()||settings!=config.current())){rankings(source,id,page);return;}
+            if(!visibleRankings(player,config.current()).contains(definition)){source.sendFailure(messages.text(language(),"collection_denied"));return;}
+            if(failure!=null){source.sendFailure(messages.text(language(),"capture_stats_unavailable"));return;}
+            br.com.shirokaidex.menus.RankingsMenu.ranking(player,config.current(),messages,definition,result.page(),page,next->rankings(source,id,next),()->rankings(source,null,0),target->profile(source,target.toString(),null,0));markPublicView(player,true);
+        }));return 1;
+    }
+    private int personalRecords(CommandSourceStack source) {
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;var server=source.getServer();var zone=config.current().statisticsTimezone();
+        database.captureRecords(player.getUUID(),zone).whenComplete((records,failure)->server.execute(()->{
+            if(!ready||stopping||activeServer!=server||server.getPlayerList().getPlayer(player.getUUID())!=player)return;
+            if(failure!=null){source.sendFailure(messages.text(language(),"capture_stats_unavailable"));return;}
+            for(var record:records)source.sendSuccess(()->messages.text(language(),"capture_record",record.period(),record.total(),record.bucket().isEmpty()?"N/D":record.bucket(),zone.getId()),false);
+        }));return 1;
+    }
+    private int rankingPrivacy(CommandSourceStack source,boolean hidden) {
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;var server=source.getServer();
+        database.rankingPrivacy(player.getUUID(),hidden).whenComplete((unused,failure)->server.execute(()->{
+            if(ready&&!stopping&&activeServer==server&&failure==null)invalidatePublicViews();
+            if(!ready||stopping||activeServer!=server||server.getPlayerList().getPlayer(player.getUUID())!=player)return;
+            if(failure!=null)source.sendFailure(messages.text(language(),"capture_stats_unavailable"));
+            else{invalidatePublicViews();source.sendSuccess(()->messages.text(language(),"ranking_privacy",hidden),false);}
+        }));return 1;
+    }
+
     private int captureStats(CommandSourceStack source,String kind,String raw){
         var player=source.getPlayer();if(!ready||player==null)return 0;
         if(kind==null){var zone=config.current().statisticsTimezone();database.captureSummary(player.getUUID(),java.time.Instant.now(),zone).whenComplete((value,failure)->source.getServer().execute(()->{
@@ -430,6 +746,7 @@ public final class ShirokaiDex implements ModInitializer {
             if(stopping||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.rewards"))return;
             if(failure!=null||found.isEmpty()){source.sendFailure(messages.text(language(),"reward_resume_blocked"));return;}
             var operation=found.get();var target=source.getServer().getPlayerList().getPlayer(operation.player());
+            if(operation.reward().startsWith("cp_")){previewPrizeResume(source,operation,reason);return;}
             var definition=config.current().rewards().stream().filter(value->value.id().equals(operation.reward())).findFirst();
             if(target==null||definition.isEmpty()){source.sendFailure(messages.text(language(),"reward_resume_blocked"));return;}
             try{
@@ -442,6 +759,20 @@ public final class ShirokaiDex implements ModInitializer {
                 },()->actor.closeContainer());
             }catch(RuntimeException invalid){source.sendFailure(messages.text(language(),"reward_resume_blocked"));}
         }));return 1;
+    }
+    private void previewPrizeResume(CommandSourceStack source,br.com.shirokaidex.rewards.RewardJournal.Operation operation,String reason){
+        var actor=source.getPlayer();var server=source.getServer();if(actor==null)return;
+        database.competitionAward(operation.reward(),operation.player()).whenComplete((found,failure)->server.execute(()->{
+            if(!ready||stopping||activeServer!=server||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.rewards"))return;
+            var player=server.getPlayerList().getPlayer(operation.player());if(failure!=null||found.isEmpty()||player==null){source.sendFailure(messages.text(language(),"reward_resume_blocked"));return;}var award=found.get();
+            try{
+                var plan=award.plan().reuse(operation.plan());if(!validPrize(player,award,plan)){source.sendFailure(messages.text(language(),"reward_resume_blocked"));return;}
+                MainMenu.confirmRecovery(actor,config.current(),messages,plan,operation.id()+" → "+player.getGameProfile().getName(),reason,()->{
+                    if(!ready||stopping||activeServer!=server||actor.hasDisconnected()||!Permissions.has(actor,"shirokaidex.admin.rewards")||!validPrize(player,award,plan))return;actor.closeContainer();
+                    deliverPlan(source,player,plan,operation.id(),reason,current->!actor.hasDisconnected()&&Permissions.has(actor,"shirokaidex.admin.rewards")&&validPrize(player,award,current));
+                },actor::closeContainer);
+            }catch(RuntimeException invalid){source.sendFailure(messages.text(language(),"reward_resume_blocked"));}
+        }));
     }
     private boolean resumeAllowed(ServerPlayer actor,ServerPlayer target,br.com.shirokaidex.rewards.RewardPlan plan){
         return !actor.hasDisconnected()&&Permissions.has(actor,"shirokaidex.admin.rewards")&&!target.hasDisconnected()&&target.getServer().getPlayerList().getPlayer(target.getUUID())==target&&validReward(target,plan);
@@ -517,7 +848,7 @@ public final class ShirokaiDex implements ModInitializer {
         shinyRequestedAt.put(uuid,now);database.capturedShinyForms(uuid).whenComplete((forms,failure)->server.execute(()->{
             if(stopping||activeServer!=server||server.getPlayerList().getPlayer(uuid)!=player)return;
             if(failure!=null){LOG.error("Verified shiny capture snapshot unavailable for {}",uuid,failure);return;}
-            cobblemon.publishCapturedShiny(uuid,forms);rewardObservedAt.remove(uuid);if(placeholderBridge!=null)placeholderCache.invalidate(uuid);
+            cobblemon.publishCapturedShiny(uuid,forms);rewardObservedAt.remove(uuid);profileObservedAt.remove(uuid);if(placeholderBridge!=null)placeholderCache.invalidate(uuid);
         }));
     }
     private void observeRewards(MinecraftServer server) {
@@ -585,6 +916,10 @@ public final class ShirokaiDex implements ModInitializer {
     private void deliverReward(CommandSourceStack source,ServerPlayer player,br.com.shirokaidex.rewards.RewardPlan plan,java.util.UUID recovery,String recoveryReason){
         var actor=source.getPlayer();if(actor==null||!(recovery==null?validReward(player,plan):resumeAllowed(actor,player,plan)))return;
         java.util.function.Predicate<br.com.shirokaidex.rewards.RewardPlan> permitted=current->recovery==null?validReward(player,current):resumeAllowed(actor,player,current);
+        deliverPlan(source,player,plan,recovery,recoveryReason,permitted);
+    }
+    private void deliverPlan(CommandSourceStack source,ServerPlayer player,br.com.shirokaidex.rewards.RewardPlan plan,java.util.UUID recovery,String recoveryReason,java.util.function.Predicate<br.com.shirokaidex.rewards.RewardPlan> permitted){
+        var actor=source.getPlayer();if(actor==null||!permitted.test(plan))return;
         if(!plan.currencies().isEmpty()&&(!FabricLoader.getInstance().isModLoaded("impactor")||!br.com.shirokaidex.rewards.ImpactorCurrencyPort.supported())){source.sendFailure(messages.text(language(),"currency_backend_unavailable"));return;}
         br.com.shirokaidex.rewards.PokemonRewardAdapter pokemonAdapter=plan.pokemon().isEmpty()?null:new br.com.shirokaidex.rewards.PokemonRewardAdapter(source.getServer(),player,permitted);
         if(pokemonAdapter!=null){pokemonDeliveries.add(pokemonAdapter);source.sendSuccess(()->messages.text(language(),"pokemon_processing"),false);}
@@ -615,7 +950,8 @@ public final class ShirokaiDex implements ModInitializer {
             source.getServer().execute(() -> {
                 if (stopping) return;
                 if (failure == null) {
-                    cobblemon.clear(); placeholderCache.clear(); rewardObservedAt.clear();
+                    invalidatePublicViews();
+                    cobblemon.clear(); placeholderCache.clear(); rewardObservedAt.clear();profileObservedAt.clear();
                     if (placeholderBridge != null) source.getServer().getPlayerList().getPlayers().forEach(player -> placeholderCache.invalidate(player.getUUID()));
                     source.getServer().getPlayerList().getPlayers().forEach(player -> source.getServer().getCommands().sendCommands(player));
                 }

@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-11-14T08:05:15.401Z",
+  "results": [
+    {
+      "name": "Unprivileged player cannot query detailed capture history",
+      "status": "passed"
+    },
+    {
+      "name": "Dedicated permission alone grants administrative access and returns bounded empty history",
+      "status": "passed"
+    },
+    {
+      "name": "Invalid UUID is rejected without database lookup",
+      "status": "passed"
+    },
+    {
+      "name": "Last supported page is bounded and returns successfully",
+      "status": "passed"
+    },
+    {
+      "name": "Revoking permission prevents further history access",
+      "status": "passed"
+    },
+    {
+      "name": "Console has no bypass of player-only history ACL",
+      "status": "passed"
+    }
+  ],
+  "base_commit": "88f923e2c70e1b80a8044fb97626a0991623abf8",
+  "branch": "handoff/crates-checkpoint",
+  "changes": "local, uncommitted",
+  "runtime": "Loom development server, Fabric 0.17.2 / Minecraft 1.21.1 / Cobblemon 1.8.3 / LuckPerms 5.4.140 / Temurin 21.0.13+9",
+  "build_command": "JAVA_HOME=/workspace/.tools/jdk-21.0.13+9 python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build serverDistribution",
+  "build": "passed",
+  "junit": {
+    "tests": 328,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "shutdown": "normal stop, all dimensions saved",
+  "sqlite_integrity": "ok",
+  "capture_events_after_test": 0,
+  "cleanup": "RCON disabled, password removed, temporary secret and LuckPerms JAR removed",
+  "limitations": [
+    "Native command tests used empty history; populated history/pagination/restart covered by two SQLite JUnit tests.",
+    "New history command not exercised in packaged server outside Loom; JAR packaging verification passed.",
+    "No graphical client, load test, retention, records or rankings validation."
+  ],
+  "setup_corrections": [
+    "Base Java21 had no compiler; official Temurin21.0.13+9 downloaded and SHA256 verified against existing pinned documentation.",
+    "npm ci succeeded using writable cache /workspace/.cache/shirokai-npm; default home cache was not writable."
+  ],
+  "runtime_warnings": [
+    "Offline test server reported public-key DNS fetch failure; startup and local command validation succeeded.",
+    "Existing optional mixin/datafixer/first-player backup warnings from Cobblemon."
+  ],
+  "jar": {
+    "file": "build/server-mod/shirokai-dex-0.4.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "a63c9a141d790ecbc073fb829bcbe70c03aff459b3f0983bdf9ae6656184d1d2"
+  }
+}

@@ -10,10 +10,17 @@ import java.util.concurrent.*;
 
 /** The connection and all SQL are confined to one worker. No Minecraft objects cross this boundary. */
 public final class Database implements AutoCloseable {
+    public static final int SCHEMA_VERSION=14;
     private final Path file;
     private final ExecutorService worker = Executors.newSingleThreadExecutor(r -> new Thread(r, "shirokaidex-sqlite"));
     private Connection connection;
     private boolean closed;
+    private record RankingKey(br.com.shirokaidex.rankings.CaptureRanking definition,int page,br.com.shirokaidex.profiles.StatisticsPrivacy privacy,String version,br.com.shirokaidex.profiles.StatisticsPrivacy.Key sensitivity) { }
+    private record CachedRanking(long at,br.com.shirokaidex.rankings.CaptureRankings.Page page) { }
+    private final java.util.LinkedHashMap<RankingKey,CachedRanking> rankingCache=new java.util.LinkedHashMap<>(128,0.75f,true);
+
+    private volatile long privacyRevision;
+    private java.util.List<br.com.shirokaidex.achievements.AchievementDefinition> preservedAchievements;
     private CompletableFuture<Void> initialization;
 
     public Database(Path file) { this.file = file; }
@@ -29,6 +36,7 @@ public final class Database implements AutoCloseable {
                     statement.execute("PRAGMA journal_mode=WAL");
                     statement.execute("PRAGMA synchronous=FULL");
                 }
+                br.com.shirokaidex.profiles.ProfileProgress.registerCollation(connection);
                 migrate();
                 transaction(() -> br.com.shirokaidex.rewards.RewardJournal.recover(connection));
             } catch (Exception failure) { connection.close(); connection = null; throw failure; }
@@ -40,13 +48,13 @@ public final class Database implements AutoCloseable {
     private void migrate() throws Exception {
         int version;
         try (Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery("PRAGMA user_version")) { version = rs.getInt(1); }
-        if (version > 9) throw new SQLException("Database version " + version + " is newer than supported version 9");
+        if (version > SCHEMA_VERSION) throw new SQLException("Database version " + version + " is newer than supported version "+SCHEMA_VERSION);
         if (version > 0) {
             try (Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery("SELECT count(*) FROM schema_migrations WHERE version BETWEEN 1 AND " + version)) {
                 if (!rs.next() || rs.getInt(1) != version) throw new SQLException("Missing migration history for version " + version);
             }
         }
-        for (int target = version + 1; target <= 9; target++) applyMigration(target);
+        for (int target = version + 1; target <= SCHEMA_VERSION; target++) applyMigration(target);
     }
 
     private void applyMigration(int version) throws Exception {
@@ -60,6 +68,11 @@ public final class Database implements AutoCloseable {
             case 7 -> "/database/V007__native_spawn_proofs.sql";
             case 8 -> "/database/V008__native_source.sql";
             case 9 -> "/database/V009__captured_shiny_forms.sql";
+            case 10 -> "/database/V010__capture_receipts.sql";
+            case 11 -> "/database/V011__rankings_records.sql";
+            case 12 -> "/database/V012__competitions.sql";
+            case 13 -> "/database/V013__competition_awards.sql";
+            case 14 -> "/database/V014__profiles_achievements.sql";
             default -> throw new SQLException("Unsupported migration " + version);
         };
         String sql;
@@ -71,6 +84,7 @@ public final class Database implements AutoCloseable {
         try {
             try (Statement statement = connection.createStatement()) {
                 for (String part : sql.split(";")) if (!part.isBlank()) statement.execute(part);
+                if(version==11)br.com.shirokaidex.rankings.CaptureRankings.backfill(connection);
                 statement.execute("PRAGMA user_version=" + version);
             }
             try (PreparedStatement statement = connection.prepareStatement("INSERT INTO schema_migrations VALUES (?, ?)")) {
@@ -201,9 +215,79 @@ public final class Database implements AutoCloseable {
 
     public CompletableFuture<java.util.Set<br.com.shirokaidex.pokedex.CapturedShinyForm>> capturedShinyForms(UUID player){return submit(()->br.com.shirokaidex.captures.CaptureLedger.shinyForms(connection,player));}
     public CompletableFuture<Boolean> recordNativeSpawnProof(br.com.shirokaidex.captures.NativeSpawnProof proof){return submit(()->transaction(()->br.com.shirokaidex.captures.NativeProvenance.observe(connection,proof)));}
-    public CompletableFuture<Boolean> recordObservedCapture(br.com.shirokaidex.captures.CaptureObservation observation){return submit(()->transaction(()->br.com.shirokaidex.captures.NativeProvenance.capture(connection,observation)));}
-    public CompletableFuture<Boolean> recordCapture(br.com.shirokaidex.captures.CaptureRecord record){return submit(()->transaction(()->br.com.shirokaidex.captures.CaptureLedger.record(connection,record)));}
+    public CompletableFuture<br.com.shirokaidex.rankings.CaptureRankings.Page> captureRanking(br.com.shirokaidex.rankings.CaptureRanking definition,int page){return captureRanking(definition,page,br.com.shirokaidex.profiles.StatisticsPrivacy.defaultsPolicy(),null);}
+    public CompletableFuture<br.com.shirokaidex.rankings.CaptureRankings.Page> captureRanking(br.com.shirokaidex.rankings.CaptureRanking definition,int page,br.com.shirokaidex.profiles.StatisticsPrivacy privacy,String version){return captureRanking(definition,page,privacy,version,null);}
+    public CompletableFuture<br.com.shirokaidex.rankings.CaptureRankings.Page> captureRanking(br.com.shirokaidex.rankings.CaptureRanking definition,int page,br.com.shirokaidex.profiles.StatisticsPrivacy privacy,String version,br.com.shirokaidex.profiles.StatisticsPrivacy.Key sensitivity){return submit(()->rankingPage(definition,page,privacy,version,sensitivity));}
+    public record RankingView(br.com.shirokaidex.rankings.CaptureRankings.Page page,long privacyRevision) { }
+    public CompletableFuture<RankingView> captureRankingView(br.com.shirokaidex.rankings.CaptureRanking definition,int page,br.com.shirokaidex.profiles.StatisticsPrivacy privacy,String version,br.com.shirokaidex.profiles.StatisticsPrivacy.Key sensitivity){return submit(()->new RankingView(rankingPage(definition,page,privacy,version,sensitivity),privacyRevision));}
+    private br.com.shirokaidex.rankings.CaptureRankings.Page rankingPage(br.com.shirokaidex.rankings.CaptureRanking definition,int page,br.com.shirokaidex.profiles.StatisticsPrivacy privacy,String version,br.com.shirokaidex.profiles.StatisticsPrivacy.Key sensitivity)throws SQLException {
+        var key=new RankingKey(definition,page,privacy,version,sensitivity);var cached=rankingCache.get(key);long now=System.nanoTime();
+        if(cached!=null&&now-cached.at()<TimeUnit.SECONDS.toNanos(5))return cached.page();
+        var value=br.com.shirokaidex.rankings.CaptureRankings.page(connection,definition,page,privacy,version,sensitivity);rankingCache.put(key,new CachedRanking(now,value));
+        if(rankingCache.size()>128)rankingCache.remove(rankingCache.keySet().iterator().next());return value;
+    }
+    public CompletableFuture<Void> rankingPrivacy(UUID player,boolean hidden){return submit(()->{br.com.shirokaidex.rankings.CaptureRankings.privacy(connection,player,hidden);rankingCache.clear();privacyRevision++;return null;});}
+    public CompletableFuture<java.util.List<br.com.shirokaidex.captures.CaptureRecords.Best>> captureRecords(UUID player,java.time.ZoneId zone){return submit(()->transaction(()->br.com.shirokaidex.captures.CaptureRecords.best(connection,player,zone)));}
+    public record PublicPrivacy(java.util.Map<br.com.shirokaidex.profiles.StatisticsPrivacy.Key,Boolean> visible,boolean rankingHidden,long privacyRevision) {public PublicPrivacy{visible=java.util.Map.copyOf(visible);}}
+    public CompletableFuture<PublicPrivacy> publicPrivacy(UUID player,br.com.shirokaidex.profiles.StatisticsPrivacy policy){return submit(()->{
+        var preferences=br.com.shirokaidex.profiles.StatisticsPrivacy.preferences(connection,player);var values=new java.util.EnumMap<br.com.shirokaidex.profiles.StatisticsPrivacy.Key,Boolean>(br.com.shirokaidex.profiles.StatisticsPrivacy.Key.class);for(var key:br.com.shirokaidex.profiles.StatisticsPrivacy.Key.values())values.put(key,policy.visible(key,preferences));boolean hidden=false;
+        try(var q=connection.prepareStatement("SELECT hidden FROM player_ranking_privacy WHERE player_uuid=?")){q.setString(1,player.toString());try(var rows=q.executeQuery()){if(rows.next())hidden=rows.getBoolean(1);}}
+        return new PublicPrivacy(values,hidden,privacyRevision);
+    });}
+    public long privacyRevision(){return privacyRevision;}
+    public CompletableFuture<java.util.Map<br.com.shirokaidex.profiles.StatisticsPrivacy.Key,Boolean>> statisticsPrivacy(UUID player){return submit(()->br.com.shirokaidex.profiles.StatisticsPrivacy.preferences(connection,player));}
+    public CompletableFuture<Void> statisticsPrivacy(UUID player,br.com.shirokaidex.profiles.StatisticsPrivacy.Key key,boolean visible){return submit(()->{br.com.shirokaidex.profiles.StatisticsPrivacy.set(connection,player,key,visible);rankingCache.clear();privacyRevision++;return null;});}
+    public record ProfileView(java.util.Optional<br.com.shirokaidex.profiles.ProfileStore.Data> data,long privacyRevision) { }
+    public CompletableFuture<ProfileView> profile(String input,UUID viewer,br.com.shirokaidex.config.Settings settings,java.util.Map<String,String> versions,java.util.Set<String> visibleCollections,java.util.List<br.com.shirokaidex.rankings.CaptureRanking> visibleRankings,Instant now){return submit(()->transaction(()->new ProfileView(br.com.shirokaidex.profiles.ProfileStore.view(connection,input,viewer,settings.statisticsPrivacy(),versions,visibleCollections,settings.collections().stream().collect(java.util.stream.Collectors.toUnmodifiableMap(br.com.shirokaidex.pokedex.CollectionDefinition::id,br.com.shirokaidex.pokedex.CollectionDefinition::mode)),settings.achievements(),visibleRankings,now,settings.statisticsTimezone()),privacyRevision)));}
+    public CompletableFuture<java.util.List<String>> observeProfile(UUID player,java.util.List<br.com.shirokaidex.profiles.ProfileProgress.Proof> progress,br.com.shirokaidex.config.Settings settings,Instant now){return submit(()->{
+        boolean preserve=!settings.achievements().equals(preservedAchievements);
+        var result=transaction(()->{
+            if(preserve)br.com.shirokaidex.achievements.AchievementStore.preserve(connection,settings.achievements(),now);
+            if(br.com.shirokaidex.profiles.ProfileProgress.observe(connection,player,progress))rankingCache.clear();
+            return br.com.shirokaidex.achievements.AchievementStore.evaluate(connection,player,settings.achievements(),progress,now);
+        });
+        if(preserve)preservedAchievements=java.util.List.copyOf(settings.achievements());return result;
+    });}
+    public CompletableFuture<java.util.List<br.com.shirokaidex.achievements.AchievementStore.Medal>> medals(UUID player){return submit(()->br.com.shirokaidex.achievements.AchievementStore.medals(connection,player));}
+    public CompletableFuture<Boolean> favoriteMedal(UUID player,String achievement,int slot){return submit(()->transaction(()->br.com.shirokaidex.achievements.AchievementStore.favorite(connection,player,achievement,slot)));}
+    public CompletableFuture<br.com.shirokaidex.profiles.ProfileStore.Preferences> preferences(UUID player){return submit(()->br.com.shirokaidex.profiles.ProfileStore.preferences(connection,player));}
+    public CompletableFuture<Void> notificationPreference(UUID player,boolean enabled){return submit(()->{br.com.shirokaidex.profiles.ProfileStore.notifications(connection,player,enabled);return null;});}
+    public record PersonalSettings(java.util.Map<br.com.shirokaidex.profiles.StatisticsPrivacy.Key,Boolean> privacy,boolean rankingHidden,br.com.shirokaidex.profiles.ProfileStore.Preferences preferences) { }
+    public CompletableFuture<PersonalSettings> personalSettings(UUID player){return submit(()->{boolean hidden=false;try(var q=connection.prepareStatement("SELECT hidden FROM player_ranking_privacy WHERE player_uuid=?")){q.setString(1,player.toString());try(var rows=q.executeQuery()){if(rows.next())hidden=rows.getBoolean(1);}}return new PersonalSettings(br.com.shirokaidex.profiles.StatisticsPrivacy.preferences(connection,player),hidden,br.com.shirokaidex.profiles.ProfileStore.preferences(connection,player));});}
+    public record AwardView(br.com.shirokaidex.competitions.CompetitionAwards.Award award,java.util.Optional<br.com.shirokaidex.rewards.RewardJournal.Operation> operation) { }
+    public CompletableFuture<java.util.List<AwardView>> competitionAwardViews(UUID player,int page){return submit(()->{
+        var result=new java.util.ArrayList<AwardView>();for(var award:br.com.shirokaidex.competitions.CompetitionAwards.list(connection,player,page))result.add(new AwardView(award,br.com.shirokaidex.rewards.RewardJournal.findForReward(connection,player,award.id())));return java.util.List.copyOf(result);
+    });}
+    public CompletableFuture<java.util.List<br.com.shirokaidex.competitions.CompetitionAwards.Award>> competitionAwards(UUID player,int page){return submit(()->br.com.shirokaidex.competitions.CompetitionAwards.list(connection,player,page));}
+    public CompletableFuture<java.util.Optional<br.com.shirokaidex.competitions.CompetitionAwards.Award>> competitionAward(String id,UUID player){return submit(()->br.com.shirokaidex.competitions.CompetitionAwards.find(connection,id,player));}
+    public CompletableFuture<br.com.shirokaidex.competitions.CompetitionStore.HistoryPage> competitionHistory(br.com.shirokaidex.competitions.CompetitionStore.HistoryFilter filter,int page){return submit(()->br.com.shirokaidex.competitions.CompetitionStore.history(connection,filter,page));}
+    public CompletableFuture<java.util.List<String>> competitionAdminRows(String edition,String mode,String event,int page){return submit(()->br.com.shirokaidex.competitions.CompetitionStore.adminRows(connection,edition,mode,event,page));}
+    public CompletableFuture<Void> synchronizeCompetitions(br.com.shirokaidex.config.Settings settings,Instant now){return submit(()->transaction(()->{br.com.shirokaidex.competitions.CompetitionStore.synchronize(connection,settings.competitions(),settings.categories(),settings.rewards(),now);return null;}));}
+    public CompletableFuture<java.util.List<br.com.shirokaidex.competitions.CompetitionStore.Edition>> competitionEditions(boolean history){return submit(()->br.com.shirokaidex.competitions.CompetitionStore.editions(connection,history));}
+    public CompletableFuture<Boolean> enrollCompetition(String edition,UUID player,Instant now){return submit(()->transaction(()->br.com.shirokaidex.competitions.CompetitionStore.enroll(connection,edition,player,now)));}
+    public CompletableFuture<Boolean> cancelCompetition(String edition,UUID player,boolean confirmed,Instant now){return submit(()->transaction(()->br.com.shirokaidex.competitions.CompetitionStore.cancel(connection,edition,player,confirmed,now)));}
+    public record CompetitionView(br.com.shirokaidex.competitions.CompetitionStore.Edition edition,br.com.shirokaidex.competitions.CompetitionStore.Membership membership,java.util.List<br.com.shirokaidex.competitions.CompetitionStore.Standing> standings,long privacyRevision) { }
+    public CompletableFuture<java.util.Optional<CompetitionView>> competitionView(String id,UUID player,int page){return competitionView(id,player,page,br.com.shirokaidex.profiles.StatisticsPrivacy.defaultsPolicy());}
+    public CompletableFuture<java.util.Optional<CompetitionView>> competitionView(String id,UUID player,int page,br.com.shirokaidex.profiles.StatisticsPrivacy privacy){return submit(()->{
+        var edition=br.com.shirokaidex.competitions.CompetitionStore.edition(connection,id);if(edition.isEmpty())return java.util.Optional.empty();
+        return java.util.Optional.of(new CompetitionView(edition.get(),br.com.shirokaidex.competitions.CompetitionStore.membership(connection,id,player),br.com.shirokaidex.competitions.CompetitionStore.standings(connection,id,page,edition.get().state()==br.com.shirokaidex.competitions.CompetitionStore.State.FINAL,privacy,edition.get().definition().metric()),privacyRevision));
+    });}
+    public CompletableFuture<Boolean> reviewCompetitionPoint(String edition,String event,String state,String actor,String reason,Instant now){return submit(()->transaction(()->br.com.shirokaidex.competitions.CompetitionStore.reviewPoint(connection,edition,event,state,actor,reason,now)));}
+    public CompletableFuture<java.util.Optional<String>> adjustCompetition(String edition,UUID player,long delta,String actor,String reason,Instant now){return submit(()->transaction(()->br.com.shirokaidex.competitions.CompetitionStore.adjust(connection,edition,player,delta,null,actor,reason,now)));}
+    public CompletableFuture<java.util.Optional<String>> revertCompetitionAdjustment(String id,String actor,String reason,Instant now){return submit(()->transaction(()->br.com.shirokaidex.competitions.CompetitionStore.revertAdjustment(connection,id,actor,reason,now)));}
+    public CompletableFuture<Boolean> finalizeCompetition(String edition,String actor,String reason,Instant now){return submit(()->transaction(()->br.com.shirokaidex.competitions.CompetitionStore.finalizeEdition(connection,edition,actor,reason,now)));}
+    public CompletableFuture<Boolean> recordObservedCapture(br.com.shirokaidex.captures.CaptureObservation observation,br.com.shirokaidex.config.Settings settings){return submit(()->captureTransaction(()->{
+        br.com.shirokaidex.competitions.CompetitionStore.synchronize(connection,settings.competitions(),settings.categories(),settings.rewards(),observation.capture().capturedAt());
+        boolean retainDetail=settings.captureHistory().enabled()||br.com.shirokaidex.competitions.CompetitionStore.needsCaptureDetail(connection,observation.capture().player(),observation.capture().capturedAt());
+        boolean inserted=br.com.shirokaidex.captures.NativeProvenance.capture(connection,observation,retainDetail);
+        if(inserted){try(var q=connection.prepareStatement("SELECT verified FROM capture_receipts WHERE event_key=?")){q.setString(1,observation.capture().eventKey());try(var rows=q.executeQuery()){if(rows.next()&&rows.getBoolean(1))br.com.shirokaidex.competitions.CompetitionStore.capture(connection,observation.capture().withOrigin(br.com.shirokaidex.captures.CaptureRecord.Origin.NATIVE_PLAYER_SPAWN),settings.competitions(),settings.categories());}}}return inserted;
+    }));}
+    public CompletableFuture<Integer> cleanupCaptureHistory(br.com.shirokaidex.captures.CaptureRetention policy,Instant now){return submit(()->transaction(()->policy.cleanup(connection,now)));}
+    public CompletableFuture<Boolean> recordObservedCapture(br.com.shirokaidex.captures.CaptureObservation observation,boolean historyEnabled){return submit(()->captureTransaction(()->br.com.shirokaidex.captures.NativeProvenance.capture(connection,observation,historyEnabled)));}
+    public CompletableFuture<Boolean> recordObservedCapture(br.com.shirokaidex.captures.CaptureObservation observation){return submit(()->captureTransaction(()->br.com.shirokaidex.captures.NativeProvenance.capture(connection,observation)));}
+    public CompletableFuture<Boolean> recordCapture(br.com.shirokaidex.captures.CaptureRecord record){return submit(()->captureTransaction(()->br.com.shirokaidex.captures.CaptureLedger.record(connection,record)));}
     public CompletableFuture<br.com.shirokaidex.captures.CaptureLedger.Summary> captureSummary(UUID player,Instant now,java.time.ZoneId zone){return submit(()->br.com.shirokaidex.captures.CaptureLedger.summary(connection,player,now,zone));}
+    public CompletableFuture<br.com.shirokaidex.captures.CaptureHistory.Page> captureHistory(UUID player,int page){return submit(()->br.com.shirokaidex.captures.CaptureHistory.read(connection,player,page));}
     public CompletableFuture<Long> captureCount(UUID player,String kind,String key){return submit(()->br.com.shirokaidex.captures.CaptureLedger.count(connection,player,kind,key));}
 
     public CompletableFuture<br.com.shirokaidex.rewards.RewardJournal.Operation> reserveReward(UUID player, br.com.shirokaidex.rewards.RewardPlan plan) {
@@ -246,6 +330,10 @@ public final class Database implements AutoCloseable {
     public CompletableFuture<Boolean> reviewReward(UUID id, String reason) { return submit(() -> transaction(() -> br.com.shirokaidex.rewards.RewardJournal.review(connection,id,reason))); }
     public CompletableFuture<Boolean> cancelReward(UUID id, String actor, String reason) { return submit(() -> transaction(() -> br.com.shirokaidex.rewards.RewardJournal.cancel(connection,id,actor,reason))); }
     public CompletableFuture<Boolean> resolveReward(UUID id, String actor, String evidence) { return submit(() -> transaction(() -> br.com.shirokaidex.rewards.RewardJournal.resolveCompleted(connection,id,actor,evidence))); }
+
+    private boolean captureTransaction(Callable<Boolean> action)throws Exception {
+        boolean inserted=transaction(action);if(inserted)rankingCache.clear();return inserted;
+    }
 
     private <T> T transaction(Callable<T> action) throws Exception {
         if (connection == null) throw new SQLException("Database is not initialized");

@@ -1,0 +1,29 @@
+# Competições — desenvolvimento contínuo local
+
+A fundação implementa calendários WEEKLY/MONTHLY/CUSTOM, timezone por definição (America/Sao_Paulo padrão), inscrição pelo menu `/dex top` → Competições e cancelamento confirmado definitivo por edição. `/dex competitions` abre o mesmo seletor; `/dex history [competition]` lista edições encerradas. A central `/dex` também oferece esses acessos.
+
+`competitions` é uma lista opcional de até32 objetos, IDs únicos. Campos: id/name/cadence/metric, timezone, key (somente SPECIES/CATEGORY), category_update_mode SNAPSHOT|LIVE, visibility PUBLIC|PARTIAL|HIDDEN, permission, result_review e antiexploit. CUSTOM exige start/end ISO-8601 com offset/UTC. WEEKLY começa na segunda local, MONTHLY no primeiro dia. Intervalos incluem início e excluem fim. Não há comandos de pausar/estender/cancelar calendário.
+
+Cada edição salva definição, datas e regras canônicas de categorias. Mudanças se aplicam às próximas edições; edição ativa continua com seu contrato. Mudar calendário pode produzir uma primeira edição encurtada após a anterior, evitando sobreposição. Reinício fecha o que venceu e abre somente o período atual; não inventa edições/capturas durante o tempo offline. Histórico oficial não é refeito por reload.
+
+Somente capturas verificadas posteriores ao instante da inscrição pontuam. Empate de milissegundo com a inscrição não pontua, por não provar que ocorreu depois. Repetições distintas da mesma espécie contam; replay do mesmo evento não conta. Receber por comando/troca/recompensa e origem UNKNOWN não pontuam. SNAPSHOT avalia a classificação observada da captura com as regras arquivadas; LIVE usa a classificação do evento atual, sem reclassificar pontos anteriores.
+
+Cancelamento exige uma segunda tela e mantém auditoria; remove a pessoa da classificação, bloqueia novos pontos e reinscrição naquela edição. A próxima edição permite nova inscrição. Score anterior continua auditável. Não altera Pokédex, estatísticas ou rankings permanentes.
+
+`antiexploit` aceita mode LOG_ONLY|HOLD_FOR_REVIEW (LOG_ONLY padrão) e hourly_threshold (0 desativa limiar). Ultrapassar um limiar registra observação; taxa alta não comprova abuso. HOLD retém somente os pontos competitivos posteriores ao limiar. Nenhuma estatística permanente é diminuída.
+
+Após o prazo: ACTIVE → REVIEW → FINAL. result_review.duration_hours=24 e auto_finalize=true por padrão; enabled=false usa revisão zero. Pontos HELD impedem finalização automática. Nesta versão a edição inteira fica em revisão enquanto houver pendência; otimização de premiações comprovadamente não afetadas ainda será tratada. Desativar proteção de pendências ou anunciar provisórios não é suportado pelo parser atual. Anúncios globais estão desativados.
+
+Administração exige jogador LuckPerms com shirokaidex.admin.competitions, sem bypass OP/console. `/dex admin competition review <edition> <event> <COUNTED|HELD|REJECTED> <justificativa>` e `finalize <edition> <justificativa>` pedem confirmação adicional. Justificativa de8–2048 caracteres, sem controles. Finalizar manualmente respeita deadline/revisão e pendências. Resultados FINAL não são reescritos por esses métodos.
+
+Ajustes competitivos e reversão única são expostos por adjust/revert, sempre com justificativa e confirmação adicional. Nenhuma correção competitiva altera os dados permanentes. Um ajuste que tornaria score negativo é bloqueado; pode ser necessário reverter ajustes anteriores antes de uma invalidação.
+
+PUBLIC mostra classificação pública; PARTIAL exibe apenas a linha do próprio jogador; HIDDEN mantém somente resumo/status próprio. Exclusão dos rankings por UUID também oculta linhas competitivas e torna inelegível na classificação oficial; não apaga pontos. As posições oficiais ficam persistidas mesmo quando uma linha é ocultada posteriormente.
+
+Retenção: detalhes necessários a competidores são preservados mesmo com capture_history.enabled=false; pontos de edições não finalizadas e capturas com auditoria competitiva impedem expiração. Pontos/resultados referenciam recibos permanentes. Auditorias de suspeita/correção conservam a evidência detalhada. Não apagar manualmente essas tabelas.
+
+Schema13 ativa prêmios exclusivos, redistribuição opcional e expiração. PrizePolicy escolhe no máximo um pacote por jogador/edição; templates são congelados ao abrir a edição. Atribuição ocorre na finalização oficial, idempotente, e não se repete por não resgate. /dex prizes mostra seus pacotes; prévia e confirmação separadas entregam pelo journal/adaptadores existentes. O prazo começa na atribuição oficial. Expiração bloqueia novas etapas e não reentrega resultados incertos; revisão administrativa continua disponível. Os comandos de retomada podem resolver a origem arquivada de prêmios cp_, sem depender do JSON de coleções atual.
+
+Validação: 363 JUnit aprovados no bloco de premiações, 15 checks de captura real/menu/reinício após corrigir o bug shiny/SNAPSHOT, seis checks nativos de premiação/expiração/entrega/reinício e nove de regressão da recuperação anterior. Evidências: [fundação](validation/phase5-foundation.json), [prêmios](validation/phase5-prizes.json), [recuperação](validation/phase5-recovery-regression.json). Histórico filtrado/admin audit são um complemento em teste. Não confundir fixtures sintéticas de prêmios com prova de captura no jogo.
+
+Identificadores contendo dois-pontos, como edição e chave de evento, devem ser colocados entre aspas nos comandos administrativos. Exemplo: `/dex admin competition points "native_total:1762732800000"`. O histórico aceita filtros de competição, `/dex history category <id>` e `/dex history period "<início ISO>" "<fim ISO>"`, com intervalos que se sobrepõem ao filtro. Páginas de18 não truncam a consulta nos1000 registros antigos. Admin points/audit/inspect permitem inspecionar evidências, inclusive motivo/ator das correções.

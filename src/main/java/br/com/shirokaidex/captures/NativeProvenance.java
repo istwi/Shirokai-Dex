@@ -11,8 +11,11 @@ public final class NativeProvenance {
         }
     }
     public static boolean capture(Connection c,CaptureObservation observation)throws SQLException{
+        return capture(c,observation,true);
+    }
+    public static boolean capture(Connection c,CaptureObservation observation,boolean historyEnabled)throws SQLException{
         var original=observation.capture();
-        try(var q=c.prepareStatement("SELECT 1 FROM capture_events WHERE event_key=?")){q.setString(1,original.eventKey());try(var r=q.executeQuery()){if(r.next())return false;}}
+        try(var q=c.prepareStatement("SELECT 1 FROM capture_receipts WHERE event_key=?")){q.setString(1,original.eventKey());try(var r=q.executeQuery()){if(r.next())return false;}}
         boolean verified=false;String nativeSource="UNVERIFIED";
         if(observation.entity()!=null){
             Long observedAt=null;
@@ -26,7 +29,7 @@ public final class NativeProvenance {
             }
         }
         var result=original.withOrigin(verified?CaptureRecord.Origin.NATIVE_PLAYER_SPAWN:CaptureRecord.Origin.UNKNOWN);
-        if(!CaptureLedger.record(c,result))throw new SQLException("Capture observation changed during transaction");
+        if(!CaptureLedger.record(c,result,historyEnabled))throw new SQLException("Capture observation changed during transaction");
         try(var q=c.prepareStatement("UPDATE capture_events SET entity_uuid=?,verification=?,native_source=? WHERE event_key=?")){
             q.setString(1,observation.entity()==null?null:observation.entity().toString());q.setString(2,!verified?"UNVERIFIED":observation.kind()==CaptureObservation.Kind.LIVE_NATIVE?"LIVE_NATIVE":"PERSISTED_NATIVE");q.setString(3,verified?nativeSource:"UNVERIFIED");q.setString(4,result.eventKey());q.executeUpdate();
         }

@@ -1,0 +1,55 @@
+{
+  "timestamp": "2026-11-14T08:33:26.505Z",
+  "results": [
+    {
+      "name": "Ranking selector shows configured accessible rankings and hides restricted definition without LuckPerms",
+      "status": "passed"
+    },
+    {
+      "name": "Schema10 migration exposes persisted synthetic score, name and evidence-backed achievement timestamp",
+      "status": "passed"
+    },
+    {
+      "name": "Ranking inventory icons cannot be extracted with shift click",
+      "status": "passed"
+    },
+    {
+      "name": "Hiding a player excludes their score immediately after cached ranking query",
+      "status": "passed"
+    },
+    {
+      "name": "Restoring visibility preserves permanent score",
+      "status": "passed"
+    },
+    {
+      "name": "Personal period records derive from retained receipts in actual server command",
+      "status": "passed"
+    },
+    {
+      "name": "Direct command rechecks ranking permission",
+      "status": "passed"
+    }
+  ],
+  "base_commit": "88f923e2c70e1b80a8044fb97626a0991623abf8",
+  "status": "local, uncommitted",
+  "junit": {
+    "tests": 344,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "build": "build serverDistribution passed",
+  "schema_before": 10,
+  "schema_after": 11,
+  "runtime": "Loom / Fabric0.17.2 / MC1.21.1 / Cobblemon1.8.3 / Java21; no LuckPerms",
+  "fixture": "Synthetic scores, not proof of native gameplay capture",
+  "jar_sha256": "d88d8ebd388e850b52e15cd2f095656f84c30267eff7895d0b4af9b14833bbd8",
+  "shutdown": "normal stop and all dimensions saved",
+  "limitations": [
+    "Native ranking restart test not repeated; SQLite JUnit exercises restart and persisted visibility.",
+    "No collection/Pokedex ranking implemented in this block.",
+    "Unknown historical reached_at timestamps remain N/D; known dates sort before unknown dates, then UUID.",
+    "Capture record buckets cover retained verified receipts; no reconstruction of missing historical events.",
+    "No load or graphical-client test; full privacy settings remain a later block."
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-11-14T09:11:20.420481+00:00",
+  "base_commit": "88f923e2c70e1b80a8044fb97626a0991623abf8",
+  "changes": "local uncommitted; no publication",
+  "schema": 13,
+  "junit": {
+    "tests": 363,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "build": "build serverDistribution passed",
+  "native": {
+    "suite": "prizes",
+    "starts": 3,
+    "jar": "shirokai-dex-0.4.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "2f0d4651f51abb9559cce8af980ab7884467673063aff68759dfb0d5d8865aa3",
+    "result": "passed"
+  },
+  "normal": {
+    "timestamp": "2026-11-14T09:08:00.973Z",
+    "results": [
+      {
+        "name": "Native startup closes/reviews/finalizes overdue synthetic edition and assigns exactly one official package",
+        "status": "passed"
+      },
+      {
+        "name": "Expired offline award remains visible for audit but cannot reserve or deliver",
+        "status": "passed"
+      },
+      {
+        "name": "Prize preview shows archived material package independently of Pokedex milestone eligibility",
+        "status": "passed"
+      },
+      {
+        "name": "Explicit second confirmation delivers archived prize through existing intent/save-readback journal exactly once",
+        "status": "passed"
+      },
+      {
+        "name": "Repeated prize preview cannot expose another claim or duplicate material rewards",
+        "status": "passed"
+      }
+    ]
+  },
+  "restart": {
+    "timestamp": "2026-11-14T09:08:48.220Z",
+    "results": [
+      {
+        "name": "Restart preserves assigned packages, durable inventory and completed journal without re-awarding or duplicate claim",
+        "status": "passed"
+      }
+    ]
+  },
+  "fixture": "Explicit synthetic overdue competition and expired official award; validates calendar finalization and material delivery, not native capture origin",
+  "sqlite_integrity": "ok",
+  "limits": [
+    "Native material claim used ITEM; Pokémon/currency/command adapters retain their prior separately scoped validation.",
+    "Prize recovery path and admin competitive adjustments have unit/inspection coverage; specific native admin scenarios still pending.",
+    "Partial/hidden standings UI, privacy defaults per statistic and historical filters require further work.",
+    "No load/graphical-client test."
+  ]
+}

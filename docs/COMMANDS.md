@@ -39,3 +39,5 @@ Desde a alpha.2: `/dex <id>` e `/dex <id> status` também atendem coleções JSO
 ## Estatísticas próprias de captura
 
 `/dex profile captures`, `/dex profile captures species <namespace:espécie>` e `/dex profile captures category <id>` consultam somente o jogador atual. Capturas verificadas são distintas de registros da Pokédex e de origem desconhecida. Perfil gráfico ainda não implementado. [Guia](CAPTURES.md).
+
+`/dex admin captures <player_uuid> [page]` — histórico administrativo paginado; exige `shirokaidex.admin.captures`. [Detalhes](CAPTURE_HISTORY.md).
