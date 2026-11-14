@@ -1,5 +1,9 @@
 # Próximos passos
 
+## Dev.2 publicada e verificada
+
+[Pré-release/JAR](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.6.0-dev.2) publicada na fonte/tag d4f1965 por solicitação do responsável. [Actions43620027225](https://github.com/istwi/Shirokai-Dex/actions/runs/43620027225) aprovado; cinco anexos baixados e manifesto conferido localmente. JAR coincide com o validado nos402 JUnit/10 checks nativos, SHA256 0dc0401af48479de0fdd118ddd9c5b9fda5bc985996717cc18c52c557a4003d8. Configuração de exemplo anexada para instalações existentes, preservadas automaticamente. [Evidência](validation/release-focused-dev2.json). Main e ambiente não publicados. Não ampliar as demais fases sem novo direcionamento: modo reduzido permanece a prioridade vigente.
+
 ## Envio dev.2 autorizado
 
 Responsável solicitou enviar o JAR ao GitHub. Snapshot em preparação na branch handoff/crates-checkpoint:402 JUnit/10 checks nativos e JAR SHA256 0dc0401af48479de0fdd118ddd9c5b9fda5bc985996717cc18c52c557a4003d8. Workflow recompila/testa e exige coincidência com o binário nativo antes de anexar/publicar; configuração focused-server.json incluída. Sem merge de main ou publicação de ambiente. Referência: commit `release: distribute v0.6.0-dev.2 snapshot`.

@@ -1,0 +1,20 @@
+{
+  "release": "https://github.com/istwi/Shirokai-Dex/releases/tag/v0.6.0-dev.2",
+  "workflow": "https://github.com/istwi/Shirokai-Dex/actions/runs/43620027225",
+  "workflow_result": "success",
+  "source_commit": "d4f196566aea9846805c9e26dd8e8d536443e66c",
+  "tag_commit_verified": true,
+  "assets": [
+    "BUILD_PROVENANCE.json",
+    "SHA256SUMS",
+    "focused-server.json",
+    "shirokai-dex-0.6.0-dev.2+mc1.21.1-cobblemon1.8.3.jar",
+    "validation.json"
+  ],
+  "downloaded_manifest": "all hashes verified locally after publication",
+  "jar_sha256": "0dc0401af48479de0fdd118ddd9c5b9fda5bc985996717cc18c52c557a4003d8",
+  "matches_native_tested_jar": true,
+  "branch": "handoff/crates-checkpoint",
+  "main_merged": false,
+  "environment_published": false
+}
