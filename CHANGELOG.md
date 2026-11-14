@@ -1,12 +1,12 @@
 # Changelog
 
-## 0.7.0-dev.1 — desenvolvimento local
+## 0.7.0-dev.1 — pré-release publicada
 
 - Menus independentes por `/dex`, `/dexrank` e `/wiki` com argumento; `/dex` sozinho sem tela. Eventos desativados.
 - Doze JSONs separados, configuração atômica com recuperação, layout da wiki de54 slots e pesquisa pelo chat.
 - Somente configurações do DexRewards:18 pacotes com itens/moedas/tags e layout original; nenhum jogador/resgate importado.
 - Placeholder progress (registrados/total), alias nacional e permissões tipadas no journal.
--410 JUnit e15 checks nativos aprovados com Impactor/LuckPerms/Text Placeholder API reais, resgate único e reinício; JAR local, não distribuído.
+-410 JUnit e15 checks nativos aprovados com Impactor/LuckPerms/Text Placeholder API reais, resgate único e reinício; JAR e configurações publicados, anexos e SHA256 conferidos.
 
 ## 0.6.0-dev.2 — pré-release publicada
 

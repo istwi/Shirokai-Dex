@@ -1,0 +1,19 @@
+{
+  "release": "https://github.com/istwi/Shirokai-Dex/releases/tag/v0.7.0-dev.1",
+  "source_commit": "dea5e5ee9f5eb82bf5c384184c5c34f6adc033a9",
+  "workflow": "https://github.com/istwi/Shirokai-Dex/actions/runs/43631176595",
+  "workflow_result": "success",
+  "published_prerelease": true,
+  "downloaded_assets": [
+    "BUILD_PROVENANCE.json",
+    "SHA256SUMS",
+    "direct-menu-config.zip",
+    "shirokai-dex-0.7.0-dev.1+mc1.21.1-cobblemon1.8.3.jar",
+    "validation.json"
+  ],
+  "checksum_manifest_verified": true,
+  "sha256": "cb493e8d1ea128b89231a0fb662e2bd389d98bd685b4856262ddc1e72f4e4c88",
+  "native_binary_matches": true,
+  "main_merged": false,
+  "environment_published": false
+}

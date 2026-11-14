@@ -1,5 +1,9 @@
 # Próximos passos
 
+## 0.7.0-dev.1 publicada e conferida
+
+[Pré-release com JAR e configurações](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.7.0-dev.1) publicada no commit dea5e5e por solicitação do responsável. [Actions43631176595](https://github.com/istwi/Shirokai-Dex/actions/runs/43631176595) aprovado. Os cinco anexos foram baixados e o manifesto conferido; JAR idêntico ao validado em410 JUnit/15 checks nativos, SHA256 cb493e8d1ea128b89231a0fb662e2bd389d98bd685b4856262ddc1e72f4e4c88. ZIP contém12 configurações, guia e evidência, sem jogadores. [Confirmação](validation/release-direct-dev1.json). Código enviado na branch handoff/crates-checkpoint; main e ambiente preservados. Este registro substitui os estados anteriores de preparação/local. Manter eventos/Forms e outros menus no escopo atual até novo pedido.
+
 ## Envio 0.7.0-dev.1 autorizado
 
 Responsável solicitou o JAR no GitHub. Preparando commit/push na branch handoff/crates-checkpoint e pré-release com JAR SHA256 cb493e8d1ea128b89231a0fb662e2bd389d98bd685b4856262ddc1e72f4e4c88, configurações e evidência dos410 JUnit/15 checks nativos. CI exige igualdade com o binário testado e verifica anexos antes de publicar. Sem merge de main ou publicação de ambiente. Referência: `release: distribute v0.7.0-dev.1 snapshot`.
