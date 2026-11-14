@@ -1,0 +1,17 @@
+{
+  "release": "https://github.com/istwi/Shirokai-Dex/releases/tag/v0.6.0-dev.1",
+  "workflow": "https://github.com/istwi/Shirokai-Dex/actions/runs/43585022162",
+  "result": "success",
+  "source": "9714b9967ec2aac7f69fabaa9c63f79e99f63495",
+  "downloaded_assets": [
+    "BUILD_PROVENANCE.json",
+    "SHA256SUMS",
+    "shirokai-dex-0.6.0-dev.1+mc1.21.1-cobblemon1.8.3.jar",
+    "validation.json"
+  ],
+  "sha256_manifest": "all verified locally after publication",
+  "jar_sha256": "8f960d5a8d1bdb58e586e951c6d2082ff91ac7a5cdfe5b94d33b1a0e19d8c296",
+  "matches_native_tested_local_jar": true,
+  "native_profile_evidence": "phase6-profiles.json",
+  "note": "Release validation.json preserves pre-native-retry state of tagged source; current repository and release notes contain successful retry. No binary replaced."
+}
