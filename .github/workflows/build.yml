@@ -43,3 +43,42 @@ jobs:
           name: junit-${{ github.sha }}
           path: build/test-results/test/*.xml
           if-no-files-found: warn
+
+  publish-development:
+    needs: build
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/handoff/crates-checkpoint' &&
+      github.event.head_commit.message == 'release: distribute v0.6.0-dev.1 snapshot'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/download-artifact@v4
+        with:
+          name: shirokai-dex-alpha-mc1.21.1-cobblemon1.8.3-${{ github.sha }}
+          path: release-assets
+      - name: Verify and attach exact CI binary
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          cd release-assets
+          sha256sum --check SHA256SUMS
+          cp ../docs/validation/development-0.6.0-dev.1.json validation.json
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          Path('BUILD_PROVENANCE.json').write_text(json.dumps({'source_commit': os.environ['GITHUB_SHA'], 'build_run': os.environ['GITHUB_RUN_ID'], 'version': '0.6.0-dev.1', 'validation': 'CI clean build/test/serverDistribution; native evidence scoped separately in repository'}, indent=2)+'\n')
+          PY
+          sha256sum *.jar validation.json BUILD_PROVENANCE.json > SHA256SUMS
+          gh release view v0.6.0-dev.1 --json isDraft --jq '.isDraft' | grep -qx true
+          gh release upload v0.6.0-dev.1 ./*
+          mkdir ../verified-release
+          gh release download v0.6.0-dev.1 --dir ../verified-release
+          cd ../verified-release
+          sha256sum --check SHA256SUMS
+          diff BUILD_PROVENANCE.json ../release-assets/BUILD_PROVENANCE.json
+          gh release edit v0.6.0-dev.1 --draft=false --prerelease --notes-file ../docs/releases/v0.6.0-dev.1.md

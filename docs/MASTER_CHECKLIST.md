@@ -371,3 +371,5 @@ Correção de preparação: condição do workflow convertida em escalar YAML ap
 | Entrega | Evidência | Referência |
 |---|---|---|
 | Snapshot fases4–6 e JAR experimental | validation/development-0.6.0-dev.1.json; relatórios phase4/phase5; testes e limitações no CHANGELOG | Commit de publicação `feat: publish 0.6.0-dev.1 development snapshot`, branch handoff/crates-checkpoint |
+
+| Distribuição automatizada dev.1 | build.yml: build limpo, anexo CI, download e SHA256 antes da pré-release; contorna falha HTTP401 do upload local sem expor credenciais | Commit `release: distribute v0.6.0-dev.1 snapshot`; funcional e93699b |

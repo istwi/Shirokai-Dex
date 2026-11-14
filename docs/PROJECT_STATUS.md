@@ -6,6 +6,8 @@ Esta seção substitui os estados históricos abaixo. Fases 4/5 avançadas; Fase
 
 Build/serverDistribution e 382 JUnit aprovados, sem falhas/erros/skips. Evidências anteriores de histórico/retenção/rankings e competições/prêmios continuam em validation/phase4-* e phase5-*. Primeira suíte nativa de perfis falhou na interação com janela antiga; correção aplicada e repetição em andamento. Não confundir implementação/testes unitários com certificação nativa ou visual.
 
+Código enviado no commit e93699b. Envio direto de anexos retornou HTTP401 no host uploads; distribuição será executada pelo workflow build.yml com GITHUB_TOKEN, verificando download/checksums antes de publicar.
+
 O responsável autorizou agora commit/push na branch handoff/crates-checkpoint e distribuição do JAR atual como pré-release de desenvolvimento. Main e ambiente publicado preservados. Progresso estimado de 75%, sem medição formal; funcionalidades restantes em NEXT_STEPS.md.
 
 ## Estado contínuo — Fase5 validada em blocos (2026-11-14)
