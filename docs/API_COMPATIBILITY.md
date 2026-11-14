@@ -1,5 +1,13 @@
 # Auditoria de compatibilidade — Fase 0
 
+## Comandos diretos — desenvolvimento local
+
+Fabric ServerMessageEvents.ALLOW_CHAT_MESSAGE e SignedMessage.signedContent foram conferidos por compilação para interceptar somente a pesquisa pendente da wiki. Minecraft1.21.1 usa menus de baú via SimpleContainer; PokemonItem e componente oficial continuam preservados. Opcional LuckPerms usa UserManager.loadUser/saveUser e Node.builder, com revalidação de sessão antes do efeito e confirmação do save; nenhuma concessão de grupo. Impactor mantém o adaptador JSON nativo auditado.
+
+POKE_BALL_CAPTURE_CALCULATED fornece thrower, ball e pokemonEntity, conferidos por compilação; novo observador correlaciona identidades antes da captura, sem aceitar origem administrativa/ausente como nativa. Hipótese de bolsa rejeitada durante auditoria: BagItems.getConvertibleForStack(master_ball) retorna null no Cobblemon1.8.3 auditado, e PokeBallItem não implementa BagItemLike. O probe incorreto foi removido; validação usa projétil físico nativo em PvE. Não afirmar correção do servidor do usuário sem sua evidência.
+
+410 JUnit/build e15 checks direct por protocolo, Impactor/LP/API reais e reinício aprovados. Evidência em validation/direct-menus.json. [Guia](DIRECT_MENUS.md).
+
 ## Menus reduzidos e derrotas — validação local
 
 Cobblemon1.8.3: `PokemonItem.from(Species,String...)`, `PokemonSpecies.getByIdentifier` e aspectos oficiais de FormData usados para ícones; componentes POKEMON_ITEM preservados. Codec de rede PokemonItemComponent.PACKET_CODEC conferido por javap: PacketCodecs.fromCodec(CODEC). O cliente de protocolo de teste foi ampliado apenas para esse componente usando o ID real do registro; não substitui teste visual no cliente Cobblemon.

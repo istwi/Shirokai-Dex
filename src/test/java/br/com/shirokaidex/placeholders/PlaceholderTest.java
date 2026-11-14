@@ -18,10 +18,12 @@ class PlaceholderTest {
         assertEquals("2",PlaceholderValues.format("seen",value,"pt_br"));
         assertEquals("3",PlaceholderValues.format("total",value,"pt_br"));
         assertEquals("2",PlaceholderValues.format("remaining",value,"pt_br"));
+        assertEquals("1/3",PlaceholderValues.format("progress",value,"pt_br"));
+        assertEquals("national",PlaceholderValues.collection("nacional"));
     }
     @Test void unsupportedCaptureEvidenceIsNeverConvertedToZero() {
         var value=new ProgressCalculator.CollectionProgress(DexProgress.unavailable(100),3);
-        for(var metric:List.of("registered","remaining","percent"))assertEquals("N/D",PlaceholderValues.format(metric,value,"pt_br"));
+        for(var metric:List.of("registered","remaining","percent","progress"))assertEquals("N/D",PlaceholderValues.format(metric,value,"pt_br"));
         assertEquals("100",PlaceholderValues.format("total",value,"pt_br"));
         assertEquals("3",PlaceholderValues.format("seen",value,"pt_br"));
     }

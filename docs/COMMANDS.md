@@ -1,5 +1,7 @@
 # Comandos disponíveis — alpha experimental
 
+> Direção atual 0.7.0-dev.1: consulte [Menus diretos](DIRECT_MENUS.md). As seções abaixo são históricas; o hub e os antigos comandos de navegação/prévia foram retirados. `/dex` sozinho não abre tela.
+
 ## Modo público reduzido
 
 Com home.focused=true, `/dex` abre somente Dex, Rankings de captura e Eventos. `/dex national`, `/dex special` e `/dex shiny` abrem Wiki e marcos da coleção; `/dex top` e `/dex rankings` abrem o seletor reduzido; `/dex competitions` abre os eventosTOTAL. Profile/settings/achievements/history/prizes/records ficam bloqueados publicamente enquanto esse modo estiver ativo. Comandos administrativos mantêm suas permissões. Interfaces completas e dados permanecem preservados para home.focused=false.

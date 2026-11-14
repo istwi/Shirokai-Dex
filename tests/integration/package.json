@@ -25,7 +25,8 @@
     "test:spawns": "node spawns.cjs",
     "test:wiki-facets": "node wiki-facets.cjs",
     "test:placeholders": "node placeholders.cjs",
-    "test:focused": "node focused.cjs"
+    "test:focused": "node focused.cjs",
+    "test:direct": "node direct.cjs"
   },
   "dependencies": {
     "mineflayer": "4.39.0"

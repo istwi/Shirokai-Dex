@@ -305,5 +305,6 @@
   "focused.event_rule": "Goal: capture Pokémon after joining this event.",
   "focused.event_score": "Your event captures: {0}",
   "focused.event_top": "Event Top 10",
-  "wiki_filter_selected": "Selected filter: {0}"
+  "wiki_filter_selected": "Selected filter: {0}",
+  "permission_backend_unavailable": "LuckPerms is unavailable for the tag grant. No delivery started."
 }

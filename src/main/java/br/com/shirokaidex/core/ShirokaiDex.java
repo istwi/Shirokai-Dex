@@ -50,6 +50,8 @@ public final class ShirokaiDex implements ModInitializer {
     private SpawnCatalog spawnCatalog = SpawnCatalog.unavailable();
     private boolean spawnRefreshPending;
     private final java.util.Map<java.util.UUID,net.minecraft.world.inventory.AbstractContainerMenu> publicViews=new java.util.HashMap<>();
+    private record PendingSearch(ServerPlayer player,String collection,Wiki.Request request,long expires) { }
+    private final java.util.concurrent.ConcurrentHashMap<java.util.UUID,PendingSearch> searches=new java.util.concurrent.ConcurrentHashMap<>();
     private int notificationCursor;
     private final java.util.Map<String,Long> notificationObserved=new java.util.HashMap<>();
     private final java.util.Set<String> notificationPending=new java.util.HashSet<>();
@@ -79,7 +81,7 @@ public final class ShirokaiDex implements ModInitializer {
 
     @Override public void onInitialize() {
         Path directory = FabricLoader.getInstance().getConfigDir().resolve("shirokaidex");
-        config = new ConfigManager(directory);
+        config = new ConfigManager(directory,true);
         database = new Database(directory.resolve("data/shirokaidex.sqlite"));
         rewardDelivery = new br.com.shirokaidex.rewards.RewardDelivery(database);
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, environment) -> {
@@ -87,70 +89,24 @@ public final class ShirokaiDex implements ModInitializer {
                 LOG.error("Command /dex already exists; refusing to overwrite it");
                 return;
             }
-            var root = literal("dex").executes(context -> open(context.getSource(), true))
-                    .then(literal("status").executes(context -> open(context.getSource(), false)))
-                    .then(literal("admin").requires(source -> Permissions.mayReload(source.getPlayer()) || Permissions.has(source.getPlayer(),"shirokaidex.admin.competitions") || Permissions.has(source.getPlayer(),"shirokaidex.admin.captures") || (Permissions.has(source.getPlayer(), "shirokaidex.admin.rewards") || Permissions.has(source.getPlayer(),"shirokaidex.admin.items")))
-                            .then(literal("reload").requires(source -> Permissions.mayReload(source.getPlayer())).executes(context -> reload(context.getSource())))
-                            .then(rewardAdminCommands()).then(savedItemCommands()).then(captureHistoryCommands()).then(competitionAdminCommands()));
-            root.then(literal("placeholder").then(argument("metric",StringArgumentType.word())
-                    .suggests((context,builder)->{PublicMetricValues.METRICS.stream().filter(m->m.startsWith(builder.getRemaining())).sorted().forEach(builder::suggest);return builder.buildFuture();})
-                    .executes(context->publicPlaceholder(context.getSource(),StringArgumentType.getString(context,"metric"),""))
-                    .then(argument("value",StringArgumentType.word()).executes(context->publicPlaceholder(context.getSource(),StringArgumentType.getString(context,"metric"),StringArgumentType.getString(context,"value"))))));
-            root.then(literal("profile").requires(source->!ready||!config.current().home().focused()).executes(context->profile(context.getSource(),null,null,0)).then(argument("player",StringArgumentType.word()).executes(context->profile(context.getSource(),StringArgumentType.getString(context,"player"),null,0))).then(literal("captures").executes(context->captureStats(context.getSource(),null,null))
-                    .then(literal("species").then(argument("id",StringArgumentType.greedyString()).executes(context->captureStats(context.getSource(),"SPECIES",StringArgumentType.getString(context,"id")))))
-                    .then(literal("category").then(argument("id",StringArgumentType.word()).executes(context->captureStats(context.getSource(),"CATEGORY",StringArgumentType.getString(context,"id")))))));
-            root.then(literal("top").executes(context->rankings(context.getSource(),null,0))
-                    .then(literal("competitions").executes(context->competitions(context.getSource(),null,0,false)))
-                    .then(argument("ranking",StringArgumentType.word()).executes(context->rankings(context.getSource(),StringArgumentType.getString(context,"ranking"),0))
-                            .then(argument("page",com.mojang.brigadier.arguments.IntegerArgumentType.integer(1,100001)).executes(context->rankings(context.getSource(),StringArgumentType.getString(context,"ranking"),com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context,"page")-1)))));
-            root.then(literal("competitions").executes(context->competitions(context.getSource(),null,0,false))
-                    .then(argument("id",StringArgumentType.word()).executes(context->competitions(context.getSource(),StringArgumentType.getString(context,"id"),0,false))));
-            root.then(literal("history").requires(source->!ready||!config.current().home().focused()).executes(context->competitions(context.getSource(),null,0,true))
-                    .then(literal("category").then(argument("category",StringArgumentType.word()).executes(context->competitionHistory(context.getSource(),new br.com.shirokaidex.competitions.CompetitionStore.HistoryFilter("",StringArgumentType.getString(context,"category"),null,null),0))))
-                    .then(literal("period").then(argument("from",StringArgumentType.string()).then(argument("until",StringArgumentType.string()).executes(context->competitionHistoryPeriod(context.getSource(),StringArgumentType.getString(context,"from"),StringArgumentType.getString(context,"until"))))))
-                    .then(argument("competition",StringArgumentType.string()).executes(context->competitions(context.getSource(),StringArgumentType.getString(context,"competition"),0,true))));
-            root.then(literal("prizes").requires(source->!ready||!config.current().home().focused()).executes(context->prizes(context.getSource(),null,0))
-                    .then(argument("award",StringArgumentType.word()).executes(context->prizes(context.getSource(),StringArgumentType.getString(context,"award"),0))));
-            root.then(literal("rankings").executes(context->rankings(context.getSource(),null,0))
-                    .then(argument("ranking",StringArgumentType.word()).executes(context->rankings(context.getSource(),StringArgumentType.getString(context,"ranking"),0))));
-            root.then(literal("achievements").requires(source->!ready||!config.current().home().focused()).executes(context->achievements(context.getSource(),null,0))
-                    .then(argument("achievement",StringArgumentType.word()).executes(context->achievements(context.getSource(),StringArgumentType.getString(context,"achievement"),0))));
-            root.then(literal("records").requires(source->!ready||!config.current().home().focused()).executes(context->personalRecords(context.getSource())));
-            root.then(literal("settings").requires(source->!ready||!config.current().home().focused()).executes(context->settings(context.getSource()))
-                    .then(literal("privacy").then(argument("statistic",StringArgumentType.word()).then(argument("visible",com.mojang.brigadier.arguments.BoolArgumentType.bool()).executes(context->changePrivacy(context.getSource(),StringArgumentType.getString(context,"statistic"),com.mojang.brigadier.arguments.BoolArgumentType.getBool(context,"visible"))))))
-                    .then(literal("notifications").then(argument("enabled",com.mojang.brigadier.arguments.BoolArgumentType.bool()).executes(context->changeNotifications(context.getSource(),com.mojang.brigadier.arguments.BoolArgumentType.getBool(context,"enabled")))))
-                    .then(literal("rankings")
-                    .then(literal("hidden").executes(context->rankingPrivacy(context.getSource(),true)))
-                    .then(literal("visible").executes(context->rankingPrivacy(context.getSource(),false)))));
-            root.then(literal("rewards").executes(context -> rewards(context.getSource(), null, 0))
-                    .then(argument("reward", StringArgumentType.word()).executes(context -> rewards(context.getSource(), StringArgumentType.getString(context, "reward"), 0))));
-            for (var collection : DexCollection.values()) {
-                root.then(literal(collection.id()).requires(source -> canAccess(source.getPlayer(), collection.id()))
-                        .executes(context -> collection(context.getSource(), collection.id(), true))
-                        .then(literal("status").executes(context -> collection(context.getSource(), collection.id(), false)))
-                        .then(literal("placeholder").then(argument("metric", StringArgumentType.word())
-                                .suggests((context, builder) -> { PlaceholderValues.METRICS.stream().filter(value -> value.startsWith(builder.getRemaining())).sorted().forEach(builder::suggest); return builder.buildFuture(); })
-                                .executes(context -> placeholder(context.getSource(), collection.id(), StringArgumentType.getString(context, "metric")))))
-                        .then(literal("wiki").executes(context -> wiki(context.getSource(), collection.id(), Wiki.Request.initial("")))
-                                .then(argument("query", StringArgumentType.greedyString()).executes(context -> wiki(context.getSource(), collection.id(), Wiki.Request.initial(StringArgumentType.getString(context, "query")))))));
-            }
-            root.then(argument("collection", StringArgumentType.word())
-                    .suggests((context, builder) -> {
-                        if (ready && context.getSource().getPlayer() != null) {
-                            for (var definition : visible(context.getSource().getPlayer(), config.current())) {
-                                if (definition.id().startsWith(builder.getRemaining())) builder.suggest(definition.id());
-                            }
-                        }
-                        return builder.buildFuture();
-                    })
-                    .executes(context -> collection(context.getSource(), StringArgumentType.getString(context, "collection"), true))
-                    .then(literal("status").executes(context -> collection(context.getSource(), StringArgumentType.getString(context, "collection"), false)))
-                    .then(literal("placeholder").then(argument("metric", StringArgumentType.word())
-                            .suggests((context, builder) -> { PlaceholderValues.METRICS.stream().filter(value -> value.startsWith(builder.getRemaining())).sorted().forEach(builder::suggest); return builder.buildFuture(); })
-                            .executes(context -> placeholder(context.getSource(), StringArgumentType.getString(context, "collection"), StringArgumentType.getString(context, "metric")))))
-                    .then(literal("wiki").executes(context -> wiki(context.getSource(), StringArgumentType.getString(context, "collection"), Wiki.Request.initial("")))
-                            .then(argument("query", StringArgumentType.greedyString()).executes(context -> wiki(context.getSource(), StringArgumentType.getString(context, "collection"), Wiki.Request.initial(StringArgumentType.getString(context, "query")))))));
+            var root=literal("dex").executes(context->0)
+                .then(literal("admin").requires(source->Permissions.mayReload(source.getPlayer())||Permissions.has(source.getPlayer(),"shirokaidex.admin.rewards")||Permissions.has(source.getPlayer(),"shirokaidex.admin.items")||Permissions.has(source.getPlayer(),"shirokaidex.admin.captures"))
+                    .then(literal("reload").requires(source->Permissions.mayReload(source.getPlayer())).executes(context->reload(context.getSource())))
+                    .then(rewardAdminCommands()).then(savedItemCommands()).then(captureHistoryCommands()));
+            for(String name:List.of("nacional","special","shiny","forms"))root.then(literal(name).executes(context->directDex(context.getSource(),br.com.shirokaidex.config.DirectMenuCatalog.collection(name),0)));
             dispatcher.register(root);
+            if(dispatcher.getRoot().getChild("dexrank")==null){var rank=literal("dexrank").executes(context->0);for(String kind:List.of("captura","derrotados","dex"))rank.then(literal(kind).executes(context->directRanking(context.getSource(),kind)));dispatcher.register(rank);}else LOG.error("Command /dexrank already exists; preserving its provider");
+            if(dispatcher.getRoot().getChild("wiki")==null)dispatcher.register(literal("wiki").executes(context->0).then(argument("collection",StringArgumentType.word()).suggests((context,builder)->{for(String name:List.of("nacional","special","shiny","forms"))if(name.startsWith(builder.getRemaining()))builder.suggest(name);return builder.buildFuture();}).executes(context->directWiki(context.getSource(),br.com.shirokaidex.config.DirectMenuCatalog.collection(StringArgumentType.getString(context,"collection")),Wiki.Request.initial(""))).then(argument("query",StringArgumentType.greedyString()).executes(context->directWiki(context.getSource(),br.com.shirokaidex.config.DirectMenuCatalog.collection(StringArgumentType.getString(context,"collection")),Wiki.Request.initial(StringArgumentType.getString(context,"query")))))));else LOG.error("Command /wiki already exists; preserving its provider");
+        });
+        net.fabricmc.fabric.api.message.v1.ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message,sender,params)->{
+            var pending=searches.remove(sender.getUUID());if(pending==null)return true;
+            String input=message.signedContent().strip();sender.server.execute(()->{
+                if(!ready||stopping||sender.server!=activeServer||pending.player()!=sender||sender.hasDisconnected())return;
+                if(System.nanoTime()>pending.expires()){directMessage(sender.createCommandSourceStack(),"search_expired");return;}
+                if(input.equalsIgnoreCase("cancelar")||input.equalsIgnoreCase("cancel")){directMessage(sender.createCommandSourceStack(),"search_cancelled");return;}
+                if(input.length()>128){directMessage(sender.createCommandSourceStack(),"unavailable");return;}
+                var old=pending.request();directWiki(sender.createCommandSourceStack(),pending.collection(),new Wiki.Request(input,old.filter(),old.order(),0,"",old.type(),old.category(),-1,Wiki.Facet.NONE,0,-1));
+            });return false;
         });
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents.ENTITY_LOAD.register((entity,world)->{
             if(!ready||stopping||!world.getServer().isSameThread()||!(entity instanceof com.cobblemon.mod.common.entity.pokemon.PokemonEntity pokemon))return;
@@ -166,9 +122,10 @@ public final class ShirokaiDex implements ModInitializer {
         CobblemonEvents.BATTLE_STARTED_POST.subscribe((Consumer<com.cobblemon.mod.common.api.events.battles.BattleStartedEvent.Post>)event->{if(ready&&!stopping&&activeServer!=null&&activeServer.isSameThread())defeats.started(event,captures);});
         CobblemonEvents.BATTLE_FAINTED.subscribe((Consumer<com.cobblemon.mod.common.api.events.battles.BattleFaintedEvent>)event->{if(!ready||stopping||activeServer==null||!activeServer.isSameThread())return;var record=defeats.fainted(event);if(record!=null)database.recordDefeat(record).exceptionally(failure->{LOG.error("Defeat persistence failed",failure);return false;});});
         CobblemonEvents.BATTLE_ENDED.subscribe((Consumer<com.cobblemon.mod.common.api.events.battles.BattleEndedEvent>)event->{if(activeServer!=null&&activeServer.isSameThread())defeats.ended(event.getBattle().getBattleId());});
+        CobblemonEvents.POKE_BALL_CAPTURE_CALCULATED.subscribe((Consumer<com.cobblemon.mod.common.api.events.pokeball.PokeBallCaptureCalculatedEvent>)event->{if(!ready||stopping||activeServer==null||!activeServer.isSameThread())return;try{var proof=captures.calculated(event);if(proof!=null)database.recordNativeSpawnProof(proof).exceptionally(error->{LOG.error("Pre-calculation capture proof failed",error);return false;});}catch(RuntimeException error){LOG.error("Capture calculation evidence unavailable",error);}});
         CobblemonEvents.POKEMON_CAPTURED.subscribe((Consumer<com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent>) event->{
             if(!ready||stopping||activeServer==null||!activeServer.isSameThread())return;
-            try{var observation=captures.captured(event,config.current().categories());var capturePlayer=event.getPlayer();var captureServer=capturePlayer.server;database.recordObservedCapture(observation,config.current()).whenComplete((inserted,failure)->{if(failure!=null)LOG.error("Capture persistence failed for {}; statistics may be incomplete",observation.capture().player(),failure);else if(Boolean.TRUE.equals(inserted))captureServer.execute(()->{if(ready&&!stopping&&activeServer==captureServer&&captureServer.getPlayerList().getPlayer(observation.capture().player())==capturePlayer){profileObservedAt.remove(capturePlayer.getUUID());refreshCapturedShiny(capturePlayer,true);}});});}
+            try{var observation=captures.captured(event,config.current().categories());var capturePlayer=event.getPlayer();var captureServer=capturePlayer.server;database.recordObservedCapture(observation,config.current().captureHistory().enabled()).whenComplete((inserted,failure)->{if(failure!=null)LOG.error("Capture persistence failed for {}; statistics may be incomplete",observation.capture().player(),failure);else if(Boolean.TRUE.equals(inserted))captureServer.execute(()->{if(ready&&!stopping&&activeServer==captureServer&&captureServer.getPlayerList().getPlayer(observation.capture().player())==capturePlayer){profileObservedAt.remove(capturePlayer.getUUID());refreshCapturedShiny(capturePlayer,true);}});});}
             catch(RuntimeException failure){LOG.error("Capture evidence unavailable; no legitimate capture inferred",failure);}
         });
         CobblemonEvents.POKEDEX_DATA_CHANGED_POST.subscribe((Consumer<PokedexDataChangedEvent.Post>) event -> {
@@ -176,8 +133,9 @@ public final class ShirokaiDex implements ModInitializer {
             if (server != null) server.execute(() -> { rewardObservedAt.remove(event.getPlayerUUID()); profileObservedAt.remove(event.getPlayerUUID()); cobblemon.invalidate(event.getPlayerUUID()); if (placeholderBridge != null) placeholderCache.invalidate(event.getPlayerUUID()); });
         });
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            activeServer = server; stopping = false;notificationObserved.clear();notificationPending.clear(); profileObservedAt.clear();profileObserving.clear();publicViews.clear();publicMasks.clear();privacyQueue.clear();privacyRefreshing.clear();lastCompetitionSync=System.nanoTime()-java.util.concurrent.TimeUnit.SECONDS.toNanos(1);competitionSyncPending=false;lastHistoryCleanup=System.nanoTime()-java.util.concurrent.TimeUnit.SECONDS.toNanos(60); historyCleanupPending=false; cobblemon.clear(); captures.clear();defeats.clear();
+            activeServer = server; stopping = false;notificationObserved.clear();notificationPending.clear();searches.clear(); profileObservedAt.clear();profileObserving.clear();publicViews.clear();publicMasks.clear();privacyQueue.clear();privacyRefreshing.clear();lastCompetitionSync=System.nanoTime()-java.util.concurrent.TimeUnit.SECONDS.toNanos(1);competitionSyncPending=false;lastHistoryCleanup=System.nanoTime()-java.util.concurrent.TimeUnit.SECONDS.toNanos(60); historyCleanupPending=false; cobblemon.clear(); captures.clear();defeats.clear();
             var registry = cobblemon.validationSnapshot();
+            config.setMenuValidator(registry::validateMenus);
             config.setItemResolver(id -> database.savedItem(id).join().orElse(null));
             config.setValidator(settings -> {
                 registry.validate(settings);
@@ -218,10 +176,6 @@ public final class ShirokaiDex implements ModInitializer {
                 try { spawnCatalog = SpawnAccess.capture(server); }
                 catch (RuntimeException failure) { spawnCatalog = SpawnCatalog.unavailable(); LOG.error("World spawn information unavailable", failure); }
             }
-            if(ready&&!stopping&&!competitionSyncPending&&System.nanoTime()-lastCompetitionSync>=java.util.concurrent.TimeUnit.SECONDS.toNanos(1)){
-                lastCompetitionSync=System.nanoTime();competitionSyncPending=true;
-                database.synchronizeCompetitions(config.current(),Instant.now()).whenComplete((unused,failure)->server.execute(()->{if(activeServer!=server)return;competitionSyncPending=false;if(failure!=null)LOG.error("Competition calendar synchronization failed",failure);}));
-            }
             if(ready&&!stopping&&!historyCleanupPending&&System.nanoTime()-lastHistoryCleanup>=java.util.concurrent.TimeUnit.SECONDS.toNanos(60)){
                 lastHistoryCleanup=System.nanoTime();historyCleanupPending=true;
                 database.cleanupCaptureHistory(config.current().captureHistory(),Instant.now()).whenComplete((removed,failure)->server.execute(()->{
@@ -230,6 +184,7 @@ public final class ShirokaiDex implements ModInitializer {
                     else if(removed>0)LOG.info("Removed {} expired verified capture history rows; permanent records preserved",removed);
                 }));
             }
+            if(ready){long now=System.nanoTime();searches.entrySet().removeIf(entry->now>entry.getValue().expires());}
             if (ready) {var online=server.getPlayerList().getPlayers();if(!online.isEmpty())refreshCapturedShiny(online.get(Math.floorMod(shinyCursor++,online.size())),false);observeRewards(server);observeProfiles(server);observeNotifications(server);}
             if (!ready || placeholderBridge == null) return;
             refreshPublicPrivacy(server);
@@ -256,8 +211,8 @@ public final class ShirokaiDex implements ModInitializer {
             if (initialization != null) initialization.thenCompose(unused -> database.recordLogin(uuid, name, time))
                     .exceptionally(failure -> { LOG.error("Could not persist player login {}", uuid, failure); return null; });
         });
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> { notificationObserved.remove(handler.player.getUUID().toString());rewardViewRequests.remove(handler.player.getUUID());publicViews.remove(handler.player.getUUID());publicMasks.remove(handler.player.getUUID());privacyQueue.remove(handler.player.getUUID());profileObservedAt.remove(handler.player.getUUID()); rewardUnlockCache.remove(handler.player.getUUID()); rewardObservedAt.remove(handler.player.getUUID()); cobblemon.forget(handler.player.getUUID());shinyRequestedAt.remove(handler.player.getUUID()); placeholderCache.remove(handler.player.getUUID());publicMetricCache.remove(handler.player.getUUID()); });
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; captures.clear();defeats.clear(); java.util.List.copyOf(pokemonDeliveries).forEach(br.com.shirokaidex.rewards.PokemonRewardAdapter::close); pokemonDeliveries.clear(); payloadValidations.forEach(future -> future.completeExceptionally(new IllegalStateException("Server stopping"))); ready = false; activeServer = null;notificationObserved.clear();notificationPending.clear(); rewardViewRequests.clear(); rewardUnlockCache.clear(); rewardObservedAt.clear();profileObservedAt.clear();profileObserving.clear();publicViews.clear();publicMasks.clear();privacyQueue.clear();privacyRefreshing.clear();shinyRequestedAt.clear(); cobblemon.clear(); placeholderCache.clear();publicMetricCache.clear(); spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = false;
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> { searches.remove(handler.player.getUUID());notificationObserved.remove(handler.player.getUUID().toString());rewardViewRequests.remove(handler.player.getUUID());publicViews.remove(handler.player.getUUID());publicMasks.remove(handler.player.getUUID());privacyQueue.remove(handler.player.getUUID());profileObservedAt.remove(handler.player.getUUID()); rewardUnlockCache.remove(handler.player.getUUID()); rewardObservedAt.remove(handler.player.getUUID()); cobblemon.forget(handler.player.getUUID());shinyRequestedAt.remove(handler.player.getUUID()); placeholderCache.remove(handler.player.getUUID());publicMetricCache.remove(handler.player.getUUID()); });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> { stopping = true; captures.clear();defeats.clear(); java.util.List.copyOf(pokemonDeliveries).forEach(br.com.shirokaidex.rewards.PokemonRewardAdapter::close); pokemonDeliveries.clear(); payloadValidations.forEach(future -> future.completeExceptionally(new IllegalStateException("Server stopping"))); ready = false; activeServer = null;notificationObserved.clear();notificationPending.clear();searches.clear(); rewardViewRequests.clear(); rewardUnlockCache.clear(); rewardObservedAt.clear();profileObservedAt.clear();profileObserving.clear();publicViews.clear();publicMasks.clear();privacyQueue.clear();privacyRefreshing.clear();shinyRequestedAt.clear(); cobblemon.clear(); placeholderCache.clear();publicMetricCache.clear(); spawnCatalog = SpawnCatalog.unavailable(); spawnRefreshPending = false;
             if (placeholderBridge != null) {
                 try { placeholderBridge.close(); }
                 catch (RuntimeException | LinkageError failure) { LOG.error("Placeholder cleanup failed", failure); }
@@ -298,6 +253,33 @@ public final class ShirokaiDex implements ModInitializer {
         if (!ready || player == null) return false;
         return config.current().collections().stream().filter(value -> value.id().equals(id))
                 .anyMatch(value -> Permissions.has(player, value.permission()));
+    }
+    private void directMessage(CommandSourceStack source,String key){var state=config.snapshot();if(state==null||state.menus()==null)return;String template=state.menus().messages().getOrDefault(key,key);source.sendSuccess(()->br.com.shirokaidex.menus.direct.RichText.render(template,java.util.Map.of("player",source.getPlayer()==null?"":source.getPlayer().getGameProfile().getName())),false);}
+    private int directDex(CommandSourceStack source,String id,int page){
+        var player=source.getPlayer();if(!ready||stopping||player==null||id==null)return 0;searches.remove(player.getUUID());var state=config.snapshot();
+        if(id.equals("forms")){br.com.shirokaidex.menus.direct.DirectMenus.future(player,state.menus().menus().get("dex_forms"));return 1;}
+        if(!canAccess(player,id))return 0;var definition=state.settings().collections().stream().filter(c->c.id().equals(id)).findFirst().orElseThrow();var plans=state.settings().rewards().stream().filter(p->p.collection().equals(id)).toList();var previous=player.containerMenu;long ticket=beginView(player);
+        database.rewardStates(player.getUUID(),plans.stream().map(br.com.shirokaidex.rewards.RewardPlan::id).toList()).whenComplete((states,error)->source.getServer().execute(()->{
+            if(!validRewardView(source,player,ticket,previous)||!canAccess(player,id))return;if(state!=config.snapshot()){directDex(source,id,page);return;}if(error!=null){directMessage(source,"unavailable");return;}
+            br.com.shirokaidex.menus.direct.DirectMenus.dex(player,state.menus(),definition,cobblemon.collections(player,state.settings().collections()).get(id).progress(),plans,rewardUnlockCache.getOrDefault(player.getUUID(),java.util.Set.of()),states,page,plan->{if(validReward(player,plan))claimReward(source,plan);},next->directDex(source,id,next));
+        }));return 1;
+    }
+    private int directWiki(CommandSourceStack source,String id,Wiki.Request request){
+        var player=source.getPlayer();if(!ready||stopping||player==null||id==null)return 0;searches.remove(player.getUUID());var state=config.snapshot();if(id.equals("forms")){br.com.shirokaidex.menus.direct.DirectMenus.future(player,state.menus().menus().get("wiki_forms"));return 1;}
+        if(!canAccess(player,id)||request.query().length()>128)return 0;var definition=state.settings().collections().stream().filter(c->c.id().equals(id)).findFirst().orElseThrow();var spec=state.menus().menus().get("wiki_"+br.com.shirokaidex.config.DirectMenuCatalog.command(id));var page=Wiki.select(cobblemon.wiki(player),definition,request,spec.contentSlots().size());var previous=player.containerMenu;long ticket=beginView(player);
+        database.capturedSpecies(player.getUUID(),definition.mode()==CollectionDefinition.Mode.SHINY_CAPTURED).whenComplete((captured,error)->source.getServer().execute(()->{
+            if(!validRewardView(source,player,ticket,previous)||!canAccess(player,id))return;if(state!=config.snapshot()){directWiki(source,id,request);return;}
+            br.com.shirokaidex.menus.direct.DirectMenus.wiki(player,spec,definition,request,page,spawnCatalog,error==null?captured:null,next->directWiki(source,id,next),()->{if(!ready||!canAccess(player,id))return;beginView(player);player.closeContainer();searches.put(player.getUUID(),new PendingSearch(player,id,request,System.nanoTime()+java.util.concurrent.TimeUnit.SECONDS.toNanos(60)));directMessage(source,"search_prompt");});
+        }));return 1;
+    }
+    private int directRanking(CommandSourceStack source,String kind){
+        var player=source.getPlayer();if(!ready||stopping||player==null)return 0;searches.remove(player.getUUID());var state=config.snapshot();var previous=player.containerMenu;long ticket=beginView(player);var spec=state.menus().menus().get("rank_"+kind);
+        if(kind.equals("derrotados")){database.defeatRanking().whenComplete((result,error)->source.getServer().execute(()->{if(!validRewardView(source,player,ticket,previous))return;if(error!=null){directMessage(source,"unavailable");return;}if(state!=config.snapshot()||result.privacyRevision()!=database.privacyRevision()){directRanking(source,kind);return;}var lines=new java.util.ArrayList<br.com.shirokaidex.menus.direct.DirectMenus.RankingLine>();int rank=1;for(var e:result.entries())lines.add(new br.com.shirokaidex.menus.direct.DirectMenus.RankingLine(rank++,e.name(),Long.toString(e.total())));br.com.shirokaidex.menus.direct.DirectMenus.ranking(player,spec,java.util.Map.of("defeats",lines),state.menus().messages().get("no_data"));markPublicView(player,true);}));return 1;}
+        boolean dex=kind.equals("dex");var definitions=visibleRankings(player,state.settings()).stream().filter(r->dex?r.metric()==br.com.shirokaidex.rankings.CaptureRanking.Metric.COLLECTION:java.util.Set.of(br.com.shirokaidex.rankings.CaptureRanking.Metric.TOTAL,br.com.shirokaidex.rankings.CaptureRanking.Metric.SHINY,br.com.shirokaidex.rankings.CaptureRanking.Metric.LEGENDARY).contains(r.metric())).limit(3).toList();var versions=cobblemon.collectionVersions(state.settings().collections());
+        var jobs=definitions.stream().map(r->database.captureRankingView(r,0,state.settings().statisticsPrivacy(),versions.get(r.key()),r.key().equals("shiny")?br.com.shirokaidex.profiles.StatisticsPrivacy.Key.SHINY_CAPTURES:null)).toList();CompletableFuture.allOf(jobs.toArray(CompletableFuture[]::new)).whenComplete((unused,error)->source.getServer().execute(()->{
+            if(!validRewardView(source,player,ticket,previous))return;if(error!=null){directMessage(source,"unavailable");return;}if(state!=config.snapshot()||jobs.stream().anyMatch(j->j.join().privacyRevision()!=database.privacyRevision())||definitions.stream().anyMatch(r->!Permissions.has(player,r.permission())||dex&&!canAccess(player,r.key()))){directRanking(source,kind);return;}
+            var boards=new java.util.HashMap<String,java.util.List<br.com.shirokaidex.menus.direct.DirectMenus.RankingLine>>();for(int i=0;i<definitions.size();i++){var r=definitions.get(i);var lines=new java.util.ArrayList<br.com.shirokaidex.menus.direct.DirectMenus.RankingLine>();int rank=1;for(var entry:jobs.get(i).join().page().entries()){String score=entry.total()==null?Long.toString(entry.score()):DexProgress.known(entry.total(),entry.registered()).formattedPercentage(state.settings().language()).orElse("N/D");lines.add(new br.com.shirokaidex.menus.direct.DirectMenus.RankingLine(rank++,entry.name(),score));}boards.put(dex?r.key():r.metric().name().toLowerCase(java.util.Locale.ROOT),lines);}br.com.shirokaidex.menus.direct.DirectMenus.ranking(player,spec,boards,state.menus().messages().get("no_data"));markPublicView(player,true);
+        }));return 1;
     }
     private int home(CommandSourceStack source){
         if(!ready||source.getPlayer()==null)return 0;if(config.current().home().focused())return focusedHome(source);var player=source.getPlayer();var settings=config.current();
@@ -673,8 +655,8 @@ public final class ShirokaiDex implements ModInitializer {
         database.claimNotifications(target,Instant.now()).whenComplete((notices,failure)->server.execute(()->{
             if(activeServer!=server)return;notificationPending.remove(target);if(!ready||stopping)return;
             if(failure!=null){LOG.error("Notification delivery claim failed; retry deferred",failure);return;}
-            if(player!=null){if(server.getPlayerList().getPlayer(player.getUUID())==player)for(var notice:notices){var rule=config.current().notifications().rules().get(notice.event());if(rule.enabled()&&!(rule.global()&&notice.broadcastEligible()))br.com.shirokaidex.notifications.NotificationDelivery.send(player,notice,rule,language(),messages);}return;}
-            var global=notices.stream().filter(n->{var rule=config.current().notifications().rules().get(n.event());return rule.enabled()&&rule.global();}).toList();if(global.isEmpty())return;
+            if(player!=null){if(server.getPlayerList().getPlayer(player.getUUID())==player)for(var notice:notices){if(notice.event()!=br.com.shirokaidex.notifications.NotificationPolicy.Event.REWARD_UNLOCKED&&notice.event()!=br.com.shirokaidex.notifications.NotificationPolicy.Event.REWARD_CLAIMED)continue;var rule=config.current().notifications().rules().get(notice.event());if(rule.enabled()&&!(rule.global()&&notice.broadcastEligible()))br.com.shirokaidex.notifications.NotificationDelivery.send(player,notice,rule,language(),messages);}return;}
+            var global=notices.stream().filter(n->{var rule=config.current().notifications().rules().get(n.event());return false;}).toList();if(global.isEmpty())return;
             var online=java.util.List.copyOf(server.getPlayerList().getPlayers());database.notificationAudience(online.stream().map(ServerPlayer::getUUID).toList()).whenComplete((audience,error)->server.execute(()->{
                 if(error!=null||!ready||stopping||activeServer!=server)return;
                 for(var receiver:online)if(audience.contains(receiver.getUUID())&&server.getPlayerList().getPlayer(receiver.getUUID())==receiver)for(var notice:global){var rule=config.current().notifications().rules().get(notice.event());if(rule.enabled()&&rule.global())br.com.shirokaidex.notifications.NotificationDelivery.send(receiver,notice,rule,language(),messages);}
@@ -1049,10 +1031,12 @@ public final class ShirokaiDex implements ModInitializer {
     private void deliverPlan(CommandSourceStack source,ServerPlayer player,br.com.shirokaidex.rewards.RewardPlan plan,java.util.UUID recovery,String recoveryReason,java.util.function.Predicate<br.com.shirokaidex.rewards.RewardPlan> permitted){
         var actor=source.getPlayer();if(actor==null||!permitted.test(plan))return;
         if(!plan.currencies().isEmpty()&&(!FabricLoader.getInstance().isModLoaded("impactor")||!br.com.shirokaidex.rewards.ImpactorCurrencyPort.supported())){source.sendFailure(messages.text(language(),"currency_backend_unavailable"));return;}
+        if(!plan.permissions().isEmpty()&&!FabricLoader.getInstance().isModLoaded("luckperms")){source.sendFailure(messages.text(language(),"permission_backend_unavailable"));return;}
         br.com.shirokaidex.rewards.PokemonRewardAdapter pokemonAdapter=plan.pokemon().isEmpty()?null:new br.com.shirokaidex.rewards.PokemonRewardAdapter(source.getServer(),player,permitted);
         if(pokemonAdapter!=null){pokemonDeliveries.add(pokemonAdapter);source.sendSuccess(()->messages.text(language(),"pokemon_processing"),false);}
         br.com.shirokaidex.rewards.RewardDelivery.Adapter adapter=pokemonAdapter==null?new br.com.shirokaidex.rewards.ItemRewardAdapter(source.getServer(),player,permitted):pokemonAdapter;
         if(!plan.currencies().isEmpty())adapter=new br.com.shirokaidex.rewards.CurrencyRewardAdapter(adapter,new br.com.shirokaidex.rewards.ImpactorCurrencyPort(source.getServer(),player,permitted));
+        if(!plan.permissions().isEmpty())adapter=new br.com.shirokaidex.rewards.PermissionRewardAdapter(adapter,new br.com.shirokaidex.rewards.LuckPermsRewardPort(source.getServer(),player,()->permitted.test(plan)));
         if(!plan.commands().isEmpty())adapter=new br.com.shirokaidex.rewards.CommandRewardAdapter(source.getServer(),player,permitted,()->config.current().commandPolicy());
         (recovery==null?rewardDelivery.claim(player.getUUID(),plan,adapter):rewardDelivery.resume(recovery,player.getUUID(),plan,adapter,actor.getUUID().toString(),recoveryReason))
                 .whenComplete((result, failure) -> source.getServer().execute(() -> {

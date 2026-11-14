@@ -1,0 +1,147 @@
+{
+  "version": "0.7.0-dev.1",
+  "base_commit": "891df62efa9b1e6d8db2e949020f171d91b57512",
+  "source": "Local uncommitted changes; not pushed or published",
+  "jar": "shirokai-dex-0.7.0-dev.1+mc1.21.1-cobblemon1.8.3.jar",
+  "sha256": "cb493e8d1ea128b89231a0fb662e2bd389d98bd685b4856262ddc1e72f4e4c88",
+  "junit": {
+    "tests": 410,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "runtime": {
+    "minecraft": "1.21.1",
+    "fabric_loader": "0.17.2",
+    "java": "21",
+    "cobblemon": "1.8.3",
+    "impactor": "5.3.5 native JSON",
+    "luckperms": "5.4.140",
+    "text_placeholder_api": "2.4.2+1.21"
+  },
+  "native": {
+    "server": {
+      "suite": "direct",
+      "starts": 2,
+      "jar": "shirokai-dex-0.7.0-dev.1+mc1.21.1-cobblemon1.8.3.jar",
+      "sha256": "cb493e8d1ea128b89231a0fb662e2bd389d98bd685b4856262ddc1e72f4e4c88",
+      "result": "passed"
+    },
+    "runs": [
+      {
+        "timestamp": "2026-11-14T19:12:10.981Z",
+        "results": [
+          {
+            "name": "Real Text Placeholder API expands progress ratio and localized percent using nacional alias",
+            "status": "passed"
+          },
+          {
+            "name": "/dex alone does not open any menu",
+            "status": "passed"
+          },
+          {
+            "name": "Imported DexRewards five-row layout exposes six reward milestones and player card",
+            "status": "passed"
+          },
+          {
+            "name": "Each requested Dex/ranking/forms command opens its own independent panel",
+            "status": "passed"
+          },
+          {
+            "name": "Wiki matches 54-slot screenshot, official models and clock filter cycling both directions",
+            "status": "passed"
+          },
+          {
+            "name": "Book searches through chat and hopper clears query/filter together",
+            "status": "passed"
+          },
+          {
+            "name": "Independent menu title/name reload succeeds and conflicting slots preserve entire last-good snapshot",
+            "status": "passed"
+          },
+          {
+            "name": "Special contains special species only and command acquisition does not count as capture",
+            "status": "passed"
+          },
+          {
+            "name": "Actual native battle capture updates reopened Top Capturas and disabled events stay inactive",
+            "status": "passed"
+          },
+          {
+            "name": "Imported package grants items, exact dollars/tokens and LuckPerms tag once",
+            "status": "passed"
+          },
+          {
+            "name": "Native origin checks reject an administrative wild capture and replay never doubles or promotes a receipt",
+            "status": "passed"
+          },
+          {
+            "name": "Wiki display models cannot enter player inventory",
+            "status": "passed"
+          }
+        ]
+      },
+      {
+        "timestamp": "2026-11-14T19:12:58.871Z",
+        "results": [
+          {
+            "name": "Real Text Placeholder API expands progress ratio and localized percent using nacional alias",
+            "status": "passed"
+          },
+          {
+            "name": "Imported item/currency/permission bundle survives restart without redelivery",
+            "status": "passed"
+          },
+          {
+            "name": "Restart preserves verified capture and direct ranking/wiki commands",
+            "status": "passed"
+          }
+        ]
+      }
+    ],
+    "checks": 15,
+    "integrity_check": "ok",
+    "reward_operations": [
+      [
+        "COMPLETED",
+        1
+      ]
+    ],
+    "capture_receipts": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "competitive_events": 0,
+    "normal_world_saves": true,
+    "rcon_secret_removed": true
+  },
+  "configuration": {
+    "source": "DexRewards.zip configuration only",
+    "packages": 18,
+    "imported_player_or_claim_records": 0
+  },
+  "fixture_corrections": [
+    "Initial JS fixture extraction selected a nested async function; syntax fixed before retest.",
+    "Source player card does not contain the player name; expectation corrected to original progress text.",
+    "BagItemLike does not apply to native Master Ball in this runtime; invalid probe removed.",
+    "Impactor fixture config needed normalized newlines between currency objects.",
+    "Reload requires a player permission; console cannot bypass it, fixture now grants only the reload node.",
+    "Physical throw must wait for battle opening to finish.",
+    "Colored score components split text on the wire; assertion now reads rendered menu lore.",
+    "LuckPerms console permission check is asynchronous; replaced fixture assertion with read-only public API probe."
+  ],
+  "limitations": [
+    "No manual graphical Cobblemon client or load test.",
+    "Forms is a future-update icon and events are intentionally disabled.",
+    "Third-party GUI must support Fabric Text Placeholder API; no specific external GUI integration certified.",
+    "Original user-server capture-ranking failure was not reproduced from its logs/origin; native battle capture/reopen works here.",
+    "Old public screens have no command entrypoint; historical database and backend code remain preserved."
+  ],
+  "final_layout_review": "Empty wiki content slots remain empty, with glass on the border; checked again in the final packaged JAR."
+}

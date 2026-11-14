@@ -15,16 +15,24 @@ import java.util.concurrent.atomic.AtomicReference;
 /** Reads/writes must be called from the configuration executor, never a menu callback. */
 public final class ConfigManager {
     private final Path directory;
-    private final AtomicReference<Settings> current = new AtomicReference<>();
+    public record State(Settings settings,DirectMenuCatalog menus) { }
+    private final AtomicReference<State> current = new AtomicReference<>();
+    private final boolean directMode;
+    @FunctionalInterface public interface MenuValidator {void validate(DirectMenuCatalog menus)throws IOException;}
+    private MenuValidator menuValidator=menus->{};
+    public synchronized void setMenuValidator(MenuValidator validator){menuValidator=java.util.Objects.requireNonNull(validator);}
+    public State snapshot(){return current.get();}
+    public DirectMenuCatalog directMenus(){return snapshot().menus();}
     private volatile boolean recovered;
     @FunctionalInterface public interface Validator { void validate(Settings settings) throws IOException; }
     private Validator validator = settings -> { };
     private java.util.function.Function<String,br.com.shirokaidex.rewards.SavedItem> itemResolver = id -> null;
     public synchronized void setItemResolver(java.util.function.Function<String,br.com.shirokaidex.rewards.SavedItem> resolver) { itemResolver=java.util.Objects.requireNonNull(resolver); }
 
-    public ConfigManager(Path directory) { this.directory = directory; }
+    public ConfigManager(Path directory){this(directory,false);}
+    public ConfigManager(Path directory,boolean directMode){this.directory=directory;this.directMode=directMode;}
     public Settings current() {
-        Settings settings = current.get();
+        State state=current.get();Settings settings=state==null?null:state.settings();
         if (settings == null) throw new IllegalStateException("Configuration has not initialized");
         return settings;
     }
@@ -37,29 +45,40 @@ public final class ConfigManager {
         if (Files.notExists(config)) {
             try(var input=ConfigManager.class.getResourceAsStream("/config/focused.json")){if(input==null)throw new IOException("Missing default preset");writeAtomic(config,new String(input.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));}
         }
+        if(directMode){DirectMenuCatalog.initialize(directory);try{reload();}catch(IOException failure){try{recoverDirect();}catch(IOException invalid){failure.addSuppressed(invalid);throw failure;}}return;}
         try { reload(); }
         catch (IOException failure) {
             Path backup = directory.resolve("config.last-good.json");
             if (!Files.isRegularFile(backup)) throw failure;
             try {
                 Settings fallback = parse(readBounded(backup,524288),itemResolver); validator.validate(fallback);
-                current.set(fallback); recovered = true;
+                current.set(new State(fallback,null)); recovered = true;
             }
             catch (IOException invalidBackup) { failure.addSuppressed(invalidBackup); throw failure; }
         }
     }
 
     public synchronized Settings reload() throws IOException {
+        if(directMode)return reloadDirect();
         String json = readBounded(directory.resolve("config.json"));
         Settings candidate = parse(json,itemResolver);
         validator.validate(candidate);
         // Persist the validated recovery copy before publishing the immutable candidate.
         writeAtomic(directory.resolve("config.last-good.json"), resolvedBackup(json,candidate));
-        current.set(candidate);
+        current.set(new State(candidate,null));
         recovered = false;
         return candidate;
     }
 
+    private Settings reloadDirect()throws IOException {
+        var catalog=DirectMenuCatalog.load(directory);String effective=catalog.effective(readBounded(directory.resolve("config.json")));
+        Settings candidate=parse(effective,itemResolver);menuValidator.validate(catalog);validator.validate(candidate);
+        var backup=new com.google.gson.JsonObject();backup.addProperty("config",effective);var files=new com.google.gson.JsonObject();catalog.rawFiles().forEach(files::addProperty);backup.add("menus",files);writeAtomic(directory.resolve("direct.last-good.json"),backup.toString());
+        current.set(new State(candidate,catalog));recovered=false;return candidate;
+    }
+    private void recoverDirect()throws IOException {
+        var backup=DirectMenuCatalog.object(readBounded(directory.resolve("direct.last-good.json"),4194304));var files=new java.util.HashMap<String,String>();for(var entry:backup.getAsJsonObject("menus").entrySet())files.put(entry.getKey(),entry.getValue().getAsString());var catalog=DirectMenuCatalog.parse(files);var settings=parse(backup.get("config").getAsString(),itemResolver);menuValidator.validate(catalog);validator.validate(settings);current.set(new State(settings,catalog));recovered=true;
+    }
     private static String readBounded(Path path) throws IOException { return readBounded(path,65536); }
     private static String readBounded(Path path,int maximum) throws IOException {
         try (var input = Files.newInputStream(path)) {

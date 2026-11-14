@@ -1,0 +1,9 @@
+{
+  "search_prompt": "<yellow>Escreva no chat o Pokémon que procura. Digite cancelar para sair.",
+  "search_cancelled": "<gray>Pesquisa cancelada.",
+  "search_expired": "<gray>O prazo da pesquisa terminou.",
+  "loading": "<gray>Carregando dados…",
+  "no_data": "<gray>Nenhum jogador classificado.",
+  "claimed": "<green>Recompensa resgatada.",
+  "unavailable": "<red>Não foi possível abrir este menu. Consulte os logs."
+}

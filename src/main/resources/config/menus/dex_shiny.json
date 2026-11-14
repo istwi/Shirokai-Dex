@@ -1,0 +1,375 @@
+{
+  "collection": {
+    "id": "shiny",
+    "name": "Shiny Dex",
+    "icon": "minecraft:amethyst_shard",
+    "progress_mode": "SHINY_CAPTURED"
+  },
+  "menu": {
+    "title": "<gradient:#00C6FF:#0072FF>✦ %dex_type% Dex</gradient>",
+    "rows": 5,
+    "background": {
+      "item": "minecraft:gray_stained_glass_pane",
+      "name": " ",
+      "lore": []
+    },
+    "buttons": {
+      "info": {
+        "slot": 10,
+        "item": "minecraft:player_head",
+        "name": "<gradient:#00C6FF:#0072FF>✦ %dex_type%</gradient>",
+        "lore": [
+          "",
+          "<gray>Seu progresso na Dex",
+          "<aqua>%player_dex_count% <gray>/ <aqua>%pokedex_total%",
+          "",
+          "<gray>Conclusão",
+          "<aqua>%player_dex_percent%%",
+          "",
+          "<gray>Última recompensa",
+          "<light_purple>%player_reward_group%"
+        ]
+      },
+      "close": {
+        "slot": 28,
+        "item": "minecraft:barrier",
+        "name": "<red>Fechar",
+        "lore": []
+      },
+      "previous": {
+        "slot": 36,
+        "item": "minecraft:arrow",
+        "name": "<aqua>← Página anterior",
+        "lore": []
+      },
+      "next": {
+        "slot": 44,
+        "item": "minecraft:arrow",
+        "name": "<aqua>Próxima página →",
+        "lore": []
+      }
+    },
+    "content_slots": [],
+    "reward_slots": [
+      12,
+      14,
+      16,
+      30,
+      32,
+      34
+    ],
+    "reward_states": {
+      "claimed": {
+        "item": "",
+        "name": "<green>%group_name% <dark_gray>(%group_percent%%)",
+        "lore": [
+          "",
+          "<green>✓ Recompensa resgatada"
+        ],
+        "glint": false
+      },
+      "available": {
+        "item": "",
+        "name": "<aqua>%group_name% <dark_gray>(%group_percent%%)",
+        "lore": [
+          "",
+          "<green>Recompensa disponível",
+          "",
+          "<yellow>➜ Clique para resgatar!"
+        ],
+        "glint": true
+      },
+      "locked": {
+        "item": "cobblemon:ancient_heavy_ball",
+        "name": "<red>%group_name% <dark_gray>(%group_percent%%)",
+        "lore": [
+          "",
+          "<gray>Complete os requisitos",
+          "<gray>para desbloquear esta recompensa."
+        ],
+        "glint": false
+      }
+    }
+  },
+  "reward_groups": [
+    {
+      "id": "dex_shiny_marco_01",
+      "percent": 1.0,
+      "name": "✦ Caçador Shiny",
+      "icon": "cobblemon:ultra_ball",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>1%</yellow> desta Pokédex.",
+        "",
+        "<#FFD700>✦ Recompensas</#FFD700>",
+        "<gold>• $2.000 PokéDollars",
+        "<light_purple>• 3 ✦ PokéTokens",
+        "<green>• 12x Ultra Ball",
+        "<green>• 4x Rare Candy",
+        "",
+        "<#FFD700>✦ Tag SPECIAL: <white>[Caçador Shiny]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Não altera seu cargo ou grupo VIP.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:ultra_ball",
+          "count": 12
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 4
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 2000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 3
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.shiny.001"
+      ]
+    },
+    {
+      "id": "dex_shiny_marco_02",
+      "percent": 3.0,
+      "name": "✦ Brilhante",
+      "icon": "cobblemon:rare_candy",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>3%</yellow> desta Pokédex.",
+        "",
+        "<#FFD700>✦ Recompensas</#FFD700>",
+        "<gold>• $5.000 PokéDollars",
+        "<light_purple>• 5 ✦ PokéTokens",
+        "<green>• 16x Ultra Ball",
+        "<green>• 7x Rare Candy",
+        "",
+        "<#FFD700>✦ Tag SPECIAL: <white>[Brilhante]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Não altera seu cargo ou grupo VIP.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:ultra_ball",
+          "count": 16
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 7
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 5000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 5
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.shiny.003"
+      ]
+    },
+    {
+      "id": "dex_shiny_marco_03",
+      "percent": 10.0,
+      "name": "✦ Especialista Shiny",
+      "icon": "cobblemon:exp_candy_l",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>10%</yellow> desta Pokédex.",
+        "",
+        "<#FFD700>✦ Recompensas</#FFD700>",
+        "<gold>• $10.000 PokéDollars",
+        "<light_purple>• 10 ✦ PokéTokens",
+        "<green>• 12x Exp. Candy L",
+        "<green>• 2x Ability Capsule",
+        "",
+        "<#FFD700>✦ Tag SPECIAL: <white>[Especialista Shiny]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Não altera seu cargo ou grupo VIP.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:exp_candy_l",
+          "count": 12
+        },
+        {
+          "id": "cobblemon:ability_capsule",
+          "count": 2
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 10000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 10
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.shiny.010"
+      ]
+    },
+    {
+      "id": "dex_shiny_marco_04",
+      "percent": 25.0,
+      "name": "✦ Mestre Shiny",
+      "icon": "cobblemon:ability_capsule",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>25%</yellow> desta Pokédex.",
+        "",
+        "<#FFD700>✦ Recompensas</#FFD700>",
+        "<gold>• $20.000 PokéDollars",
+        "<light_purple>• 20 ✦ PokéTokens",
+        "<green>• 16x Exp. Candy XL",
+        "<green>• 3x Ability Capsule",
+        "",
+        "<#FFD700>✦ Tag SPECIAL: <white>[Mestre Shiny]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Não altera seu cargo ou grupo VIP.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:exp_candy_xl",
+          "count": 16
+        },
+        {
+          "id": "cobblemon:ability_capsule",
+          "count": 3
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 20000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 20
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.shiny.025"
+      ]
+    },
+    {
+      "id": "dex_shiny_marco_05",
+      "percent": 50.0,
+      "name": "✦ Lenda Brilhante",
+      "icon": "cobblemon:exp_candy_xl",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>50%</yellow> desta Pokédex.",
+        "",
+        "<#FFD700>✦ Recompensas</#FFD700>",
+        "<gold>• $40.000 PokéDollars",
+        "<light_purple>• 40 ✦ PokéTokens",
+        "<green>• 28x Exp. Candy XL",
+        "<green>• 4x Ability Capsule",
+        "<green>• 12x Rare Candy",
+        "",
+        "<#FFD700>✦ Tag SPECIAL: <white>[Lenda Brilhante]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Não altera seu cargo ou grupo VIP.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:exp_candy_xl",
+          "count": 28
+        },
+        {
+          "id": "cobblemon:ability_capsule",
+          "count": 4
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 12
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 40000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 40
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.shiny.050"
+      ]
+    },
+    {
+      "id": "dex_shiny_marco_06",
+      "percent": 100.0,
+      "name": "✦ Shiny Supremo",
+      "icon": "cobblemon:master_ball",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>100%</yellow> desta Pokédex.",
+        "",
+        "<#FFD700>✦ Recompensas</#FFD700>",
+        "<gold>• $80.000 PokéDollars",
+        "<light_purple>• 80 ✦ PokéTokens",
+        "<green>• 1x Master Ball",
+        "<green>• 64x Exp. Candy XL",
+        "<green>• 8x Ability Capsule",
+        "<green>• 2x Estrelas do Nether",
+        "",
+        "<#FFD700>✦ Tag SPECIAL: <white>[Shiny Supremo]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Não altera seu cargo ou grupo VIP.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:master_ball",
+          "count": 1
+        },
+        {
+          "id": "cobblemon:exp_candy_xl",
+          "count": 64
+        },
+        {
+          "id": "cobblemon:ability_capsule",
+          "count": 8
+        },
+        {
+          "id": "minecraft:nether_star",
+          "count": 2
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 80000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 80
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.shiny.100"
+      ]
+    }
+  ]
+}

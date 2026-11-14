@@ -79,3 +79,11 @@ Em 2026-11-14, o responsável pediu enviar o trabalho ao GitHub com JAR atual e 
 ## Autorização pontual — JAR dev.2
 
 O responsável pediu “manda o jar pro git”. Autoriza commit/push do bloco local e pré-release experimental0.6.0-dev.2 na branch handoff/crates-checkpoint com JAR, configuração e evidências. Não autoriza merge na main nem publicação de ambiente.
+
+## Direção atual — menus por comando e ZIP
+
+Implementar apenas os menus diretos de Dex/rankings/wiki solicitados; `/dex` sozinho não abre tela. Eventos desativados para uso futuro. Configuração independente de cada painel. Importar do DexRewards.zip somente apresentação e recompensas: responsável recusou importar quaisquer jogadores/resgates. Preservar dados existentes do Shirokai Dex. Trabalho local sem nova autorização de publicação após dev.2; não repetir onboarding nem publicar ambiente.
+
+## Autorização pontual — JAR 0.7.0-dev.1
+
+O responsável pediu “manda o jar pro git”. Autoriza commit/push do bloco de menus diretos na branch handoff/crates-checkpoint e pré-release experimental v0.7.0-dev.1 com JAR validado/configurações/evidências. Sem merge da main ou publicação de ambiente.

@@ -34,6 +34,13 @@ public final class CaptureAccess {
         tracker.hit(ball.getUUID(),entity.getPokemon().getUuid(),player.getUUID(),Instant.now(),natural,entity.getUUID(),entity.getPokemon().isWild()&&entity.getSpawnCause()==null);
         return natural?observe(entity,NativeSpawnProof.Source.PREHIT):null;
     }
+    public NativeSpawnProof calculated(com.cobblemon.mod.common.api.events.pokeball.PokeBallCaptureCalculatedEvent event){
+        if(!(event.getThrower() instanceof ServerPlayer player)||!player.server.isSameThread())return null;
+        var ball=event.getPokeBallEntity();var entity=event.getPokemonEntity();
+        if(ball.getOwner()!=player||ball.getCapturingPokemon()!=entity||!entity.getPokemon().isWild())return null;
+        boolean natural=nativeWild(entity);tracker.hit(ball.getUUID(),entity.getPokemon().getUuid(),player.getUUID(),Instant.now(),natural,entity.getUUID(),entity.getSpawnCause()==null);
+        return natural?observe(entity,NativeSpawnProof.Source.PREHIT):null;
+    }
     public CaptureObservation captured(PokemonCapturedEvent event,CategoryCatalog catalog){
         var player=event.getPlayer();if(!player.server.isSameThread())throw new IllegalStateException("Capture snapshot must run on server thread");
         var pokemon=event.getPokemon();var ball=event.getPokeBallEntity();var at=Instant.now();

@@ -1,5 +1,32 @@
 # Próximos passos
 
+## Envio 0.7.0-dev.1 autorizado
+
+Responsável solicitou o JAR no GitHub. Preparando commit/push na branch handoff/crates-checkpoint e pré-release com JAR SHA256 cb493e8d1ea128b89231a0fb662e2bd389d98bd685b4856262ddc1e72f4e4c88, configurações e evidência dos410 JUnit/15 checks nativos. CI exige igualdade com o binário testado e verifica anexos antes de publicar. Sem merge de main ou publicação de ambiente. Referência: `release: distribute v0.7.0-dev.1 snapshot`.
+
+## Menus diretos — validados localmente (0.7.0-dev.1)
+
+Esta seção substitui as direções históricas abaixo. Implementados `/dex nacional|special|shiny|forms`, `/dexrank captura|derrotados|dex` e `/wiki nacional|special|shiny|forms`; `/dex` sozinho não abre tela. Eventos desativados e antigos painéis públicos sem entrada por comando. Doze JSONs separados, wiki de54 posições com modelos oficiais/relógio/livro/funil, pesquisa pelo chat,18 pacotes tipados e layout do ZIP. **Somente configurações: nenhum jogador/resgate do ZIP importado**, conforme escolha do responsável. [Guia e placeholders](DIRECT_MENUS.md).
+
+410 JUnit, build/serverDistribution e15 checks nativos (12 +3 após reinício) aprovados no JAR SHA256 `cb493e8d1ea128b89231a0fb662e2bd389d98bd685b4856262ddc1e72f4e4c88`. [Evidência](validation/direct-menus.json). Um pacote real entregou12 Poké Balls/4 Potions/$500/1 token e nó LP; concluído uma única vez após reinício. Uma captura PvE nativa atualizou Top Geral/Shiny; captura administrativa e replay não pontuaram/promoveram origem. Zero edições de eventos; SQLite íntegro, dois encerramentos normais e segredo removido. Testados parser real Text Placeholder API, reload independente e rejeição de slots conflitantes; recuperação de snapshot completo também coberta por JUnit. Não certificar cliente gráfico/carga nem GUI externa sem teste próprio.
+
+Origem da falha de ranking no servidor do usuário continua desconhecida; não afirmar causa resolvida com base só no teste local. Código, JAR e ZIP de configuração permanecem locais, sem commit/push/release/merge/ambiente. Base local891df62, branch handoff/crates-checkpoint. Artefatos em build/server-mod e build/direct-menu-config.zip. Nenhum players/*.json externo foi copiado.
+
+A suíte vigente de navegação é `direct`; fixtures históricas dos menus retirados não representam os comandos atuais.
+
+Próxima ação: aguardar ajustes do responsável sobre estes menus; não retomar telas/fases desativadas. Se solicitar envio, distribuir o JAR validado e configurações, com evidência/proveniência e confirmação de SHA remoto. Para o ranking de produção, consultar a origem e os recibos/logs desse servidor antes de inferir causa. Não importar players do ZIP nem repetir onboarding/publicação do ambiente.
+
+
+## Histórico do pedido — comandos diretos e ZIP DexRewards
+
+O responsável substituiu o hub: /dex sozinho não abre nada; /dex nacional|special|shiny|forms abre cada menu, /dexrank captura|derrotados|dex abre rankings, /wiki <coleção> abre wiki. Wiki6 linhas igual imagem: borda cinza, conteúdo interno28 slots, relógio48 filtro por clique, livro49 pesquisa capturada pelo chat, funil50 limpa. Menus separados configuráveis (nome/item/lore), layout de recompensas5 linhas igual reward_gui.json do ZIP. Eventos ficam desativados; retirar o fluxo público antigo, preservando banco/journal e backend de evento para futuro.
+
+ZIP local: /workspace/attachments/34397f8e-ff24-468f-bfc8-fab8caf6a6c3/DexRewards.zip. Usar só config.json, dex_types/*.json, reward_gui.json e messages.json. O usuário respondeu explicitamente NÃO importar dados/resgates de jogadores. NÃO copiar players/*.json para Git. Nacional/Special têm5,15,30,50,75,100%; Shiny1,3,10,25,50,100%.18 pacotes com itens, impactor:dollars/tokens e permissões shirokai.dex.* (sem gruposVIP). Converter dinheiro em ações Currency existentes e tags em nova ação tipada LuckPerms; preservar journal/ack e compatibilidade de planos antigos. Não habilitar comandos mistos cegos.
+
+Bug relatado: uma captura não atualizou ranking mesmo após reabrir. Origem/método ainda não informado. Cache do banco já é invalidado ao gravar; hipótese inicial de bolsa não confirmada e descartada no teste auditado: Master Ball não tem BagItemLike nativo em1.8.3. API POKE_BALL_CAPTURE_CALCULATED possui thrower/PokemonEntity/PokeBallEntity e permite nova correlação antes da captura com as mesmas regras de origem e dedup. Validar projétil físico em PvE, sem promover UNKNOWN antigo.
+
+Implementados catálogo separado, comandos, pesquisa e18 pacotes; progress ratio/alias nacional.410 JUnit/build aprovados. Próximo: concluir suíte direct com Impactor/LP/API reais e reinício; documentar resultado/JAR. Scripts corrigidos após expectativa de cartão não presente no ZIP, tentativa incorreta de BagItem, CRLF na fixture Impactor, reload usado por console sem permissão e projétil lançado antes de terminar a abertura da batalha. Raiz atual /tmp/shirokai-direct-native-6; log /tmp/shirokai-direct-native-6.log. Origem da captura no servidor do usuário continua desconhecida. Última versão publicada dev.2, branch limpa no início deste pedido (891df62). Nenhuma publicação nova autorizada neste pedido de implementação.
+
 ## Dev.2 publicada e verificada
 
 [Pré-release/JAR](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.6.0-dev.2) publicada na fonte/tag d4f1965 por solicitação do responsável. [Actions43620027225](https://github.com/istwi/Shirokai-Dex/actions/runs/43620027225) aprovado; cinco anexos baixados e manifesto conferido localmente. JAR coincide com o validado nos402 JUnit/10 checks nativos, SHA256 0dc0401af48479de0fdd118ddd9c5b9fda5bc985996717cc18c52c557a4003d8. Configuração de exemplo anexada para instalações existentes, preservadas automaticamente. [Evidência](validation/release-focused-dev2.json). Main e ambiente não publicados. Não ampliar as demais fases sem novo direcionamento: modo reduzido permanece a prioridade vigente.

@@ -6,8 +6,9 @@ from urllib.parse import urlsplit
 REPO=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--base',type=Path,required=True,help='Prepared disposable server containing official server.jar, classpath.txt and dependency mods')
-parser.add_argument('--suite',choices=['commands','recovery','captures','fishing','prizes','profiles','focused'],required=True)
+parser.add_argument('--suite',choices=['commands','recovery','captures','fishing','prizes','profiles','focused','direct'],required=True)
 parser.add_argument('--placeholder-api',action='store_true',help='Install checksum-verified optional Text Placeholder API for profiles suite')
+parser.add_argument('--direct-bundle',action='store_true',help='Install audited Impactor in direct suite and test imported typed bundle')
 parser.add_argument('--competitions',action='store_true',help='Exercise capture competitions during the native captures suite')
 parser.add_argument('--resume-focused',action='store_true',help='Resume only an existing disposable focused test world; never production')
 parser.add_argument('--root',type=Path,help='New /tmp directory; never overwrite an existing world')
@@ -36,20 +37,33 @@ binaries=list((REPO/'build/server-mod').glob('*.jar'));assert len(binaries)==1
 installed_binary=root/'mods'/binaries[0].name
 shutil.copy2(binaries[0],installed_binary)
 if args.placeholder_api:
- assert args.suite=='profiles'
+ assert args.suite in ('profiles','direct')
  spec=json.loads((REPO/'tests/fixtures/placeholders/runtime.json').read_text())['placeholder_api']
  candidates=list((REPO.parent/'.cache/shirokai-gradle/caches/modules-2/files-2.1/eu.pb4/placeholder-api'/spec['version']).glob('*/*.jar'))
  assert len(candidates)==1 and hashlib.sha256(candidates[0].read_bytes()).hexdigest()==spec['sha256'],'Optional API checksum mismatch'
  shutil.copy2(candidates[0],root/'mods'/candidates[0].name)
+if args.direct_bundle:
+ assert args.suite=='direct'
+ spec=json.loads((REPO/'tests/fixtures/currency/runtime-mods.json').read_text())[0]
+ jar=REPO.parent/'.cache/shirokai-runtime-mods'/spec['filename'];assert hashlib.sha512(jar.read_bytes()).hexdigest()==spec['sha512']
+ shutil.copy2(jar,root/'mods'/jar.name)
+ with zipfile.ZipFile(jar) as z:defaults=z.read('impactor/assets/configs/economy.conf').decode().replace('\r\n','\n').replace('default-balance = 500.0','default-balance = 0.0')
+ start=defaults.index('    "impactor:dollars" {');end=defaults.index('\n}\r',start) if '\n}\r' in defaults[start:] else defaults.index('\n}',start)
+ token=defaults[start:end].replace('impactor:dollars','impactor:tokens').replace('primary = true','primary = false').replace('decimals = 2','decimals = 0').replace('Dollars','Tokens').replace('Dollar','Token')
+ defaults=defaults[:end]+'\n'+token+defaults[end:];target=root/'config/impactor/economy.conf';target.parent.mkdir(parents=True,exist_ok=True);target.write_text(defaults)
 config=root/'config/shirokaidex';config.mkdir(parents=True,exist_ok=args.resume_focused);shutil.copy2(REPO/'tests/fixtures'/args.suite/'config.json',config/'config.json')
+if args.suite=='direct':
+ shutil.copytree(REPO/'src/main/resources/config/menus',config/'menus')
+ for name,species in [('nacional',['cobblemon:pikachu','cobblemon:bulbasaur']),('special',['cobblemon:mew','cobblemon:mewtwo']),('shiny',['cobblemon:pikachu'])]:
+  target=config/'menus'/('dex_'+name+'.json');data=json.loads(target.read_text());data['collection']['criteria']={'include_species':species};target.write_text(json.dumps(data))
 if args.competitions:
  assert args.suite=='captures','Competition native scenario requires captures suite'
  configfile=config/'config.json';values=json.loads(configfile.read_text());values['competitions']=[dict(id=identifier,name=identifier,cadence='WEEKLY',timezone='America/Sao_Paulo',metric=metric,key=key,category_update_mode=mode) for identifier,metric,key,mode in [('native_total','TOTAL','','SNAPSHOT'),('native_snapshot','CATEGORY','electric_catches','SNAPSHOT'),('native_live','CATEGORY','electric_catches','LIVE')]];configfile.write_text(json.dumps(values)+'\n')
-world={'commands':'command-reward-validation','recovery':'reward-recovery-validation','captures':'native-capture-validation','fishing':'native-capture-validation','prizes':'prize-award-validation','profiles':'profile-medal-validation','focused':'native-capture-validation'}[args.suite]
-if args.suite in ('captures','fishing','focused'):
+world={'commands':'command-reward-validation','recovery':'reward-recovery-validation','captures':'native-capture-validation','fishing':'native-capture-validation','prizes':'prize-award-validation','profiles':'profile-medal-validation','focused':'native-capture-validation','direct':'native-capture-validation'}[args.suite]
+if args.suite in ('captures','fishing','focused','direct'):
     probe=REPO/'build/test-mods'/(binaries[0].stem+'-capture-probe.jar');assert probe.is_file()
     shutil.copy2(probe,root/'mods'/probe.name)
-    if not args.resume_focused:shutil.copytree(REPO/'tests/fixtures'/('captures' if args.suite=='focused' else args.suite)/'datapacks',root/world/'datapacks')
+    if not args.resume_focused:shutil.copytree(REPO/'tests/fixtures'/('captures' if args.suite in ('focused','direct') else args.suite)/'datapacks',root/world/'datapacks')
 
 secret=root/'.rcon-test-secret';secret.write_text(secrets.token_hex(24));secret.chmod(0o600)
 (root/'server.properties').write_text('server-ip=127.0.0.1\nserver-port=25571\nlevel-name='+world+'\nonline-mode=false\nenforce-secure-profile=false\nview-distance=2\nsimulation-distance=3\nmax-players=4\nspawn-protection=0\nenable-rcon=true\nrcon.port=25573\nrcon.password='+secret.read_text()+'\n')
@@ -90,10 +104,11 @@ def start():
  raise RuntimeError('Server readiness timed out: '+str(path))
 def run(restart=False):
  env=os.environ.copy();env.update(MC_TEST_RUN=str(root),MC_TEST_PORT='25571',MC_TEST_RCON_PORT='25573',MC_TEST_RCON_PASSWORD_FILE=str(secret))
+ if args.direct_bundle:env['MC_DIRECT_BUNDLE']='1'
  if args.competitions:env['MC_CAPTURE_COMPETITIONS']='1'
  if args.placeholder_api:env['MC_PROFILE_PLACEHOLDERS']='1'
  if args.resume_focused:env['MC_FOCUSED_BATTLE_ONLY']='1'
- if restart:env[{'commands':'MC_COMMAND_MODE','recovery':'MC_RECOVERY_MODE','captures':'MC_CAPTURE_MODE','fishing':'MC_CAPTURE_MODE','prizes':'MC_PRIZE_MODE','profiles':'MC_PROFILE_MODE','focused':'MC_FOCUSED_MODE'}[args.suite]]='after-restart'
+ if restart:env[{'commands':'MC_COMMAND_MODE','recovery':'MC_RECOVERY_MODE','captures':'MC_CAPTURE_MODE','fishing':'MC_CAPTURE_MODE','prizes':'MC_PRIZE_MODE','profiles':'MC_PROFILE_MODE','focused':'MC_FOCUSED_MODE','direct':'MC_DIRECT_MODE'}[args.suite]]='after-restart'
  subprocess.run(['npm','--prefix',str(REPO/'tests/integration'),'run','test:'+args.suite],env=env,check=True,cwd=REPO)
 try:
  print('SERVER_ROOT',root,flush=True)

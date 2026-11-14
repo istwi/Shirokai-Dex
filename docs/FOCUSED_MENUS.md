@@ -1,5 +1,7 @@
 # Menus públicos reduzidos
 
+> Direção atual 0.7.0-dev.1: consulte [Menus diretos](DIRECT_MENUS.md). As seções abaixo são históricas; o hub e os antigos comandos de navegação/prévia foram retirados. `/dex` sozinho não abre tela.
+
 Pedido vigente do responsável. Instalações novas recebem o preset `src/main/resources/config/focused.json`; configuração existente não é substituída. Um exemplo completo para instalação/revisão está em [focused-server.json](examples/focused-server.json). Faça backup de config.json e use o exemplo adaptado às suas recompensas; `/dex admin reload` exige a permissão administrativa existente. Dados do banco não são apagados ao mudar de modo.
 
 `home.focused: true` ativa o hub com Dex, Rankings de captura e Eventos. Profile/settings/achievements/history/prizes/records ficam sem acesso público nesse modo; ferramentas administrativas continuam protegidas. `false` recupera a navegação clássica. Não remove os sistemas ou históricos existentes.

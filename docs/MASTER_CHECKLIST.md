@@ -1,5 +1,31 @@
 # Prompt mestre — checklist de execução
 
+## Envio 0.7.0-dev.1 autorizado
+
+Responsável solicitou o JAR no GitHub. Preparando commit/push na branch handoff/crates-checkpoint e pré-release com JAR SHA256 cb493e8d1ea128b89231a0fb662e2bd389d98bd685b4856262ddc1e72f4e4c88, configurações e evidência dos410 JUnit/15 checks nativos. CI exige igualdade com o binário testado e verifica anexos antes de publicar. Sem merge de main ou publicação de ambiente. Referência: `release: distribute v0.7.0-dev.1 snapshot`.
+
+## Menus diretos — validados localmente (0.7.0-dev.1)
+
+Esta seção substitui as direções históricas abaixo. Implementados `/dex nacional|special|shiny|forms`, `/dexrank captura|derrotados|dex` e `/wiki nacional|special|shiny|forms`; `/dex` sozinho não abre tela. Eventos desativados e antigos painéis públicos sem entrada por comando. Doze JSONs separados, wiki de54 posições com modelos oficiais/relógio/livro/funil, pesquisa pelo chat,18 pacotes tipados e layout do ZIP. **Somente configurações: nenhum jogador/resgate do ZIP importado**, conforme escolha do responsável. [Guia e placeholders](DIRECT_MENUS.md).
+
+410 JUnit, build/serverDistribution e15 checks nativos (12 +3 após reinício) aprovados no JAR SHA256 `cb493e8d1ea128b89231a0fb662e2bd389d98bd685b4856262ddc1e72f4e4c88`. [Evidência](validation/direct-menus.json). Um pacote real entregou12 Poké Balls/4 Potions/$500/1 token e nó LP; concluído uma única vez após reinício. Uma captura PvE nativa atualizou Top Geral/Shiny; captura administrativa e replay não pontuaram/promoveram origem. Zero edições de eventos; SQLite íntegro, dois encerramentos normais e segredo removido. Testados parser real Text Placeholder API, reload independente e rejeição de slots conflitantes; recuperação de snapshot completo também coberta por JUnit. Não certificar cliente gráfico/carga nem GUI externa sem teste próprio.
+
+Origem da falha de ranking no servidor do usuário continua desconhecida; não afirmar causa resolvida com base só no teste local. Código, JAR e ZIP de configuração permanecem locais, sem commit/push/release/merge/ambiente. Base local891df62, branch handoff/crates-checkpoint. Artefatos em build/server-mod e build/direct-menu-config.zip. Nenhum players/*.json externo foi copiado.
+
+### Checklist do pedido atual
+
+- [x] ~~Comandos independentes e `/dex` sozinho inerte.~~ DirectMenus/ShirokaiDex, suíte direct.
+- [x] ~~Configuração por painel, slots/ícones/textos e reload atômico.~~ DirectMenuCatalog/MenuSpec/ConfigManager; JUnit e protocolo.
+- [x] ~~Layout da wiki com modelos oficiais, filtros, pesquisa e limpeza.~~ Geometria/ações testadas por protocolo; visual manual não certificado.
+- [x] ~~Converter somente configurações e18 pacotes do ZIP.~~ Script restrito a arquivos de configuração, recursos e DirectMenusConfigTest; um pacote integral validado nativamente com itens/moedas/tag e reinício.
+- [x] ~~Placeholder registrados/total e percentual por coleção.~~ PlaceholderValues; parser real com alias nacional e JUnit para N/D/denominador.
+- [x] ~~Eventos desativados e antigos menus fora dos comandos públicos.~~ Sem edições/pontos competitivos criados na suíte; histórico preservado.
+- [ ] Identificar a origem exata da captura não contada no servidor do responsável: faltam evidências desse servidor. Captura nativa local atualiza ranking; UNKNOWN não deve ser promovido sem prova.
+
+| Entrega local | Arquivos/evidência | Referência |
+|---|---|---|
+| Criação do catálogo, comandos/wiki,18 pacotes, permissions no journal, progress ratio e desativação de eventos | DirectMenuCatalog, menus/direct, rewards/Permission*, ConfigManager, CaptureAccess, PlaceholderValues, scripts/convert_dexrewards_config.py, tests/integration/direct.cjs;410 JUnit/15 checks; validation/direct-menus.json | Sem commit por restrição vigente; base891df62 |
+
 ## Dev.2 publicada e verificada
 
 [Pré-release/JAR](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.6.0-dev.2) publicada na fonte/tag d4f1965 por solicitação do responsável. [Actions43620027225](https://github.com/istwi/Shirokai-Dex/actions/runs/43620027225) aprovado; cinco anexos baixados e manifesto conferido localmente. JAR coincide com o validado nos402 JUnit/10 checks nativos, SHA256 0dc0401af48479de0fdd118ddd9c5b9fda5bc985996717cc18c52c557a4003d8. Configuração de exemplo anexada para instalações existentes, preservadas automaticamente. [Evidência](validation/release-focused-dev2.json). Main e ambiente não publicados. Não ampliar as demais fases sem novo direcionamento: modo reduzido permanece a prioridade vigente.

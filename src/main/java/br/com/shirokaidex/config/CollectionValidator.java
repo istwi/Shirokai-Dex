@@ -21,6 +21,11 @@ public final class CollectionValidator {
         this.species = Set.copyOf(ids); this.labels = Set.copyOf(labels); this.types = Set.copyOf(types);
         this.forms = Set.copyOf(forms); this.items = Set.copyOf(items);
     }
+    public void validateMenus(DirectMenuCatalog menus)throws IOException {
+        for(var menu:menus.menus().values()){validateIcon(menu.background());validateIcon(menu.entry());for(var button:menu.buttons().values())validateIcon(button.icon());for(var icon:menu.rewardStates().values())validateIcon(icon);}
+        for(var groups:menus.displays().values())for(var group:groups)if(!items.contains(group.icon()))throw new IOException("Unknown reward menu icon: "+group.icon());
+    }
+    private void validateIcon(br.com.shirokaidex.menus.direct.MenuSpec.Icon icon)throws IOException {if(!icon.item().isEmpty()&&!items.contains(icon.item()))throw new IOException("Unknown menu icon: "+icon.item());}
     public void validate(Settings settings) throws IOException {
         validate(settings.categories());
         for(var rule:settings.notifications().rules().values())if(!sounds.contains(rule.sound()))throw new IOException("Unknown notification sound "+rule.sound());

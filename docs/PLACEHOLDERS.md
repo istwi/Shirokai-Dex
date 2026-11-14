@@ -1,5 +1,7 @@
 # Placeholders básicos — alpha.4
 
+> Direção atual 0.7.0-dev.1: consulte [Menus diretos](DIRECT_MENUS.md). As seções abaixo são históricas; o hub e os antigos comandos de navegação/prévia foram retirados. `/dex` sozinho não abre tela.
+
 ## Desenvolvimento dev.2 — expansão pública em validação
 
 Novas chaves pela sintaxe real da API, com argumento separado por espaço:

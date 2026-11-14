@@ -1,6 +1,14 @@
 # Changelog
 
-## 0.6.0-dev.2 — alterações locais, não publicadas
+## 0.7.0-dev.1 — desenvolvimento local
+
+- Menus independentes por `/dex`, `/dexrank` e `/wiki` com argumento; `/dex` sozinho sem tela. Eventos desativados.
+- Doze JSONs separados, configuração atômica com recuperação, layout da wiki de54 slots e pesquisa pelo chat.
+- Somente configurações do DexRewards:18 pacotes com itens/moedas/tags e layout original; nenhum jogador/resgate importado.
+- Placeholder progress (registrados/total), alias nacional e permissões tipadas no journal.
+-410 JUnit e15 checks nativos aprovados com Impactor/LuckPerms/Text Placeholder API reais, resgate único e reinício; JAR local, não distribuído.
+
+## 0.6.0-dev.2 — pré-release publicada
 
 - Preset público com Dex/Rankings/Eventos e os demais painéis desativados por flag reversível; não sobrescreve configuração existente.
 - Nacional sem lendários/míticos/Ultra Beasts, Special com esses grupos, Shiny por captura verificada; Forms futura e inerte.

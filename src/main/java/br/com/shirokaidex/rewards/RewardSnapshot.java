@@ -14,9 +14,10 @@ public final class RewardSnapshot {
         if(json==null||json.getBytes(StandardCharsets.UTF_8).length>262144)throw new IllegalArgumentException("Invalid reward snapshot size");
         var root=JsonParser.parseString(json).getAsJsonObject();if(root.size()!=2||!root.has("format_version")||!root.get("format_version").getAsString().equals("1")||!root.has("plan"))throw new IllegalArgumentException("Unknown reward snapshot version");
         var gson=new Gson();var result=gson.fromJson(root.get("plan"),RewardPlan.class);
-        if(result==null||!gson.toJsonTree(result).equals(root.get("plan")))throw new IllegalArgumentException("Reward snapshot differs from validated definition");return result;
+        var serialized=gson.toJsonTree(result);if(result!=null&&!root.getAsJsonObject("plan").has("permissions")&&result.permissions().isEmpty())serialized.getAsJsonObject().remove("permissions");
+        if(result==null||!serialized.equals(root.get("plan")))throw new IllegalArgumentException("Reward snapshot differs from validated definition");return result;
     }
     public static RewardPlan awardPlan(RewardPlan template,String id){
-        return new RewardPlan(id,template.collection(),1,null,template.items(),false,template.pokemon(),template.currencies(),template.commands());
+        return new RewardPlan(id,template.collection(),1,null,template.items(),false,template.pokemon(),template.currencies(),template.commands(),template.permissions());
     }
 }

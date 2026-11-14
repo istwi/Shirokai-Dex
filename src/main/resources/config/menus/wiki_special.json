@@ -1,0 +1,101 @@
+{
+  "title": "<gradient:#00C6FF:#0072FF>✦ Wiki special</gradient>",
+  "rows": 6,
+  "background": {
+    "item": "minecraft:gray_stained_glass_pane",
+    "name": " ",
+    "lore": []
+  },
+  "buttons": {
+    "filter": {
+      "slot": 48,
+      "item": "minecraft:clock",
+      "name": "<yellow>Filtro: %filter%",
+      "lore": [
+        "<gray>Esquerdo: avançar filtro.",
+        "<gray>Direito: voltar filtro.",
+        "<aqua>Selecionado: %filter%"
+      ]
+    },
+    "search": {
+      "slot": 49,
+      "item": "minecraft:writable_book",
+      "name": "<aqua>Pesquisar Pokémon",
+      "lore": [
+        "<gray>Pesquisa: %query%",
+        "<yellow>Clique e escreva o nome no chat."
+      ]
+    },
+    "clear": {
+      "slot": 50,
+      "item": "minecraft:hopper",
+      "name": "<red>Limpar filtros",
+      "lore": [
+        "<gray>Remove a pesquisa e os filtros."
+      ]
+    },
+    "previous": {
+      "slot": 45,
+      "item": "minecraft:arrow",
+      "name": "<aqua>← Página anterior",
+      "lore": []
+    },
+    "next": {
+      "slot": 53,
+      "item": "minecraft:arrow",
+      "name": "<aqua>Próxima página →",
+      "lore": []
+    }
+  },
+  "content_slots": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43
+  ],
+  "reward_slots": [],
+  "entry": {
+    "item": "",
+    "name": "<aqua>%pokemon_name%",
+    "lore": [
+      "<dark_gray>%pokemon_id%",
+      "<gray>Visto: <white>%seen%",
+      "<gray>Obtido: <white>%owned%",
+      "<gray>Capturado: <white>%captured%",
+      "",
+      "<yellow>Onde encontrar",
+      "%spawns%"
+    ]
+  },
+  "filter_names": {
+    "ALL": "Todos",
+    "SEEN": "Vistos",
+    "OWNED": "Obtidos",
+    "UNSEEN": "Não vistos",
+    "SHINY_SEEN": "Shiny vistos"
+  }
+}

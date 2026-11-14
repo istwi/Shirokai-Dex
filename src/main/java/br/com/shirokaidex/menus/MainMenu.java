@@ -334,8 +334,8 @@ public final class MainMenu extends ChestMenu {
         close.set(DataComponents.CUSTOM_NAME, messages.text(language, "menu_close"));
         contents.setItem(22, close); actions.put(22, player::closeContainer);
     }
-    static void show(ServerPlayer player,String title,SimpleContainer contents,Map<Integer,Runnable> actions){show(player,Component.literal(title),contents,actions);}
-    static void show(ServerPlayer player, Component title, SimpleContainer contents, Map<Integer, Runnable> actions) {
+    public static void show(ServerPlayer player,String title,SimpleContainer contents,Map<Integer,Runnable> actions){show(player,Component.literal(title),contents,actions);}
+    public static void show(ServerPlayer player, Component title, SimpleContainer contents, Map<Integer, Runnable> actions) {
         player.openMenu(new SimpleMenuProvider((id, inventory, viewer) -> new MainMenu(id, player, contents, actions), title));
     }
     @Override public void clicked(int slot, int button, ClickType type, Player player) {
