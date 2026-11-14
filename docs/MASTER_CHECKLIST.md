@@ -1,5 +1,9 @@
 # Prompt mestre — checklist de execução
 
+## Validação complementar de perfis — 2026-11-14
+
+Suíte nativa concluída: nove checks e um de reinício aprovados, três inicializações/encerramentos normais e segredo RCON removido. [Evidência](validation/phase6-profiles.json), incluindo falha inicial e repetição corrigida. Perfis offline, privacidade pública, Pokédex oficial, conquistas/favoritos e ausência de concessões materiais indevidas verificados por protocolo. Próximo: placeholders avançados/menus/notificações e demais pendências; cliente gráfico/carga não certificados. Esta atualização substitui as menções anteriores de repetição pendente.
+
 Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A especificação original permanece preservada; esta checklist acompanha sua execução.
 
 ## Como atualizar (obrigatório para todo Codex)

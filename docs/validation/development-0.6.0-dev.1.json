@@ -10,7 +10,7 @@
   "build": "build serverDistribution: BUILD SUCCESSFUL",
   "jar": "shirokai-dex-0.6.0-dev.1+mc1.21.1-cobblemon1.8.3.jar",
   "sha256": "8f960d5a8d1bdb58e586e951c6d2082ff91ac7a5cdfe5b94d33b1a0e19d8c296",
-  "profiles_native": "retry pending; first attempt failed on stale settings window; no success claimed",
+  "profiles_native": "PASSED: 9 checks plus 1 restart check, 3 normal server starts/stops; see phase6-profiles.json",
   "scope": "Development snapshot, not a completed mod or stable release",
   "pending": [
     "advanced placeholders and optional integrations",

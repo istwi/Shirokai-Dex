@@ -1,0 +1,94 @@
+{
+  "suite": {
+    "suite": "profiles",
+    "starts": 3,
+    "jar": "shirokai-dex-0.6.0-dev.1+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "8f960d5a8d1bdb58e586e951c6d2082ff91ac7a5cdfe5b94d33b1a0e19d8c296",
+    "result": "passed"
+  },
+  "initial_failure": {
+    "timestamp": "2026-11-14T10:08:14.771Z",
+    "results": [
+      {
+        "name": "Locked secret medal shows only safe hint; reliable stored capture counters unlock visual badges independently of Pokedex progress",
+        "status": "passed"
+      },
+      {
+        "name": "Public profile applies default species privacy and private-medal visibility to a second player",
+        "status": "passed"
+      },
+      {
+        "name": "Privacy GUI immediately closes already-open public views; subsequent public values are masked while owner retains access",
+        "status": "passed"
+      },
+      {
+        "name": "Explicit per-statistic override exposes only authorized aggregate species counts through a paginated profile page",
+        "status": "passed"
+      },
+      {
+        "name": "profile and medal integration",
+        "status": "failed",
+        "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'gray_dye'\n- 'lime_dye'\n"
+      }
+    ]
+  },
+  "passing": {
+    "timestamp": "2026-11-14T10:22:49.401Z",
+    "results": [
+      {
+        "name": "Locked secret medal shows only safe hint; reliable stored capture counters unlock visual badges independently of Pokedex progress",
+        "status": "passed"
+      },
+      {
+        "name": "Public profile applies default species privacy and private-medal visibility to a second player",
+        "status": "passed"
+      },
+      {
+        "name": "Privacy GUI immediately closes already-open public views; subsequent public values are masked while owner retains access",
+        "status": "passed"
+      },
+      {
+        "name": "Explicit per-statistic override exposes only authorized aggregate species counts through a paginated profile page",
+        "status": "passed"
+      },
+      {
+        "name": "Real command acquisition satisfies Pokedex/AND/OR/dependency medals without inventing captures or material rewards, and notification opt-out is respected",
+        "status": "passed"
+      },
+      {
+        "name": "Unlocked medals allow exactly three persistent favorite slots; GUI icons never become inventory rewards",
+        "status": "passed"
+      },
+      {
+        "name": "Ranking head opens a permission/privacy-aware trainer profile with public favorites",
+        "status": "passed"
+      },
+      {
+        "name": "Global ranking exclusion still applies independently of individual statistics visibility",
+        "status": "passed"
+      },
+      {
+        "name": "Offline profile retains last-observed official progress and earned favorites with explicit observation time, without loading or altering offline Pokedex data",
+        "status": "passed"
+      }
+    ]
+  },
+  "restart": {
+    "timestamp": "2026-11-14T10:24:07.179Z",
+    "results": [
+      {
+        "name": "Restart preserves five medals, three favorites, privacy/preferences and official Pokedex snapshot without duplicate unlock audit or material grants",
+        "status": "passed"
+      }
+    ]
+  },
+  "cleanup": {
+    "normal_stops": 3,
+    "rcon_secret_removed": true
+  },
+  "limits": [
+    "protocol bots, no graphical client",
+    "synthetic verified counters explicitly seeded; official Pokedex changed only through native givepokemonother",
+    "optional placeholder API, load and production modpack not certified"
+  ]
+}

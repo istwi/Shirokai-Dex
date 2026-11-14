@@ -1,5 +1,9 @@
 # Estado do projeto
 
+## Validação complementar de perfis — 2026-11-14
+
+Suíte nativa concluída: nove checks e um de reinício aprovados, três inicializações/encerramentos normais e segredo RCON removido. [Evidência](validation/phase6-profiles.json), incluindo falha inicial e repetição corrigida. Perfis offline, privacidade pública, Pokédex oficial, conquistas/favoritos e ausência de concessões materiais indevidas verificados por protocolo. Próximo: placeholders avançados/menus/notificações e demais pendências; cliente gráfico/carga não certificados. Esta atualização substitui as menções anteriores de repetição pendente.
+
 ## Snapshot 0.6.0-dev.1 — 2026-11-14 (estado vigente)
 
 Esta seção substitui os estados históricos abaixo. Fases 4/5 avançadas; Fase 6 implementada e em validação, sem declarar o mod concluído. Schema14 ativo: perfis online/offline, privacidade por estatística, rankings de conclusão com razão exata, conquistas declarativas, auditoria e três favoritos persistentes. Preferências de notificações e invalidação de telas públicas integradas. Alias legado de placeholder e proteção de privacidade adicionados; integração opcional positiva ainda pendente.

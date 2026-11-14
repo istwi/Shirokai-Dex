@@ -1,5 +1,9 @@
 # Próximos passos
 
+## Validação complementar de perfis — 2026-11-14
+
+Suíte nativa concluída: nove checks e um de reinício aprovados, três inicializações/encerramentos normais e segredo RCON removido. [Evidência](validation/phase6-profiles.json), incluindo falha inicial e repetição corrigida. Perfis offline, privacidade pública, Pokédex oficial, conquistas/favoritos e ausência de concessões materiais indevidas verificados por protocolo. Próximo: placeholders avançados/menus/notificações e demais pendências; cliente gráfico/carga não certificados. Esta atualização substitui as menções anteriores de repetição pendente.
+
 ## Passagem 0.6.0-dev.1 — estado vigente
 
 Última tarefa: preparar snapshot publicável na branch handoff/crates-checkpoint por solicitação explícita do responsável. Build e 382 JUnit aprovados; schema14/perfis/conquistas estão ativos (as notas históricas de preparação abaixo estão superadas).
