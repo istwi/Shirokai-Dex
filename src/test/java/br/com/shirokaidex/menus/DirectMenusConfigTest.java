@@ -25,5 +25,26 @@ class DirectMenusConfigTest {
   assertThrows(java.io.IOException.class,()->DirectMenuCatalog.object("{} {}"));assertThrows(IllegalArgumentException.class,()->RichText.validate("<click:run_command:'/op x'>click</click>"));assertThrows(IllegalArgumentException.class,()->RichText.validate("bad\nline"));var files=bundled();files.put("wiki_nacional",files.get("wiki_nacional").replace("\"filter\"","\"run_command\""));assertThrows(java.io.IOException.class,()->DirectMenuCatalog.parse(files));
   var longLore=bundled();var dex=JsonParser.parseString(longLore.get("dex_nacional")).getAsJsonObject();var lore=new JsonArray();for(int i=0;i<32;i++)lore.add("line");dex.getAsJsonArray("reward_groups").get(0).getAsJsonObject().add("lore",lore);longLore.put("dex_nacional",dex.toString());assertThrows(java.io.IOException.class,()->DirectMenuCatalog.parse(longLore));
  }
+ @Test void closeCommandsAreOptionalIndependentAndNormalizeSlash()throws Exception {
+  var files=bundled();assertEquals("",DirectMenuCatalog.parse(files).menus().get("dex_nacional").buttons().get("close").command());
+  for(String command:List.of("/menu","pokedex","menu principal")){
+   var dex=JsonParser.parseString(files.get("dex_nacional")).getAsJsonObject();dex.getAsJsonObject("menu").getAsJsonObject("buttons").getAsJsonObject("close").addProperty("command",command);files.put("dex_nacional",dex.toString());
+   var catalog=DirectMenuCatalog.parse(files);assertEquals(command.startsWith("/")?command.substring(1):command,catalog.menus().get("dex_nacional").buttons().get("close").command());assertEquals("",catalog.menus().get("dex_shiny").buttons().get("close").command());
+  }
+ }
+ @Test void malformedCommandsAndCommandsOnOtherControlsAreRejected()throws Exception {
+  for(String command:List.of("/","menu\nother","x".repeat(257),"<click:run_command>")){
+   var files=bundled();var dex=JsonParser.parseString(files.get("dex_nacional")).getAsJsonObject();dex.getAsJsonObject("menu").getAsJsonObject("buttons").getAsJsonObject("close").addProperty("command",command);files.put("dex_nacional",dex.toString());assertThrows(java.io.IOException.class,()->DirectMenuCatalog.parse(files));
+  }
+  for(JsonElement command:List.of(JsonNull.INSTANCE,new JsonPrimitive(42),new JsonPrimitive(true))){
+   var files=bundled();var dex=JsonParser.parseString(files.get("dex_nacional")).getAsJsonObject();dex.getAsJsonObject("menu").getAsJsonObject("buttons").getAsJsonObject("close").add("command",command);files.put("dex_nacional",dex.toString());assertThrows(java.io.IOException.class,()->DirectMenuCatalog.parse(files));
+  }
+  var files=bundled();var wiki=JsonParser.parseString(files.get("wiki_nacional")).getAsJsonObject();wiki.getAsJsonObject("buttons").getAsJsonObject("filter").addProperty("command","menu");files.put("wiki_nacional",wiki.toString());assertThrows(java.io.IOException.class,()->DirectMenuCatalog.parse(files));
+ }
+ @Test void commandReloadIsAtomicAndRecoveryPreservesConfiguredCommand()throws Exception {
+  var manager=new ConfigManager(directory,true);manager.initialize();var file=directory.resolve("menus/dex_nacional.json");var dex=JsonParser.parseString(Files.readString(file)).getAsJsonObject();dex.getAsJsonObject("menu").getAsJsonObject("buttons").getAsJsonObject("close").addProperty("command","/menu");Files.writeString(file,dex.toString());manager.reload();assertEquals("menu",manager.directMenus().menus().get("dex_nacional").buttons().get("close").command());var before=manager.snapshot();
+  dex.getAsJsonObject("menu").getAsJsonObject("buttons").getAsJsonObject("close").addProperty("command",42);Files.writeString(file,dex.toString());assertThrows(java.io.IOException.class,manager::reload);assertSame(before,manager.snapshot());
+  var restarted=new ConfigManager(directory,true);restarted.initialize();assertTrue(restarted.recoveredFromBackup());assertEquals("menu",restarted.directMenus().menus().get("dex_nacional").buttons().get("close").command());
+ }
  @Test void templateDataNeverBecomesFormattingAndRealProgressDenominatorIsNotHardcoded(){assertEquals("Player <red>value",RichText.render("Player %player%",Map.of("player","<red>value")).getString());}
 }

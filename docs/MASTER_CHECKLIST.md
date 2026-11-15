@@ -1,5 +1,9 @@
 # Prompt mestre — checklist de execução
 
+## Pedido atual — 0.7.0-dev.2 (2026-11-15)
+
+Base correta: tag v0.7.0-dev.1, commit dea5e5e. Botão menu.buttons.close.command nos JSONs de Dex Nacional/Special/Shiny; padrão fecha, comando executa como jogador sem elevação. /dex sozinho permanece inerte. Build/serverDistribution/verifyModJar e 413 JUnit aprovados. Cinco checks nativos do clique aprovados no JAR empacotado: fechar padrão, outro menu, sem elevação, destino ausente e reload. Evidência: [close-command-dev2.json](validation/close-command-dev2.json). Servidor encerrado normalmente, SQLite íntegro, RCON desativado e segredo removido. /menu e /pokedex externos não instalados neste teste. Trabalho na branch fix/latest-menu-command, envio de código/JAR autorizado pelo pedido atual; sem merge na main ou publicação de ambiente. Próximo passo: conferir teste nativo e artifact do commit no Actions. API reutilizada: performPrefixedCommand/createCommandSourceStack do Minecraft1.21.1.
+
 ## Envio 0.7.0-dev.1 autorizado
 
 Responsável solicitou o JAR no GitHub. Preparando commit/push na branch handoff/crates-checkpoint e pré-release com JAR SHA256 cb493e8d1ea128b89231a0fb662e2bd389d98bd685b4856262ddc1e72f4e4c88, configurações e evidência dos410 JUnit/15 checks nativos. CI exige igualdade com o binário testado e verifica anexos antes de publicar. Sem merge de main ou publicação de ambiente. Referência: `release: distribute v0.7.0-dev.1 snapshot`.
@@ -438,3 +442,5 @@ Correção de preparação: condição do workflow convertida em escalar YAML ap
 | Entrega | Evidência | Referência |
 |---|---|---|
 | Menus reduzidos e derrotas nativas | focused-menus.json;402 JUnit,9+1 checks nativos; JAR idêntico ao testado; preset/examples e FOCUSED_MENUS.md | Local sobre a55155b, sem novo commit/push/release/ambiente |
+
+| Comando no Fechar da Dex dev.2 | MenuSpec/DirectMenuCatalog/DirectMenus e JSONs; 413 JUnit/build/JAR e cinco checks nativos aprovados; [evidência](validation/close-command-dev2.json) | Commit `feat: configure close commands on latest direct menus`, base tag v0.7.0-dev.1/dea5e5e; branch fix/latest-menu-command |

@@ -1,4 +1,4 @@
-# Menus diretos — desenvolvimento 0.7.0-dev.1
+# Menus diretos — desenvolvimento 0.7.0-dev.2
 
 Esta direção substitui o hub e os menus públicos antigos. `/dex` sozinho não abre tela.
 
@@ -58,3 +58,23 @@ Troque `nacional` por `special` ou `shiny`. `national` também é aceito pela AP
 ## Validação local
 
 410 JUnit/build e15 verificações em servidor com APIs reais e reinício aprovados. [Evidência](validation/direct-menus.json). Geometria, controles, modelos no protocolo, pesquisa, reload, ranking e um pacote integral foram testados. Não houve revisão manual da renderização no cliente gráfico ou teste de carga. A falha de captura específica do servidor do responsável ainda não tem causa confirmada; o teste local de PvE atualizou Top Geral/Shiny.
+
+## Botão Fechar ou comando de outro menu (dev.2)
+
+Edite `config/shirokaidex/menus/dex_nacional.json`, `dex_special.json` ou `dex_shiny.json`. Dentro de `menu.buttons.close`, adicione `command`:
+
+```json
+"close": {
+  "slot": 28,
+  "item": "minecraft:barrier",
+  "name": "<red>Voltar ao menu",
+  "lore": [],
+  "command": "/menu"
+}
+```
+
+Pode usar `/pokedex`, `/dex shiny` ou outro comando registrado, com argumentos. A barra inicial é opcional. Sem `command` ou com `""`, continua apenas fechando. Cada Dex configura seu destino independentemente. Aparência/nome/slot continuam editáveis. Arquivos existentes não são sobrescritos: acrescente o campo manualmente e use `/dex admin reload` (LuckPerms `shirokaidex.admin.reload`) ou reinicie.
+
+O clique fecha a tela e executa como o jogador, respeitando suas permissões; comando ausente/negado recebe o erro normal. Não é console, não concede OP e não expande placeholders no comando. Aceita até 256 caracteres; controles de linha, tipos inválidos e comandos nos outros botões são rejeitados no reload atômico. Wiki/rankings preservados.
+
+Esta versão deriva da tag v0.7.0-dev.1 (`dea5e5e`); a alteração anterior de home.close_command na alpha.8 não é usada pelos menus diretos.

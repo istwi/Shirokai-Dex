@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-11-15T04:54:51.044Z",
+  "results": [
+    {
+      "name": "Default barrier closes without opening a menu",
+      "status": "passed"
+    },
+    {
+      "name": "Player command opens another direct menu with arguments",
+      "status": "passed"
+    },
+    {
+      "name": "Non-OP player cannot elevate permissions through a configured command",
+      "status": "passed"
+    },
+    {
+      "name": "Missing destination closes menu and reports dispatcher error",
+      "status": "passed"
+    },
+    {
+      "name": "Reload restores default close behavior",
+      "status": "passed"
+    }
+  ],
+  "version": "0.7.0-dev.2",
+  "base": "dea5e5ee9f5eb82bf5c384184c5c34f6adc033a9",
+  "sha256": "c9697bd10456194d16a5971fa00a8c4437c2f8166a498061da707221b6961e8d",
+  "junit": {
+    "tests": 413,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "server": "Packaged JAR; Fabric0.17.2/MC1.21.1/Cobblemon1.8.3/LuckPerms5.4.140; disposable loopback; normal shutdown; SQLite integrity ok; RCON disabled/secret removed",
+  "limitations": "No visual Minecraft client or external /menu or /pokedex provider installed. Cross-menu command validated with /dex shiny. Historical gameplay suites not rerun.",
+  "test_correction": "Initial title assertion searched contiguous Shiny text in a per-character gradient; runner now compares exact destination title against direct command baseline."
+}

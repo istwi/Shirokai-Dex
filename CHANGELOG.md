@@ -255,3 +255,7 @@ Sem release, sem JAR e sem funcionalidades entregues até esta etapa.
 ## Origem do WIP alpha.9
 
 Passagem `6b97093` continha coordenação/probe compilados, sem validação funcional. Retomada atual descrita no topo.
+
+## 0.7.0-dev.2
+
+- Comando opcional por botão Fechar nos três menus diretos de Dex, com permissões do jogador, aparência editável e padrão compatível. Base v0.7.0-dev.1; preserva rankings/wiki/recompensas.

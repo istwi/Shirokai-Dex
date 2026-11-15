@@ -32,6 +32,7 @@
         ]
       },
       "close": {
+        "command": "",
         "slot": 28,
         "item": "minecraft:barrier",
         "name": "<red>Fechar",

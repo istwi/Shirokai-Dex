@@ -341,3 +341,9 @@ Build local com JDK21 completo: `JAVA_HOME=/workspace/.tools/jdk-21.0.13+9 pytho
 ## Recibos e retenção — schema10 local
 
 `CaptureReceiptsTest` e `CaptureRetentionTest` acrescentam nove casos de migração, rollback, replay após remoção/reinício, períodos/fusos, lotes/cutoff, auditoria preservada e configuração estrita. Build/serverDistribution com 337 JUnit aprovado; nenhum caso ignorado. Cenário nativo e instruções de seed/verify documentados em [RETENTION.md](RETENTION.md). Fixtures sintéticas não comprovam captura no jogo.
+
+## Botão de comando nos menus diretos (0.7.0-dev.2)
+
+Com o JAR empacotado em servidor descartável loopback (25571/RCON25573), LuckPerms5.4.140 e arquivos de menus padrão, execute `MC_TEST_RUN=/tmp/SEU_SERVIDOR MC_TEST_RCON_PASSWORD_FILE=/tmp/SEU_SEGREDO node tests/integration/close-command.cjs`. Requer o npm ci de tests/integration. Perfil reservado DexButton não OP. O runner concede somente reload via LP, altera apenas dex_nacional e termina restaurando command vazio no caminho aprovado; em falha preserve o diretório descartável para diagnóstico. Nunca execute em servidor de usuários.
+
+Verifica barreira padrão, comando com argumento para outra Dex, ausência de elevação em /give, destino inexistente e restauração por reload. Relatório atual em build/integration-close-command.json. Encerrar servidor com stop, conferir salvamento, desativar RCON e remover segredo. Suite independente das capturas/recompensas históricas.
