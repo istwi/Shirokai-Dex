@@ -1,5 +1,9 @@
 # Prompt mestre — checklist de execução
 
+## Entrega local — 2026-11-15
+
+- [ ] Comando configurável na barreira inicial: home.close_command implementado, com testes de parsing/defaults/rejeição. Ver docs/LAYOUT.md. Sem commit; validação funcional em servidor pendente.
+
 Lista operacional do [prompt mestre integral](PROJECT_SPECIFICATION.md). A especificação original permanece preservada; esta checklist acompanha sua execução.
 
 ## Como atualizar (obrigatório para todo Codex)
@@ -234,3 +238,7 @@ Ao registrar a própria entrega, use o assunto do commit em preparação e subst
 | Sincronização autorizada alpha.6/7/8 | Snapshot de menus e CURRENCY, evidências de 274 JUnit e testes nativos, documentos de continuidade atualizados | Commit `feat: add configurable menu presentation and Impactor currency rewards`, base `7defc0c`; sem nova release |
 
 | Passagem para outro Codex | Main funcional preservada; WIP Crates salvo e enviado separadamente, pendências e testes exatos documentados; servidor encerrado e segredo removido | Main funcional `191a65e`; branch handoff/crates-checkpoint `6b97093`; [passagem](CRATES_CHECKPOINT_HANDOFF.md) |
+
+Validação local deste pedido (2026-11-15): build serverDistribution aprovado com JDK Temurin 21.0.9+10 em /workspace/.tools (SHA-256 oficial conferido); 280 JUnit, zero falhas/erros/skips. verifyModJar aprovado. Clique/comando em servidor real ainda pendente; nenhuma publicação ou envio ao GitHub.
+
+| Botão inicial por comando | HomeLayout/Codec, HomeMenu/ShirokaiDex e HomeLayoutTest; build/serverDistribution, verifyModJar, checksum e 280 JUnit aprovados; servidor pendente | Commit `feat: configure home close button player command`, base `c89cc1b`; envio autorizado, sem release |

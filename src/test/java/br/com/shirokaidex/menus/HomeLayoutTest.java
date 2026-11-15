@@ -22,6 +22,19 @@ class HomeLayoutTest {
         "{\"slots\":{\"dex\":22}}","{\"slots\":{\"dex\":54}}","{\"slots\":{\"dex\":-1}}","{\"slots\":{\"dex\":20,\"dex\":21}}",
         "{\"slots\":{\"unknown\":2}}","{\"rows\":6,\"rows\":6}","{\"command\":\"op someone\"}"
     }) void invalidOrExecutableLayoutsAreRejected(String home){assertThrows(java.io.IOException.class,()->ConfigManager.parse(config(home)));}
+    @Test void closeCommandDefaultsAndAcceptsPlayerMenuCommands()throws Exception{
+        assertEquals("",Settings.defaults().home().closeCommand());
+        for(String command:List.of("/menu","/pokedex","menu principal")){
+            var home=ConfigManager.parse(config("{\"close_command\":\""+command+"\"}")).home();
+            assertEquals(command.startsWith("/")?command.substring(1):command,home.closeCommand());
+        }
+    }
+    @ParameterizedTest @ValueSource(strings={"{\"close_command\":null}","{\"close_command\":42}","{\"close_command\":\"/\"}","{\"close_command\":\"menu\",\"close_command\":\"pokedex\"}"})
+    void invalidCloseCommandIsRejected(String home){assertThrows(java.io.IOException.class,()->ConfigManager.parse(config(home)));}
+    @Test void closeCommandRejectsControlCharactersAndExcessiveLength(){
+        for(String command:List.of("menu\nother","menu\r","menu\u0000", "x".repeat(257)))
+            assertThrows(IllegalArgumentException.class,()->new HomeLayout(6,HomeLayout.Palette.VIOLET,HomeLayout.DEFAULT_SLOTS,command));
+    }
     @Test void changingRowsRequiresAllPositionsToFitAndRejectsWholeReload()throws Exception{
         var slots=new HashMap<>(HomeLayout.DEFAULT_SLOTS);slots.put("settings",28);slots.put("back",30);slots.put("close",32);
         assertEquals(4,new HomeLayout(4,HomeLayout.Palette.EMBER,slots).rows());

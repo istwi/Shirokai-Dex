@@ -151,3 +151,9 @@ Sem release, sem JAR e sem funcionalidades entregues até esta etapa.
 - Prévia/segunda confirmação monetárias, planos históricos compatíveis e limites estritos.
 - Dependência API compileOnly 5.3.5, sem empacotar/instalar Impactor ou alterar suas configurações no servidor do usuário.
 - Alterações continuam locais; nenhuma publicação.
+
+## Alteração local — 2026-11-15
+
+- Barreira inicial aceita home.close_command para abrir outro menu como jogador; vazio preserva Fechar. Validação funcional pendente.
+
+Validação local deste pedido (2026-11-15): build serverDistribution aprovado com JDK Temurin 21.0.9+10 em /workspace/.tools (SHA-256 oficial conferido); 280 JUnit, zero falhas/erros/skips. verifyModJar aprovado. Clique/comando em servidor real ainda pendente; nenhuma publicação ou envio ao GitHub.

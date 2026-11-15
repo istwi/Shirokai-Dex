@@ -30,14 +30,14 @@ public final class HomeMenu {
         Map<String,Item> icons=Map.of("dex",Items.BOOK,"rewards",Items.CHEST,"wiki",Items.SPYGLASS,"competitions",Items.GOLDEN_SWORD,"achievements",Items.NETHER_STAR,"history",Items.WRITABLE_BOOK,"settings",Items.COMPARATOR,"back",Items.ARROW,"close",Items.BARRIER);
         for(String id:icons.keySet()){
             int slot=layout.slots().get(id);boolean enabled=available.containsKey(id);var item=new ItemStack(icons.get(id));
-            item.set(DataComponents.CUSTOM_NAME,name(messages.text(settings.language(),"home."+id),enabled?(id.equals("back")?0xF1CD76:id.equals("close")?0xF07886:layout.palette().start):0x999999));
+            item.set(DataComponents.CUSTOM_NAME,name((id.equals("close")&&!layout.closeCommand().isEmpty()?Component.literal("/"+layout.closeCommand()):messages.text(settings.language(),"home."+id)),enabled?(id.equals("back")?0xF1CD76:id.equals("close")?0xF07886:layout.palette().start):0x999999));
             List<Component> lore=new ArrayList<>();
             if(Set.of("competitions","achievements","history","settings").contains(id))lore.add(messages.text(settings.language(),"home.in_development"));
             else if(id.equals("dex"))lore.add(messages.text(settings.language(),"home.collections",collections));
             else if(id.equals("rewards"))lore.add(messages.text(settings.language(),"home.reward_count",rewards));
             else if(id.equals("back"))lore.add(messages.text(settings.language(),enabled?"home.external_back":"home.external_missing"));
             else if(id.equals("wiki"))lore.add(messages.text(settings.language(),enabled?"home.wiki_description":"home.wiki_locked"));
-            if(enabled)lore.add(messages.text(settings.language(),id.equals("close")?"home.click_close":id.equals("back")?"home.click_back":"home.click_open"));
+            if(enabled)lore.add(messages.text(settings.language(),id.equals("close")?(layout.closeCommand().isEmpty()?"home.click_close":"home.click_back"):id.equals("back")?"home.click_back":"home.click_open"));
             item.set(DataComponents.LORE,new ItemLore(lore.stream().map(line->(Component)line.copy().withStyle(style->style.withColor(0xAAAAAA).withItalic(false))).toList()));contents.setItem(slot,item);if(enabled)actions.put(slot,available.get(id));
         }
         MainMenu.show(player,gradient(settings.menuTitle(),layout.palette()),contents,actions);

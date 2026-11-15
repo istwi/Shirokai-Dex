@@ -25,7 +25,7 @@ O resumo não inventa dinheiro, capturas, rankings ou placeholders externos. “
 }
 ```
 
-Opções: VIOLET (padrão), OCEAN, EMBER. rows aceita 3..6; posições omitidas herdam padrões. Para reduzir linhas, reposicionar todos os botões que sairiam do tamanho. IDs desconhecidos, posições duplicadas/fora da grade, campos duplicados e comandos arbitrários no layout são rejeitados integralmente; reload mantém estado/backup válido. Configuração antiga sem home continua válida.
+Opções: VIOLET (padrão), OCEAN, EMBER. rows aceita 3..6; posições omitidas herdam padrões. Para reduzir linhas, reposicionar todos os botões que sairiam do tamanho. IDs desconhecidos, posições duplicadas/fora da grade, campos duplicados e campos desconhecidos no layout são rejeitados integralmente; reload mantém estado/backup válido. Configuração antiga sem home continua válida.
 
 Botões/decoração não transferem itens ao inventário; callbacks verificam permissões atuais. /menu usa a fonte do próprio jogador sem elevar permissão; se o comando não existir, o botão informa indisponibilidade e não executa um comando presumido.
 
@@ -123,3 +123,17 @@ Cada entrada de `menus` também aceita `rows`, `title`, `palette` e `buttons`. E
 Não interpreta comandos, MiniMessage nem placeholders externos. Paletas oferecem coloração em duas cores nos submenus e gradiente na grade; o título dinâmico original pode manter paginação via `{title}`. A central continua usando seu layout `home`.
 
 Fixture completa: `tests/fixtures/menu-appearance/config.json`. Templates reutilizáveis, condições genéricas e posicionamento arbitrário de conteúdos continuam pendentes; os estados/permissões atuais são condições fixas do servidor. Validação visual em cliente gráfico/carga não certificada.
+
+## Comando no botão de fechar da central
+
+No `config/shirokaidex/config.json`, acrescente ao objeto `home` existente:
+
+```json
+"close_command": "/menu"
+```
+
+Use `/pokedex` ou outro comando registrado para abrir o menu desejado. Aceita argumentos e barra inicial opcional (até 256 caracteres), sem templates/placeholders. O botão de barreira da primeira tela passa a mostrar o comando; fecha a Dex e executa como o próprio jogador, respeitando suas permissões. Se o comando não existir ou a permissão faltar, o dispatcher fornece o erro normal. Não executa como console e não concede OP.
+
+Omitir `close_command` ou usar `""` mantém Fechar. Os botões dos submenus e a seta externa `/menu` permanecem com suas ações anteriores. Aplicar com o reload documentado do Dex ou reiniciar. Esta alteração é local; validação em servidor real pendente.
+
+Validação local deste pedido (2026-11-15): build serverDistribution aprovado com JDK Temurin 21.0.9+10 em /workspace/.tools (SHA-256 oficial conferido); 280 JUnit, zero falhas/erros/skips. verifyModJar aprovado. Clique/comando em servidor real ainda pendente; nenhuma publicação ou envio ao GitHub.

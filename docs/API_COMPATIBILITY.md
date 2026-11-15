@@ -1,5 +1,9 @@
 # Auditoria de compatibilidade — Fase 0
 
+## Botão de comando — 2026-11-15
+
+Reutiliza getCommands().performPrefixedCommand(player.createCommandSourceStack(), command), já usado pela seta /menu na base c89cc1b. Nenhuma API externa nova; sem elevação de permissão. Execução real desta opção pendente.
+
 Data: 2026-11-07. Esta é uma auditoria estática inicial; não uma certificação de funcionamento em servidor. O repositório estava vazio, sem HEAD, fontes, build ou testes. Java local confirmado: OpenJDK 21.0.13.
 
 ## Estados e evidências
@@ -258,3 +262,5 @@ Auditoria adicional nas fontes oficiais da tag 5.3.5 (`da9a2fd55cf6f0acb6e55fe15
 Checagem reflexiva isolada/somente leitura para identificar serviço/backend reais, pois API pública não expõe essa capacidade: public storage() do serviço, fields implementation/loader/root conferidos nas fontes e por javap no JAR oficial. Classe JsonLoader também confirmada. Suporta só serviço nativo com JSON, versões 5.3.5/5.3.5+metadata; SQL/HOCON/YAML/custom providers não são certificados e são bloqueados antes de efeitos. Não escreve nem altera configurações do Impactor em servidores de usuários.
 
 [Guia](CURRENCY_REWARDS.md), [evidência](validation/phase3-currency.json): ausência opcional, depósitos reais, isolamento de moedas, rejeição de referência/precisão, plano misto, falha e reinício. Não é certificação de transação distribuída, concorrência com todos os plugins ou carga.
+
+Validação local deste pedido (2026-11-15): build serverDistribution aprovado com JDK Temurin 21.0.9+10 em /workspace/.tools (SHA-256 oficial conferido); 280 JUnit, zero falhas/erros/skips. verifyModJar aprovado. Clique/comando em servidor real ainda pendente; nenhuma publicação ou envio ao GitHub.

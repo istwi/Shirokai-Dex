@@ -1,5 +1,13 @@
 # Estado do projeto
 
+## Envio autorizado — 2026-11-15
+
+O usuário autorizou commit/push da opção home.close_command. Snapshot `feat: configure home close button player command`, base c89cc1b; build/serverDistribution e 280 JUnit aprovados, clique em servidor ainda pendente. As notas de trabalho local abaixo registram a etapa anterior ao envio. Nenhuma release ou configuração de ambiente incluída. Próximo passo: validar a opção em servidor descartável.
+
+## Botão da central configurável — 2026-11-15
+
+Pedido atual substitui a pausa para esta alteração: home.close_command opcional executa comando como jogador ao clicar na barreira inicial; padrão continua fechar. Código e testes locais, sem commit/push/release/publicação de ambiente. Build e teste funcional em verificação; não reutilizar evidências históricas.
+
 Atualizado em 2026-11-07. Repositório `istwi/Shirokai-Dex`, branch `main`; apenas um Codex por vez.
 
 ## Sessão encerrada pelo responsável — passagem ao próximo Codex
@@ -274,3 +282,5 @@ Cinco anexos baixados da release e conferidos: JAR instalável, fontes, `phase2-
 ## Última alteração local — submenus
 
 Estilo compartilhado de coleção/wiki/formas/spawn/prévia/confirmação, barra exata e consulta assíncrona de estados reais do journal. Sem mudança das regras de entrega. Testes desta passagem em `validation/layout-submenus.json`; validação de protocolo/cliente desta alteração ainda pendente. Gradle avisa sobre funcionalidades obsoletas incompatíveis com Gradle 9; não houve atualização de dependências. Sem commit/push/publicação.
+
+Validação local deste pedido (2026-11-15): build serverDistribution aprovado com JDK Temurin 21.0.9+10 em /workspace/.tools (SHA-256 oficial conferido); 280 JUnit, zero falhas/erros/skips. verifyModJar aprovado. Clique/comando em servidor real ainda pendente; nenhuma publicação ou envio ao GitHub.

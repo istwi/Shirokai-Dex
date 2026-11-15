@@ -1,5 +1,13 @@
 # Próximos passos
 
+## Envio autorizado — 2026-11-15
+
+O usuário autorizou commit/push da opção home.close_command. Snapshot `feat: configure home close button player command`, base c89cc1b; build/serverDistribution e 280 JUnit aprovados, clique em servidor ainda pendente. As notas de trabalho local abaixo registram a etapa anterior ao envio. Nenhuma release ou configuração de ambiente incluída. Próximo passo: validar a opção em servidor descartável.
+
+## Pedido atual — botão da central
+
+Concluir validação de home.close_command (HomeLayout/Codec, HomeMenu e ShirokaiDex), depois testar /menu, /pokedex, ausência de comando/permissão e padrão vazio em servidor descartável. Manter alterações locais. WIP Crates continua separado; não trocar de branch para este pedido.
+
 **Sessão parada por pedido do usuário.** Main funcional `191a65e` enviada e CI aprovado. Continuação incompleta: branch `handoff/crates-checkpoint`, commit `6b97093`, também enviada. Código funcional alpha.8 permanece na main; WIP alpha.9 não integrado. Sem nova release/ambiente.
 
 ## Passagem obrigatória
@@ -94,3 +102,5 @@ Crates indicado: `https://github.com/istwi/Shirokai-Crates`, revisão `05b3995c4
 Usuário autorizou publicar o JAR. [Pré-release v0.2.0-alpha.3](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.2.0-alpha.3) publicada, não draft e experimental, com tag confirmada no commit `47817bff13cdc3464ad926791233801a01354b54`. Workflow [42365493365](https://github.com/istwi/Shirokai-Dex/actions/runs/42365493365) aprovado e 78 JUnit executados no build de publicação.
 
 Cinco anexos baixados da release e conferidos: JAR instalável, fontes, `phase2-wiki.json`, `BUILD_PROVENANCE.json` e `SHA256SUMS.txt`. Checksums GitHub e manifesto verificados; versão interna do JAR, proveniência e alvo da tag confirmados. [Evidência](validation/release-alpha3.json). O relatório de servidor dev mantém seu hash local separado dos binários de CI. Limites de cliente visual/carga/JAR fora do Loom continuam explícitos. A release antiga permaneceu inalterada; nenhuma configuração de ambiente foi publicada.
+
+Validação local deste pedido (2026-11-15): build serverDistribution aprovado com JDK Temurin 21.0.9+10 em /workspace/.tools (SHA-256 oficial conferido); 280 JUnit, zero falhas/erros/skips. verifyModJar aprovado. Clique/comando em servidor real ainda pendente; nenhuma publicação ou envio ao GitHub.

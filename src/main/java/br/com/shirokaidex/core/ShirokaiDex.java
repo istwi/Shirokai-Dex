@@ -220,7 +220,11 @@ public final class ShirokaiDex implements ModInitializer {
     }
     private int home(CommandSourceStack source){
         if(!ready||source.getPlayer()==null)return 0;var player=source.getPlayer();var settings=config.current();
-        java.util.Map<String,Runnable> actions=new java.util.HashMap<>();actions.put("dex",()->selector(source,0));actions.put("rewards",()->rewards(source,null,0));actions.put("close",player::closeContainer);
+        java.util.Map<String,Runnable> actions=new java.util.HashMap<>();actions.put("dex",()->selector(source,0));actions.put("rewards",()->rewards(source,null,0));actions.put("close",()->{
+            if(!ready)return;player.closeContainer();
+            String command=config.current().home().closeCommand();
+            if(!command.isEmpty())source.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack(),command);
+        });
         if(canAccess(player,"national"))actions.put("wiki",()->wiki(source,"national",Wiki.Request.initial("")));
         if(source.getServer().getCommands().getDispatcher().getRoot().getChild("menu")!=null)actions.put("back",()->{
             if(!ready)return;player.closeContainer();source.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack(),"menu");
