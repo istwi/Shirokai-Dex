@@ -261,7 +261,7 @@ public final class ShirokaiDex implements ModInitializer {
         if(!canAccess(player,id))return 0;var definition=state.settings().collections().stream().filter(c->c.id().equals(id)).findFirst().orElseThrow();var plans=state.settings().rewards().stream().filter(p->p.collection().equals(id)).toList();var previous=player.containerMenu;long ticket=beginView(player);
         database.rewardStates(player.getUUID(),plans.stream().map(br.com.shirokaidex.rewards.RewardPlan::id).toList()).whenComplete((states,error)->source.getServer().execute(()->{
             if(!validRewardView(source,player,ticket,previous)||!canAccess(player,id))return;if(state!=config.snapshot()){directDex(source,id,page);return;}if(error!=null){directMessage(source,"unavailable");return;}
-            br.com.shirokaidex.menus.direct.DirectMenus.dex(player,state.menus(),definition,cobblemon.collections(player,state.settings().collections()).get(id).progress(),plans,rewardUnlockCache.getOrDefault(player.getUUID(),java.util.Set.of()),states,page,plan->{if(validReward(player,plan))claimReward(source,plan);},next->directDex(source,id,next));
+            br.com.shirokaidex.menus.direct.DirectMenus.dex(player,state.menus(),definition,cobblemon.collections(player,state.settings().collections()).get(id).progress(),plans,rewardUnlockCache.getOrDefault(player.getUUID(),java.util.Set.of()),states,page,plan->{if(validReward(player,plan))claimReward(source,plan);},next->directDex(source,id,next),()->directWiki(source,id,Wiki.Request.initial("")));
         }));return 1;
     }
     private int directWiki(CommandSourceStack source,String id,Wiki.Request request){

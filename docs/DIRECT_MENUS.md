@@ -1,4 +1,4 @@
-# Menus diretos — desenvolvimento 0.7.0-dev.2
+# Menus diretos — desenvolvimento 0.7.0-dev.3
 
 Esta direção substitui o hub e os menus públicos antigos. `/dex` sozinho não abre tela.
 
@@ -78,3 +78,22 @@ Pode usar `/pokedex`, `/dex shiny` ou outro comando registrado, com argumentos. 
 O clique fecha a tela e executa como o jogador, respeitando suas permissões; comando ausente/negado recebe o erro normal. Não é console, não concede OP e não expande placeholders no comando. Aceita até 256 caracteres; controles de linha, tipos inválidos e comandos nos outros botões são rejeitados no reload atômico. Wiki/rankings preservados.
 
 Esta versão deriva da tag v0.7.0-dev.1 (`dea5e5e`); a alteração anterior de home.close_command na alpha.8 não é usada pelos menus diretos.
+
+## Cabeça pessoal e wiki da coleção (dev.3)
+
+Nas três Dex ativas, a cabeça de `menu.buttons.info` (slot10) recebe o perfil completo do jogador que abriu a tela, incluindo UUID e propriedades da skin da sessão. Quando o item configurado é diferente de player_head, ele é preservado. Não usa a cabeça de um jogador fixo nem busca skins de forma síncrona. A textura disponível depende do perfil fornecido pelo servidor; login offline sem skin não fornece uma textura autenticada.
+
+O botão `menu.buttons.wiki` (slot19, abaixo da cabeça) abre a wiki da mesma coleção: Nacional → Nacional, Special → Special, Shiny → Shiny. É um callback interno, independente de outro provedor registrar `/wiki`; mantém a validação de permissões da coleção. Fechar/voltar no slot28 continua independente.
+
+```json
+"wiki": {
+  "slot": 19,
+  "item": "minecraft:book",
+  "name": "<aqua>Wiki %dex_type%",
+  "lore": ["<gray>Clique para consultar esta Pokédex"]
+}
+```
+
+Item/nome/lore/slot continuam editáveis em cada JSON. Arquivos antigos sem wiki recebem o botão padrão na leitura, sem sobrescrever o arquivo. Se slot19 já estiver ocupado, usa o primeiro slot livre; pode adicionar wiki explicitamente para escolher a posição. Slots em conflito continuam rejeitados. Forms permanece tela futura.
+
+Teste dev.3: duas texturas públicas Mojang distintas preservadas com assinatura exata no item recebido por dois perfis descartáveis, nas três Dex. Fixtures existem somente no servidor de teste; o produto não fixa skins e usa o perfil do jogador. Renderização gráfica não testada.

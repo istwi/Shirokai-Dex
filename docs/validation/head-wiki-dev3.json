@@ -1,0 +1,41 @@
+{
+  "timestamp": "2026-11-15T05:18:27.054Z",
+  "results": [
+    {
+      "name": "DexHeadA: own head with exact signed texture and nacional wiki at slot19; close preserved",
+      "status": "passed"
+    },
+    {
+      "name": "DexHeadA: own head with exact signed texture and special wiki at slot19; close preserved",
+      "status": "passed"
+    },
+    {
+      "name": "DexHeadA: own head with exact signed texture and shiny wiki at slot19; close preserved",
+      "status": "passed"
+    },
+    {
+      "name": "DexHeadB: own head with exact signed texture and nacional wiki at slot19; close preserved",
+      "status": "passed"
+    },
+    {
+      "name": "DexHeadB: own head with exact signed texture and special wiki at slot19; close preserved",
+      "status": "passed"
+    },
+    {
+      "name": "DexHeadB: own head with exact signed texture and shiny wiki at slot19; close preserved",
+      "status": "passed"
+    }
+  ],
+  "version": "0.7.0-dev.3",
+  "base": "4ac406964c129451c02d56397faa75594fc082ca",
+  "sha256": "c2d5edac6726d8eda34add79072c93ba063314fdc925eb6ccbcdf39b7d0a8029",
+  "junit": {
+    "tests": 415,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "skin_validation": "Two distinct public signed Mojang textures from Notch and jeb_ assigned only to disposable test profiles through a separate probe. Exact texture value/signature and viewer identity received in all six head items. No fixed skin or test texture in production code/resources.",
+  "server": "Packaged JAR; Fabric0.17.2/MC1.21.1/Cobblemon1.8.3/LuckPerms5.4.140; loopback; normal shutdown; SQLite integrity ok; RCON disabled/secret removed",
+  "limitations": "Graphical Minecraft rendering not tested; skin texture/signature transport verified. Historical gameplay suites not rerun."
+}

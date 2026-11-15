@@ -49,6 +49,14 @@
         "item": "minecraft:arrow",
         "name": "<aqua>Próxima página →",
         "lore": []
+      },
+      "wiki": {
+        "slot": 19,
+        "item": "minecraft:book",
+        "name": "<aqua>Wiki %dex_type%",
+        "lore": [
+          "<gray>Clique para consultar esta Pokédex"
+        ]
       }
     },
     "content_slots": [],

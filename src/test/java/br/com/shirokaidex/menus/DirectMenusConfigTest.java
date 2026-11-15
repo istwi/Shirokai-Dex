@@ -46,5 +46,15 @@ class DirectMenusConfigTest {
   dex.getAsJsonObject("menu").getAsJsonObject("buttons").getAsJsonObject("close").addProperty("command",42);Files.writeString(file,dex.toString());assertThrows(java.io.IOException.class,manager::reload);assertSame(before,manager.snapshot());
   var restarted=new ConfigManager(directory,true);restarted.initialize();assertTrue(restarted.recoveredFromBackup());assertEquals("menu",restarted.directMenus().menus().get("dex_nacional").buttons().get("close").command());
  }
+ @Test void wikiButtonDefaultsMigrateOldMenusAndAvoidExistingSlots()throws Exception {
+  for(String name:List.of("dex_nacional","dex_special","dex_shiny")){
+   var files=bundled();var dex=JsonParser.parseString(files.get(name)).getAsJsonObject();var buttons=dex.getAsJsonObject("menu").getAsJsonObject("buttons");buttons.remove("wiki");files.put(name,dex.toString());assertEquals(19,DirectMenuCatalog.parse(files).menus().get(name).buttons().get("wiki").slot());
+   buttons.getAsJsonObject("info").addProperty("slot",19);files.put(name,dex.toString());var migrated=DirectMenuCatalog.parse(files).menus().get(name);assertNotEquals(19,migrated.buttons().get("wiki").slot());assertEquals(19,migrated.buttons().get("info").slot());
+  }
+ }
+ @Test void wikiAppearanceRemainsEditableButCannotRunCommands()throws Exception {
+  var files=bundled();var dex=JsonParser.parseString(files.get("dex_nacional")).getAsJsonObject();var wiki=dex.getAsJsonObject("menu").getAsJsonObject("buttons").getAsJsonObject("wiki");wiki.addProperty("item","minecraft:compass");wiki.addProperty("name","Consultar");wiki.addProperty("slot",20);files.put("dex_nacional",dex.toString());var button=DirectMenuCatalog.parse(files).menus().get("dex_nacional").buttons().get("wiki");assertEquals(20,button.slot());assertEquals("minecraft:compass",button.icon().item());
+  wiki.addProperty("command","op someone");files.put("dex_nacional",dex.toString());assertThrows(java.io.IOException.class,()->DirectMenuCatalog.parse(files));
+ }
  @Test void templateDataNeverBecomesFormattingAndRealProgressDenominatorIsNotHardcoded(){assertEquals("Player <red>value",RichText.render("Player %player%",Map.of("player","<red>value")).getString());}
 }

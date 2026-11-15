@@ -259,3 +259,7 @@ Passagem `6b97093` continha coordenação/probe compilados, sem validação func
 ## 0.7.0-dev.2
 
 - Comando opcional por botão Fechar nos três menus diretos de Dex, com permissões do jogador, aparência editável e padrão compatível. Base v0.7.0-dev.1; preserva rankings/wiki/recompensas.
+
+## 0.7.0-dev.3
+
+- Cabeça de informações usa o perfil/skin do próprio jogador. Atalho wiki abaixo da cabeça abre a coleção selecionada nas três Dex, mantendo Fechar/comando e configurações existentes.

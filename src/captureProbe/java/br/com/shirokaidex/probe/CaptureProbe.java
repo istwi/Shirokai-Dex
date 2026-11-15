@@ -35,7 +35,7 @@ public final class CaptureProbe implements ModInitializer {
         CobblemonEvents.POKEMON_CAPTURED.subscribe((Consumer<PokemonCapturedEvent>) event->{if(event.getPlayer().getGameProfile().getName().equals("DexCapture"))last=event;});
         CommandRegistrationCallback.EVENT.register((dispatcher,registry,environment)->{
             var root=literal("dexcaptureprobe").requires(source->source.getPlayer()==null&&source.getServer().getWorldData().getLevelName().equals("native-capture-validation"));
-            for(String mode:List.of("scan","throw","unknown","replay","park","parked","status","battle","battlethrow","fishcast","fishstatus","fishthrow","fishpark","fishparked","preparefighter","battleattack","battleunknown","modelid","menu","battlestatus","tag"))root.then(literal(mode).executes(context->run(context.getSource(),mode)));
+            for(String mode:List.of("scan","throw","unknown","replay","park","parked","status","battle","battlethrow","fishcast","fishstatus","fishthrow","fishpark","fishparked","preparefighter","battleattack","battleunknown","modelid","menu","battlestatus","tag","headskin"))root.then(literal(mode).executes(context->run(context.getSource(),mode)));
             root.then(literal("placeholder").then(net.minecraft.commands.Commands.argument("text",com.mojang.brigadier.arguments.StringArgumentType.greedyString()).executes(context->{
                 var player=context.getSource().getServer().getPlayerList().getPlayerByName("DexCapture");
                 String text=com.mojang.brigadier.arguments.StringArgumentType.getString(context,"text");
@@ -48,6 +48,19 @@ public final class CaptureProbe implements ModInitializer {
     private int run(CommandSourceStack source,String mode){
         var server=source.getServer();
         if(mode.equals("modelid")){int id=net.minecraft.core.registries.BuiltInRegistries.ITEM.getId(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse("cobblemon:pokemon_model")));int component=net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE.getId(com.cobblemon.mod.common.CobblemonItemComponents.POKEMON_ITEM);source.sendSuccess(()->Component.literal("Pokemon model item id: "+id+"; component id: "+component),false);return 1;}
+        if(mode.equals("headskin")){
+            try {
+                var path=java.nio.file.Path.of("head-skin-fixture.json");
+                var fixture=com.google.gson.JsonParser.parseString(java.nio.file.Files.readString(path)).getAsJsonObject();
+                int updated=0;
+                for(String name:List.of("DexHeadA","DexHeadB")){
+                    var viewer=server.getPlayerList().getPlayerByName(name);if(viewer==null)continue;
+                    var property=fixture.getAsJsonObject(name);var properties=viewer.getGameProfile().getProperties();properties.removeAll("textures");
+                    properties.put("textures",new com.mojang.authlib.properties.Property("textures",property.get("value").getAsString(),property.get("signature").getAsString()));updated++;
+                }
+                final int count=updated;source.sendSuccess(()->Component.literal("Test skin profiles updated: "+count),false);return count;
+            }catch(java.io.IOException e){throw new IllegalStateException("Missing disposable head skin fixture",e);}
+        }
         var player=server.getPlayerList().getPlayerByName("DexCapture");if(player==null)throw new IllegalStateException("Reserved player required");
         if(mode.equals("tag")){boolean granted=DirectPermissionProbe.granted(player);source.sendSuccess(()->Component.literal("Dex tag: "+granted),false);return 1;}
         if(mode.equals("battlestatus")){var battle=com.cobblemon.mod.common.battles.BattleRegistry.getBattleByParticipatingPlayer(player);var info=new StringBuilder("start=").append(lastBattleStart).append("; faint=").append(lastFaint);if(battle==null)info.append("; active=none");else{info.append("; turn=").append(battle.getTurn()).append("; ended=").append(battle.getEnded()).append("; dispatch=").append(battle.getDispatchResult());for(var actor:battle.getActors())info.append("; actor=").append(actor.getClass().getSimpleName()).append("/choose=").append(actor.getMustChoose()).append("/responses=").append(actor.getResponses()).append("/request=").append(actor.getRequest());var log=battle.getBattleLog();info.append("; log=").append(log.subList(Math.max(0,log.size()-12),log.size()));}String text=info.toString();source.sendSuccess(()->Component.literal(text.substring(0,Math.min(8000,text.length()))),false);return 1;}
