@@ -1,0 +1,480 @@
+{
+  "collection": {
+    "id": "national",
+    "name": "Nacional Dex",
+    "icon": "minecraft:book",
+    "progress_mode": "OWNED",
+    "category": "ordinary_species"
+  },
+  "menu": {
+    "title": "<gradient:#00C6FF:#0072FF>✦ %dex_type% Dex</gradient>",
+    "rows": 5,
+    "background": {
+      "item": "minecraft:gray_stained_glass_pane",
+      "name": " ",
+      "lore": []
+    },
+    "buttons": {
+      "info": {
+        "slot": 10,
+        "item": "minecraft:player_head",
+        "name": "<gradient:#00C6FF:#0072FF>✦ %dex_type%</gradient>",
+        "lore": [
+          "",
+          "<gray>Seu progresso na Dex",
+          "<aqua>%player_dex_count% <gray>/ <aqua>%pokedex_total%",
+          "",
+          "<gray>Conclusão",
+          "<aqua>%player_dex_percent%%",
+          "",
+          "<gray>Última recompensa",
+          "<light_purple>%player_reward_group%"
+        ]
+      },
+      "close": {
+        "command": "pokedex",
+        "slot": 28,
+        "item": "cobblemon:eject_button",
+        "name": "<yellow><bold>VOLTAR AO MENU</bold></yellow>",
+        "lore": [
+          "<gray>Retornar ao menu principal.",
+          "",
+          "<yellow>➜ Clique para voltar!"
+        ]
+      },
+      "previous": {
+        "slot": 36,
+        "item": "minecraft:arrow",
+        "name": "<aqua>← Página anterior",
+        "lore": []
+      },
+      "next": {
+        "slot": 44,
+        "item": "minecraft:arrow",
+        "name": "<aqua>Próxima página →",
+        "lore": []
+      },
+      "wiki": {
+        "slot": 19,
+        "item": "minecraft:book",
+        "name": "<aqua>Wiki %dex_type%",
+        "lore": [
+          "<gray>Clique para consultar esta Pokédex"
+        ]
+      }
+    },
+    "content_slots": [],
+    "reward_slots": [
+      12,
+      14,
+      16,
+      30,
+      32,
+      34
+    ],
+    "reward_states": {
+      "claimed": {
+        "item": "",
+        "name": "<green>%group_name% <dark_gray>(%group_percent%%)",
+        "lore": [
+          "",
+          "<green>✓ Recompensa resgatada"
+        ],
+        "glint": false
+      },
+      "available": {
+        "item": "",
+        "name": "<aqua>%group_name% <dark_gray>(%group_percent%%)",
+        "lore": [
+          "",
+          "<green>Recompensa disponível",
+          "",
+          "<yellow>➜ Clique para resgatar!"
+        ],
+        "glint": true
+      },
+      "locked": {
+        "item": "cobblemon:ancient_heavy_ball",
+        "name": "<red>%group_name% <dark_gray>(%group_percent%%)",
+        "lore": [
+          "",
+          "<gray>Complete os requisitos",
+          "<gray>para desbloquear esta recompensa."
+        ],
+        "glint": false
+      }
+    }
+  },
+  "reward_groups": [
+    {
+      "id": "dex_national_marco_01",
+      "percent": 5,
+      "name": "✦ Iniciante",
+      "icon": "cobblemon:poke_ball",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>5%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $10.000 PokéDollars",
+        "<light_purple>• 3 PokéTokens",
+        "<green>• 20x Ultra Ball",
+        "<green>• 6x Revive",
+        "<green>• 10x Exp. Candy M",
+        "<green>• 3x Rare Candy",
+        "<aqua>• 1x Caixa Básica",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[Aprendiz]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:ultra_ball",
+          "count": 20
+        },
+        {
+          "id": "cobblemon:revive",
+          "count": 6
+        },
+        {
+          "id": "cobblemon:exp_candy_m",
+          "count": 10
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 3
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_inicial_rara",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 10000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 3
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.national.005"
+      ]
+    },
+    {
+      "id": "dex_national_marco_02",
+      "percent": 15,
+      "name": "✦ Explorador",
+      "icon": "cobblemon:great_ball",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>15%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $20.000 PokéDollars",
+        "<light_purple>• 6 PokéTokens",
+        "<green>• 28x Ultra Ball",
+        "<green>• 10x Revive",
+        "<green>• 14x Exp. Candy M",
+        "<green>• 5x Rare Candy",
+        "<aqua>• 1x Caixa Epic",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[Explorador]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:ultra_ball",
+          "count": 28
+        },
+        {
+          "id": "cobblemon:revive",
+          "count": 10
+        },
+        {
+          "id": "cobblemon:exp_candy_m",
+          "count": 14
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 5
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_epica",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 20000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 6
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.national.015"
+      ]
+    },
+    {
+      "id": "dex_national_marco_03",
+      "percent": 30,
+      "name": "✦ Treinador",
+      "icon": "cobblemon:ultra_ball",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>30%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $40.000 PokéDollars",
+        "<light_purple>• 10 PokéTokens",
+        "<green>• 36x Ultra Ball",
+        "<green>• 14x Revive",
+        "<green>• 20x Exp. Candy M",
+        "<green>• 8x Rare Candy",
+        "<aqua>• 2x Caixa Epic",
+        "<aqua>• 1x Caixa Paradoxo",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[Treinador]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:ultra_ball",
+          "count": 36
+        },
+        {
+          "id": "cobblemon:revive",
+          "count": 14
+        },
+        {
+          "id": "cobblemon:exp_candy_m",
+          "count": 20
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 8
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_epica",
+          "count": 2
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_paradoxos",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 40000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 10
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.national.030"
+      ]
+    },
+    {
+      "id": "dex_national_marco_04",
+      "percent": 50,
+      "name": "✦ Especialista",
+      "icon": "cobblemon:rare_candy",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>50%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $75.000 PokéDollars",
+        "<light_purple>• 15 PokéTokens",
+        "<green>• 48x Ultra Ball",
+        "<green>• 18x Revive",
+        "<green>• 28x Exp. Candy M",
+        "<green>• 12x Rare Candy",
+        "<aqua>• 1x Caixa Paradoxo",
+        "<aqua>• 1x Caixa Ultra Beast",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[Especialista]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:ultra_ball",
+          "count": 48
+        },
+        {
+          "id": "cobblemon:revive",
+          "count": 18
+        },
+        {
+          "id": "cobblemon:exp_candy_m",
+          "count": 28
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 12
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_paradoxos",
+          "count": 1
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_ultra_beasts",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 75000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 15
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.national.050"
+      ]
+    },
+    {
+      "id": "dex_national_marco_05",
+      "percent": 75,
+      "name": "✦ Mestre",
+      "icon": "cobblemon:ability_capsule",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>75%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $150.000 PokéDollars",
+        "<light_purple>• 25 PokéTokens",
+        "<green>• 1x Master Ball",
+        "<green>• 36x Exp. Candy M",
+        "<green>• 20x Rare Candy",
+        "<gold>• 1x Vale Shiny",
+        "<aqua>• 1x Caixa Mítica",
+        "<aqua>• 1x Caixa Ultra Beast",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[Mestre]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:master_ball",
+          "count": 1
+        },
+        {
+          "id": "cobblemon:exp_candy_m",
+          "count": 36
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 20
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_mitica",
+          "count": 1
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_ultra_beasts",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 150000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 25
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.national.075"
+      ]
+    },
+    {
+      "id": "dex_national_marco_06",
+      "percent": 100,
+      "name": "✦ Mestre da Dex",
+      "icon": "cobblemon:master_ball",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>100%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $300.000 PokéDollars",
+        "<light_purple>• 50 PokéTokens",
+        "<green>• 2x Master Ball",
+        "<green>• 50x Exp. Candy M",
+        "<green>• 35x Rare Candy",
+        "<gold>• 1x Vale Shiny",
+        "<aqua>• 1x Caixa Lendária",
+        "<aqua>• 1x Caixa Shiny",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[PokéMestre]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:master_ball",
+          "count": 2
+        },
+        {
+          "id": "cobblemon:exp_candy_m",
+          "count": 50
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 35
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_lendaria",
+          "count": 1
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_shiny",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 300000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 50
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.national.100"
+      ]
+    }
+  ]
+}

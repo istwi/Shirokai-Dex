@@ -35,12 +35,22 @@ public final class CaptureProbe implements ModInitializer {
         CobblemonEvents.POKEMON_CAPTURED.subscribe((Consumer<PokemonCapturedEvent>) event->{if(event.getPlayer().getGameProfile().getName().equals("DexCapture"))last=event;});
         CommandRegistrationCallback.EVENT.register((dispatcher,registry,environment)->{
             var root=literal("dexcaptureprobe").requires(source->source.getPlayer()==null&&source.getServer().getWorldData().getLevelName().equals("native-capture-validation"));
-            for(String mode:List.of("scan","throw","unknown","replay","park","parked","status","battle","battlethrow","fishcast","fishstatus","fishthrow","fishpark","fishparked","preparefighter","battleattack","battleunknown","modelid","menu","battlestatus","tag","headskin"))root.then(literal(mode).executes(context->run(context.getSource(),mode)));
+            for(String mode:List.of("scan","throw","unknown","replay","park","parked","status","battle","battlethrow","fishcast","fishstatus","fishthrow","fishpark","fishparked","preparefighter","battleattack","battleunknown","modelid","menu","battlestatus","tag","headskin","rewardstats","randomcheck","rewardtag"))root.then(literal(mode).executes(context->run(context.getSource(),mode)));
             root.then(literal("placeholder").then(net.minecraft.commands.Commands.argument("text",com.mojang.brigadier.arguments.StringArgumentType.greedyString()).executes(context->{
                 var player=context.getSource().getServer().getPlayerList().getPlayerByName("DexCapture");
                 String text=com.mojang.brigadier.arguments.StringArgumentType.getString(context,"text");
                 String result=DirectPlaceholderProbe.parse(player,text);
                 context.getSource().sendSuccess(()->Component.literal("Placeholder: "+result),false);return 1;
+            })));
+            root.then(literal("rewardkeys").then(net.minecraft.commands.Commands.argument("crate",com.mojang.brigadier.arguments.StringArgumentType.word()).executes(context->{
+                try{
+                    var player=context.getSource().getServer().getPlayerList().getPlayerByName("DexCapture");if(player==null)throw new IllegalStateException("Reserved player required");
+                    Object service=Class.forName("dev.shirokaicrates.ShirokaiCrates").getMethod("service").invoke(null);Object snapshot=service.getClass().getMethod("snapshot").invoke(service);
+                    Object crate=((java.util.Map<?,?>)snapshot.getClass().getMethod("crates").invoke(snapshot)).get(com.mojang.brigadier.arguments.StringArgumentType.getString(context,"crate"));if(crate==null)throw new IllegalStateException("Unknown crate");
+                    var field=service.getClass().getDeclaredField("tokens");field.setAccessible(true);Object tokens=field.get(service);var matches=tokens.getClass().getMethod("matches",net.minecraft.world.item.ItemStack.class,crate.getClass(),boolean.class);int total=0;
+                    for(int i=0;i<36;i++){var item=player.getInventory().getItem(i);if(Boolean.TRUE.equals(matches.invoke(tokens,item,crate,false)))total+=item.getCount();}
+                    final int count=total;context.getSource().sendSuccess(()->Component.literal("Valid reward keys:"+count),false);return count;
+                }catch(ReflectiveOperationException e){throw new IllegalStateException(e);}
             })));
             dispatcher.register(root);
         });
@@ -48,6 +58,27 @@ public final class CaptureProbe implements ModInitializer {
     private int run(CommandSourceStack source,String mode){
         var server=source.getServer();
         if(mode.equals("modelid")){int id=net.minecraft.core.registries.BuiltInRegistries.ITEM.getId(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse("cobblemon:pokemon_model")));int component=net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE.getId(com.cobblemon.mod.common.CobblemonItemComponents.POKEMON_ITEM);source.sendSuccess(()->Component.literal("Pokemon model item id: "+id+"; component id: "+component),false);return 1;}
+        if(mode.equals("randomcheck")){
+            try{
+                var request=br.com.shirokaidex.config.ConfigManager.parse("{\"schema_version\":1,\"language\":\"pt_br\",\"menu_title\":\"Test\",\"rewards\":[{\"id\":\"random_test\",\"collection\":\"national\",\"minimum_registered\":1,\"pokemon\":[{\"random_pool\":\"legendary\",\"shiny\":true,\"ivs\":{\"hp\":31,\"attack\":31,\"defence\":31,\"special_attack\":31,\"special_defence\":31,\"speed\":31}}]}]}").rewards().getFirst();
+                for(int i=0;i<24;i++){
+                    var frozen=br.com.shirokaidex.rewards.PokemonPayload.freeze(server,null,request.pokemon().getFirst());
+                    var plan=request.withPokemon(List.of(frozen));if(!request.reuse(plan.json()).equals(plan))throw new IllegalStateException("Frozen random roll changed");
+                    var pokemon=br.com.shirokaidex.rewards.PokemonPayload.restore(server,frozen);
+                    if(!pokemon.getShiny()||!pokemon.getSpecies().getImplemented()||!pokemon.getSpecies().getStandardForm().getLabels().contains("legendary"))throw new IllegalStateException("Invalid random pool result");
+                }
+                source.sendSuccess(()->Component.literal("Random legendary frozen/restored checks:24"),false);return 24;
+            }catch(java.io.IOException e){throw new IllegalStateException(e);}
+        }
+        if(mode.equals("rewardstats")){
+            var player=server.getPlayerList().getPlayerByName("DexCapture");if(player==null)throw new IllegalStateException("Reserved player required");
+            var entries=new com.google.gson.JsonArray();
+            for(var pokemon:com.cobblemon.mod.common.Cobblemon.INSTANCE.getStorage().getParty(player)){
+                var entry=new com.google.gson.JsonObject();entry.addProperty("uuid",pokemon.getUuid().toString());entry.addProperty("species",pokemon.getSpecies().getResourceIdentifier().toString());entry.addProperty("shiny",pokemon.getShiny());entry.addProperty("legendary",pokemon.getSpecies().getStandardForm().getLabels().contains("legendary"));
+                var ivs=new com.google.gson.JsonArray();for(var stat:List.of(com.cobblemon.mod.common.api.pokemon.stats.Stats.HP,com.cobblemon.mod.common.api.pokemon.stats.Stats.ATTACK,com.cobblemon.mod.common.api.pokemon.stats.Stats.DEFENCE,com.cobblemon.mod.common.api.pokemon.stats.Stats.SPECIAL_ATTACK,com.cobblemon.mod.common.api.pokemon.stats.Stats.SPECIAL_DEFENCE,com.cobblemon.mod.common.api.pokemon.stats.Stats.SPEED))ivs.add(pokemon.getIvs().get(stat));entry.add("ivs",ivs);entries.add(entry);
+            }
+            source.sendSuccess(()->Component.literal("Reward Pokemon:"+entries),false);return entries.size();
+        }
         if(mode.equals("headskin")){
             try {
                 var path=java.nio.file.Path.of("head-skin-fixture.json");
@@ -62,7 +93,7 @@ public final class CaptureProbe implements ModInitializer {
             }catch(java.io.IOException e){throw new IllegalStateException("Missing disposable head skin fixture",e);}
         }
         var player=server.getPlayerList().getPlayerByName("DexCapture");if(player==null)throw new IllegalStateException("Reserved player required");
-        if(mode.equals("tag")){boolean granted=DirectPermissionProbe.granted(player);source.sendSuccess(()->Component.literal("Dex tag: "+granted),false);return 1;}
+        if(mode.equals("tag")||mode.equals("rewardtag")){boolean granted=mode.equals("rewardtag")?DirectPermissionProbe.granted(player,"shirokai.dex.shiny.100"):DirectPermissionProbe.granted(player);source.sendSuccess(()->Component.literal("Dex tag: "+granted),false);return 1;}
         if(mode.equals("battlestatus")){var battle=com.cobblemon.mod.common.battles.BattleRegistry.getBattleByParticipatingPlayer(player);var info=new StringBuilder("start=").append(lastBattleStart).append("; faint=").append(lastFaint);if(battle==null)info.append("; active=none");else{info.append("; turn=").append(battle.getTurn()).append("; ended=").append(battle.getEnded()).append("; dispatch=").append(battle.getDispatchResult());for(var actor:battle.getActors())info.append("; actor=").append(actor.getClass().getSimpleName()).append("/choose=").append(actor.getMustChoose()).append("/responses=").append(actor.getResponses()).append("/request=").append(actor.getRequest());var log=battle.getBattleLog();info.append("; log=").append(log.subList(Math.max(0,log.size()-12),log.size()));}String text=info.toString();source.sendSuccess(()->Component.literal(text.substring(0,Math.min(8000,text.length()))),false);return 1;}
         if(mode.equals("menu")){var entries=new com.google.gson.JsonArray();for(int slot=0;slot<player.containerMenu.slots.size()-36;slot++){var stack=player.containerMenu.getSlot(slot).getItem();if(stack.isEmpty())continue;var item=new com.google.gson.JsonObject();item.addProperty("slot",slot);item.addProperty("id",net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());item.addProperty("name",stack.getHoverName().getString());var lore=new com.google.gson.JsonArray();for(var line:stack.getOrDefault(net.minecraft.core.component.DataComponents.LORE,net.minecraft.world.item.component.ItemLore.EMPTY).lines())lore.add(line.getString());item.add("lore",lore);entries.add(item);}source.sendSuccess(()->Component.literal("Menu snapshot: "+entries),false);return 1;}
         if(mode.equals("preparefighter")){for(var p:com.cobblemon.mod.common.Cobblemon.INSTANCE.getStorage().getParty(player))if(p.getSpecies().getResourceIdentifier().toString().equals("cobblemon:mewtwo")){p.getMoveSet().clear();p.getMoveSet().setMove(0,com.cobblemon.mod.common.api.moves.Moves.getByName("psychic").create());p.heal();source.sendSuccess(()->Component.literal("Fighter ready"),false);return 1;}throw new IllegalStateException("Give the reserved test player Mewtwo first");}

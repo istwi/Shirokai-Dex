@@ -1,0 +1,489 @@
+{
+  "collection": {
+    "id": "special",
+    "name": "Special Dex",
+    "icon": "minecraft:nether_star",
+    "progress_mode": "OWNED",
+    "category": "special_species"
+  },
+  "menu": {
+    "title": "<gradient:#00C6FF:#0072FF>✦ %dex_type% Dex</gradient>",
+    "rows": 5,
+    "background": {
+      "item": "minecraft:gray_stained_glass_pane",
+      "name": " ",
+      "lore": []
+    },
+    "buttons": {
+      "info": {
+        "slot": 10,
+        "item": "minecraft:player_head",
+        "name": "<gradient:#00C6FF:#0072FF>✦ %dex_type%</gradient>",
+        "lore": [
+          "",
+          "<gray>Seu progresso na Dex",
+          "<aqua>%player_dex_count% <gray>/ <aqua>%pokedex_total%",
+          "",
+          "<gray>Conclusão",
+          "<aqua>%player_dex_percent%%",
+          "",
+          "<gray>Última recompensa",
+          "<light_purple>%player_reward_group%"
+        ]
+      },
+      "close": {
+        "command": "pokedex",
+        "slot": 28,
+        "item": "cobblemon:eject_button",
+        "name": "<yellow><bold>VOLTAR AO MENU</bold></yellow>",
+        "lore": [
+          "<gray>Retornar ao menu principal.",
+          "",
+          "<yellow>➜ Clique para voltar!"
+        ]
+      },
+      "previous": {
+        "slot": 36,
+        "item": "minecraft:arrow",
+        "name": "<aqua>← Página anterior",
+        "lore": []
+      },
+      "next": {
+        "slot": 44,
+        "item": "minecraft:arrow",
+        "name": "<aqua>Próxima página →",
+        "lore": []
+      },
+      "wiki": {
+        "slot": 19,
+        "item": "minecraft:book",
+        "name": "<aqua>Wiki %dex_type%",
+        "lore": [
+          "<gray>Clique para consultar esta Pokédex"
+        ]
+      }
+    },
+    "content_slots": [],
+    "reward_slots": [
+      12,
+      14,
+      16,
+      30,
+      32,
+      34
+    ],
+    "reward_states": {
+      "claimed": {
+        "item": "",
+        "name": "<green>%group_name% <dark_gray>(%group_percent%%)",
+        "lore": [
+          "",
+          "<green>✓ Recompensa resgatada"
+        ],
+        "glint": false
+      },
+      "available": {
+        "item": "",
+        "name": "<aqua>%group_name% <dark_gray>(%group_percent%%)",
+        "lore": [
+          "",
+          "<green>Recompensa disponível",
+          "",
+          "<yellow>➜ Clique para resgatar!"
+        ],
+        "glint": true
+      },
+      "locked": {
+        "item": "cobblemon:ancient_heavy_ball",
+        "name": "<red>%group_name% <dark_gray>(%group_percent%%)",
+        "lore": [
+          "",
+          "<gray>Complete os requisitos",
+          "<gray>para desbloquear esta recompensa."
+        ],
+        "glint": false
+      }
+    }
+  },
+  "reward_groups": [
+    {
+      "id": "dex_special_marco_01",
+      "percent": 5,
+      "name": "✦ Caçador Lendário",
+      "icon": "cobblemon:ultra_ball",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>5%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $15.000 PokéDollars",
+        "<light_purple>• 5 PokéTokens",
+        "<green>• 6x Exp. Candy L",
+        "<green>• 24x Ultra Ball",
+        "<green>• 8x Revive",
+        "<green>• 5x Rare Candy",
+        "<aqua>• 1x Caixa Paradoxo",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[Caçador de Lendas]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:exp_candy_l",
+          "count": 6
+        },
+        {
+          "id": "cobblemon:ultra_ball",
+          "count": 24
+        },
+        {
+          "id": "cobblemon:revive",
+          "count": 8
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 5
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_paradoxos",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 15000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 5
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.legendary.005"
+      ]
+    },
+    {
+      "id": "dex_special_marco_02",
+      "percent": 15,
+      "name": "✦ Aprendiz Lendário",
+      "icon": "cobblemon:rare_candy",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>15%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $30.000 PokéDollars",
+        "<light_purple>• 10 PokéTokens",
+        "<green>• 12x Exp. Candy L",
+        "<green>• 1x Ability Capsule",
+        "<green>• 32x Ultra Ball",
+        "<green>• 10x Rare Candy",
+        "<aqua>• 1x Caixa Ultra Beast",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[Colecionador Lendário]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:exp_candy_l",
+          "count": 12
+        },
+        {
+          "id": "cobblemon:ability_capsule",
+          "count": 1
+        },
+        {
+          "id": "cobblemon:ultra_ball",
+          "count": 32
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 10
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_ultra_beasts",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 30000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 10
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.legendary.015"
+      ]
+    },
+    {
+      "id": "dex_special_marco_03",
+      "percent": 30,
+      "name": "✦ Especialista Lendário",
+      "icon": "cobblemon:exp_candy_l",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>30%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $60.000 PokéDollars",
+        "<light_purple>• 20 PokéTokens",
+        "<green>• 20x Exp. Candy L",
+        "<green>• 2x Ability Capsule",
+        "<green>• 1x Master Ball",
+        "<green>• 15x Rare Candy",
+        "<aqua>• 1x Caixa Mítica",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[Especialista Lendário]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:exp_candy_l",
+          "count": 20
+        },
+        {
+          "id": "cobblemon:ability_capsule",
+          "count": 2
+        },
+        {
+          "id": "cobblemon:master_ball",
+          "count": 1
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 15
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_mitica",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 60000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 20
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.legendary.030"
+      ]
+    },
+    {
+      "id": "dex_special_marco_04",
+      "percent": 50,
+      "name": "✦ Mestre Lendário",
+      "icon": "cobblemon:ability_capsule",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>50%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $120.000 PokéDollars",
+        "<light_purple>• 40 PokéTokens",
+        "<green>• 32x Exp. Candy L",
+        "<green>• 3x Ability Capsule",
+        "<green>• 2x Master Ball",
+        "<green>• 25x Rare Candy",
+        "<aqua>• 1x Caixa Lendária",
+        "<aqua>• 1x Caixa Ultra Beast",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[Mestre Lendário]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:exp_candy_l",
+          "count": 32
+        },
+        {
+          "id": "cobblemon:ability_capsule",
+          "count": 3
+        },
+        {
+          "id": "cobblemon:master_ball",
+          "count": 2
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 25
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_lendaria",
+          "count": 1
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_ultra_beasts",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 120000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 40
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.legendary.050"
+      ]
+    },
+    {
+      "id": "dex_special_marco_05",
+      "percent": 75,
+      "name": "✦ Lenda Viva",
+      "icon": "cobblemon:exp_candy_xl",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>75%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $250.000 PokéDollars",
+        "<light_purple>• 75 PokéTokens",
+        "<green>• 48x Exp. Candy L",
+        "<green>• 5x Ability Capsule",
+        "<green>• 3x Master Ball",
+        "<green>• 40x Rare Candy",
+        "<gold>• 1x Vale Shiny",
+        "<aqua>• 2x Caixa Lendária",
+        "<aqua>• 1x Caixa Shiny",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[Elite Lendária]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:exp_candy_l",
+          "count": 48
+        },
+        {
+          "id": "cobblemon:ability_capsule",
+          "count": 5
+        },
+        {
+          "id": "cobblemon:master_ball",
+          "count": 3
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 40
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_lendaria",
+          "count": 2
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_shiny",
+          "count": 1
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 250000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 75
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.legendary.075"
+      ]
+    },
+    {
+      "id": "dex_special_marco_06",
+      "percent": 100,
+      "name": "✦ Soberano Lendário",
+      "icon": "cobblemon:master_ball",
+      "lore": [
+        "",
+        "<gray>Conclua <yellow>100%</yellow> desta Pokédex.",
+        "",
+        "<aqua>✦ Recompensas",
+        "<gold>• $500.000 PokéDollars",
+        "<light_purple>• 150 PokéTokens",
+        "<green>• 64x Exp. Candy L",
+        "<green>• 8x Ability Capsule",
+        "<green>• 5x Master Ball",
+        "<green>• 64x Rare Candy",
+        "<green>• 1x Bloco de Netherite",
+        "<gold>• 2x Vale Shiny",
+        "<aqua>• 3x Caixa Lendária",
+        "<aqua>• 3x Caixa Shiny",
+        "",
+        "<aqua>✦ Tag SPECIAL: <white>[Guardião das Lendas]",
+        "<gray>Desbloqueia uma tag selecionável no /perfil.",
+        "<gray>Recompensa resgatável uma vez."
+      ],
+      "items": [
+        {
+          "id": "cobblemon:exp_candy_l",
+          "count": 64
+        },
+        {
+          "id": "cobblemon:ability_capsule",
+          "count": 8
+        },
+        {
+          "id": "cobblemon:master_ball",
+          "count": 5
+        },
+        {
+          "id": "cobblemon:rare_candy",
+          "count": 64
+        },
+        {
+          "id": "minecraft:netherite_block",
+          "count": 1
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_caixa_lendaria",
+          "count": 3
+        },
+        {
+          "type": "SAVED_ITEM",
+          "saved_item": "dex_key_shiny",
+          "count": 3
+        }
+      ],
+      "currencies": [
+        {
+          "currency": "impactor:dollars",
+          "amount": 500000
+        },
+        {
+          "currency": "impactor:tokens",
+          "amount": 150
+        }
+      ],
+      "permissions": [
+        "shirokai.dex.legendary.100"
+      ]
+    }
+  ]
+}

@@ -43,3 +43,18 @@ Salvamento é do próprio Cobblemon. Leitura assíncrona dos arquivos NBT nativo
 Se a gravação não puder ser confirmada, a operação fica em NEEDS_REVIEW, preservando payload/etapas. Shutdown interrompe verificações e impede reenvio automático; recuperação também bloqueia PROCESSING. SQLite e arquivos Cobblemon não são transação atômica; não há garantia de fsync/perda de energia. A administração deve conferir UUID, lojas e evidências antes de resolver a operação.
 
 [Validação](validation/phase3-pokemon.json): atributos completos, forma Alola, equipe cheia/PC, ambos lotados, falha real de gravação assíncrona e reinício. Backend/formas/datapacks adicionais, cliente visual/carga e JAR instalado fora do Loom continuam pendentes.
+
+## Pool de lendários aleatórios — dev.6
+
+Nos menus diretos, reward_groups também aceita pokemon. Em vez de species, pode declarar random_pool: "legendary". Não combinar os dois campos. O pool usa somente espécies implementadas cujo formulário padrão tem label nativo legendary; não depende de IDs fixos nem inclui míticos sem esse label. Forma/habilidade/gênero/movimentos específicos não podem restringir esse pool.
+
+```json
+"pokemon": [{
+  "type": "POKEMON",
+  "random_pool": "legendary",
+  "shiny": true,
+  "ivs": {"hp":31,"attack":31,"defence":31,"special_attack":31,"special_defence":31,"speed":31}
+}]
+```
+
+No resgate, o Pokémon real é sorteado e congelado em snapshot NBT antes da reserva/efeito. Verificação de atributos, original trainer, entrega/readback e journal continuam existentes. Um plano reservado reutiliza exatamente o NBT/UUID, sem novo sorteio; definição sem snapshot permanece estável. Configuração valida o pool na thread do servidor, sem conceder Pokémon. Caso nenhum lendário esteja implementado, a definição falha em vez de substituir por espécie comum. Sem level explícito, mantém o padrão5 limitado ao máximo do servidor.

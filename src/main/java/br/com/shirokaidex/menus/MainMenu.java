@@ -176,7 +176,7 @@ public final class MainMenu extends ChestMenu {
         List<Component> statusLore=new ArrayList<>();statusLore.add(requirement==null?messages.text(settings.language(),"layout.reward_requirement",threshold):Component.literal(requirement));statusLore.add(messages.text(settings.language(),"layout.reward_hint."+view.status().name()));
         if(!view.operation().isEmpty()){
             statusLore.add(messages.text(settings.language(),"layout.operation_short",view.operation().substring(0,8)));
-            statusLore.add(messages.text(settings.language(),"layout.operation_hint"));actions.put(19,()->player.sendSystemMessage(messages.text(settings.language(),"saved_item_operation",view.operation())));
+            statusLore.add(messages.text(settings.language(),"layout.operation_hint"));actions.put(19,()->player.sendSystemMessage(br.com.shirokaidex.localization.ChatMessages.format(messages.text(settings.language(),"saved_item_operation",view.operation()))));
         }
         MenuStyle.card(status,messages.text(settings.language(),"layout.reward_status."+view.status().name()),statusLore,rewardColor(view));contents.setItem(19,status);
         if(view.canClaim())navigation(contents,actions,24,messages.text(settings.language(),"reward_claim"),claim);
@@ -244,7 +244,7 @@ public final class MainMenu extends ChestMenu {
         item.set(DataComponents.LORE,new ItemLore(List.of(messages.text(language,"currency_amount",money.currency(),money.amount().toPlainString()))));return item;
     }
     private static ItemStack pokemonItem(br.com.shirokaidex.rewards.PokemonReward pokemon,String language,Messages messages){
-        var item=new ItemStack(Items.DRAGON_EGG);item.set(DataComponents.CUSTOM_NAME,messages.text(language,"pokemon_reward",pokemon.species()));
+        var item=new ItemStack(Items.DRAGON_EGG);item.set(DataComponents.CUSTOM_NAME,messages.text(language,"pokemon_reward",pokemon.randomPool().isEmpty()?pokemon.species():messages.text(language,"pokemon_random_legendary").getString()));
         var lore=new java.util.ArrayList<Component>();String defaults=messages.text(language,"pokemon_default").getString();
         lore.add(messages.text(language,"pokemon_level",pokemon.level()==null?defaults:pokemon.level()));lore.add(messages.text(language,"pokemon_shiny",pokemon.shiny()));
         for(var entry:java.util.Map.of("form",pokemon.form(),"nature",pokemon.nature(),"ability",pokemon.ability(),"gender",pokemon.gender(),"ball",pokemon.pokeball(),"held",pokemon.heldItem()).entrySet().stream().sorted(java.util.Map.Entry.comparingByKey()).toList())lore.add(messages.text(language,"pokemon_"+entry.getKey(),entry.getValue().isEmpty()?defaults:entry.getValue()));

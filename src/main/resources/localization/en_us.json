@@ -306,5 +306,6 @@
   "focused.event_score": "Your event captures: {0}",
   "focused.event_top": "Event Top 10",
   "wiki_filter_selected": "Selected filter: {0}",
-  "permission_backend_unavailable": "LuckPerms is unavailable for the tag grant. No delivery started."
+  "permission_backend_unavailable": "LuckPerms is unavailable for the tag grant. No delivery started.",
+  "pokemon_random_legendary": "Random legendary"
 }

@@ -23,6 +23,15 @@ class PokemonRewardTest {
         assertThrows(IllegalArgumentException.class,()->definition.reuse(prepared.json().replace("bulbasaur","pikachu")));
         assertThrows(RuntimeException.class,()->definition.reuse(definition.json()));
     }
+    @Test void randomLegendaryDefinitionAndReservedRollKeepExactSnapshot()throws Exception{
+        var definition=ConfigManager.parse(config("{\"random_pool\":\"legendary\",\"shiny\":true,\"ivs\":{\"hp\":31,\"attack\":31,\"defence\":31,\"special_attack\":31,\"special_defence\":31,\"speed\":31}}" )).rewards().getFirst();
+        var pokemon=definition.pokemon().getFirst();assertEquals("legendary",pokemon.randomPool());assertEquals("",pokemon.species());assertTrue(pokemon.shiny());assertEquals(6,pokemon.ivs().size());assertTrue(pokemon.ivs().values().stream().allMatch(v->v==31));
+        var frozen=definition.withPokemon(List.of(pokemon.withSnapshot("{Species:lugia,UUID:[I;1,2,3,4]}")));
+        assertEquals(frozen,definition.reuse(frozen.json()));assertEquals(definition,frozen.definition());assertFalse(pokemon.json().has("species"));assertTrue(pokemon.json().has("random_pool"));
+        assertThrows(IllegalArgumentException.class,()->definition.reuse(frozen.json().replace("legendary","ordinary")));
+    }
+    @ParameterizedTest @ValueSource(strings={"{\"random_pool\":\"ordinary\"}","{\"random_pool\":1}","{\"random_pool\":\"legendary\",\"species\":\"cobblemon:lugia\"}","{\"random_pool\":\"legendary\",\"species\":\"\"}","{\"random_pool\":\"legendary\",\"form\":\"alola\"}","{\"random_pool\":\"legendary\",\"moves\":[\"tackle\"]}"})
+    void randomPoolRejectsInvalidOrSpeciesSpecificRestrictions(String request){assertThrows(java.io.IOException.class,()->ConfigManager.parse(config(request)));}
     @ParameterizedTest @ValueSource(strings={
         "{\"species\":\"bulbasaur\"}","{\"species\":\"cobblemon:bulbasaur\",\"species\":\"cobblemon:bulbasaur\"}",
         "{\"species\":\"cobblemon:bulbasaur\",\"level\":0}","{\"species\":\"cobblemon:bulbasaur\",\"level\":101}",

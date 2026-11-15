@@ -87,3 +87,7 @@ Implementar apenas os menus diretos de Dex/rankings/wiki solicitados; `/dex` soz
 ## Autorização pontual — JAR 0.7.0-dev.1
 
 O responsável pediu “manda o jar pro git”. Autoriza commit/push do bloco de menus diretos na branch handoff/crates-checkpoint e pré-release experimental v0.7.0-dev.1 com JAR validado/configurações/evidências. Sem merge da main ou publicação de ambiente.
+
+## Autorização pontual — arquivos dev.6 (2026-11-15)
+
+O usuário pediu “envia no git os arquivos”. Autoriza commit/push do bloco local dev.5/dev.6 e disponibilização do JAR, ZIP de configurações e instruções pelo Actions na branch fix/latest-menu-command. Não autoriza merge na main nem publicação de ambiente. Preservar banco/jogadores do ZIP enviado; distribuir somente os três menus revisados e o guia. Vale Shiny é visual; VIP Top removido; chaves requerem modelos nativos do servidor do responsável.

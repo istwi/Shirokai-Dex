@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-11-15T06:06:20.187Z",
+  "results": [
+    {
+      "name": "Wiki prompt/cancellation have white bold brand and regular gray text despite legacy message colors",
+      "status": "passed"
+    },
+    {
+      "name": "Command success uses the same chat style",
+      "status": "passed"
+    },
+    {
+      "name": "Command failure stays gray and keeps white branding despite vanilla error wrapping",
+      "status": "passed"
+    },
+    {
+      "name": "Actual Pokedex unlock notification reaches chat with requested styling",
+      "status": "passed"
+    },
+    {
+      "name": "Menu title/items keep their presentation without chat prefix",
+      "status": "passed"
+    },
+    {
+      "name": "Shirokai Core normal player chat retains its own formatting",
+      "status": "passed"
+    }
+  ],
+  "version": "0.7.0-dev.5",
+  "base": "7b5eab352aa4778725ed67421c408fb3aae06dcc",
+  "sha256": "7698f647434446393c964fe1ff3c4d543690922c58a872c77be25bc4ec22e509",
+  "junit": {
+    "tests": 418,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "style": {
+    "brand": "✦ SHIROKAI",
+    "brand_rgb": "FFFFFF",
+    "brand_bold": true,
+    "body_rgb": "AAAAAA",
+    "body_bold": false
+  },
+  "server": "Packaged JAR; Fabric0.17.2/MC1.21.1/Cobblemon1.8.3/LuckPerms5.4.140/Shirokai Core0.15.2-dev; loopback; normal shutdown; SQLite integrity ok; RCON disabled/secret removed",
+  "test_correction": "Initial runner expected literal color name gray; Minecraft can encode the same RGB as #AAAAAA. Runner now compares exact normalized RGB, preserving the color assertions.",
+  "limitations": "Protocol text/style components verified; no graphical client rendering. Test unlock uses one-species disposable collection and official givepokemonother acquisition; no claim or material reward delivery performed. Other notification channels unchanged and not rerun."
+}

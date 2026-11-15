@@ -1,35 +1,32 @@
 # Shirokai Dex
 
-Fundação experimental de mod server-side para Minecraft 1.21.1, Fabric, Java 21 e Cobblemon 1.8.3.
+Mod server-side experimental para Minecraft 1.21.1, Fabric, Java21 e Cobblemon1.8.3.
 
-Na versão de desenvolvimento da branch `handoff/crates-checkpoint`, 0.4.0-alpha.5, Nacional e Lendária mostram **quantidade/total e porcentagem** em menu e status. Shiny usa espécies/formas com captura verificada; sem snapshot confiável fica N/D. [Regras e comandos](docs/POKEDEX.md).
+## Snapshot atual: 0.7.0-dev.6
 
-Disponível: `/dex`, resumo somente de leitura da Pokédex oficial, menu inicial protegido, configuração validada com recuperação e SQLite com migração versionada. Coleções com filtros/modos/permissões por JSON e seletor paginado estão disponíveis: veja [configuração das coleções](docs/COLLECTIONS.md). A [wiki de espécies](docs/WIKI.md) permite pesquisa, filtros por estado/tipo/label, ordenação e páginas de espécies e de todas as formas. [Placeholders básicos](docs/PLACEHOLDERS.md) expõem progresso, vistas, total e restantes pela Text Placeholder API opcional. [Recompensas](docs/REWARDS.md) têm marcos, desbloqueio permanente, prévia/segunda confirmação e journal de resgates. [Itens salvos/componentes](docs/SAVED_ITEMS.md) incluem save/list/give/delete, snapshots imutáveis e backup independente. Captura/estatísticas têm escopo inicial próprio; cobertura completa, rankings e competições continuam pendentes.
+Branch `fix/latest-menu-command`, derivada da tag `v0.7.0-dev.1`. Mensagens da Dex no chat usam **✦ SHIROKAI** branco/negrito e texto cinza. Cabeça pessoal, wiki da coleção, botão de voltar por comando e pesquisa compatível com Shirokai Core/Tab permanecem disponíveis.
 
-Validação de desenvolvimento 0.4.0-alpha.5: **326 JUnit e testes nativos de progresso Shiny/captura/pesca/reinício**, [relatório](docs/validation/phase4-shiny.json). [Capturas/estatísticas](docs/CAPTURES.md) distinguem ações legítimas comprovadas, origem desconhecida e espécies distintas; dedup e snapshots são persistentes. Captura natural no escopo auditado foi validada pelo motor real. Proveniência observada persiste após reload no escopo testado; outros fluxos continuam parciais. [Recuperação segura](docs/RECOVERY.md) e COMMAND seguem disponíveis no escopo documentado.
+Menus diretos: `/dex nacional|special|shiny|forms`, `/dexrank captura|derrotados|dex` e `/wiki nacional|special|shiny|forms`. `/dex` sozinho não abre tela; Forms é futura. [Guia dos menus](docs/DIRECT_MENUS.md).
 
-`/dex` abre a [central Shirokai](docs/LAYOUT.md), com resumo real, paletas, gradiente e atalhos. Recompensas incluem [Pokémon no escopo NBT auditado](docs/POKEMON_REWARDS.md). Checkpoint Crates0.2.1/SAVED_ITEM foi validado na alpha.9. [COMMAND isolado](docs/COMMAND_REWARDS.md) exige política explícita e revisão após dispatch na alpha.10 local. CRATE_KEY dedicado, cobertura completa de captura e competições seguem pendentes.
+O pacote de configuração do servidor contém18 recompensas revisadas conforme o TXT enviado: itens, dólares/tokens e permissões de tags, chaves autênticas via SAVED_ITEM, Vale Shiny apenas visual e VIP Top removido. O marco final da Shiny inclui um lendário aleatório implementado, shiny e seis IVs31, com espécie/UUID congelados antes da entrega.
 
-**Commits/push autorizados continuamente na branch de desenvolvimento; main preservada.** Nenhuma nova release foi publicada nesta validação; os links abaixo são versões anteriores.
+**Antes de aplicar os três menus, cadastre os sete modelos de chaves no próprio servidor.** O ZIP não inclui banco, jogadores, segredo ou chaves assinadas de outro servidor. [Instalação e comandos de preparação](docs/SERVER_REWARDS_2026_11.md). Arquivos revisados: [menus do pacote](tests/fixtures/server-rewards/menus).
 
-[Baixar a pré-release 0.4.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.4.0-alpha.1) — JAR instalável, checksums, proveniência e relatório. Schema6; faça backup e leia os [limites de captura](docs/CAPTURES.md). [Publicação verificada](docs/validation/release-captures-alpha1.json).
+## Downloads e validação
 
-[Baixar a pré-release 0.2.0-alpha.3](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.2.0-alpha.3) — JAR, fontes, checksums e relatório de validação.
+[Builds e downloads no GitHub Actions](https://github.com/istwi/Shirokai-Dex/actions/workflows/build.yml): selecione o build desta branch/commit. O artifact contém JAR, `shirokaidex-recompensas-atualizadas.zip`, guia, `BUILD_PROVENANCE.json` e `SHA256SUMS`. Este snapshot não implica merge na main, release estável ou publicação do ambiente.
 
-[Baixar a pré-release anterior 0.1.0-alpha.1](https://github.com/istwi/Shirokai-Dex/releases/tag/v0.1.0-alpha.1) — JAR, fontes, checksums e relatório de validação.
+427 JUnit/build/JAR aprovados; sete checks de recompensa em servidor empacotado e24 freezes/restores aleatórios adicionais, incluindo chaves Crates0.2.1, Impactor5.3.5/JSON nativo, LuckPerms5.4.140 e reinício. [Evidência e limites](docs/validation/server-rewards-dev6.json). Os17 pacotes restantes foram validados por parsing/quantidades; não foram resgatados individualmente no servidor. Renderização gráfica e carga não certificadas. [Estilo de chat](docs/validation/chat-style-dev5.json).
 
-## Instalar e desenvolver
+## Desenvolvimento
 
-Com JDK 21 completo: `./gradlew --no-daemon build`.
+Com JDK21 completo:
 
-Em cloud com proxy herdado: `python3 scripts/gradle_cloud.py --no-daemon build`, usando a truststore do ambiente quando necessária. Não desabilite TLS/checksums. Distribuição: execute também `./gradlew serverDistribution`. Artefato: `build/server-mod/shirokai-dex-0.4.0-alpha.5+mc1.21.1-cobblemon1.8.3.jar`; não instalar `-sources.jar`.
+```sh
+./gradlew --no-daemon build serverDistribution
+python3 scripts/package_server_update.py
+```
 
-Leia [instalação](docs/INSTALLATION.md), [configuração](docs/CONFIGURATION.md), [comandos](docs/COMMANDS.md), [permissões](docs/PERMISSIONS.md), [banco](docs/DATABASE.md) e [diagnóstico](docs/TROUBLESHOOTING.md). O workflow [Java 21](.github/workflows/build.yml) gera artifact identificado pelo commit quando passa; confira o resultado no GitHub.
+Na nuvem com proxy herdado, use `python3 scripts/gradle_cloud.py -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts --no-daemon build serverDistribution`. Não desabilite TLS/checksums. [Testes e servidores descartáveis](docs/TESTING.md).
 
-## Continuidade obrigatória
-
-Antes de trabalhar, leia [AGENTS.md](AGENTS.md), [checklist](docs/MASTER_CHECKLIST.md), [estado](docs/PROJECT_STATUS.md), [próximos passos](docs/NEXT_STEPS.md) e [auditoria](docs/API_COMPATIBILITY.md). O [prompt mestre integral](docs/PROJECT_SPECIFICATION.md) permanece preservado.
-
-Apenas um Codex por vez. A cada entrega, atualize a checklist com itens comprovados riscados, estado, próximos passos e evidências. Faça commit/push autorizado e confirme sincronização. Execute `python3 scripts/check_continuity.py`; o checker não substitui revisão do código ou testes do mod.
-
-Recompensas monetárias locais: [Impactor/CURRENCY](docs/CURRENCY_REWARDS.md), no escopo JSON nativo auditado.
+Leia [AGENTS.md](AGENTS.md), [estado](docs/PROJECT_STATUS.md), [próximos passos](docs/NEXT_STEPS.md), [checklist](docs/MASTER_CHECKLIST.md) e [auditoria](docs/API_COMPATIBILITY.md). Apenas um Codex por vez; use o checkout existente. [Recompensas Pokémon](docs/POKEMON_REWARDS.md), [itens salvos](docs/SAVED_ITEMS.md) e [contrato de chaves](docs/CRATE_KEY_CONTRACT.md).

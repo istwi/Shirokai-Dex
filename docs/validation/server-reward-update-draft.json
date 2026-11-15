@@ -1,0 +1,30 @@
+{
+  "status": "historical_draft_superseded",
+  "button_files": [
+    "dex_special.json",
+    "dex_shiny.json"
+  ],
+  "button_command": "pokedex",
+  "button_item": "cobblemon:eject_button",
+  "reward_rows": 18,
+  "all_ids_preserved": true,
+  "all_tag_nodes_preserved": true,
+  "shiny_percentages": [
+    5,
+    15,
+    30,
+    50,
+    75,
+    100
+  ],
+  "database_in_patch": false,
+  "remaining": [
+    "crate delivery definitions/templates",
+    "shiny voucher delivery definition",
+    "VIP Top permanent group/provider",
+    "legendary shiny species and delivery definition"
+  ],
+  "patch_sha256": "a683ee56667f40159422af1e3077fe5599fc43f6860cc096dd4bdf94fce99b43",
+  "superseded_by": "server-rewards-dev6.json",
+  "remaining_are_historical": true
+}

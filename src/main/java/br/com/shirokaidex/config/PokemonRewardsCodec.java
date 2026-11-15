@@ -15,7 +15,7 @@ final class PokemonRewardsCodec {
             r.beginObject();while(r.hasNext()){
                 String key=r.nextName();unique(r,keys,key);
                 switch(key){
-                    case "species","form","nature","ability","gender","pokeball","held_item"->text.put(key,string(r));
+                    case "random_pool","species","form","nature","ability","gender","pokeball","held_item"->text.put(key,string(r));
                     case "type"->{if(!string(r).equals("POKEMON"))throw error(r,"pokemon type must be POKEMON");}
                     case "level"->level=integer(r);
                     case "shiny"->{if(r.peek()!=JsonToken.BOOLEAN)throw error(r,"shiny must be boolean");shiny=r.nextBoolean();}
@@ -25,7 +25,8 @@ final class PokemonRewardsCodec {
                     default->throw error(r,"unknown pokemon field "+key);
                 }
             }r.endObject();
-            result.add(new PokemonReward(text.get("species"),text.get("form"),level,shiny,text.get("nature"),text.get("ability"),text.get("gender"),text.get("pokeball"),text.get("held_item"),moves,ivs,evs,""));
+            if(text.containsKey("species")&&text.containsKey("random_pool"))throw error(r,"choose species or random_pool");
+            result.add(new PokemonReward(text.get("species"),text.get("form"),level,shiny,text.get("nature"),text.get("ability"),text.get("gender"),text.get("pokeball"),text.get("held_item"),moves,ivs,evs,"",text.get("random_pool")));
         }r.endArray();return List.copyOf(result);
     }
     private static Map<String,Integer> stats(JsonReader r)throws IOException{

@@ -19,8 +19,14 @@ import java.util.*;
 /** Typed validation never delegates invalid strings to the permissive properties parser. */
 public final class PokemonPayload {
     private PokemonPayload() { }
+    private static com.cobblemon.mod.common.pokemon.Species randomLegendary(){
+        var candidates=PokemonSpecies.INSTANCE.getImplemented().stream().filter(species->species.getStandardForm().getLabels().contains("legendary")).toList();
+        if(candidates.isEmpty())throw new IllegalArgumentException("no implemented legendary species available");
+        return candidates.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(candidates.size()));
+    }
     public static Pokemon create(MinecraftServer server,ServerPlayer owner,PokemonReward request){
-        thread(server);var species=PokemonSpecies.INSTANCE.getByIdentifier(ResourceLocation.parse(request.species()));
+        thread(server);
+        var species=request.randomPool().isEmpty()?PokemonSpecies.INSTANCE.getByIdentifier(ResourceLocation.parse(request.species())):randomLegendary();
         if(species==null||!species.getImplemented())throw new IllegalArgumentException("unknown/unimplemented pokemon species");
         List<FormData> forms=new ArrayList<>();forms.add(species.getStandardForm());forms.addAll(species.getForms());
         var form=request.form().isEmpty()?species.getStandardForm():forms.stream().filter(f->f.getName().equalsIgnoreCase(request.form())).findFirst().orElseThrow(()->new IllegalArgumentException("unknown form"));
@@ -66,7 +72,7 @@ public final class PokemonPayload {
         boolean legalAbility=false;for(var potential:pokemon.getForm().getAbilities())if(potential.getTemplate().getName().equals(pokemon.getAbility().getName()))legalAbility=true;
         if(!legalAbility)throw new IllegalArgumentException("ability invalid for effective form");
         for(var move:pokemon.getMoveSet().getMoves())if(!pokemon.getForm().getMoves().getAllLegalMoves().contains(move.getTemplate()))throw new IllegalArgumentException("move invalid for effective form");
-        if(!pokemon.getSpecies().getResourceIdentifier().toString().equals(request.species())||pokemon.getShiny()!=request.shiny())throw new IllegalArgumentException("pokemon properties changed");
+        if((request.randomPool().isEmpty()?!pokemon.getSpecies().getResourceIdentifier().toString().equals(request.species()):!pokemon.getSpecies().getImplemented()||!pokemon.getSpecies().getStandardForm().getLabels().contains("legendary"))||pokemon.getShiny()!=request.shiny())throw new IllegalArgumentException("pokemon properties changed");
         if(!request.form().isEmpty()&&!pokemon.getForm().getName().equalsIgnoreCase(request.form()))throw new IllegalArgumentException("form changed");
         if(request.level()!=null&&pokemon.getLevel()!=request.level())throw new IllegalArgumentException("level changed");
         if(!request.nature().isEmpty()&&!pokemon.getNature().getName().toString().equals(request.nature()))throw new IllegalArgumentException("nature changed");

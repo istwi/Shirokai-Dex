@@ -1,4 +1,4 @@
-# Menus diretos — desenvolvimento 0.7.0-dev.4
+# Menus diretos — desenvolvimento 0.7.0-dev.6
 
 Esta direção substitui o hub e os menus públicos antigos. `/dex` sozinho não abre tela.
 
@@ -101,3 +101,13 @@ Teste dev.3: duas texturas públicas Mojang distintas preservadas com assinatura
 ## Compatibilidade da pesquisa com Shirokai Core/Tab (dev.4)
 
 A captura da próxima mensagem da pesquisa roda na fase shirokaidex:wiki_search, antes dos roteadores na fase padrão do Fabric. Isso impede que o Core encaminhe o nome pesquisado ao chat local antes da Dex. Sem pesquisa pendente, o evento segue normalmente ao Core. Não intercepta pacotes nem pula assinatura/validação do Minecraft. /wiki nacional zorua continua disponível como consulta direta. Correção restrita à pesquisa; layout, skin, atalhos e botão de comando preservados.
+
+## Estilo de mensagens no chat (dev.5)
+
+Padrão: **✦ SHIROKAI** branco/negrito, ` » ` e texto cinza normal. Exemplo: `✦ SHIROKAI » Recompensa desbloqueada: ...`. Aplicado às notificações em CHAT (incluindo recompensa disponível/resgatada), respostas e erros de comandos e prompts/cancelamento da pesquisa. O texto em messages.json permanece editável; tags antigas de cor são normalizadas somente na saída ao chat. Não é necessário apagar/recriar JSONs.
+
+Cores de itens, nomes/lore dos menus, actionbar e títulos continuam com sua apresentação própria. Chat de jogadores no Shirokai Core não passa por essa formatação. Eventos de clique existentes no texto são preservados.
+
+## Atualização das recompensas do servidor (dev.6)
+
+Pacote derivado dos arquivos enviados pelo responsável: ver SERVER_REWARDS_2026_11.md. O ZIP contém somente três menus, sem banco/backup/jogadores. Pokemon é aceito no reward_group, inclusive random_pool legendary. Chaves físicas são SAVED_ITEM autenticados no servidor do responsável; modelos ausentes rejeitam o reload inteiro. O Vale Shiny aparece apenas no visual por pedido explícito; VIP Top removido. As definições específicas não substituem silenciosamente os presets gerais do mod.

@@ -22,3 +22,7 @@ Esses requisitos descrevem um contrato desejado, **não métodos existentes**. N
 ## Continuidade
 
 Checkpoint/SAVED_ITEM validado e enviado somente em `handoff/crates-checkpoint`, commit `f714c4b`; main preservada em `c89cc1b`. Esta auditoria posterior é local. Antes de implementar COMMAND, definir no Dex política explícita de comandos autorizados, contexto de execução, confirmação/journal e comprovação de resultado: comando que agenda efeito assíncrono não produz confirmação durável apenas pelo retorno do dispatcher. Não usar COMMAND para contornar o bloqueio de CRATE_KEY.
+
+## Reconferência em 2026-11-15
+
+Repositório oficial continua em05b3995. /crates givekey requer source de jogador e permissão; console não é destinatário implícito nem administrador artificial. Pacote de recompensas usa sete referências SAVED_ITEM, preparadas pelo próprio administrador com chaves emitidas pelo Crates do mesmo servidor. Nenhum segredo, chave de outro servidor ou acesso privado do provedor em produção foi adicionado. Esta entrega não implementa CRATE_KEY dedicado; usa a alternativa existente e auditada.

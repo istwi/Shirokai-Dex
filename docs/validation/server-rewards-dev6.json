@@ -1,0 +1,63 @@
+{
+  "version": "0.7.0-dev.6",
+  "base_commit": "7b5eab352aa4778725ed67421c408fb3aae06dcc",
+  "local_changes": true,
+  "sha256": "99ddf229fd593ac53fa4403a2dcb1490ba51487de5f4761278e236a9fa5e6f95",
+  "junit": {
+    "tests": 427,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "results": [
+    {
+      "name": "24 random legendary rolls freeze and restore without changing species/UUID or requested shiny/IV attributes",
+      "status": "passed"
+    },
+    {
+      "name": "Seven genuine Crates keys saved via supported commands; player give permission removed before claiming",
+      "status": "passed"
+    },
+    {
+      "name": "Complete server TXT configuration loads with authentic saved key templates and optional random Pokemon",
+      "status": "passed"
+    },
+    {
+      "name": "Final TXT mixed package delivers exact items, money/tokens, tag, authenticated keys and one random shiny6IV legendary",
+      "status": "passed"
+    },
+    {
+      "name": "Repeated click never rerolls the frozen Pokemon or duplicates rewards",
+      "status": "passed"
+    },
+    {
+      "name": "Final TXT items, exact currency, permanent tag, five authentic keys per crate and same shiny6IV legendary survive restart",
+      "status": "passed"
+    },
+    {
+      "name": "Restart/repeated click never rerolls or duplicates the frozen operation",
+      "status": "passed"
+    }
+  ],
+  "native_freeze_checks": 24,
+  "providers": {
+    "Crates": "0.2.1 / 49a82904ef3fa971c535191657a592b9ee5affad5577913f1bb537ca1274adfd",
+    "Impactor": "5.3.5 JSON native",
+    "LuckPerms": "5.4.140",
+    "Cobblemon": "1.8.3+1.21.1"
+  },
+  "limits": [
+    "Native mixed delivery exercised Shiny100 package; remaining17 packages parsed/validated, not all claimed on server.",
+    "Only disposable fixture used OWNED/Pikachu denominator to test delivery; shipped Shiny capture mode/category are unchanged.",
+    "24 additional random pool freeze/restore checks; native gameplay capture not recertified by this suite.",
+    "Vale Shiny is explicitly visual-only, VIP Top removed.",
+    "No signed server keys or Crates secrets distributed: administrator prepares seven SavedItem templates on their own server.",
+    "No graphical client rendering or load test."
+  ],
+  "test_corrections": [
+    "Mod item quantities queried by native clear with maxCount0 instead of vanilla-client item names.",
+    "Read-only journal check uses actual plan_json column.",
+    "Verification resumed existing completed fixture without reissuing rewards; UUID/plan equality verified after another restart."
+  ],
+  "cleanup": "All server runs stopped normally; SQLite integrity ok; RCON disabled and secret removed."
+}

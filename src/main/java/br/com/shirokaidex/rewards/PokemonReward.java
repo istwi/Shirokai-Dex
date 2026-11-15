@@ -8,10 +8,17 @@ import java.nio.charset.StandardCharsets;
 /** Requested attributes plus optional, per-operation frozen Cobblemon NBT. No game objects cross threads. */
 public record PokemonReward(String species,String form,Integer level,boolean shiny,String nature,String ability,
                             String gender,String pokeball,String heldItem,List<String> moves,
-                            Map<String,Integer> ivs,Map<String,Integer> evs,String snapshot) {
+                            Map<String,Integer> ivs,Map<String,Integer> evs,String snapshot,String randomPool) {
+    public PokemonReward(String species,String form,Integer level,boolean shiny,String nature,String ability,String gender,String pokeball,String heldItem,List<String> moves,Map<String,Integer> ivs,Map<String,Integer> evs,String snapshot){
+        this(species,form,level,shiny,nature,ability,gender,pokeball,heldItem,moves,ivs,evs,snapshot,"");
+    }
     public static final Set<String> STATS=Set.of("hp","attack","defence","special_attack","special_defence","speed");
     public PokemonReward {
-        CollectionDefinition.identifier(species);form=optional(form);nature=optional(nature);ability=optional(ability);gender=optional(gender);pokeball=optional(pokeball);heldItem=optional(heldItem);
+        randomPool=optional(randomPool);species=optional(species);
+        if(randomPool.isEmpty())CollectionDefinition.identifier(species);
+        else if(!randomPool.equals("legendary")||!species.isEmpty())throw new IllegalArgumentException("choose species or legendary random pool");
+        if(!randomPool.isEmpty()&&((form!=null&&!form.isEmpty())||(ability!=null&&!ability.isEmpty())||(gender!=null&&!gender.isEmpty())||!moves.isEmpty()))throw new IllegalArgumentException("random pool cannot constrain species-specific attributes");
+        form=optional(form);nature=optional(nature);ability=optional(ability);gender=optional(gender);pokeball=optional(pokeball);heldItem=optional(heldItem);
         if(level!=null&&(level<1||level>100))throw new IllegalArgumentException("pokemon level must be 1..100");
         for(String id:List.of(nature,pokeball,heldItem))if(!id.isEmpty())CollectionDefinition.identifier(id);
         for(String name:List.of(form,ability))if(!name.isEmpty()&&!name.matches("[a-z0-9_/-]{1,64}"))throw new IllegalArgumentException("invalid form or ability");
@@ -21,9 +28,9 @@ public record PokemonReward(String species,String form,Integer level,boolean shi
         ivs=stats(ivs,31);evs=stats(evs,252);if(evs.values().stream().mapToInt(Integer::intValue).sum()>510)throw new IllegalArgumentException("maximum 510 EVs");
         if(snapshot==null||snapshot.getBytes(StandardCharsets.UTF_8).length>65536)throw new IllegalArgumentException("pokemon snapshot maximum 64 KiB");
     }
-    public PokemonReward withSnapshot(String value){return new PokemonReward(species,form,level,shiny,nature,ability,gender,pokeball,heldItem,moves,ivs,evs,value);}
+    public PokemonReward withSnapshot(String value){return new PokemonReward(species,form,level,shiny,nature,ability,gender,pokeball,heldItem,moves,ivs,evs,value,randomPool);}
     public JsonObject json(){
-        var json=new JsonObject();json.addProperty("type","POKEMON");json.addProperty("species",species);
+        var json=new JsonObject();json.addProperty("type","POKEMON");if(randomPool.isEmpty())json.addProperty("species",species);else json.addProperty("random_pool",randomPool);
         if(!form.isEmpty())json.addProperty("form",form);if(level!=null)json.addProperty("level",level);json.addProperty("shiny",shiny);
         for(var entry:Map.of("nature",nature,"ability",ability,"gender",gender,"pokeball",pokeball,"held_item",heldItem).entrySet().stream().sorted(Map.Entry.comparingByKey()).toList())if(!entry.getValue().isEmpty())json.addProperty(entry.getKey(),entry.getValue());
         if(!moves.isEmpty()){var values=new JsonArray();moves.forEach(values::add);json.add("moves",values);}

@@ -306,5 +306,6 @@
   "focused.event_score": "Suas capturas no evento: {0}",
   "focused.event_top": "Top 10 do evento",
   "wiki_filter_selected": "Filtro selecionado: {0}",
-  "permission_backend_unavailable": "LuckPerms indisponível para conceder a tag. Nenhuma entrega foi iniciada."
+  "permission_backend_unavailable": "LuckPerms indisponível para conceder a tag. Nenhuma entrega foi iniciada.",
+  "pokemon_random_legendary": "Lendário aleatório"
 }

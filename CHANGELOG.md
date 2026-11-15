@@ -267,3 +267,12 @@ Passagem `6b97093` continha coordenação/probe compilados, sem validação func
 ## 0.7.0-dev.4
 
 - Pesquisa pelo livro da wiki consome a mensagem antes do roteador padrão do Shirokai Core/Tab; impede o nome pesquisado de aparecer no chat.
+
+## 0.7.0-dev.5 (incluída na dev.6)
+
+- Mensagens de chat da Dex usam ✦ SHIROKAI branco/negrito e corpo cinza normal, incluindo recompensas, pesquisa e respostas/erros de comandos.
+
+## 0.7.0-dev.6 — snapshot de desenvolvimento
+
+- Pacote de configuração do servidor com18 recompensas do TXT, voltar ao menu nas três Dex, chaves via SAVED_ITEM, Vale Shiny apenas visual e VIP removido.
+- Menus diretos aceitam Pokémon; pool lendário aleatório congela espécie/UUID/atributos no plano antes da entrega.
