@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-11-15T05:35:04.576Z",
+  "results": [
+    {
+      "name": "Shirokai Core normal chat reaches another player",
+      "status": "passed"
+    },
+    {
+      "name": "Wiki consumes zorua before Shirokai Core and reopens filtered menu without broadcast",
+      "status": "passed"
+    },
+    {
+      "name": "Cancel is private and does not reopen wiki",
+      "status": "passed"
+    },
+    {
+      "name": "Core chat works after search/cancel",
+      "status": "passed"
+    },
+    {
+      "name": "Pending search belongs only to its player; another player still chats normally",
+      "status": "passed"
+    },
+    {
+      "name": "Opening another menu abandons search and restores normal chat",
+      "status": "passed"
+    }
+  ],
+  "version": "0.7.0-dev.4",
+  "base": "6dc938565e91eba6447758e98f0e2f83d3ee7c12",
+  "sha256": "de95797f4a17038ce69a1dfd1be88811246b26027326ffa51d2db23293372a3a",
+  "junit": {
+    "tests": 415,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "baseline": {
+    "version": "0.7.0-dev.3",
+    "results": [
+      {
+        "name": "Shirokai Core normal chat reaches another player",
+        "status": "passed"
+      },
+      {
+        "name": "wiki chat integration",
+        "status": "failed",
+        "error": "Pending search was consumed by chat instead of reopening wiki"
+      }
+    ],
+    "expected_failure": "Pending search was consumed by Core default-phase chat handler instead of reopening wiki"
+  },
+  "chat_provider": {
+    "repository": "istwi/Shirokai-tab",
+    "release": "v0.15.2-dev",
+    "sha256": "d215fc746fe6d45a2ae49f255ed4c4b1fb816d3220f522ff61bf96212a8dee4a",
+    "source_inspected": "8ffe346; ShirokaiCore and MinecraftChat default-phase callback; no external code copied or changed"
+  },
+  "server": "Packaged JAR; Fabric0.17.2/MC1.21.1/Cobblemon1.8.3/LuckPerms5.4.140/Shirokai Core0.15.2-dev; loopback; normal shutdown; SQLite integrity ok; RCON disabled/secret removed",
+  "limitations": "Offline protocol clients; authenticated signed-message chain not exercised. Vanilla packet/signature handling unchanged. Other chat routers with earlier custom phases/mixins not tested. Historical gameplay suites not rerun."
+}

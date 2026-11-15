@@ -1,4 +1,4 @@
-# Menus diretos — desenvolvimento 0.7.0-dev.3
+# Menus diretos — desenvolvimento 0.7.0-dev.4
 
 Esta direção substitui o hub e os menus públicos antigos. `/dex` sozinho não abre tela.
 
@@ -97,3 +97,7 @@ O botão `menu.buttons.wiki` (slot19, abaixo da cabeça) abre a wiki da mesma co
 Item/nome/lore/slot continuam editáveis em cada JSON. Arquivos antigos sem wiki recebem o botão padrão na leitura, sem sobrescrever o arquivo. Se slot19 já estiver ocupado, usa o primeiro slot livre; pode adicionar wiki explicitamente para escolher a posição. Slots em conflito continuam rejeitados. Forms permanece tela futura.
 
 Teste dev.3: duas texturas públicas Mojang distintas preservadas com assinatura exata no item recebido por dois perfis descartáveis, nas três Dex. Fixtures existem somente no servidor de teste; o produto não fixa skins e usa o perfil do jogador. Renderização gráfica não testada.
+
+## Compatibilidade da pesquisa com Shirokai Core/Tab (dev.4)
+
+A captura da próxima mensagem da pesquisa roda na fase shirokaidex:wiki_search, antes dos roteadores na fase padrão do Fabric. Isso impede que o Core encaminhe o nome pesquisado ao chat local antes da Dex. Sem pesquisa pendente, o evento segue normalmente ao Core. Não intercepta pacotes nem pula assinatura/validação do Minecraft. /wiki nacional zorua continua disponível como consulta direta. Correção restrita à pesquisa; layout, skin, atalhos e botão de comando preservados.

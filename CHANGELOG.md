@@ -263,3 +263,7 @@ Passagem `6b97093` continha coordenação/probe compilados, sem validação func
 ## 0.7.0-dev.3
 
 - Cabeça de informações usa o perfil/skin do próprio jogador. Atalho wiki abaixo da cabeça abre a coleção selecionada nas três Dex, mantendo Fechar/comando e configurações existentes.
+
+## 0.7.0-dev.4
+
+- Pesquisa pelo livro da wiki consome a mensagem antes do roteador padrão do Shirokai Core/Tab; impede o nome pesquisado de aparecer no chat.

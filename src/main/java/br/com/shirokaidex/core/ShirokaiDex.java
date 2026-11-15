@@ -98,7 +98,11 @@ public final class ShirokaiDex implements ModInitializer {
             if(dispatcher.getRoot().getChild("dexrank")==null){var rank=literal("dexrank").executes(context->0);for(String kind:List.of("captura","derrotados","dex"))rank.then(literal(kind).executes(context->directRanking(context.getSource(),kind)));dispatcher.register(rank);}else LOG.error("Command /dexrank already exists; preserving its provider");
             if(dispatcher.getRoot().getChild("wiki")==null)dispatcher.register(literal("wiki").executes(context->0).then(argument("collection",StringArgumentType.word()).suggests((context,builder)->{for(String name:List.of("nacional","special","shiny","forms"))if(name.startsWith(builder.getRemaining()))builder.suggest(name);return builder.buildFuture();}).executes(context->directWiki(context.getSource(),br.com.shirokaidex.config.DirectMenuCatalog.collection(StringArgumentType.getString(context,"collection")),Wiki.Request.initial(""))).then(argument("query",StringArgumentType.greedyString()).executes(context->directWiki(context.getSource(),br.com.shirokaidex.config.DirectMenuCatalog.collection(StringArgumentType.getString(context,"collection")),Wiki.Request.initial(StringArgumentType.getString(context,"query")))))));else LOG.error("Command /wiki already exists; preserving its provider");
         });
-        net.fabricmc.fabric.api.message.v1.ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message,sender,params)->{
+        // Consume private wiki input before default-phase chat routers broadcast/cancel it.
+        // Fabric still validates the signed message normally before this event.
+        var wikiSearchPhase=net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("shirokaidex","wiki_search");
+        net.fabricmc.fabric.api.message.v1.ServerMessageEvents.ALLOW_CHAT_MESSAGE.addPhaseOrdering(wikiSearchPhase,net.fabricmc.fabric.api.event.Event.DEFAULT_PHASE);
+        net.fabricmc.fabric.api.message.v1.ServerMessageEvents.ALLOW_CHAT_MESSAGE.register(wikiSearchPhase,(message,sender,params)->{
             var pending=searches.remove(sender.getUUID());if(pending==null)return true;
             String input=message.signedContent().strip();sender.server.execute(()->{
                 if(!ready||stopping||sender.server!=activeServer||pending.player()!=sender||sender.hasDisconnected())return;
