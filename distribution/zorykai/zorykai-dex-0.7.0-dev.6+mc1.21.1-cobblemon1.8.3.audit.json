@@ -1,0 +1,203 @@
+{
+  "source_commit": "32c4d3167ce57627f0c7cd3a04ac47fafa8e07b7",
+  "original_sha256": "99ddf229fd593ac53fa4403a2dcb1490ba51487de5f4761278e236a9fa5e6f95",
+  "output_sha256": "979b15cbc570b93d5449268f85b6f55e99f3861ca51db492b88fa0c9688aa638",
+  "changes": [
+    {
+      "entry": "br/com/shirokaidex/config/Settings.class",
+      "edits": [
+        {
+          "constant_pool_index": 449,
+          "before": "✦ Shirokai Dex",
+          "after": "✦ Zorykai Dex"
+        }
+      ]
+    },
+    {
+      "entry": "br/com/shirokaidex/localization/ChatMessages.class",
+      "edits": [
+        {
+          "constant_pool_index": 51,
+          "before": "✦ SHIROKAI",
+          "after": "✦ ZORYKAI"
+        }
+      ]
+    },
+    {
+      "entry": "config/focused.json",
+      "edits": [
+        {
+          "path": "menu_title",
+          "before": "Shirokai Dex",
+          "after": "Zorykai Dex"
+        }
+      ]
+    },
+    {
+      "entry": "config/menus/dex_forms.json",
+      "edits": [
+        {
+          "path": "title",
+          "before": "<gradient:#00C6FF:#0072FF>✦ Forms Dex</gradient>",
+          "after": "<white><bold>✦ ZORYKAI</bold></white> <gradient:#00C6FF:#0072FF>✦ Forms Dex</gradient>"
+        }
+      ]
+    },
+    {
+      "entry": "config/menus/dex_nacional.json",
+      "edits": [
+        {
+          "path": "menu.title",
+          "before": "<gradient:#00C6FF:#0072FF>✦ %dex_type% Dex</gradient>",
+          "after": "<white><bold>✦ ZORYKAI</bold></white> <gradient:#00C6FF:#0072FF>✦ %dex_type% Dex</gradient>"
+        }
+      ]
+    },
+    {
+      "entry": "config/menus/dex_shiny.json",
+      "edits": [
+        {
+          "path": "menu.title",
+          "before": "<gradient:#00C6FF:#0072FF>✦ %dex_type% Dex</gradient>",
+          "after": "<white><bold>✦ ZORYKAI</bold></white> <gradient:#00C6FF:#0072FF>✦ %dex_type% Dex</gradient>"
+        }
+      ]
+    },
+    {
+      "entry": "config/menus/dex_special.json",
+      "edits": [
+        {
+          "path": "menu.title",
+          "before": "<gradient:#00C6FF:#0072FF>✦ %dex_type% Dex</gradient>",
+          "after": "<white><bold>✦ ZORYKAI</bold></white> <gradient:#00C6FF:#0072FF>✦ %dex_type% Dex</gradient>"
+        }
+      ]
+    },
+    {
+      "entry": "config/menus/rank_captura.json",
+      "edits": [
+        {
+          "path": "title",
+          "before": "<gradient:#00C6FF:#0072FF>✦ Rankings</gradient>",
+          "after": "<white><bold>✦ ZORYKAI</bold></white> <gradient:#00C6FF:#0072FF>✦ Rankings</gradient>"
+        }
+      ]
+    },
+    {
+      "entry": "config/menus/rank_derrotados.json",
+      "edits": [
+        {
+          "path": "title",
+          "before": "<gradient:#00C6FF:#0072FF>✦ Rankings</gradient>",
+          "after": "<white><bold>✦ ZORYKAI</bold></white> <gradient:#00C6FF:#0072FF>✦ Rankings</gradient>"
+        }
+      ]
+    },
+    {
+      "entry": "config/menus/rank_dex.json",
+      "edits": [
+        {
+          "path": "title",
+          "before": "<gradient:#00C6FF:#0072FF>✦ Rankings</gradient>",
+          "after": "<white><bold>✦ ZORYKAI</bold></white> <gradient:#00C6FF:#0072FF>✦ Rankings</gradient>"
+        }
+      ]
+    },
+    {
+      "entry": "config/menus/wiki_forms.json",
+      "edits": [
+        {
+          "path": "title",
+          "before": "<gradient:#00C6FF:#0072FF>✦ Forms Dex</gradient>",
+          "after": "<white><bold>✦ ZORYKAI</bold></white> <gradient:#00C6FF:#0072FF>✦ Forms Dex</gradient>"
+        }
+      ]
+    },
+    {
+      "entry": "config/menus/wiki_nacional.json",
+      "edits": [
+        {
+          "path": "title",
+          "before": "<gradient:#00C6FF:#0072FF>✦ Wiki nacional</gradient>",
+          "after": "<white><bold>✦ ZORYKAI</bold></white> <gradient:#00C6FF:#0072FF>✦ Wiki nacional</gradient>"
+        }
+      ]
+    },
+    {
+      "entry": "config/menus/wiki_shiny.json",
+      "edits": [
+        {
+          "path": "title",
+          "before": "<gradient:#00C6FF:#0072FF>✦ Wiki shiny</gradient>",
+          "after": "<white><bold>✦ ZORYKAI</bold></white> <gradient:#00C6FF:#0072FF>✦ Wiki shiny</gradient>"
+        }
+      ]
+    },
+    {
+      "entry": "config/menus/wiki_special.json",
+      "edits": [
+        {
+          "path": "title",
+          "before": "<gradient:#00C6FF:#0072FF>✦ Wiki special</gradient>",
+          "after": "<white><bold>✦ ZORYKAI</bold></white> <gradient:#00C6FF:#0072FF>✦ Wiki special</gradient>"
+        }
+      ]
+    },
+    {
+      "entry": "fabric.mod.json",
+      "edits": [
+        {
+          "path": "name",
+          "before": "Shirokai Dex",
+          "after": "Zorykai Dex"
+        },
+        {
+          "path": "description",
+          "before": "Pokédex experimental do Shirokai: coleções, progresso oficial e wiki de espécies.",
+          "after": "Pokédex experimental do Zorykai: coleções, progresso oficial e wiki de espécies."
+        }
+      ]
+    },
+    {
+      "entry": "localization/en_us.json",
+      "edits": [
+        {
+          "path": "not_ready",
+          "before": "Shirokai Dex is not available yet. Check the server logs.",
+          "after": "Zorykai Dex is not available yet. Check the server logs."
+        },
+        {
+          "path": "reload_ok",
+          "before": "Shirokai Dex configuration reloaded.",
+          "after": "Zorykai Dex configuration reloaded."
+        },
+        {
+          "path": "home.return_home",
+          "before": "Shirokai hub",
+          "after": "Zorykai hub"
+        }
+      ]
+    },
+    {
+      "entry": "localization/pt_br.json",
+      "edits": [
+        {
+          "path": "not_ready",
+          "before": "Shirokai Dex ainda não está disponível. Consulte os logs do servidor.",
+          "after": "Zorykai Dex ainda não está disponível. Consulte os logs do servidor."
+        },
+        {
+          "path": "reload_ok",
+          "before": "Configuração do Shirokai Dex recarregada.",
+          "after": "Configuração do Zorykai Dex recarregada."
+        },
+        {
+          "path": "home.return_home",
+          "before": "Central Shirokai",
+          "after": "Central Zorykai"
+        }
+      ]
+    }
+  ],
+  "validation": "ZIP integrity, unchanged entry paths and technical metadata; class instructions/attributes and all non-approved constants byte-for-byte identical. Runtime validation reported separately."
+}

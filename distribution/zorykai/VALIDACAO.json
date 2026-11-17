@@ -1,0 +1,25 @@
+{
+  "base_branch": "fix/latest-menu-command",
+  "base_commit": "32c4d3167ce57627f0c7cd3a04ac47fafa8e07b7",
+  "version": "0.7.0-dev.6",
+  "original_build": {
+    "junit_tests": 427,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "verifyModJar": "passed"
+  },
+  "modified_artifact": {
+    "jar": "zorykai-dex-0.7.0-dev.6+mc1.21.1-cobblemon1.8.3.jar",
+    "sha256": "979b15cbc570b93d5449268f85b6f55e99f3861ca51db492b88fa0c9688aa638",
+    "zip_integrity": "passed",
+    "approved_entries_changed": 17,
+    "class_instructions_and_nonvisual_constants": "byte-identical",
+    "technical_metadata_and_paths": "unchanged",
+    "all_json_placeholder_tokens": "unchanged",
+    "actual_minecraft_component_validation": "passed: white/bold brand; gray chat body; unchanged click action; PT/EN translations; all 11 original title gradients and formatting",
+    "dedicated_server_and_graphical_client": "not run"
+  },
+  "source_files_modified": false,
+  "published_or_pushed": false
+}

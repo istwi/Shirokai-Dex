@@ -480,3 +480,5 @@ Correção de preparação: condição do workflow convertida em escalar YAML ap
 | Recompensas do servidor dev.6 (local) |18 pacotes, IDs/tags preservados, sete modelos SAVED_ITEM autênticos, Vale Shiny visual e VIP removido; pool lendário congelado;427 JUnit e7 checks nativos +24 freezes | Sem commit; base7b5eab3; [evidência](validation/server-rewards-dev6.json); instalação requer cadastro de chaves próprias |
 
 | Envio autorizado dev.6 | Código,18 pacotes/guia/evidências; Actions empacota JAR/ZIP/checksums;427 JUnit e testes nativos documentados | Commit `feat: package dev6 server rewards and chat styling`, base7b5eab3; branch fix/latest-menu-command; sem merge/main/ambiente |
+
+| Distribuição visual Zorykai | JAR dev.6 com17 entradas visuais alteradas; instruções/identificadores/placeholders preservados;427 JUnit na base e verificação de componentes reais | Branch `zorykai`, commit `chore: distribute visual Zorykai dev6 jar`, base32c4d31; `distribution/zorykai/`; servidor/cliente gráfico pendentes; sem merge/release/ambiente |

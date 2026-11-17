@@ -1,0 +1,12 @@
+ZORYKAI DEX — alteração visual da versão 0.7.0-dev.6
+Base: istwi/Shirokai-Dex, branch fix/latest-menu-command, commit 32c4d3167ce57627f0c7cd3a04ac47fafa8e07b7.
+
+Instalação: pare o servidor e faça backup. Substitua o JAR anterior por este; mantenha somente uma cópia do mod na pasta mods. Não instale sources.jar.
+
+O ID continua shirokaidex, assim como pastas de configuração, permissões, comandos, placeholders e integrações. Não renomeie esses identificadores para zorykai. Não foram modificados dados de jogadores nem código-fonte.
+
+Os padrões de apresentação incorporados ao JAR usam Zorykai. O prefixo do chat e dos 11 títulos de menus configuráveis é ✦ ZORYKAI branco em negrito. As tags originais dos títulos e seus degradês foram preservados. As traduções mantêm Shirokai → Zorykai e SHIROKAI → ZORYKAI conforme a capitalização original.
+
+Configurações já existentes em config/shirokaidex podem sobrepor os padrões incorporados ao JAR. Este pacote não apaga nem substitui automaticamente configurações personalizadas; títulos antigos definidos externamente exigem ajuste visual nesses arquivos. Não exclua a pasta de dados para aplicar a marca.
+
+Consulte o relatório de validação e a auditoria JSON para evidências e limitações. Nenhum commit, push, release ou publicação do ambiente foi realizado nesta alteração.
