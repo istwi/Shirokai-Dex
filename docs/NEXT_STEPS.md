@@ -1,5 +1,13 @@
 # Próximos passos
 
+## Envio autorizado dev.7 — 2026-11-17
+
+O responsável pediu enviar o JAR ao GitHub. Commit desta entrega: `feat: open SkiesGUIs from bare dex and distribute Zorykai dev7`, base29a6573, branch `zorykai`. Inclui fonte do encaminhamento, versão, documentação e distribuição em `distribution/zorykai/dev7/`; JAR/checksum/auditoria/instruções. Build/verifyModJar e427 JUnit aprovados, placeholders preservados. SkiesGUIs real/menu e cliente gráfico seguem sem validação nesta instância. Conferir SHA remoto após push. Sem merge na main, release ou publicação de ambiente.
+
+## /dex abre SkiesGUIs — dev.7, 2026-11-17
+
+Base mais recente entre todas as branches: `zorykai`,29a6573 (base funcional dev.6/32c4d31). Somente a execução da raiz `/dex` foi alterada para `skiesguis open pokedex`, usando `getPlayerOrException` e `player.createCommandSourceStack`, sem console/elevação. Subcomandos e suas permissões preservados. Versão0.7.0-dev.7. Build/serverDistribution/verifyModJar e427 JUnit aprovados, zero falhas/erros/skips. JAR Zorykai local em `/workspace/output/zorykai-dev7/`, com17 entradas de apresentação e placeholders/instruções preservados pela auditoria; não confundir com o JAR dev.6 já enviado em distribution/zorykai. SkiesGUIs/menu/permissões reais não disponíveis para teste funcional nesta instância; validação em servidor pendente. Encaminhamento não afirma que a GUI abriu: erros do provedor são enviados pelo próprio dispatcher. Alterações atuais locais, sem commit/push/release/ambiente. Próximo passo: instalar dev.7 e executar `/dex` como jogador com o menu `pokedex` configurado, conferir permissão negada e regressão de subcomandos.
+
 ## Distribuição visual Zorykai — 2026-11-16
 
 O usuário autorizou enviar o JAR alterado para a branch separada `zorykai`. Base mais recente conferida entre todas as branches: `fix/latest-menu-command`, `32c4d31`, versão0.7.0-dev.6. Distribuição em `distribution/zorykai/`: JAR, checksum, auditoria e instruções. Fontes da aplicação intactas; somente textos de apresentação no binário e recursos incorporados foram editados. Placeholders/comandos/permissões/IDs/pacotes/classes e instruções preservados; prefixo branco/negrito e11 degradês verificados usando componentes reais Minecraft. Build original com427 JUnit aprovados; servidor dedicado/cliente gráfico não executados nesta alteração. Configurações externas podem sobrepor títulos incorporados. Commit desta entrega: `chore: distribute visual Zorykai dev6 jar`, base32c4d31. Sem merge na main, nova release ou publicação de ambiente. Próximo passo deste pedido: instalar o JAR em servidor de teste e conferir apresentação com as configurações existentes. As direções históricas abaixo não ampliam o escopo desta distribuição.

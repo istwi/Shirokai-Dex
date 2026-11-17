@@ -482,3 +482,7 @@ Correção de preparação: condição do workflow convertida em escalar YAML ap
 | Envio autorizado dev.6 | Código,18 pacotes/guia/evidências; Actions empacota JAR/ZIP/checksums;427 JUnit e testes nativos documentados | Commit `feat: package dev6 server rewards and chat styling`, base7b5eab3; branch fix/latest-menu-command; sem merge/main/ambiente |
 
 | Distribuição visual Zorykai | JAR dev.6 com17 entradas visuais alteradas; instruções/identificadores/placeholders preservados;427 JUnit na base e verificação de componentes reais | Branch `zorykai`, commit `chore: distribute visual Zorykai dev6 jar`, base32c4d31; `distribution/zorykai/`; servidor/cliente gráfico pendentes; sem merge/release/ambiente |
+
+| /dex → SkiesGUIs dev.7 (local) | Apenas raiz encaminha skiesguis open pokedex com fonte do jogador;427 JUnit/build/JAR aprovados; textos Zorykai preservados em cópia do JAR | Base zorykai29a6573; sem commit/push; SkiesGUIs real/menu e regressão nativa pendentes |
+
+| Envio autorizado Zorykai dev.7 | Fonte da raiz /dex, versão, documentação e JAR/checksum/auditoria em distribution/zorykai/dev7;427 JUnit/build aprovados | Commit `feat: open SkiesGUIs from bare dex and distribute Zorykai dev7`, base29a6573; branch zorykai; integração SkiesGUIs real pendente |

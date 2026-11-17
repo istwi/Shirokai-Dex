@@ -89,7 +89,7 @@ public final class ShirokaiDex implements ModInitializer {
                 LOG.error("Command /dex already exists; refusing to overwrite it");
                 return;
             }
-            var root=literal("dex").executes(context->0)
+            var root=literal("dex").executes(context->openExternalPokedex(context.getSource()))
                 .then(literal("admin").requires(source->Permissions.mayReload(source.getPlayer())||Permissions.has(source.getPlayer(),"shirokaidex.admin.rewards")||Permissions.has(source.getPlayer(),"shirokaidex.admin.items")||Permissions.has(source.getPlayer(),"shirokaidex.admin.captures"))
                     .then(literal("reload").requires(source->Permissions.mayReload(source.getPlayer())).executes(context->reload(context.getSource())))
                     .then(rewardAdminCommands()).then(savedItemCommands()).then(captureHistoryCommands()));
@@ -265,6 +265,13 @@ public final class ShirokaiDex implements ModInitializer {
         source.sendFailure(br.com.shirokaidex.localization.ChatMessages.format(body));
     }
     private void directMessage(CommandSourceStack source,String key){var state=config.snapshot();if(state==null||state.menus()==null)return;String template=state.menus().messages().getOrDefault(key,key);chatSuccess(source,()->br.com.shirokaidex.menus.direct.RichText.render(template,java.util.Map.of("player",source.getPlayer()==null?"":source.getPlayer().getGameProfile().getName())),false);}
+    private int openExternalPokedex(CommandSourceStack source) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        var player=source.getPlayerOrException();
+        source.getServer().getCommands().performPrefixedCommand(
+                player.createCommandSourceStack(),"skiesguis open pokedex");
+        return 1;
+    }
+
     private int directDex(CommandSourceStack source,String id,int page){
         var player=source.getPlayer();if(!ready||stopping||player==null||id==null)return 0;searches.remove(player.getUUID());var state=config.snapshot();
         if(id.equals("forms")){br.com.shirokaidex.menus.direct.DirectMenus.future(player,state.menus().menus().get("dex_forms"));return 1;}

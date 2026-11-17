@@ -1,6 +1,6 @@
 # Comandos disponíveis — alpha experimental
 
-> Direção atual 0.7.0-dev.1: consulte [Menus diretos](DIRECT_MENUS.md). As seções abaixo são históricas; o hub e os antigos comandos de navegação/prévia foram retirados. `/dex` sozinho não abre tela.
+> Direção atual 0.7.0-dev.7: consulte [Menus diretos](DIRECT_MENUS.md). `/dex` sozinho executa `skiesguis open pokedex` como o jogador, respeitando permissões. Requer o provedor e o menu configurados. As seções abaixo são históricas; o hub e os antigos comandos de navegação/prévia foram retirados.
 
 ## Modo público reduzido
 

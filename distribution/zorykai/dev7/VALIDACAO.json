@@ -1,0 +1,17 @@
+{
+  "base_branch": "zorykai",
+  "base_commit": "29a65733aac84f6383643727f9c7cd4564d42160",
+  "local_changes": true,
+  "version": "0.7.0-dev.7",
+  "junit": {
+    "tests": 427,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "jar_sha256": "5ef301c746f66e6d45d0a6130ddc4aaa89cd84486bf1a27bfcc2b348692b6f7b",
+  "zip_and_display_diff_audit": "passed",
+  "all_json_placeholder_tokens": "unchanged",
+  "skiesguis_server_integration": "not executed",
+  "validation_before_authorized_push": true
+}

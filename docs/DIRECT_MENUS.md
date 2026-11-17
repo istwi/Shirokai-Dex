@@ -1,6 +1,6 @@
 # Menus diretos — desenvolvimento 0.7.0-dev.6
 
-Esta direção substitui o hub e os menus públicos antigos. `/dex` sozinho não abre tela.
+Esta direção substitui o hub e os menus públicos antigos. Na dev.7, `/dex` sozinho executa `skiesguis open pokedex` como o jogador, sem elevar permissões. Requer SkiesGUIs e o menu `pokedex` configurados no servidor; a integração visual externa ainda precisa ser validada nesse servidor. Subcomandos Dex existentes permanecem iguais.
 
 | Comando | Tela |
 |---|---|

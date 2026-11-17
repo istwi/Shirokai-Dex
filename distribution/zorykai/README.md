@@ -1,3 +1,13 @@
+# Zorykai Dex — versão atual dev.7
+
+[Baixar JAR dev.7](dev7/zorykai-dex-0.7.0-dev.7+mc1.21.1-cobblemon1.8.3.jar) · [Instruções](dev7/LEIA-ME.txt) · [Validação](dev7/VALIDACAO.json)
+
+`/dex` sem argumentos executa `skiesguis open pokedex` como o próprio jogador. Requer SkiesGUIs com o menu `pokedex` configurado e as permissões do provedor. Subcomandos e placeholders preservados; apresentação Zorykai mantida no JAR. Build/verifyModJar e427 JUnit aprovados. Abertura real no SkiesGUIs ainda não validada nesta instância.
+
+O código-fonte inclui o encaminhamento do comando e a versão dev.7. A marca Zorykai continua aplicada somente na cópia do JAR; o build direto das fontes mantém os textos originais Shirokai. Não instalar dois JARs do mesmo mod.
+
+## Distribuição anterior
+
 # Zorykai Dex 0.7.0-dev.6
 
 JAR com alteração exclusivamente visual de Shirokai para Zorykai, baseado em `fix/latest-menu-command`, commit `32c4d3167ce57627f0c7cd3a04ac47fafa8e07b7`.

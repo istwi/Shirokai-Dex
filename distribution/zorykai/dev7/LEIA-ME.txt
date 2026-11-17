@@ -1,0 +1,7 @@
+Zorykai Dex dev.7
+
+Pare o servidor e substitua o JAR dev.6 pelo dev.7, mantendo uma única cópia do mod em mods. Preserve config/shirokaidex e os dados dos jogadores.
+
+/dex sem argumentos executa skiesguis open pokedex como jogador. SkiesGUIs deve estar instalado, com menu pokedex configurado, e o jogador deve ter as permissões exigidas pelo provedor. /dex nacional|special|shiny|forms e comandos administrativos permanecem iguais. Não adiciona /pdex nem modifica placeholders ou permissões existentes.
+
+Build e427 JUnit aprovados. Integração SkiesGUIs em servidor real não executada. Distribuição dev.7 enviada por solicitação do responsável na branch zorykai; dev.6 permanece disponível como distribuição anterior.

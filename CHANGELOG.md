@@ -1,5 +1,9 @@
 # Changelog
 
+## /dex abre SkiesGUIs — dev.7, 2026-11-17
+
+Base mais recente entre todas as branches: `zorykai`,29a6573 (base funcional dev.6/32c4d31). Somente a execução da raiz `/dex` foi alterada para `skiesguis open pokedex`, usando `getPlayerOrException` e `player.createCommandSourceStack`, sem console/elevação. Subcomandos e suas permissões preservados. Versão0.7.0-dev.7. Build/serverDistribution/verifyModJar e427 JUnit aprovados, zero falhas/erros/skips. JAR Zorykai local em `/workspace/output/zorykai-dev7/`, com17 entradas de apresentação e placeholders/instruções preservados pela auditoria; não confundir com o JAR dev.6 já enviado em distribution/zorykai. SkiesGUIs/menu/permissões reais não disponíveis para teste funcional nesta instância; validação em servidor pendente. Encaminhamento não afirma que a GUI abriu: erros do provedor são enviados pelo próprio dispatcher. Alterações atuais locais, sem commit/push/release/ambiente. Próximo passo: instalar dev.7 e executar `/dex` como jogador com o menu `pokedex` configurado, conferir permissão negada e regressão de subcomandos.
+
 ## 0.7.0-dev.1 — desenvolvimento local
 
 - Menus independentes por `/dex`, `/dexrank` e `/wiki` com argumento; `/dex` sozinho sem tela. Eventos desativados.
